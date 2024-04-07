@@ -1,0 +1,21 @@
+// MARK: - Error
+
+"errorExistingCategoryTitle" = "Existing Category";
+"errorNotFoundCategoryTitle" = "Category Not Found";
+"errorNotFoundBudgetTitle" = "Budget Not Found";
+"errorExistingTransactionTitle" = "Existing Transaction";
+"errorNotFoundTransactionTitle" = "Transaction Not Found";
+"errorCantDeleteCategoryTitle" = "Cannot Delete Category";
+"errorCantDeleteBudgetTitle" = "Cannot Delete Budget";
+"errorExistingBudgetTitle" = "Existing Budget";
+"errorCantSaveOnDatabaseTitle" = "Error Saving";
+
+"errorExistingCategoryDescription" = "The informed category already exists in the system";
+"errorNotFoundCategoryDescription" = "The category could not be found";
+"errorNotFoundBudgetDescription" = "The budget could not be found";
+"errorExistingTransactionDescription" = "The informed transaction already exists in the system";
+"errorNotFoundTransactionDescription" = "The transaction could not be found";
+"errorCantDeleteCategoryDescription" = "The category you are trying to remove is being used in some transaction";
+"errorCantDeleteBudgetDescription" = "The budget you are trying to remove is being used in some transaction";
+"errorExistingBudgetDescription" = "There is already a budget for the informed month";
+"errorCantSaveOnDatabaseDescription" = "The information could not be persisted on the device";
