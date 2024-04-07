@@ -1,6 +1,6 @@
 # Refds Budget
 
-<img src="Assets/SC1.png" width="20%" /> <img src="Assets/SC2.png" width="20%" /> <img src="Assets/SC3.png" width="20%" /> <img src="Assets/SC4.png" width="20%" />
+<img src="Assets/SC1.png" width="23%" /> <img src="Assets/SC2.png" width="23%" /> <img src="Assets/SC3.png" width="23%" /> <img src="Assets/SC4.png" width="23%" />
 
 Budget is the perfect app for those tired of dealing with their finances in a confusing and disorganized manner. With it, you can easily plan your monthly expenses, dividing them into different categories for better tracking and organization.
 
