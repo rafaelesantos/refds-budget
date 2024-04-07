@@ -1,0 +1,50 @@
+{
+  "pins" : [
+    {
+      "identity" : "refds-core-data",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-core-data.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3486a66c286d2decc0a9acb4327fcd276e81b670"
+      }
+    },
+    {
+      "identity" : "refds-design-patterns",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-design-patterns.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "034a47be6809e5a184df07a0c69cb77000603c67"
+      }
+    },
+    {
+      "identity" : "refds-injection",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-injection.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "16e85653c6fe36ec7b22ffb2ba667b286e748bc6"
+      }
+    },
+    {
+      "identity" : "refds-network",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-network.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b1581783a4709b39f13cad219cab36061ca3dd41"
+      }
+    },
+    {
+      "identity" : "refds-shared",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-shared.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4302e031c6143393b6375db098b0fbc96202a87b"
+      }
+    }
+  ],
+  "version" : 2
+}
