@@ -19,14 +19,7 @@ public struct CategoryRowView: View {
             rowTransactions
             rowDescription
         }
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                withAnimation { 
-                    budget = viewData.budget
-                    percentage = viewData.percentage
-                }
-            }
-        }
+        .onAppear { updateStateValue() }
     }
     
     private var rowCategory: some View {
@@ -81,6 +74,15 @@ public struct CategoryRowView: View {
     private var rowDescription: some View {
         if let description = viewData.description, !description.isEmpty {
             RefdsText(description, style: .callout, color: .secondary)
+        }
+    }
+    
+    private func updateStateValue() {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            withAnimation {
+                budget = viewData.budget
+                percentage = viewData.percentage
+            }
         }
     }
 }
