@@ -2,7 +2,7 @@ import Foundation
 import RefdsRedux
 
 public final class AddCategoryReducer: RefdsReduxReducerProtocol {
-    public typealias State = AddCategoryStateProtocol
+    public typealias State = CategoryStateProtocol
     
     public init() {}
     
@@ -10,12 +10,6 @@ public final class AddCategoryReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? AddCategoryAction {
-        case let .updateName(name):
-            state.name = name
-        case let .updateColor(color):
-            state.color = color
-        case let .updateIcon(icon):
-            state.icon = icon
         case let .updateBudgets(budgets):
             state.budgets = budgets
         case let .updateError(error):

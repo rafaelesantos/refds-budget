@@ -3,7 +3,7 @@ import RefdsRedux
 import RefdsShared
 import RefdsBudgetData
 
-public protocol AddBudgetStateProtocol: RefdsReduxState {
+public protocol BudgetStateProtocol: RefdsReduxState {
     var id: UUID { get set }
     var amount: Double { get set }
     var description: String? { get set }
@@ -12,7 +12,7 @@ public protocol AddBudgetStateProtocol: RefdsReduxState {
     var error: RefdsBudgetError? { get set }
 }
 
-public struct AddBudgetState: AddBudgetStateProtocol {
+public struct AddBudgetState: BudgetStateProtocol {
     public var id: UUID
     public var amount: Double
     public var description: String?

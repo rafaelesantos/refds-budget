@@ -4,21 +4,21 @@ import RefdsRedux
 import RefdsShared
 import RefdsBudgetData
 
-public protocol AddCategoryStateProtocol: RefdsReduxState {
+public protocol CategoryStateProtocol: RefdsReduxState {
     var id: UUID { get set }
     var name: String { get set }
     var color: Color { get set }
     var icon: String { get set }
-    var budgets: [AddBudgetStateProtocol] { get set }
+    var budgets: [BudgetStateProtocol] { get set }
     var error: RefdsBudgetError? { get set }
 }
 
-public struct AddCategoryState: AddCategoryStateProtocol {
+public struct AddCategoryState: CategoryStateProtocol {
     public var id: UUID
     public var name: String
     public var color: Color
     public var icon: String
-    public var budgets: [AddBudgetStateProtocol]
+    public var budgets: [BudgetStateProtocol]
     public var error: RefdsBudgetError?
     
     public init(
@@ -26,7 +26,7 @@ public struct AddCategoryState: AddCategoryStateProtocol {
         name: String = "",
         color: Color = .accentColor,
         icon: String = "",
-        budgets: [AddBudgetStateProtocol] = []
+        budgets: [BudgetStateProtocol] = []
     ) {
         self.id = id
         self.name = name

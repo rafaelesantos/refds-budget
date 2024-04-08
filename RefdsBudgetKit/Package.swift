@@ -19,10 +19,11 @@ let package = Package(
         .library(
             name: "RefdsBudgetKit",
             targets: [
+                "RefdsBudgetResource",
                 "RefdsBudgetDomain",
                 "RefdsBudgetData",
                 "RefdsBudgetPresentation",
-                "RefdsBudgetResource",
+                "RefdsBudgetUI"
             ]),
     ],
     dependencies: [
@@ -30,9 +31,11 @@ let package = Package(
         .package(url: "https://github.com/rafaelesantos/refds-network.git", branch: "main"),
         .package(url: "https://github.com/rafaelesantos/refds-core-data.git", branch: "main"),
         .package(url: "https://github.com/rafaelesantos/refds-injection.git", branch: "main"),
-        .package(url: "https://github.com/rafaelesantos/refds-design-patterns.git", branch: "main")
+        .package(url: "https://github.com/rafaelesantos/refds-design-patterns.git", branch: "main"),
+        .package(url: "https://github.com/rafaelesantos/refds-design-system.git", branch: "main")
     ],
     targets: [
+        .target(name: "RefdsBudgetResource"),
         .target(name: "RefdsBudgetDomain", dependencies: [
             .product(name: "RefdsShared", package: "refds-shared")
         ]),
@@ -50,6 +53,10 @@ let package = Package(
             .product(name: "RefdsInjection", package: "refds-injection"),
             .product(name: "RefdsDesignPatterns", package: "refds-design-patterns")
         ]),
-        .target(name: "RefdsBudgetResource")
+        .target(name: "RefdsBudgetUI", dependencies: [
+            "RefdsBudgetPresentation",
+            "RefdsBudgetResource",
+            .product(name: "RefdsUI", package: "refds-design-system")
+        ])
     ]
 )

@@ -4,11 +4,8 @@ import RefdsRedux
 import RefdsBudgetData
 
 public enum AddCategoryAction: RefdsReduxAction {
-    case updateName(String)
-    case updateColor(Color)
-    case updateIcon(String)
-    case updateBudgets([AddBudgetStateProtocol])
+    case updateBudgets([BudgetStateProtocol])
     case updateError(RefdsBudgetError)
+    case save(CategoryStateProtocol)
     case dismiss
-    case save
 }

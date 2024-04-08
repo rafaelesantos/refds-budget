@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "refds-design-system",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-design-system.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6ec0e34309e922643389370db79b3a4bb6be21b8"
+      }
+    },
+    {
       "identity" : "refds-injection",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/rafaelesantos/refds-injection.git",
@@ -42,7 +51,7 @@
       "location" : "https://github.com/rafaelesantos/refds-shared.git",
       "state" : {
         "branch" : "main",
-        "revision" : "4302e031c6143393b6375db098b0fbc96202a87b"
+        "revision" : "c49a3d14ed067c99d76456eae8d9c711d6f3f69e"
       }
     }
   ],

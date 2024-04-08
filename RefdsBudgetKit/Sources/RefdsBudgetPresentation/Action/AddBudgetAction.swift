@@ -3,10 +3,7 @@ import RefdsRedux
 import RefdsBudgetData
 
 public enum AddBudgetAction: RefdsReduxAction {
-    case updateAmount(Double)
-    case updateDescription(String)
-    case updateDate(Date)
     case updateError(RefdsBudgetError)
+    case save(BudgetStateProtocol)
     case dismiss
-    case save
 }
