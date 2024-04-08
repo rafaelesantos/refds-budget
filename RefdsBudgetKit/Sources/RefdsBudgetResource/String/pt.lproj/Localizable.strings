@@ -20,3 +20,7 @@
 "errorExistingBudgetDescription" = "Já existe um orçamento para o mês informado";
 "errorCantSaveOnDatabaseDescription" = "A informação não pôde ser persistida no dispositivo";
 
+// MARK: - Category
+
+"categoryRowSpend" = "Até o momento";
+"categoryRowTransactions" = "Transações";

@@ -1,6 +1,7 @@
 import Foundation
 
 public enum LocalizableKey: String {
+    // MARK: - Error
     case errorExistingCategoryTitle
     case errorNotFoundCategoryTitle
     case errorNotFoundBudgetTitle
@@ -19,4 +20,7 @@ public enum LocalizableKey: String {
     case errorCantDeleteBudgetDescription
     case errorExistingBudgetDescription
     case errorCantSaveOnDatabaseDescription
+    // MARK: - Category
+    case categoryRowSpend
+    case categoryRowTransactions
 }

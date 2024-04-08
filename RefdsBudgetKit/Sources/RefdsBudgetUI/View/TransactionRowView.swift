@@ -1,49 +1,36 @@
 import SwiftUI
 import RefdsUI
+import RefdsBudgetPresentation
 
 public struct TransactionRowView: View {
-    private let icon: String
-    private let color: Color
-    private let amount: Double
-    private let description: String
-    private let date: Date
+    private let viewData: TransactionRowViewData
     
-    public init(
-        icon: String,
-        color: Color,
-        amount: Double,
-        description: String,
-        date: Date
-    ) {
-        self.icon = icon
-        self.color = color
-        self.amount = amount
-        self.description = description
-        self.date = date
+    public init(viewData: TransactionRowViewData) {
+        self.viewData = viewData
     }
     
     public var body: some View {
-        HStack(spacing: .padding(.medium)) {
-            if let icon = RefdsIconSymbol(rawValue: icon) {
+        HStack(alignment: .top, spacing: .padding(.medium)) {
+            if let icon = RefdsIconSymbol(rawValue: viewData.icon) {
                 RefdsIcon(
                     icon,
-                    color: color,
+                    color: viewData.color,
                     size: .padding(.medium)
                 )
                 .frame(width: .padding(.medium), height: .padding(.medium))
-                .padding(.padding(.small))
-                .background(color.opacity(0.2))
+                .padding(10)
+                .background(viewData.color.opacity(0.4))
                 .clipShape(.rect(cornerRadius: .cornerRadius))
             }
             
-            VStack {
+            VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
                 HStack(spacing: .padding(.small)) {
-                    RefdsText(amount.currency(), weight: .bold, lineLimit: 1)
+                    RefdsText(viewData.amount.currency(), weight: .bold, lineLimit: 1)
                     Spacer(minLength: .zero)
-                    RefdsText(date.asString(withDateFormat: .custom("HH:mm")), style: .footnote, color: .secondary)
+                    RefdsText(viewData.date.asString(withDateFormat: .custom(" HH : mm ")), style: .callout, color: .secondary)
                 }
                 
-                RefdsText(description, color: .secondary, lineLimit: 2)
+                RefdsText(viewData.description, style: .callout, color: .secondary)
             }
         }
     }
@@ -52,13 +39,18 @@ public struct TransactionRowView: View {
 #Preview {
     List {
         ForEach((1 ... 5).indices, id: \.self) { _ in
-            TransactionRowView(
-                icon: RefdsIconSymbol.random.rawValue,
-                color: .random,
-                amount: .random(in: 1 ... 1000),
-                description: .someParagraph(),
-                date: .current
-            )
+            Section {
+                ForEach((1 ... .random(in: 1 ... 3)).indices, id: \.self) { _ in
+                    let viewData = TransactionRowViewData(
+                        icon: RefdsIconSymbol.random.rawValue,
+                        color: .random,
+                        amount: .random(in: 1 ... 1000),
+                        description: .someParagraph(),
+                        date: .current
+                    )
+                    TransactionRowView(viewData: viewData)
+                }
+            }
         }
     }
 }
