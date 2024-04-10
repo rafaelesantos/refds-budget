@@ -5,47 +5,64 @@ import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
 
-public final class CategoryMiddleware: RefdsReduxMiddlewareProtocol {
+public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
     @RefdsInjection private var repository: CategoryUseCase
     @RefdsInjection private var adapter: CategoryAdapterProtocol
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<any RefdsReduxState> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
         switch action {
-        case is AddBudgetAction:
-            self.handler(for: action as? AddBudgetAction, on: completion)
-        case is AddCategoryAction:
-            self.handler(for: action as? AddCategoryAction, on: completion)
-        case is CategoriesAction:
-            self.handler(for: action as? CategoriesAction, on: completion)
-        case is AddTransactionAction:
-            self.handler(for: action as? AddTransactionAction, on: completion)
+        case let action as AddBudgetAction:
+            self.handler(for: action, on: completion)
+        case let action as AddCategoryAction:
+            self.handler(for: action, on: completion)
+        case let action as CategoriesAction:
+            self.handler(for: action, on: completion)
+        case let action as AddTransactionAction:
+            self.handler(for: action, on: completion)
         default:
             break
         }
     }
     
     private func handler(
-        for addBudgetAction: AddBudgetAction?,
-        on completion: RefdsReduxMiddlewareCompletion
+        for addBudgetAction: AddBudgetAction,
+        on completion: (AddBudgetAction) -> Void
     ) {
         switch addBudgetAction {
+        case .fetchCategories:
+            let categories = repository.getAllCategories().map { entity in
+                let budgets = repository.getBudgets(by: entity.budgets)
+                return adapter.adapt(category: entity, budgets: budgets)
+            }
+            completion(.updateCategories(categories))
+            
+        case let .fetchBudget(date, id):
+            guard let budget = repository.getBudget(on: id, from: date) else {
+                return completion(.updateBudget(.init(), .zero, ""))
+            }
+            completion(.updateBudget(budget.id, budget.amount, budget.message ?? ""))
+            
         case let .save(budget):
+            guard let category = budget.category else {
+                return completion(.updateError(.notFoundCategory))
+            }
+            
             do {
                 try repository.addBudget(
                     id: budget.id,
                     amount: budget.amount,
                     date: budget.month,
                     message: budget.description,
-                    category: budget.categoryId
+                    category: category.id
                 )
             } catch {
-                return completion(AddBudgetAction.updateError(.existingBudget))
+                return completion(.updateError(.existingBudget))
             }
             
-            guard let category = repository.getCategory(by: budget.categoryId) else {
-                return completion(AddBudgetAction.updateError(.notFoundCategory))
+            guard let category = repository.getCategory(by: category.id) else {
+                return completion(.updateError(.notFoundCategory))
             }
             
             do {
@@ -57,18 +74,18 @@ public final class CategoryMiddleware: RefdsReduxMiddlewareProtocol {
                     icon: category.icon
                 )
             } catch {
-                return completion(AddBudgetAction.updateError(.existingCategory))
+                return completion(.updateError(.existingCategory))
             }
             
-            completion(AddBudgetAction.dismiss)
+            completion(.dismiss)
         default:
             break
         }
     }
     
     private func handler(
-        for addCategoryAction: AddCategoryAction?,
-        on completion: RefdsReduxMiddlewareCompletion
+        for addCategoryAction: AddCategoryAction,
+        on completion: (AddCategoryAction) -> Void
     ) {
         switch addCategoryAction {
         case let .save(category):
@@ -81,18 +98,18 @@ public final class CategoryMiddleware: RefdsReduxMiddlewareProtocol {
                     icon: category.icon
                 )
             } catch {
-                return completion(AddCategoryAction.updateError(.existingCategory))
+                return completion(.updateError(.existingCategory))
             }
             
-            completion(AddCategoryAction.dismiss)
+            completion(.dismiss)
         default:
             break
         }
     }
     
     private func handler(
-        for categoriesAction: CategoriesAction?,
-        on completion: RefdsReduxMiddlewareCompletion
+        for categoriesAction: CategoriesAction,
+        on completion: (CategoriesAction) -> Void
     ) {
         switch categoriesAction {
         case let .fetchCategories(date):
@@ -102,7 +119,7 @@ public final class CategoryMiddleware: RefdsReduxMiddlewareProtocol {
                     return adapter.adapt(category: $0, budgets: budgets)
                 }
                 
-                return completion(CategoriesAction.updateCategories(categories))
+                return completion(.updateCategories(categories))
             }
             
             let categories = repository.getCategories(from: date).map {
@@ -110,15 +127,15 @@ public final class CategoryMiddleware: RefdsReduxMiddlewareProtocol {
                 return adapter.adapt(category: $0, budgets: budgets)
             }
             
-            completion(CategoriesAction.updateCategories(categories))
+            completion(.updateCategories(categories))
         default:
             break
         }
     }
     
     private func handler(
-        for addBudgetAction: AddTransactionAction?,
-        on completion: RefdsReduxMiddlewareCompletion
+        for addBudgetAction: AddTransactionAction,
+        on completion: (AddTransactionAction) -> Void
     ) {
         switch addBudgetAction {
         case let .fetchCategories(date):
@@ -126,7 +143,7 @@ public final class CategoryMiddleware: RefdsReduxMiddlewareProtocol {
                 let budgets = repository.getBudgets(by: $0.budgets)
                 return adapter.adapt(category: $0, budgets: budgets)
             }
-            completion(AddTransactionAction.updateCategories(categories))
+            completion(.updateCategories(categories))
         default:
             break
         }

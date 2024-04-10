@@ -1,12 +1,13 @@
 import SwiftUI
 import RefdsUI
+import RefdsShared
 import RefdsBudgetPresentation
 
 public struct CategoryRowView: View {
     private let viewData: CategoryRowViewData
     
-    @State private var budget: Double = 0
-    @State private var percentage: Double = 0
+    @State private var budget: Double = .zero
+    @State private var percentage: Double = .zero
     
     public init(viewData: CategoryRowViewData) {
         self.viewData = viewData

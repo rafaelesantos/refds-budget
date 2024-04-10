@@ -9,14 +9,14 @@ public final class LocalSettingsRepository: SettingsUseCase {
     
     public init() {}
     
-    public func getSettings() -> RefdsBudgetDomain.SettingsEntity {
+    public func getSettings() -> SettingsEntity {
         let request = SettingsEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         guard let settings = try? database.viewContext.fetch(request).last else {
             let settings = SettingsEntity(context: database.viewContext)
             settings.date = .current
             settings.theme = Color.green.asHex()
-            settings.appearence = 0
+            settings.appearence = .zero
             settings.notifications = true
             settings.reminderNotification = true
             settings.warningNotification = true

@@ -23,4 +23,14 @@ public enum LocalizableKey: String {
     // MARK: - Category
     case categoryRowSpend
     case categoryRowTransactions
+    // MARK: - Add Budget
+    case addBudgetDescriptionBudget
+    case addBudgetDescriptionHeader
+    case addBudgetSelectedMonth
+    case addBudgetSelectedYear
+    case addBudgetDateHeader
+    case addBudgetAdd
+    case addBudgetEmptyCategories
+    case addBudgetSelectedCategory
+    case addBudgetCategoryHeader
 }

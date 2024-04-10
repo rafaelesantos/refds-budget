@@ -1,5 +1,6 @@
 import SwiftUI
 import RefdsUI
+import RefdsShared
 import RefdsBudgetPresentation
 
 public struct TransactionRowView: View {

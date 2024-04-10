@@ -24,3 +24,15 @@
 
 "categoryRowSpend" = "So far";
 "categoryRowTransactions" = "Transactions";
+
+// MARK: - Add Budget
+
+"addBudgetDescriptionBudget" = "Budget Description";
+"addBudgetDescriptionHeader" = "Description";
+"addBudgetSelectedMonth" = "Select the month";
+"addBudgetSelectedYear" = "Select the year";
+"addBudgetDateHeader" = "Date";
+"addBudgetAdd" = "Save budget";
+"addBudgetEmptyCategories" = "There are no categories for this period";
+"addBudgetSelectedCategory" = "Select the category";
+"addBudgetCategoryHeader" = "Category";

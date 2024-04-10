@@ -20,7 +20,19 @@
 "errorExistingBudgetDescription" = "Já existe um orçamento para o mês informado";
 "errorCantSaveOnDatabaseDescription" = "A informação não pôde ser persistida no dispositivo";
 
-// MARK: - Category
+// MARK: - Category Row
 
 "categoryRowSpend" = "Até o momento";
 "categoryRowTransactions" = "Transações";
+
+// MARK: - Add Budget
+
+"addBudgetDescriptionBudget" = "Descrição do orçamento";
+"addBudgetDescriptionHeader" = "Descrição";
+"addBudgetSelectedMonth" = "Selecione o mês";
+"addBudgetSelectedYear" = "Selecione o ano";
+"addBudgetDateHeader" = "Data";
+"addBudgetAdd" = "Salvar orçamento";
+"addBudgetEmptyCategories" = "Não há categorias para esse período";
+"addBudgetSelectedCategory" = "Selecione a categoria";
+"addBudgetCategoryHeader" = "Categoria";

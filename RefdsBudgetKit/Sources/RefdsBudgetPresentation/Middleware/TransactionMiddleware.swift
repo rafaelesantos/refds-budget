@@ -5,15 +5,15 @@ import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
 
-public final class TransactionMiddleware: RefdsReduxMiddlewareProtocol {
+public final class TransactionMiddleware<State>: RefdsReduxMiddlewareProtocol {
     @RefdsInjection private var repository: TransactionUseCase
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<any RefdsReduxState> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
         switch action {
-        case is AddTransactionAction:
-            self.handler(for: action as? AddTransactionAction, on: completion)
+        case let action as AddTransactionAction:
+            self.handler(for: action, on: completion)
         default:
             break
         }
@@ -21,8 +21,8 @@ public final class TransactionMiddleware: RefdsReduxMiddlewareProtocol {
     }
     
     private func handler(
-        for addBudgetAction: AddTransactionAction?,
-        on completion: RefdsReduxMiddlewareCompletion
+        for addBudgetAction: AddTransactionAction,
+        on completion: (AddTransactionAction) -> Void
     ) {
         switch addBudgetAction {
         case let .fetchRemaining(category, date):
@@ -30,17 +30,17 @@ public final class TransactionMiddleware: RefdsReduxMiddlewareProtocol {
                 on: category.id,
                 from: date,
                 format: .monthYear
-            ).map { $0.amount }.reduce(0, +)
+            ).map { $0.amount }.reduce(.zero, +)
             
             let remaining = (category.budgets.first(where: {
                 $0.month.asString(withDateFormat: .monthYear) == date.asString(withDateFormat: .monthYear)
-            })?.amount ?? 0) - amount
+            })?.amount ?? .zero) - amount
             
-            completion(AddTransactionAction.updateRemaining(remaining))
+            completion(.updateRemaining(remaining))
             
         case let .save(transaction):
             guard let category = transaction.category else {
-                return completion(AddTransactionAction.updateError(.notFoundCategory))
+                return completion(.updateError(.notFoundCategory))
             }
             
             do {
@@ -52,10 +52,10 @@ public final class TransactionMiddleware: RefdsReduxMiddlewareProtocol {
                     amount: transaction.amount
                 )
             } catch {
-                return completion(AddTransactionAction.updateError(.existingTransaction))
+                return completion(.updateError(.existingTransaction))
             }
             
-            completion(AddTransactionAction.dismiss)
+            completion(.dismiss)
             
         default:
             break

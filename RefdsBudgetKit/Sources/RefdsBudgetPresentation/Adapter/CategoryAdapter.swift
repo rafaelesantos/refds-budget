@@ -5,7 +5,7 @@ import RefdsBudgetDomain
 
 public protocol CategoryAdapterProtocol {
     func adapt(category: CategoryEntity, budgets: [BudgetEntity]) -> CategoryStateProtocol
-    func adapt(budget: BudgetEntity) -> BudgetStateProtocol
+    func adapt(budget: BudgetEntity, categories: [CategoryEntity]) -> BudgetStateProtocol
 }
 
 public final class CategoryAdapter: CategoryAdapterProtocol {
@@ -17,17 +17,19 @@ public final class CategoryAdapter: CategoryAdapterProtocol {
             name: category.name,
             color: Color(hex: category.color),
             icon: category.icon,
-            budgets: budgets.map { adapt(budget: $0) }
+            budgets: budgets.map { adapt(budget: $0, categories: []) }
         )
     }
     
-    public func adapt(budget: BudgetEntity) -> BudgetStateProtocol {
-        AddBudgetState(
+    public func adapt(budget: BudgetEntity, categories: [CategoryEntity]) -> BudgetStateProtocol {
+        let categories = categories.map { adapt(category: $0, budgets: []) }
+        return AddBudgetState(
             id: budget.id,
             amount: budget.amount,
-            description: budget.message,
+            description: budget.message ?? "",
             month: budget.date.date,
-            categoryId: budget.category
+            category: categories.first,
+            categories: categories
         )
     }
 }
