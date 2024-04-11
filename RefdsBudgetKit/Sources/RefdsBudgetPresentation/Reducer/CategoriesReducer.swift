@@ -21,9 +21,10 @@ public final class CategoriesReducer: RefdsReduxReducerProtocol {
         case let .updateCurrentValues(currentValues):
             state.isLoading = false
             state.currentValues = currentValues
-        case .editCategory,
-                .editBudget,
-                .categoryDetail,
+        case .fetchCurrentValues,
+                .showEditCategory,
+                .showEditBudget,
+                .showCategoryDetail,
                 .addCategory,
                 .addBudget:
             break

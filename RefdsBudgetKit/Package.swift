@@ -49,6 +49,7 @@ let package = Package(
         .target(name: "RefdsBudgetPresentation", dependencies: [
             "RefdsBudgetDomain",
             "RefdsBudgetData",
+            "RefdsBudgetResource",
             .product(name: "RefdsShared", package: "refds-shared"),
             .product(name: "RefdsInjection", package: "refds-injection"),
             .product(name: "RefdsDesignPatterns", package: "refds-design-patterns")

@@ -4,25 +4,24 @@ import RefdsShared
 import RefdsBudgetDomain
 
 public protocol CategoryAdapterProtocol {
-    func adapt(category: CategoryEntity, budgets: [BudgetEntity]) -> CategoryStateProtocol
+    func adaptCategory(entity: CategoryEntity) -> CategoryStateProtocol
     func adapt(budget: BudgetEntity, categories: [CategoryEntity]) -> BudgetStateProtocol
 }
 
 public final class CategoryAdapter: CategoryAdapterProtocol {
     public init() {}
     
-    public func adapt(category: CategoryEntity, budgets: [BudgetEntity]) -> CategoryStateProtocol {
+    public func adaptCategory(entity: CategoryEntity) -> CategoryStateProtocol {
         AddCategoryState(
-            id: category.id,
-            name: category.name,
-            color: Color(hex: category.color),
-            icon: category.icon,
-            budgets: budgets.map { adapt(budget: $0, categories: []) }
+            id: entity.id,
+            name: entity.name,
+            color: Color(hex: entity.color),
+            icon: entity.icon
         )
     }
     
     public func adapt(budget: BudgetEntity, categories: [CategoryEntity]) -> BudgetStateProtocol {
-        let categories = categories.map { adapt(category: $0, budgets: []) }
+        let categories = categories.map { adaptCategory(entity: $0) }
         return AddBudgetState(
             id: budget.id,
             amount: budget.amount,

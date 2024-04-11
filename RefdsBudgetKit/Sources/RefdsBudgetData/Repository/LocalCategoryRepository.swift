@@ -66,6 +66,15 @@ public final class LocalCategoryRepository: CategoryUseCase {
         }.first
     }
     
+    public func getBudgets(from date: Date) -> [BudgetEntity] {
+        let budgets: [BudgetEntity] = getAllBudgets()
+        return budgets.filter { budget in
+            let budgetDate = budget.date.asString(withDateFormat: .monthYear)
+            let currentDate = date.asString(withDateFormat: .monthYear)
+            return budgetDate == currentDate
+        }
+    }
+    
     public func removeCategory(id: UUID) throws {
         guard let category = getCategory(by: id) else { throw RefdsBudgetError.notFoundCategory }
         getBudgets(on: category.id).forEach { database.viewContext.delete($0) }

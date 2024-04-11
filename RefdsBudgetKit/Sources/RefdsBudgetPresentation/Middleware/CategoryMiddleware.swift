@@ -4,9 +4,11 @@ import RefdsRedux
 import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
+import RefdsBudgetResource
 
 public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
-    @RefdsInjection private var repository: CategoryUseCase
+    @RefdsInjection private var categoryRepository: CategoryUseCase
+    @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var adapter: CategoryAdapterProtocol
     
     public init() {}
@@ -32,14 +34,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         switch addBudgetAction {
         case .fetchCategories:
-            let categories = repository.getAllCategories().map { entity in
-                let budgets = repository.getBudgets(by: entity.budgets)
-                return adapter.adapt(category: entity, budgets: budgets)
+            let categories = categoryRepository.getAllCategories().map { entity in
+                adapter.adaptCategory(entity: entity)
             }
             completion(.updateCategories(categories))
             
         case let .fetchBudget(date, id):
-            guard let budget = repository.getBudget(on: id, from: date) else {
+            guard let budget = categoryRepository.getBudget(on: id, from: date) else {
                 return completion(.updateBudget(.init(), .zero, ""))
             }
             completion(.updateBudget(budget.id, budget.amount, budget.message ?? ""))
@@ -50,7 +51,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             }
             
             do {
-                try repository.addBudget(
+                try categoryRepository.addBudget(
                     id: budget.id,
                     amount: budget.amount,
                     date: budget.month,
@@ -61,12 +62,12 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 return completion(.updateError(.existingBudget))
             }
             
-            guard let category = repository.getCategory(by: category.id) else {
+            guard let category = categoryRepository.getCategory(by: category.id) else {
                 return completion(.updateError(.notFoundCategory))
             }
             
             do {
-                try repository.addCategory(
+                try categoryRepository.addCategory(
                     id: category.id,
                     name: category.name,
                     color: Color(hex: category.color),
@@ -88,20 +89,32 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: (AddCategoryAction) -> Void
     ) {
         switch addCategoryAction {
+        case let .fetchCategory(category):
+            var category = category
+            guard let entity = categoryRepository.getCategory(by: category.id) else {
+                category.showSaveButton = true
+                return completion(.updateCategroy(category))
+            }
+            let adapted = adapter.adaptCategory(entity: entity)
+            category = adapted
+            category.showSaveButton = false
+            completion(.updateCategroy(category))
+            
         case let .save(category):
+            let budgets = categoryRepository.getBudgets(on: category.id)
             do {
-                try repository.addCategory(
+                try categoryRepository.addCategory(
                     id: category.id,
                     name: category.name,
                     color: category.color,
-                    budgets: category.budgets.map { $0.id },
+                    budgets: budgets.map { $0.id },
                     icon: category.icon
                 )
             } catch {
                 return completion(.updateError(.existingCategory))
             }
             
-            completion(.dismiss)
+            if category.showSaveButton { completion(.dismiss) }
         default:
             break
         }
@@ -114,17 +127,42 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         switch categoriesAction {
         case let .fetchCategories(date):
             guard let date = date else {
-                let categories = repository.getAllCategories().map {
-                    let budgets = repository.getBudgets(by: $0.budgets)
-                    return adapter.adapt(category: $0, budgets: budgets)
+                let categories = categoryRepository.getAllCategories().map {
+                    let budgets = categoryRepository.getBudgets(on: $0.id)
+                    let budgetsAmount = budgets.map { $0.amount }.reduce(.zero, +)
+                    let transactions = transactionRepository.getTransactions(on: $0.id)
+                    let spend = transactions.map { $0.amount }.reduce(.zero, +)
+                    let percentage = spend / (budgetsAmount == .zero ? 1 : budgetsAmount)
+                    return CategoryRowViewData(
+                        icon: $0.icon,
+                        name: $0.name,
+                        description: nil,
+                        color: Color(hex: $0.color),
+                        budget: budgetsAmount,
+                        percentage: percentage,
+                        transactionsAmount: transactions.count,
+                        spend: spend
+                    )
                 }
                 
                 return completion(.updateCategories(categories))
             }
             
-            let categories = repository.getCategories(from: date).map {
-                let budgets = repository.getBudgets(by: $0.budgets)
-                return adapter.adapt(category: $0, budgets: budgets)
+            let categories = categoryRepository.getCategories(from: date).map {
+                let budget = categoryRepository.getBudget(on: $0.id, from: date)
+                let transactions = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear)
+                let spend = transactions.map { $0.amount }.reduce(.zero, +)
+                let percentage = spend / ((budget?.amount ?? 1) == .zero ? 1 : (budget?.amount ?? 1))
+                return CategoryRowViewData(
+                    icon: $0.icon,
+                    name: $0.name,
+                    description: budget?.message,
+                    color: Color(hex: $0.color),
+                    budget: budget?.amount ?? .zero,
+                    percentage: percentage,
+                    transactionsAmount: transactions.count,
+                    spend: spend
+                )
             }
             
             completion(.updateCategories(categories))
@@ -139,9 +177,8 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         switch addBudgetAction {
         case let .fetchCategories(date):
-            let categories = repository.getCategories(from: date).map {
-                let budgets = repository.getBudgets(by: $0.budgets)
-                return adapter.adapt(category: $0, budgets: budgets)
+            let categories = categoryRepository.getCategories(from: date).map {
+                adapter.adaptCategory(entity: $0)
             }
             completion(.updateCategories(categories))
         default:

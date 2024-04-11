@@ -10,11 +10,11 @@ public final class AddCategoryReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? AddCategoryAction {
-        case let .updateBudgets(budgets):
-            state.budgets = budgets
+        case let .updateCategroy(category):
+            state = category
         case let .updateError(error):
             state.error = error
-        case .dismiss, .save, nil:
+        case .fetchCategory, .dismiss, .save, nil:
             break
         }
         

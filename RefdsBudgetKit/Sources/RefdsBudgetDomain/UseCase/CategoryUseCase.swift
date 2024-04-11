@@ -10,6 +10,7 @@ public protocol CategoryUseCase {
     
     func getBudget(by id: UUID) -> BudgetEntity?
     func getBudgets(by ids: [UUID]) -> [BudgetEntity]
+    func getBudgets(from date: Date) -> [BudgetEntity]
     func getBudgets(on category: UUID) -> [BudgetEntity]
     func getBudget(on category: UUID, from date: Date) -> BudgetEntity?
     

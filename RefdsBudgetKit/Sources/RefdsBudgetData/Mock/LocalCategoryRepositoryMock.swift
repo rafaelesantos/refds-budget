@@ -41,6 +41,10 @@ public final class LocalCategoryRepositoryMock: CategoryUseCase {
         BudgetEntityMock.value(for: database.viewContext)
     }
     
+    public func getBudgets(from date: Date) -> [BudgetEntity] {
+        (1 ... 20).map { _ in BudgetEntityMock.value(for: database.viewContext) }
+    }
+    
     public func removeCategory(id: UUID) throws {}
     
     public func removeBudget(id: UUID) throws {}

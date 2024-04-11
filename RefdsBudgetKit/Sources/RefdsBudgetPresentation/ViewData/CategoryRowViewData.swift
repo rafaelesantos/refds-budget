@@ -1,15 +1,26 @@
 import Foundation
 import SwiftUI
 
-public struct CategoryRowViewData {
-    public let icon: String
-    public let name: String
-    public let description: String?
-    public let color: Color
-    public let budget: Double
-    public let percentage: Double
-    public let transactionsAmount: Int
-    public let spend: Double
+public protocol CategoryRowViewDataProtocol {
+    var icon: String { get }
+    var name: String { get }
+    var description: String? { get }
+    var color: Color { get }
+    var budget: Double { get }
+    var percentage: Double { get }
+    var transactionsAmount: Int { get }
+    var spend: Double { get }
+}
+
+public struct CategoryRowViewData: CategoryRowViewDataProtocol {
+    public var icon: String
+    public var name: String
+    public var description: String?
+    public var color: Color
+    public var budget: Double
+    public var percentage: Double
+    public var transactionsAmount: Int
+    public var spend: Double
     
     public init(
         icon: String,

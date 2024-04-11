@@ -18,8 +18,27 @@ public extension RefdsReduxStore {
             reducer: reducer,
             state: state,
             middlewares: [
-                CategoryMiddleware<State>().middleware
-                //TransactionMiddleware<State>().middleware
+                CategoryMiddleware<State>().middleware,
+                TransactionMiddleware<State>().middleware
+            ]
+        )
+    }
+    
+    static func production(reducer: @escaping RefdsReduxReducer<State>, state: State) -> RefdsReduxStore<State> {
+        RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
+        RefdsContainer.register(type: CategoryUseCase.self) { LocalCategoryRepository() }
+        RefdsContainer.register(type: TransactionUseCase.self) { LocalTransactionRepository() }
+        RefdsContainer.register(type: SettingsUseCase.self) { LocalSettingsRepository() }
+        RefdsContainer.register(type: BubbleUseCase.self) { LocalBubbleRepository() }
+        RefdsContainer.register(type: CategoryAdapterProtocol.self) { CategoryAdapter() }
+        RefdsContainer.register(type: TransactionAdapterProtocol.self) { TransactionAdapter() }
+        
+        return .init(
+            reducer: reducer,
+            state: state,
+            middlewares: [
+                CategoryMiddleware<State>().middleware,
+                TransactionMiddleware<State>().middleware
             ]
         )
     }

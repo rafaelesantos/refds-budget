@@ -1,12 +1,6 @@
 import SwiftUI
-
 import RefdsUI
 import RefdsRedux
-import RefdsShared
-import RefdsInjection
-
-import RefdsBudgetDomain
-import RefdsBudgetData
 import RefdsBudgetPresentation
 
 public struct AddBudgetView: View {
@@ -57,11 +51,12 @@ public struct AddBudgetView: View {
             sectionDescription
             sectionDate
             sectionCategory
+            sectionSaveButton
         }
         .refdsDismissesKeyboad()
-        .overlay(alignment: .bottom) { saveButton }
         .onAppear { action(.fetchCategories) }
         .refdsToast(item: $state.error)
+        .frame(maxWidth: 500)
     }
     
     private var sectionAmount: some View {
@@ -130,9 +125,10 @@ public struct AddBudgetView: View {
     private var rowYear: some View {
         Picker(selection: bindingYear) {
             let currentYear = Date().asString(withDateFormat: .year).asInt ?? .zero
-            let years = ((currentYear - 5) ... (currentYear + 5)).map { $0 }
+            let padding = Int(CGFloat.padding(.extraSmall))
+            let years = ((currentYear - padding) ... (currentYear + padding)).map { $0 }
             ForEach(years, id: \.self) {
-                RefdsText("\($0)")
+                RefdsText($0.asString)
                     .tag($0)
             }
         } label: {
@@ -183,14 +179,16 @@ public struct AddBudgetView: View {
         }
     }
     
-    private var saveButton: some View {
-        RefdsButton(
-            .localizable(by: .addBudgetAdd),
-            isDisable: !state.canSave
-        ) {
-            action(.save(state))
+    private var sectionSaveButton: some View {
+        Section {} footer: {
+            RefdsButton(
+                .localizable(by: .addBudgetAdd),
+                isDisable: !state.canSave
+            ) {
+                action(.save(state))
+            }
+            .padding(.horizontal, -20)
         }
-        .padding(.padding(.large))
     }
 }
 

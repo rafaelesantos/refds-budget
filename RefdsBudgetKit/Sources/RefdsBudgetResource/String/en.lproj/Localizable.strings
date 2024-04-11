@@ -22,7 +22,6 @@
 
 // MARK: - Category
 
-"categoryRowSpend" = "So far";
 "categoryRowTransactions" = "Transactions";
 
 // MARK: - Add Budget
@@ -36,3 +35,22 @@
 "addBudgetEmptyCategories" = "There are no categories for this period";
 "addBudgetSelectedCategory" = "Select the category";
 "addBudgetCategoryHeader" = "Category";
+
+// MARK: - Add Category
+
+"addCategoryInputName" = "Enter the name";
+"addCategoryColorHeader" = "Color";
+"addCategoryInputHex" = "Enter the hex";
+"addCategoryIconsHeader" = "Icons";
+"addCategorySelectedIcon" = "Selected";
+"addCategoryShowLessIcons" = "Show fewer icons";
+"addCategoryShowMoreIcons" = "Show more icons";
+"addCategorySaveCategoryButton" = "Save category";
+
+// MARK: - Categories
+
+"categoriesNavigationTitle" = "Categories";
+"categoriesCurrentValueTitle" = "Total Transactions";
+"categoriesCurrentValueSubtitle" = "Total Budget";
+"categoriesPeriod" = "Period";
+"categoriesStatus" = "Status";

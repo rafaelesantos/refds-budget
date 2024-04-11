@@ -7,19 +7,16 @@ import RefdsBudgetPresentation
 import RefdsBudgetUI
 
 struct ContentView: View {
-    @StateObject private var store: RefdsReduxStore<BudgetStateProtocol>
-    
-    init() {
-        RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
-        RefdsContainer.register(type: CategoryUseCase.self) { LocalCategoryRepository() }
-        RefdsContainer.register(type: CategoryAdapterProtocol.self) { CategoryAdapter() }
-        
-        _store = StateObject(wrappedValue: RefdsReduxStore(reducer: AddBudgetReducer().reduce, state: AddBudgetState(), middlewares: [CategoryMiddleware().middleware]))
-    }
+    @StateObject private var store: RefdsReduxStore<CategoriesStateProtocol> = .production(
+        reducer: CategoriesReducer().reduce,
+        state: CategoriesState()
+    )
     
     var body: some View {
-        AddBudgetView(state: $store.state) {
-            store.dispatch(action: $0)
+        NavigationStack {
+            CategoriesView(state: $store.state) {
+                store.dispatch(action: $0)
+            }
         }
     }
 }

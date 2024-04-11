@@ -21,7 +21,6 @@ public enum LocalizableKey: String {
     case errorExistingBudgetDescription
     case errorCantSaveOnDatabaseDescription
     // MARK: - Category
-    case categoryRowSpend
     case categoryRowTransactions
     // MARK: - Add Budget
     case addBudgetDescriptionBudget
@@ -33,4 +32,19 @@ public enum LocalizableKey: String {
     case addBudgetEmptyCategories
     case addBudgetSelectedCategory
     case addBudgetCategoryHeader
+    // MARK: - Add Category
+    case addCategoryInputName
+    case addCategoryColorHeader
+    case addCategoryInputHex
+    case addCategoryIconsHeader
+    case addCategorySelectedIcon
+    case addCategoryShowLessIcons
+    case addCategoryShowMoreIcons
+    case addCategorySaveCategoryButton
+    // MARK: - Categories
+    case categoriesNavigationTitle
+    case categoriesCurrentValueTitle
+    case categoriesCurrentValueSubtitle
+    case categoriesPeriod
+    case categoriesStatus
 }

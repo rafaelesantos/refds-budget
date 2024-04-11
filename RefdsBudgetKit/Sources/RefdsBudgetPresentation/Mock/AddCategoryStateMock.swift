@@ -7,8 +7,9 @@ public struct AddCategoryStateMock: CategoryStateProtocol {
     public var name: String = .someWord()
     public var color: Color = .random
     public var icon: String = "dollarsign"
-    public var budgets: [BudgetStateProtocol] = (1 ... 4).map { _ in AddBudgetStateMock() }
+    public var showSaveButton: Bool = .random()
     public var error: RefdsBudgetError? = Bool.random() ? nil : .existingCategory
+    public var canSave: Bool = true
     
     public init() {}
 }

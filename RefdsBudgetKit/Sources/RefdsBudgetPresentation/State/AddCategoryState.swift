@@ -9,7 +9,8 @@ public protocol CategoryStateProtocol: RefdsReduxState {
     var name: String { get set }
     var color: Color { get set }
     var icon: String { get set }
-    var budgets: [BudgetStateProtocol] { get set }
+    var showSaveButton: Bool { get set }
+    var canSave: Bool { get }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -18,20 +19,24 @@ public struct AddCategoryState: CategoryStateProtocol {
     public var name: String
     public var color: Color
     public var icon: String
-    public var budgets: [BudgetStateProtocol]
+    public var showSaveButton: Bool
     public var error: RefdsBudgetError?
+    
+    public var canSave: Bool {
+        name.count > 2
+    }
     
     public init(
         id: UUID = .init(),
         name: String = "",
         color: Color = .accentColor,
-        icon: String = "",
-        budgets: [BudgetStateProtocol] = []
+        icon: String = RefdsIconSymbol.dollarsign.rawValue,
+        showSaveButton: Bool = true
     ) {
         self.id = id
         self.name = name
         self.color = color
         self.icon = icon
-        self.budgets = budgets
+        self.showSaveButton = showSaveButton
     }
 }
