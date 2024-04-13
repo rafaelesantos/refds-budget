@@ -92,14 +92,15 @@ public final class LocalCategoryRepository: CategoryUseCase {
         guard let category = getCategory(by: id) else {
             let category = CategoryEntity(context: database.viewContext)
             category.id = id
-            category.name = name.uppercased()
+            category.name = name.capitalized
             category.color = color.asHex()
             category.budgets = budgets
+            category.icon = icon
             try database.viewContext.save()
             return
         }
         category.id = id
-        category.name = name.uppercased()
+        category.name = name.capitalized
         category.color = color.asHex()
         category.budgets = budgets
         category.icon = icon

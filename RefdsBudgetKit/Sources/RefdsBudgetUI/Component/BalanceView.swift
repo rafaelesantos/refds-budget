@@ -1,14 +1,15 @@
 import SwiftUI
 import RefdsUI
+import RefdsShared
 import RefdsBudgetPresentation
 
-public struct CurrentValueView: View {
-    private let viewData: CurrentValuesStateProtocol
+public struct BalanceView: View {
+    private let viewData: BalanceStateProtocol
     
     @State private var expense: Double = 0
     @State private var percentage: Double = 0
     
-    public init(viewData: CurrentValuesStateProtocol) {
+    public init(viewData: BalanceStateProtocol) {
         self.viewData = viewData
     }
     
@@ -46,6 +47,7 @@ public struct CurrentValueView: View {
             }
             
             ProgressView(value: percentage > 1 ? 1 : percentage, total: 1)
+                .tint(percentage.riskColor)
                 .scaleEffect(x: 1, y: 1.5, anchor: .center)
                 .padding(.vertical, .padding(.extraSmall))
             
@@ -70,7 +72,10 @@ public struct CurrentValueView: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .padding(.padding(.extraSmall))
         .onAppear { updateStateValues() }
+        .onChange(of: viewData.expense) { updateStateValues() }
+        .onChange(of: viewData.spendPercentage) { updateStateValues() }
     }
     
     private func updateStateValues() {
@@ -84,7 +89,7 @@ public struct CurrentValueView: View {
 }
 
 #Preview {
-    CurrentValueView(viewData: CurrentValuesStateMock())
+    BalanceView(viewData: BalanceStateMock())
         .refdsCard()
         .padding(.padding(.extraLarge))
 }

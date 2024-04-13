@@ -50,7 +50,29 @@
 // MARK: - Categories
 
 "categoriesNavigationTitle" = "Categories";
-"categoriesCurrentValueTitle" = "Total Transactions";
-"categoriesCurrentValueSubtitle" = "Total Budget";
+"categoriesBalanceTitle" = "Total Transactions";
+"categoriesBalanceSubtitle" = "Total Budget";
 "categoriesPeriod" = "Period";
-"categoriesStatus" = "Status";
+"categoriesBalance" = "Balance";
+"categoriesEmptyCategoriesTitle" = "Create a category for your expenses";
+"categoriesEmptyCategoriesDescription" = "It seems you don't have any categories for your expenses yet. To keep your finances organized, we recommend creating one now.";
+"categoriesEmptyCategoriesButton" = "Add category";
+"categoriesEmptyBudgetsTitle" = "Create a budget for this month";
+"categoriesEmptyBudgetsDescription" = "It seems you haven't created a budget for your expenses this month yet. To ensure you stay within your financial limits, we suggest creating one now.";
+"categoriesEmptyBudgetsButton" = "Add budget";
+"categoriesEditBudget" = "Edit Budget";
+"categoriesEditCategory" = "Edit Category";
+"categoriesRemoveBudget" = "Remove Budget";
+"categoriesRemoveCategory" = "Remove Category";
+"categoriesApplyFilters" = "Apply Filters";
+"categoriesDate" = "Date";
+"categoriesFilter" = "Filters";
+"categoriesLegend" = "Legend";
+"categoriesGreenLegendTitle" = "Within Budget";
+"categoriesGreenLegendDescription" = "You are managing your budget wisely. Keep it up!";
+"categoriesYellowLegendTitle" = "Keep an Eye";
+"categoriesYellowLegendDescription" = "Be careful! You are approaching the limit. Monitor your spending closely.";
+"categoriesOrangeLegendTitle" = "High Alert";
+"categoriesOrangeLegendDescription" = "You are in the red! Almost reaching the limit. It's time to reassess expenses.";
+"categoriesRedLegendTitle" = "Budget Exceeded";
+"categoriesRedLegendDescription" = "You have exceeded the limit! It's time to rethink your spending habits.";

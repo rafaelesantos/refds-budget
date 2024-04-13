@@ -7,13 +7,21 @@ public struct AddBudgetView: View {
     @Binding private var state: BudgetStateProtocol
     private let action: (AddBudgetAction) -> Void
     
+    private var bindingAmount: Binding<Double> {
+        Binding { state.amount } set: {
+            state.amount = $0
+        }
+    }
+    
     private var bindingMonth: Binding<String> {
         Binding {
             state.month.asString(withDateFormat: .month)
         } set: {
-            let year = state.month.asString(withDateFormat: .year).asInt ?? .zero
-            state.month = ("\($0)/\(year)").asDate(withFormat: .fullMonthYear) ?? .current
-            action(.fetchBudget(state.month, state.category?.id ?? .init()))
+            if let year = state.month.asString(withDateFormat: .year).asInt,
+               let date = ("\($0)/\(year)").asDate(withFormat: .fullMonthYear) {
+                state.month = date
+                action(.fetchBudget(date, state.category?.id ?? .init()))
+            }
         }
     }
     
@@ -22,8 +30,10 @@ public struct AddBudgetView: View {
             state.month.asString(withDateFormat: .year).asInt ?? .zero
         } set: {
             let month = state.month.asString(withDateFormat: .month)
-            state.month = ("\(month)/\($0)").asDate(withFormat: .fullMonthYear) ?? .current
-            action(.fetchBudget(state.month, state.category?.id ?? .init()))
+            if let date = ("\(month)/\($0)").asDate(withFormat: .fullMonthYear) {
+                state.month = date
+                action(.fetchBudget(date, state.category?.id ?? .init()))
+            }
         }
     }
     
@@ -31,9 +41,10 @@ public struct AddBudgetView: View {
         Binding {
             state.category?.name ?? .localizable(by: .addBudgetEmptyCategories)
         } set: { name in
-            let category = state.categories.first(where: { $0.name == name })
-            state.category = category
-            action(.fetchBudget(state.month, state.category?.id ?? .init()))
+            if let category = state.categories.first(where: { $0.name.lowercased() == name.lowercased() }) {
+                state.category = category
+                action(.fetchBudget(state.month, category.id))
+            }
         }
     }
     
@@ -53,10 +64,18 @@ public struct AddBudgetView: View {
             sectionCategory
             sectionSaveButton
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .refreshable { action(.fetchCategories(state.month)) }
+        .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
-        .onAppear { action(.fetchCategories) }
         .refdsToast(item: $state.error)
-        .frame(maxWidth: 500)
+    }
+    
+    private func fetchDataOnAppear() {
+        guard state.category == nil else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            action(.fetchCategories(state.month))
+        }
     }
     
     private var sectionAmount: some View {
@@ -175,7 +194,6 @@ public struct AddBudgetView: View {
             } label: {
                 RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
             }
-            .onAppear { action(.fetchBudget(state.month, state.category?.id ?? .init())) }
         }
     }
     
@@ -194,13 +212,10 @@ public struct AddBudgetView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStore.mock(
-            reducer: AddBudgetReducer().reduce,
-            state: AddBudgetStateMock()
-        )
+        @StateObject private var store = RefdsReduxStoreFactory(mock: true).mock
         
         var body: some View {
-            AddBudgetView(state: $store.state) {
+            AddBudgetView(state: $store.state.addBudgetState) {
                 store.dispatch(action: $0)
             }
         }

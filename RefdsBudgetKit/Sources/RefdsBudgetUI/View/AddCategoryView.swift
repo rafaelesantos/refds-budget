@@ -13,11 +13,8 @@ public struct AddCategoryView: View {
     private var bindingHexColor: Binding<String> {
         Binding {
             state.color.asHex()
-        } set: { color in
-            withAnimation {
-                state.color = Color(hex: color)
-            }
-            if !state.showSaveButton { action(.save(state)) }
+        } set: {
+            state.color = Color(hex: $0)
         }
     }
     
@@ -26,9 +23,6 @@ public struct AddCategoryView: View {
             state.name
         } set: {
             state.name = $0
-            if state.canSave, !state.showSaveButton {
-                action(.save(state))
-            }
         }
     }
     
@@ -49,13 +43,14 @@ public struct AddCategoryView: View {
         }
         .refdsDismissesKeyboad()
         .onAppear { action(.fetchCategory(state)) }
+        .refdsToast(item: $state.error)
     }
     
     private var sectionNameView: some View {
         Section {} footer: {
             RefdsTextField(
                 .localizable(by: .addCategoryInputName),
-                text: $state.name,
+                text: bindingName,
                 axis: .vertical,
                 style: .largeTitle,
                 color: .primary,
@@ -88,9 +83,7 @@ public struct AddCategoryView: View {
                     let colors = Color.Default.allCases.sorted(by: { $0.id < $1.id })
                     ForEach(colors, id: \.self) { color in
                         RefdsButton {
-                            withAnimation {
-                                state.color = color.rawValue
-                            }
+                            state.color = color.rawValue
                         } label: {
                             bubbleColorView(for: color.rawValue)
                         }
@@ -114,6 +107,7 @@ public struct AddCategoryView: View {
                     .frame(width: 10, height: 10)
             }
         }
+        .animation(.default, value: color)
         .padding(.vertical, .padding(.extraSmall))
     }
     
@@ -168,10 +162,7 @@ public struct AddCategoryView: View {
             let selectedIcon = RefdsIconSymbol(rawValue: state.icon)
             ForEach(icons, id: \.self) { icon in
                 RefdsButton {
-                    withAnimation {
-                        state.icon = icon.rawValue
-                    }
-                    if !state.showSaveButton { action(.save(state)) }
+                    state.icon = icon.rawValue
                 } label: {
                     RefdsIcon(
                         icon,
@@ -183,6 +174,7 @@ public struct AddCategoryView: View {
                     .background(icon == selectedIcon ? state.color.opacity(0.2) : nil)
                     .clipShape(.rect(cornerRadius: 8))
                     .padding(.padding(.extraSmall))
+                    .animation(.default, value: state.icon)
                 }
                 .buttonStyle(.plain)
             }
@@ -211,31 +203,25 @@ public struct AddCategoryView: View {
         [.init(.adaptive(minimum: 50, maximum: 100))]
     }
     
-    @ViewBuilder
     private var sectionSaveButtonView: some View {
-        if state.showSaveButton {
-            Section {} footer: {
-                RefdsButton(
-                    .localizable(by: .addCategorySaveCategoryButton),
-                    isDisable: !state.canSave
-                ) {
-                    action(.save(state))
-                }
-                .padding(.horizontal, -20)
+        Section {} footer: {
+            RefdsButton(
+                .localizable(by: .addCategorySaveCategoryButton),
+                isDisable: !state.canSave
+            ) {
+                action(.save(state))
             }
+            .padding(.horizontal, -20)
         }
     }
 }
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStore.mock(
-            reducer: AddCategoryReducer().reduce,
-            state: AddCategoryStateMock()
-        )
+        @StateObject private var store = RefdsReduxStoreFactory(mock: true).mock
         
         var body: some View {
-            AddCategoryView(state: $store.state) {
+            AddCategoryView(state: $store.state.addCategoryState) {
                 store.dispatch(action: $0)
             }
         }

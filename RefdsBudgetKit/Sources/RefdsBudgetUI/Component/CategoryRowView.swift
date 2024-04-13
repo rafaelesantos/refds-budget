@@ -20,6 +20,8 @@ public struct CategoryRowView: View {
             rowDescription
         }
         .onAppear { updateStateValue() }
+        .onChange(of: viewData.budget) { updateStateValue() }
+        .onChange(of: viewData.percentage) { updateStateValue() }
     }
     
     private var rowCategory: some View {
@@ -32,7 +34,7 @@ public struct CategoryRowView: View {
                 )
                 .frame(width: .padding(.medium), height: .padding(.medium))
                 .padding(10)
-                .background(viewData.color.opacity(0.4))
+                .background(viewData.color.opacity(0.25))
                 .clipShape(.rect(cornerRadius: .cornerRadius))
             }
             
@@ -46,6 +48,7 @@ public struct CategoryRowView: View {
                 
                 HStack(spacing: .padding(.small)) {
                     ProgressView(value: percentage > 1 ? 1 : percentage, total: 1)
+                        .tint(percentage.riskColor)
                         .scaleEffect(x: 1, y: 1.5, anchor: .center)
                     RefdsText(viewData.percentage.percent(), style: .callout, color: .secondary)
                 }
@@ -57,14 +60,13 @@ public struct CategoryRowView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsText(viewData.transactionsAmount.asString, style: .footnote, color: .secondary, weight: .bold)
                 .padding(.padding(.extraSmall))
-                .frame(width: 40)
-                .background(.secondary.opacity(0.1))
+                .frame(width: 35)
+                .background(.secondary.opacity(0.05))
                 .clipShape(.rect(cornerRadius: 5))
             RefdsText(.localizable(by: .categoryRowTransactions), style: .callout)
         
             Spacer(minLength: .zero)
             RefdsText(viewData.spend.currency(), style: .callout, color: .secondary)
-            
         }
     }
     

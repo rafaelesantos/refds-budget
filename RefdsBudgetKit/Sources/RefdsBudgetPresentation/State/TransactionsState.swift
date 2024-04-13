@@ -14,6 +14,6 @@ public struct TransactionsState: TransactionsStateProtocol {
     public var selectedCategories: [CategoryStateProtocol]
     public var categories: [CategoryStateProtocol]
     public var transaction: [TransactionStateProtocol]
-    public var currentValues: CurrentValuesStateProtocol
+    public var balance: BalanceStateProtocol
     public var error: RefdsBudgetError?
 }

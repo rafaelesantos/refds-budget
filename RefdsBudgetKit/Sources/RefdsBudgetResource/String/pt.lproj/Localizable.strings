@@ -50,7 +50,29 @@
 // MARK: - Categories
 
 "categoriesNavigationTitle" = "Categorias";
-"categoriesCurrentValueTitle" = "Transações totais";
-"categoriesCurrentValueSubtitle" = "Orçamento total";
+"categoriesBalanceTitle" = "Transações totais";
+"categoriesBalanceSubtitle" = "Orçamento total";
 "categoriesPeriod" = "Perído";
-"categoriesStatus" = "Status";
+"categoriesBalance" = "Saldo";
+"categoriesEmptyCategoriesTitle" = "Crie uma categoria para suas despesas";
+"categoriesEmptyCategoriesDescription" = "Parece que você ainda não tem nenhuma categoria para suas despesas. Para manter suas finanças organizadas, recomendamos que você crie uma agora.";
+"categoriesEmptyCategoriesButton" = "Adicionar categoria";
+"categoriesEmptyBudgetsTitle" = "Crie um budget para este mês";
+"categoriesEmptyBudgetsDescription" = "Parece que você ainda não criou um budget para suas despesas deste mês. Para garantir que você fique dentro do seu limite financeiro, sugerimos que crie um agora.";
+"categoriesEmptyBudgetsButton" = "Adicionar orçamento";
+"categoriesEditBudget" = "Editar Orçamento";
+"categoriesEditCategory" = "Editar Categoria";
+"categoriesRemoveBudget" = "Remover Orçamento";
+"categoriesRemoveCategory" = "Remover Categoria";
+"categoriesApplyFilters" = "Aplicar Filtros";
+"categoriesDate" = "Data";
+"categoriesFilter" = "Filtros";
+"categoriesLegend" = "Legenda";
+"categoriesGreenLegendTitle" = "Dentro do Orçamento";
+"categoriesGreenLegendDescription" = "Você está administrando seu orçamento com sabedoria. Continue assim!";
+"categoriesYellowLegendTitle" = "Fique de Olho";
+"categoriesYellowLegendDescription" = "Cuidado! Você está se aproximando do limite. Monitore seus gastos com atenção.";
+"categoriesOrangeLegendTitle" = "Atenção Máxima";
+"categoriesOrangeLegendDescription" = "Você está no vermelho! Quase atingindo o limite. Hora de reavaliar as despesas.";
+"categoriesRedLegendTitle" = "Orçamento Estourado";
+"categoriesRedLegendDescription" = "Você ultrapassou o limite! É hora de repensar seus hábitos de consumo.";

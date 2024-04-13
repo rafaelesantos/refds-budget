@@ -2,6 +2,8 @@ import Foundation
 import SwiftUI
 
 public protocol CategoryRowViewDataProtocol {
+    var categoryId: UUID { get }
+    var budgetId: UUID { get }
     var icon: String { get }
     var name: String { get }
     var description: String? { get }
@@ -13,6 +15,8 @@ public protocol CategoryRowViewDataProtocol {
 }
 
 public struct CategoryRowViewData: CategoryRowViewDataProtocol {
+    public var categoryId: UUID
+    public var budgetId: UUID
     public var icon: String
     public var name: String
     public var description: String?
@@ -23,6 +27,8 @@ public struct CategoryRowViewData: CategoryRowViewDataProtocol {
     public var spend: Double
     
     public init(
+        categoryId: UUID,
+        budgetId: UUID,
         icon: String,
         name: String,
         description: String?,
@@ -32,6 +38,8 @@ public struct CategoryRowViewData: CategoryRowViewDataProtocol {
         transactionsAmount: Int,
         spend: Double
     ) {
+        self.categoryId = categoryId
+        self.budgetId = budgetId
         self.icon = icon
         self.name = name
         self.description = description

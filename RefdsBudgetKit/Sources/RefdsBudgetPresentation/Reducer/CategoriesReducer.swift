@@ -9,24 +9,30 @@ public final class CategoriesReducer: RefdsReduxReducerProtocol {
     public var reduce: RefdsReduxReducer<State> = { state, action in
         var state = state
         
-        switch action as! CategoriesAction {
-        case .fetchCategories:
+        switch action as? CategoriesAction {
+        case .fetchData:
             state.isLoading = true
+            
         case let .updateError(error):
             state.isLoading = false
             state.error = error
-        case let .updateCategories(categories):
+            
+        case let .updateCategories(categories, isEmptyCategories):
             state.isLoading = false
             state.categories = categories
-        case let .updateCurrentValues(currentValues):
+            state.isEmptyCategories = isEmptyCategories
+            
+        case let .updateBalance(balance):
             state.isLoading = false
-            state.currentValues = currentValues
-        case .fetchCurrentValues,
-                .showEditCategory,
-                .showEditBudget,
+            state.balance = balance
+            
+        case .removeBudget,
+                .removeCategory,
+                .fetchCategoryForEdit,
+                .fetchBudgetForEdit,
                 .showCategoryDetail,
                 .addCategory,
-                .addBudget:
+                .addBudget, nil:
             break
         }
         

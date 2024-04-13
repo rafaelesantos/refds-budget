@@ -9,7 +9,9 @@ public protocol CategoriesStateProtocol: RefdsReduxState {
     var isFilterEnable: Bool { get set }
     var date: Date { get set }
     var categories: [CategoryRowViewDataProtocol] { get set }
-    var currentValues: CurrentValuesStateProtocol? { get set }
+    var isEmptyCategories: Bool { get set }
+    var isEmptyBudgets: Bool { get }
+    var balance: BalanceStateProtocol? { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -19,8 +21,11 @@ public struct CategoriesState: CategoriesStateProtocol {
     public var isFilterEnable: Bool
     public var date: Date
     public var categories: [CategoryRowViewDataProtocol]
-    public var currentValues: CurrentValuesStateProtocol?
+    public var isEmptyCategories: Bool
+    public var balance: BalanceStateProtocol?
     public var error: RefdsBudgetError?
+    
+    public var isEmptyBudgets: Bool { categories.isEmpty }
     
     public init(
         isLoading: Bool = true,
@@ -28,13 +33,15 @@ public struct CategoriesState: CategoriesStateProtocol {
         isFilterEnable: Bool = true,
         date: Date = .current,
         categories: [CategoryRowViewDataProtocol] = [],
-        currentValues: CurrentValuesStateProtocol? = nil
+        isEmptyCategories: Bool = true,
+        balance: BalanceStateProtocol? = nil
     ) {
         self.isLoading = isLoading
         self.searchText = searchText
         self.isFilterEnable = isFilterEnable
         self.date = date
         self.categories = categories
-        self.currentValues = currentValues
+        self.isEmptyCategories = isEmptyCategories
+        self.balance = balance
     }
 }

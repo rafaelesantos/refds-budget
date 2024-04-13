@@ -43,8 +43,30 @@ public enum LocalizableKey: String {
     case addCategorySaveCategoryButton
     // MARK: - Categories
     case categoriesNavigationTitle
-    case categoriesCurrentValueTitle
-    case categoriesCurrentValueSubtitle
+    case categoriesBalanceTitle
+    case categoriesBalanceSubtitle
     case categoriesPeriod
-    case categoriesStatus
+    case categoriesBalance
+    case categoriesEmptyCategoriesTitle
+    case categoriesEmptyCategoriesDescription
+    case categoriesEmptyCategoriesButton
+    case categoriesEmptyBudgetsTitle
+    case categoriesEmptyBudgetsDescription
+    case categoriesEmptyBudgetsButton
+    case categoriesEditBudget
+    case categoriesEditCategory
+    case categoriesRemoveBudget
+    case categoriesRemoveCategory
+    case categoriesApplyFilters
+    case categoriesDate
+    case categoriesFilter
+    case categoriesLegend
+    case categoriesGreenLegendTitle
+    case categoriesGreenLegendDescription
+    case categoriesYellowLegendTitle
+    case categoriesYellowLegendDescription
+    case categoriesOrangeLegendTitle
+    case categoriesOrangeLegendDescription
+    case categoriesRedLegendTitle
+    case categoriesRedLegendDescription
 }

@@ -7,7 +7,9 @@ public struct CategoriesStateMock: CategoriesStateProtocol {
     public var isFilterEnable: Bool = .random()
     public var date: Date = .current
     public var categories: [CategoryRowViewDataProtocol] = (1 ... 4).map { _ in CategoryRowViewDataMock() }
-    public var currentValues: CurrentValuesStateProtocol? = CurrentValuesStateMock()
+    public var isEmptyCategories: Bool = false
+    public var isEmptyBudgets: Bool = false
+    public var balance: BalanceStateProtocol? = BalanceStateMock()
     public var error: RefdsBudgetError? = Bool.random() ? nil : .notFoundCategory
     
     public init() {}

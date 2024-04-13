@@ -16,37 +16,6 @@ public final class TransactionMiddleware<State>: RefdsReduxMiddlewareProtocol {
         switch action {
         case let action as AddTransactionAction:
             self.handler(for: action, on: completion)
-        case let action as CategoriesAction:
-            self.handler(for: action, on: completion)
-        default:
-            break
-        }
-    }
-    
-    private func handler(
-        for categoriesAction: CategoriesAction,
-        on completion: (CategoriesAction) -> Void
-    ) {
-        switch categoriesAction {
-        case let .fetchCurrentValues(date):
-            guard let date = date else { 
-                let expense = transactionRepository.getTransactions().map { $0.amount }.reduce(.zero, +)
-                let budget = categoryRepository.getAllBudgets().map { $0.amount }.reduce(.zero, +)
-                let currentValue = CurrentValuesState(expense: expense, income: .zero, budget: budget)
-                return completion(.updateCurrentValues(currentValue))
-            }
-            
-            let expense = transactionRepository.getTransactions(from: date, format: .monthYear).map { $0.amount }.reduce(.zero, +)
-            let budget = categoryRepository.getBudgets(from: date).map { $0.amount }.reduce(.zero, +)
-            let currentValue = CurrentValuesState(
-                title: .localizable(by: .categoriesCurrentValueTitle),
-                subtitle: .localizable(by: .categoriesCurrentValueSubtitle),
-                expense: expense,
-                income: .zero,
-                budget: budget
-            )
-            completion(.updateCurrentValues(currentValue))
-        
         default:
             break
         }

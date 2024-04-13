@@ -4,14 +4,22 @@ import RefdsShared
 import RefdsBudgetDomain
 
 public protocol CategoryAdapterProtocol {
-    func adaptCategory(entity: CategoryEntity) -> CategoryStateProtocol
-    func adapt(budget: BudgetEntity, categories: [CategoryEntity]) -> BudgetStateProtocol
+    func adapt(entity: CategoryEntity) -> CategoryStateProtocol
+    func adapt(
+        entity: CategoryEntity,
+        budgetId: UUID,
+        budgetDescription: String?,
+        budget: Double,
+        percentage: Double,
+        transactionsAmount: Int,
+        spend: Double
+    ) -> CategoryRowViewDataProtocol
 }
 
 public final class CategoryAdapter: CategoryAdapterProtocol {
     public init() {}
     
-    public func adaptCategory(entity: CategoryEntity) -> CategoryStateProtocol {
+    public func adapt(entity: CategoryEntity) -> CategoryStateProtocol {
         AddCategoryState(
             id: entity.id,
             name: entity.name,
@@ -20,15 +28,26 @@ public final class CategoryAdapter: CategoryAdapterProtocol {
         )
     }
     
-    public func adapt(budget: BudgetEntity, categories: [CategoryEntity]) -> BudgetStateProtocol {
-        let categories = categories.map { adaptCategory(entity: $0) }
-        return AddBudgetState(
-            id: budget.id,
-            amount: budget.amount,
-            description: budget.message ?? "",
-            month: budget.date.date,
-            category: categories.first,
-            categories: categories
+    public func adapt(
+        entity: CategoryEntity,
+        budgetId: UUID,
+        budgetDescription: String?,
+        budget: Double,
+        percentage: Double,
+        transactionsAmount: Int,
+        spend: Double
+    ) -> CategoryRowViewDataProtocol {
+        CategoryRowViewData(
+            categoryId: entity.id,
+            budgetId: budgetId,
+            icon: entity.icon,
+            name: entity.name,
+            description: budgetDescription,
+            color: Color(hex: entity.color),
+            budget: budget,
+            percentage: percentage,
+            transactionsAmount: transactionsAmount,
+            spend: spend
         )
     }
 }
