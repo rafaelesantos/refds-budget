@@ -3,13 +3,13 @@ import RefdsUI
 import RefdsShared
 import RefdsBudgetPresentation
 
-public struct BalanceView: View {
-    private let viewData: BalanceStateProtocol
+public struct BalanceRowView: View {
+    private let viewData: BalanceRowViewDataProtocol
     
     @State private var expense: Double = 0
     @State private var percentage: Double = 0
     
-    public init(viewData: BalanceStateProtocol) {
+    public init(viewData: BalanceRowViewDataProtocol) {
         self.viewData = viewData
     }
     
@@ -39,14 +39,13 @@ public struct BalanceView: View {
                 RefdsText(
                     viewData.spendPercentage.percent(),
                     style: .title3,
-                    color: .secondary,
-                    weight: .bold,
+                    weight: .light,
                     alignment: .center
                 )
                 .padding(.bottom, 3)
             }
             
-            ProgressView(value: percentage > 1 ? 1 : percentage, total: 1)
+            ProgressView(value: percentage, total: 1)
                 .tint(percentage.riskColor)
                 .scaleEffect(x: 1, y: 1.5, anchor: .center)
                 .padding(.vertical, .padding(.extraSmall))
@@ -72,7 +71,7 @@ public struct BalanceView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.padding(.extraSmall))
+        .padding(.vertical, .padding(.extraSmall))
         .onAppear { updateStateValues() }
         .onChange(of: viewData.expense) { updateStateValues() }
         .onChange(of: viewData.spendPercentage) { updateStateValues() }
@@ -82,14 +81,14 @@ public struct BalanceView: View {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             withAnimation {
                 expense = viewData.expense
-                percentage = viewData.spendPercentage
+                percentage = viewData.spendPercentage > 1 ? 1 : viewData.spendPercentage
             }
         }
     }
 }
 
 #Preview {
-    BalanceView(viewData: BalanceStateMock())
+    BalanceRowView(viewData: BalanceRowViewDataMock())
         .refdsCard()
         .padding(.padding(.extraLarge))
 }

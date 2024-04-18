@@ -4,14 +4,8 @@ import RefdsRedux
 import RefdsBudgetPresentation
 
 public struct AddBudgetView: View {
-    @Binding private var state: BudgetStateProtocol
+    @Binding private var state: AddBudgetStateProtocol
     private let action: (AddBudgetAction) -> Void
-    
-    private var bindingAmount: Binding<Double> {
-        Binding { state.amount } set: {
-            state.amount = $0
-        }
-    }
     
     private var bindingMonth: Binding<String> {
         Binding {
@@ -49,7 +43,7 @@ public struct AddBudgetView: View {
     }
     
     public init(
-        state: Binding<BudgetStateProtocol>,
+        state: Binding<AddBudgetStateProtocol>,
         action: @escaping (AddBudgetAction) -> Void
     ) {
         self._state = state
@@ -64,11 +58,11 @@ public struct AddBudgetView: View {
             sectionCategory
             sectionSaveButton
         }
-        .navigationBarTitleDisplayMode(.inline)
         .refreshable { action(.fetchCategories(state.month)) }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
+        .overlay(alignment: .bottom) { saveButton.padding(20).background() }
     }
     
     private func fetchDataOnAppear() {
@@ -79,7 +73,7 @@ public struct AddBudgetView: View {
     }
     
     private var sectionAmount: some View {
-        Section {} footer: {
+        RefdsSection {} footer: {
             VStack(spacing: .zero) {
                 RefdsText(
                     state.month.asString(withDateFormat: .custom("MMMM, yyyy")).uppercased(),
@@ -97,13 +91,23 @@ public struct AddBudgetView: View {
     }
     
     private var sectionDescription: some View {
-        Section {
+        RefdsSection {
+            #if os(macOS)
             RefdsTextField(
                 .localizable(by: .addBudgetDescriptionBudget),
                 text: $state.description,
                 axis: .vertical,
                 style: .callout
             )
+            #else
+            RefdsTextField(
+                .localizable(by: .addBudgetDescriptionBudget),
+                text: $state.description,
+                axis: .vertical,
+                style: .callout,
+                textInputAutocapitalization: .sentences
+            )
+            #endif
         } header: {
             RefdsText(
                 .localizable(by: .addBudgetDescriptionHeader),
@@ -114,7 +118,7 @@ public struct AddBudgetView: View {
     }
     
     private var sectionDate: some View {
-        Section {
+        RefdsSection {
             rowMonth
             rowYear
         } header: {
@@ -159,7 +163,7 @@ public struct AddBudgetView: View {
     }
     
     private var sectionCategory: some View {
-        Section {
+        RefdsSection {
             rowEmptyCategories
             rowCategories
         } header: {
@@ -198,14 +202,18 @@ public struct AddBudgetView: View {
     }
     
     private var sectionSaveButton: some View {
-        Section {} footer: {
-            RefdsButton(
-                .localizable(by: .addBudgetAdd),
-                isDisable: !state.canSave
-            ) {
-                action(.save(state))
-            }
-            .padding(.horizontal, -20)
+        RefdsSection {} footer: {
+            saveButton
+                .opacity(0)
+        }
+    }
+    
+    private var saveButton: some View {
+        RefdsButton(
+            .localizable(by: .addBudgetAdd),
+            isDisable: !state.canSave
+        ) {
+            action(.save(state))
         }
     }
 }

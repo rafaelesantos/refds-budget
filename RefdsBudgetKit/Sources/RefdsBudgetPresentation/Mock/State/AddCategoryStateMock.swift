@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import RefdsBudgetData
 
-public struct AddCategoryStateMock: CategoryStateProtocol {
+public struct AddCategoryStateMock: AddCategoryStateProtocol {
     public var id: UUID = .init()
     public var name: String = .someWord()
     public var color: Color = .random

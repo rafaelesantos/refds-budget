@@ -2,7 +2,7 @@ import Foundation
 import RefdsRedux
 
 public final class AddTransactionReducer: RefdsReduxReducerProtocol {
-    public typealias State = TransactionStateProtocol
+    public typealias State = AddTransactionStateProtocol
     
     public init() {}
     
@@ -10,13 +10,16 @@ public final class AddTransactionReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? AddTransactionAction {
-        case let .updateCategories(categories):
+        case let .updateCategories(categories, isEmptyCategories):
             state.categories = categories
-        case let .updateRemaining(remaining):
-            state.remaining = remaining
+            state.category = categories.first
+            state.isEmptyCategories = isEmptyCategories
+            if let category = categories.first {
+                state.remaining = category.budget - (category.spend + state.amount)
+            }
         case let .updateError(error):
             state.error = error
-        case .dismiss, .save, .fetchRemaining, .fetchCategories, nil:
+        case .dismiss, .save, .fetchCategories, .addCategory, .addBudget, nil:
             break
         }
         

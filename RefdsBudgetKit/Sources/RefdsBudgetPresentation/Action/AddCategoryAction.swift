@@ -4,9 +4,9 @@ import RefdsRedux
 import RefdsBudgetData
 
 public enum AddCategoryAction: RefdsReduxAction {
-    case updateCategroy(CategoryStateProtocol)
+    case updateCategroy(AddCategoryStateProtocol)
     case updateError(RefdsBudgetError)
-    case save(CategoryStateProtocol)
-    case fetchCategory(CategoryStateProtocol)
+    case save(AddCategoryStateProtocol)
+    case fetchCategory(AddCategoryStateProtocol)
     case dismiss
 }

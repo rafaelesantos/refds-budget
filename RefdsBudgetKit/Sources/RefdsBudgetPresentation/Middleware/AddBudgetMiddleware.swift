@@ -60,7 +60,7 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func save(
-        _ budget: BudgetStateProtocol,
+        _ budget: AddBudgetStateProtocol,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
         guard let category = budget.category else {

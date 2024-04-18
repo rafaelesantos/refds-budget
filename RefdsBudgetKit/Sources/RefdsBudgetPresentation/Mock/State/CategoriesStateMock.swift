@@ -9,7 +9,7 @@ public struct CategoriesStateMock: CategoriesStateProtocol {
     public var categories: [CategoryRowViewDataProtocol] = (1 ... 4).map { _ in CategoryRowViewDataMock() }
     public var isEmptyCategories: Bool = false
     public var isEmptyBudgets: Bool = false
-    public var balance: BalanceStateProtocol? = BalanceStateMock()
+    public var balance: BalanceRowViewDataProtocol? = BalanceRowViewDataMock()
     public var error: RefdsBudgetError? = Bool.random() ? nil : .notFoundCategory
     
     public init() {}

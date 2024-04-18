@@ -4,7 +4,7 @@ import RefdsRedux
 import RefdsShared
 import RefdsBudgetData
 
-public protocol CategoryStateProtocol: RefdsReduxState {
+public protocol AddCategoryStateProtocol: RefdsReduxState {
     var id: UUID { get set }
     var name: String { get set }
     var color: Color { get set }
@@ -13,7 +13,7 @@ public protocol CategoryStateProtocol: RefdsReduxState {
     var error: RefdsBudgetError? { get set }
 }
 
-public struct AddCategoryState: CategoryStateProtocol {
+public struct AddCategoryState: AddCategoryStateProtocol {
     public var id: UUID
     public var name: String
     public var color: Color

@@ -20,6 +20,11 @@
 "errorExistingBudgetDescription" = "Já existe um orçamento para o mês informado";
 "errorCantSaveOnDatabaseDescription" = "A informação não pôde ser persistida no dispositivo";
 
+// MARK: - Loading Row
+
+"loadinginRowTitle" = "Aguarde um Momento";
+"loadinginRowDescription" = "Enquanto os dados estão sendo carregados, estamos preparando tudo para você.";
+
 // MARK: - Category Row
 
 "categoryRowTransactions" = "Transações";
@@ -33,7 +38,7 @@
 "addBudgetDateHeader" = "Data";
 "addBudgetAdd" = "Salvar orçamento";
 "addBudgetEmptyCategories" = "Não há categorias para esse período";
-"addBudgetSelectedCategory" = "Selecione a categoria";
+"addBudgetSelectedCategory" = "Selecione";
 "addBudgetCategoryHeader" = "Categoria";
 
 // MARK: - Add Category
@@ -76,3 +81,43 @@
 "categoriesOrangeLegendDescription" = "Você está no vermelho! Quase atingindo o limite. Hora de reavaliar as despesas.";
 "categoriesRedLegendTitle" = "Orçamento Estourado";
 "categoriesRedLegendDescription" = "Você ultrapassou o limite! É hora de repensar seus hábitos de consumo.";
+"categoriesChartHeader" = "Gráfico";
+
+// MARK: - Category
+
+"categoryBalanceTitle" = "Transações em %@";
+"categoryBalanceSubtitle" = "Orçamento em %@";
+"categoryBudgetsHeader" = "Orçamentos";
+"categoryTransactionsHeader" = "Transações";
+
+// MARK: - Empty Budget
+
+"emptyTitle" = "Dados Indisponíveis";
+"emptyDescriptions" = "Não encontramos nenhum dado com as informações solicitadas. Por favor, tente novamente mais tarde ou revise os critérios de busca.";
+"emptyBudgetsTitle" = "Budgets Indisponíveis";
+"emptyTransactionsTitle" = "Transações Indisponíveis";
+
+// MARK: - Item Navigation
+
+"itemNavigationCategories" = "Categorias";
+"itemNavigationHome" = "Início";
+"itemNavigationTransactions" = "Transações";
+"itemNavigationSettings" = "Ajustes";
+
+// MARK: - Add Transaction
+
+"addTransactionRemaining" = "Restante";
+"addTransactionSaveButton" = "Salvar transação";
+"addTransactionNavigationTitle" = "Transação";
+"addTransactionDescriptionPrompt" = "Informe uma descrição para sua despesa";
+
+// MARK: - Transactions
+
+"transactionsCopyHeader" = "Total de %d transações para o período de %@ à %@\n\n";
+"transactionsCopyFooter" = "TOTAL: %@";
+"transactionsRemoveTransactions" = "Remover";
+"transactionsCopyTransactions" = "Copiar";
+"transactionsNewTransactions" = "Adicionar";
+"transactionsMoreMultiMenuHeader" = "%d Transações Selecionadas";
+"transactionsMoreMenuHeader" = "Transações";
+"transactionsAddTransaction" = "Adicionar transação";

@@ -30,7 +30,8 @@ public final class CategoriesReducer: RefdsReduxReducerProtocol {
                 .removeCategory,
                 .fetchCategoryForEdit,
                 .fetchBudgetForEdit,
-                .showCategoryDetail,
+                .fetchBalance,
+                .showCategory,
                 .addCategory,
                 .addBudget, nil:
             break

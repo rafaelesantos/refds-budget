@@ -32,7 +32,7 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func fetchCategory(
-        with state: CategoryStateProtocol,
+        with state: AddCategoryStateProtocol,
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
         guard let entity = categoryRepository.getCategory(by: state.id) else {
@@ -43,7 +43,7 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func save(
-        _ category: CategoryStateProtocol,
+        _ category: AddCategoryStateProtocol,
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
         let budgets = categoryRepository.getBudgets(on: category.id)

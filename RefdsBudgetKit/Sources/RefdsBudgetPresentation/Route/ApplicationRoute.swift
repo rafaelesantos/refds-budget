@@ -6,6 +6,8 @@ import RefdsInjection
 public enum ApplicationRoute: RefdsRoutableRedux {
     case addBudget
     case addCategory
+    case category
+    case addTransaction
     
     public var navigationType: RefdsNavigationType {
         .push
@@ -34,6 +36,8 @@ public enum ApplicationRoute: RefdsRoutableRedux {
             switch self {
             case .addBudget: AnyView(viewFactory.makeAddBudgetView(state: state.addBudgetState, action: action))
             case .addCategory: AnyView(viewFactory.makeAddCategoryView(state: state.addCategoryState, action: action))
+            case .category: AnyView(viewFactory.makeCategoryView(state: state.categoryState, action: action))
+            case .addTransaction: AnyView(viewFactory.makeAddTransactionView(state: state.addTransaction, action: action))
             }
         }
     }

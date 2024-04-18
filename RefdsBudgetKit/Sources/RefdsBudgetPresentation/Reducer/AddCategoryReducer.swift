@@ -2,7 +2,7 @@ import Foundation
 import RefdsRedux
 
 public final class AddCategoryReducer: RefdsReduxReducerProtocol {
-    public typealias State = CategoryStateProtocol
+    public typealias State = AddCategoryStateProtocol
     
     public init() {}
     

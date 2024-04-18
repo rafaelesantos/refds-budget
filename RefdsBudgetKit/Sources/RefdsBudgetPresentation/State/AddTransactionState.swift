@@ -3,33 +3,47 @@ import RefdsRedux
 import RefdsShared
 import RefdsBudgetData
 
-public protocol TransactionStateProtocol: RefdsReduxState {
+public protocol AddTransactionStateProtocol: RefdsReduxState {
     var id: UUID { get set }
     var amount: Double { get set }
     var description: String { get set }
-    var category: CategoryStateProtocol? { get set }
-    var categories: [CategoryStateProtocol] { get set }
+    var category: CategoryRowViewDataProtocol? { get set }
+    var categories: [CategoryRowViewDataProtocol] { get set }
     var remaining: Double? { get set }
     var date: Date { get set }
+    var canSave: Bool { get }
+    var isEmptyCategories: Bool { get set }
+    var isEmptyBudgets: Bool { get }
     var error: RefdsBudgetError? { get set }
 }
 
-public struct AddTransactionState: TransactionStateProtocol {
+public struct AddTransactionState: AddTransactionStateProtocol {
     public var id: UUID
     public var amount: Double
     public var description: String
-    public var category: CategoryStateProtocol?
-    public var categories: [CategoryStateProtocol]
+    public var category: CategoryRowViewDataProtocol?
+    public var categories: [CategoryRowViewDataProtocol]
     public var remaining: Double?
     public var date: Date
     public var error: RefdsBudgetError?
+    public var isEmptyCategories: Bool = false
+    
+    public var canSave: Bool {
+        amount > 0 &&
+        description.isEmpty == false &&
+        category != nil
+    }
+    
+    public var isEmptyBudgets: Bool {
+        categories.isEmpty
+    }
     
     public init(
         id: UUID = .init(),
         amount: Double = .zero,
         description: String = "",
-        category: CategoryStateProtocol? = nil,
-        categories: [CategoryStateProtocol] = [],
+        category: CategoryRowViewDataProtocol? = nil,
+        categories: [CategoryRowViewDataProtocol] = [],
         remaining: Double? = nil,
         date: Date = .current,
         error: RefdsBudgetError? = nil

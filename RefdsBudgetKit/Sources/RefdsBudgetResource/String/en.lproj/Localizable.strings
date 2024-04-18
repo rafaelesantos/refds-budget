@@ -20,6 +20,11 @@
 "errorExistingBudgetDescription" = "There is already a budget for the informed month";
 "errorCantSaveOnDatabaseDescription" = "The information could not be persisted on the device";
 
+// MARK: - Loading Row
+
+"loadinginRowTitle" = "Please Wait";
+"loadinginRowDescription" = "While the data is being loaded, we’re preparing everything for you.";
+
 // MARK: - Category
 
 "categoryRowTransactions" = "Transactions";
@@ -33,7 +38,7 @@
 "addBudgetDateHeader" = "Date";
 "addBudgetAdd" = "Save budget";
 "addBudgetEmptyCategories" = "There are no categories for this period";
-"addBudgetSelectedCategory" = "Select the category";
+"addBudgetSelectedCategory" = "Select";
 "addBudgetCategoryHeader" = "Category";
 
 // MARK: - Add Category
@@ -76,3 +81,43 @@
 "categoriesOrangeLegendDescription" = "You are in the red! Almost reaching the limit. It's time to reassess expenses.";
 "categoriesRedLegendTitle" = "Budget Exceeded";
 "categoriesRedLegendDescription" = "You have exceeded the limit! It's time to rethink your spending habits.";
+"categoriesChartHeader" = "Chart";
+
+// MARK: - Category
+
+"categoryBalanceTitle" = "Transactions in %@";
+"categoryBalanceSubtitle" = "Budget in %@";
+"categoryBudgetsHeader" = "Budgets";
+"categoryTransactionsHeader" = "Transactions";
+
+// MARK: - Empty Budget
+
+"emptyTitle" = "Data Unavailable";
+"emptyDescriptions" = "No data found with the requested information. Please try again later or revise your search criteria.";
+"emptyBudgetsTitle" = "Budgets Unavailable";
+"emptyTransactionsTitle" = "Transactions Unavailable";
+
+// MARK: - Item Navigation
+
+"itemNavigationCategories" = "Categories";
+"itemNavigationHome" = "Home";
+"itemNavigationTransactions" = "Transactions";
+"itemNavigationSettings" = "Settings";
+
+// MARK: - Add Transaction
+
+"addTransactionRemaining" = "Remaining";
+"addTransactionSaveButton" = "Save transaction";
+"addTransactionNavigationTitle" = "Transaction";
+"addTransactionDescriptionPrompt" = "Provide a description for your expense";
+
+// MARK: - Transactions
+
+"transactionsCopyHeader" = "Total of %d transactions for the period from %@ to %@\n\n";
+"transactionsCopyFooter" = "TOTAL: %@";
+"transactionsRemoveTransactions" = "Remove";
+"transactionsCopyTransactions" = "Copy";
+"transactionsNewTransactions" = "Add";
+"transactionsMoreMultiMenuHeader" = "%d Transactions Selected";
+"transactionsMoreMenuHeader" = "Transactions";
+"transactionsAddTransaction" = "Add transaction";

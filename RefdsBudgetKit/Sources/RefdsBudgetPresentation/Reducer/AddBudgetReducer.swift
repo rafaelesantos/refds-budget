@@ -2,7 +2,7 @@ import Foundation
 import RefdsRedux
 
 public final class AddBudgetReducer: RefdsReduxReducerProtocol {
-    public typealias State = BudgetStateProtocol
+    public typealias State = AddBudgetStateProtocol
     
     public init() {}
     

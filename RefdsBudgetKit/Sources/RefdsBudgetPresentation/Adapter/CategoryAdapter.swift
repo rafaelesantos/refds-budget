@@ -4,7 +4,7 @@ import RefdsShared
 import RefdsBudgetDomain
 
 public protocol CategoryAdapterProtocol {
-    func adapt(entity: CategoryEntity) -> CategoryStateProtocol
+    func adapt(entity: CategoryEntity) -> AddCategoryStateProtocol
     func adapt(
         entity: CategoryEntity,
         budgetId: UUID,
@@ -19,7 +19,7 @@ public protocol CategoryAdapterProtocol {
 public final class CategoryAdapter: CategoryAdapterProtocol {
     public init() {}
     
-    public func adapt(entity: CategoryEntity) -> CategoryStateProtocol {
+    public func adapt(entity: CategoryEntity) -> AddCategoryStateProtocol {
         AddCategoryState(
             id: entity.id,
             name: entity.name,

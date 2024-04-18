@@ -1,6 +1,6 @@
 import Foundation
 
-public struct BalanceStateMock: BalanceStateProtocol {
+public struct BalanceRowViewDataMock: BalanceRowViewDataProtocol {
     public var title: String? = .someWord()
     public var subtitle: String? = .someWord()
     public var expense: Double = .random(in: 250 ... 750)

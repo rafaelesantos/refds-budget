@@ -5,16 +5,21 @@ import RefdsBudgetPresentation
 
 public struct CategoryRowView: View {
     private let viewData: CategoryRowViewDataProtocol
+    private let action: ((CategoryRowViewDataProtocol) -> Void)?
     
     @State private var budget: Double = .zero
     @State private var percentage: Double = .zero
     
-    public init(viewData: CategoryRowViewDataProtocol) {
+    public init(
+        viewData: CategoryRowViewDataProtocol,
+        action: ((CategoryRowViewDataProtocol) -> Void)? = nil
+    ) {
         self.viewData = viewData
+        self.action = action
     }
     
     public var body: some View {
-        Section {
+        RefdsSection {
             rowCategory
             rowTransactions
             rowDescription
@@ -34,33 +39,39 @@ public struct CategoryRowView: View {
                 )
                 .frame(width: .padding(.medium), height: .padding(.medium))
                 .padding(10)
-                .background(viewData.color.opacity(0.25))
+                .background(viewData.color.opacity(0.2))
                 .clipShape(.rect(cornerRadius: .cornerRadius))
             }
             
-            VStack(spacing: .padding(.extraSmall)) {
-                HStack(spacing: .padding(.small)) {
-                    RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
-                    Spacer(minLength: .zero)
-                    RefdsText(budget.currency(), style: .callout, lineLimit: 1)
-                        .contentTransition(.numericText())
+            HStack(spacing: .zero) {
+                VStack(spacing: .padding(.extraSmall)) {
+                    HStack(spacing: .padding(.small)) {
+                        RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
+                        Spacer(minLength: .zero)
+                        RefdsText(budget.currency(), style: .callout, lineLimit: 1)
+                            .contentTransition(.numericText())
+                    }
+                    
+                    HStack(spacing: .padding(.small)) {
+                        ProgressView(value: percentage, total: 1)
+                            .tint(percentage.riskColor)
+                            .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                        RefdsText(viewData.percentage.percent(), style: .callout, color: .secondary)
+                    }
                 }
                 
-                HStack(spacing: .padding(.small)) {
-                    ProgressView(value: percentage > 1 ? 1 : percentage, total: 1)
-                        .tint(percentage.riskColor)
-                        .scaleEffect(x: 1, y: 1.5, anchor: .center)
-                    RefdsText(viewData.percentage.percent(), style: .callout, color: .secondary)
-                }
+                Spacer(minLength: .padding(.extraSmall))
+                
+                RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
             }
         }
     }
     
     private var rowTransactions: some View {
         HStack(spacing: .padding(.medium)) {
-            RefdsText(viewData.transactionsAmount.asString, style: .footnote, color: .secondary, weight: .bold)
+            RefdsText(viewData.transactionsAmount.asString, style: .caption, color: .primary, weight: .bold)
                 .padding(.padding(.extraSmall))
-                .frame(width: 35)
+                .frame(width: 40)
                 .background(.secondary.opacity(0.05))
                 .clipShape(.rect(cornerRadius: 5))
             RefdsText(.localizable(by: .categoryRowTransactions), style: .callout)
@@ -81,7 +92,7 @@ public struct CategoryRowView: View {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             withAnimation {
                 budget = viewData.budget
-                percentage = viewData.percentage
+                percentage = viewData.percentage > 1 ? 1 : viewData.percentage
             }
         }
     }

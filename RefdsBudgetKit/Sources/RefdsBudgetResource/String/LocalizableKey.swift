@@ -20,7 +20,10 @@ public enum LocalizableKey: String {
     case errorCantDeleteBudgetDescription
     case errorExistingBudgetDescription
     case errorCantSaveOnDatabaseDescription
-    // MARK: - Category
+    // MARK: - Loading Row
+    case loadinginRowTitle
+    case loadinginRowDescription
+    // MARK: - Category Row
     case categoryRowTransactions
     // MARK: - Add Budget
     case addBudgetDescriptionBudget
@@ -69,4 +72,34 @@ public enum LocalizableKey: String {
     case categoriesOrangeLegendDescription
     case categoriesRedLegendTitle
     case categoriesRedLegendDescription
+    case categoriesChartHeader
+    // MARK: - Category
+    case categoryBalanceTitle
+    case categoryBalanceSubtitle
+    case categoryBudgetsHeader
+    case categoryTransactionsHeader
+    // MARK: - Empty Budget
+    case emptyTitle
+    case emptyDescriptions
+    case emptyBudgetsTitle
+    case emptyTransactionsTitle
+    // MARK: - Item Navigation
+    case itemNavigationCategories
+    case itemNavigationHome
+    case itemNavigationTransactions
+    case itemNavigationSettings
+    // MARK: - Add Transaction
+    case addTransactionRemaining
+    case addTransactionSaveButton
+    case addTransactionNavigationTitle
+    case addTransactionDescriptionPrompt
+    // MARK: - Transactions
+    case transactionsCopyHeader
+    case transactionsCopyFooter
+    case transactionsRemoveTransactions
+    case transactionsCopyTransactions
+    case transactionsNewTransactions
+    case transactionsMoreMultiMenuHeader
+    case transactionsMoreMenuHeader
+    case transactionsAddTransaction
 }

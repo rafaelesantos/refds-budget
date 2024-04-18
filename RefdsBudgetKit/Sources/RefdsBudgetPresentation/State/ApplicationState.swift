@@ -5,27 +5,47 @@ import RefdsRouter
 import RefdsBudgetData
 
 public protocol ApplicationStateProtocol: RefdsReduxState {
-    var router: RefdsRouterRedux<ApplicationRoute> { get set }
-    var addBudgetState: BudgetStateProtocol { get set }
-    var addCategoryState: CategoryStateProtocol { get set }
+    var itemNavigation: ItemNavigation? { get set }
+    var categoriesRouter: RefdsRouterRedux<ApplicationRoute> { get set }
+    var transactionsRouter: RefdsRouterRedux<ApplicationRoute> { get set }
+    var addBudgetState: AddBudgetStateProtocol { get set }
+    var addCategoryState: AddCategoryStateProtocol { get set }
+    var categoryState: CategoryStateProtocol { get set }
     var categoriesState: CategoriesStateProtocol { get set }
+    var addTransaction: AddTransactionStateProtocol { get set }
+    var transactions: TransactionsStateProtocol { get set }
 }
 
 public struct ApplicationState: ApplicationStateProtocol {
-    public var router: RefdsRouterRedux<ApplicationRoute>
-    public var addBudgetState: BudgetStateProtocol
-    public var addCategoryState: CategoryStateProtocol
+    public var itemNavigation: ItemNavigation?
+    public var categoriesRouter: RefdsRouterRedux<ApplicationRoute>
+    public var transactionsRouter: RefdsRouterRedux<ApplicationRoute>
+    public var addBudgetState: AddBudgetStateProtocol
+    public var addCategoryState: AddCategoryStateProtocol
+    public var categoryState: CategoryStateProtocol
     public var categoriesState: CategoriesStateProtocol
+    public var addTransaction: AddTransactionStateProtocol
+    public var transactions: TransactionsStateProtocol
     
     public init(
-        router: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
-        addBudgetState: BudgetStateProtocol = AddBudgetState(),
-        addCategoryState: CategoryStateProtocol = AddCategoryState(),
-        categoriesState: CategoriesStateProtocol = CategoriesState()
+        itemNavigation: ItemNavigation? = .categories,
+        categoriesRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
+        transactionsRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
+        addBudgetState: AddBudgetStateProtocol = AddBudgetState(),
+        addCategoryState: AddCategoryStateProtocol = AddCategoryState(),
+        categoryState: CategoryStateProtocol = CategoryState(),
+        categoriesState: CategoriesStateProtocol = CategoriesState(),
+        addTransaction: AddTransactionStateProtocol = AddTransactionState(),
+        transactions: TransactionsStateProtocol = TransactionsState()
     ) {
-        self.router = router
+        self.itemNavigation = itemNavigation
+        self.categoriesRouter = categoriesRouter
+        self.transactionsRouter = transactionsRouter
         self.addBudgetState = addBudgetState
         self.addCategoryState = addCategoryState
+        self.categoryState = categoryState
         self.categoriesState = categoriesState
+        self.addTransaction = addTransaction
+        self.transactions = transactions
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 import RefdsRedux
 
-public protocol BalanceStateProtocol: RefdsReduxState {
+public protocol BalanceRowViewDataProtocol: RefdsReduxState {
     var title: String? { get set }
     var subtitle: String? { get set }
     var expense: Double { get set }
@@ -10,7 +10,7 @@ public protocol BalanceStateProtocol: RefdsReduxState {
     var spendPercentage: Double { get }
 }
 
-public struct BalanceState: BalanceStateProtocol {
+public struct BalanceRowViewData: BalanceRowViewDataProtocol {
     public var title: String?
     public var subtitle: String?
     public var expense: Double

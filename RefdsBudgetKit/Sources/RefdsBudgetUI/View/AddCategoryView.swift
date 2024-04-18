@@ -5,7 +5,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct AddCategoryView: View {
-    @Binding private var state: CategoryStateProtocol
+    @Binding private var state: AddCategoryStateProtocol
     private let action: (AddCategoryAction) -> Void
     
     @State private var iconPrefix = 15
@@ -27,7 +27,7 @@ public struct AddCategoryView: View {
     }
     
     public init(
-        state: Binding<CategoryStateProtocol>,
+        state: Binding<AddCategoryStateProtocol>,
         action: @escaping (AddCategoryAction) -> Void
     ) {
         self._state = state
@@ -47,7 +47,18 @@ public struct AddCategoryView: View {
     }
     
     private var sectionNameView: some View {
-        Section {} footer: {
+        RefdsSection {} footer: {
+            #if os(macOS)
+            RefdsTextField(
+                .localizable(by: .addCategoryInputName),
+                text: bindingName,
+                axis: .vertical,
+                style: .largeTitle,
+                color: .primary,
+                weight: .bold,
+                alignment: .center
+            )
+            #else
             RefdsTextField(
                 .localizable(by: .addCategoryInputName),
                 text: bindingName,
@@ -58,11 +69,12 @@ public struct AddCategoryView: View {
                 alignment: .center,
                 textInputAutocapitalization: .words
             )
+            #endif
         }
     }
     
     private var sectionColorsView: some View {
-        Section {
+        RefdsSection {
             rowColors
             rowHexColor
         } header: {
@@ -128,7 +140,7 @@ public struct AddCategoryView: View {
     }
     
     private var sectionIconsView: some View {
-        Section {
+        RefdsSection {
             rowSelectedIcon
             rowIcons
             rowShowMoreIcons
@@ -204,7 +216,7 @@ public struct AddCategoryView: View {
     }
     
     private var sectionSaveButtonView: some View {
-        Section {} footer: {
+        RefdsSection {} footer: {
             RefdsButton(
                 .localizable(by: .addCategorySaveCategoryButton),
                 isDisable: !state.canSave

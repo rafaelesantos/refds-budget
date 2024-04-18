@@ -4,7 +4,7 @@ import RefdsShared
 import RefdsBudgetDomain
 
 public protocol TransactionAdapterProtocol {
-    //func adapt(transaction: TransactionEntity) -> TransactionStateProtocol
+    //func adapt(transaction: TransactionEntity) -> AddTransactionStateProtocol
 }
 
 public final class TransactionAdapter: TransactionAdapterProtocol {

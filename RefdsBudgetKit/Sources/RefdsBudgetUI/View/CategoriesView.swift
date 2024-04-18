@@ -25,14 +25,21 @@ public struct CategoriesView: View {
             sectionEmptyCategories
             sectionEmptyBudgets
             sectionsCategory
+            sectionBudgetsChart
             sectionLegend
         }
+        #if os(macOS)
+        .listStyle(.plain)
+        #elseif os(iOS)
+        .listStyle(.insetGrouped)
+        #endif
         .navigationTitle(String.localizable(by: .categoriesNavigationTitle))
+        .onChange(of: state.isFilterEnable) { reloadData() }
+        .onChange(of: state.date) { reloadData() }
         .toolbar { ToolbarItem { addCategoryButton } }
         .refreshable { reloadData() }
         .onAppear { reloadData() }
         .refdsToast(item: $state.error)
-        .onChange(of: state.isFilterEnable) { reloadData() }
     }
     
     private func reloadData() {
@@ -58,34 +65,13 @@ public struct CategoriesView: View {
         }
     }
     
-    private var bindingMonth: Binding<String> {
-        Binding {
-            state.date.asString(withDateFormat: .month)
-        } set: {
-            if let year = state.date.asString(withDateFormat: .year).asInt,
-               let date = "\($0)/\(year)".asDate(withFormat: .fullMonthYear) {
-                state.date = date
-                action(.fetchData(date))
-            }
-        }
-    }
-    
-    private var bindingYear: Binding<Int> {
-        Binding {
-            state.date.asString(withDateFormat: .year).asInt ?? .zero
-        } set: {
-            let month = state.date.asString(withDateFormat: .month)
-            if let date = "\(month)/\($0)".asDate(withFormat: .fullMonthYear) {
-                state.date = date
-                action(.fetchData(date))
-            }
-        }
-    }
-    
     private var sectionsCategory: some View {
         ForEach(state.categories.indices, id: \.self) { index in
             let category = state.categories[index]
             CategoryRowView(viewData: category)
+                .onTapGesture {
+                    action(.showCategory(category.categoryId))
+                }
                 .contextMenu {
                     editBudgetButton(at: index)
                     editCategoryButton(at: index)
@@ -149,8 +135,8 @@ public struct CategoriesView: View {
     @ViewBuilder
     private var sectionBalance: some View {
         if let balance = state.balance {
-            Section {
-                BalanceView(viewData: balance)
+            RefdsSection {
+                BalanceRowView(viewData: balance)
                 rowApplyFilter
                 rowAddBudget
             } header: {
@@ -169,13 +155,21 @@ public struct CategoriesView: View {
     private var rowAddBudget: some View {
         if !state.isEmptyCategories, !state.isEmptyBudgets {
             RefdsButton { action(.addBudget(nil, state.date)) } label: {
-                RefdsText(
-                    .localizable(by: .categoriesEmptyBudgetsButton),
-                    style: .callout,
-                    color: .accentColor
-                )
+                HStack {
+                    RefdsText(
+                        .localizable(by: .categoriesEmptyBudgetsButton),
+                        style: .callout,
+                        color: .accentColor
+                    )
+                    Spacer()
+                    RefdsIcon(
+                        .chevronRight,
+                        color: .secondary.opacity(0.5),
+                        style: .callout,
+                        weight: .bold
+                    )
+                }
             }
-            .padding(.horizontal, .padding(.extraSmall))
         }
     }
     
@@ -183,13 +177,12 @@ public struct CategoriesView: View {
         RefdsToggle(isOn: bindingFilterEnable) {
             RefdsText(.localizable(by: .categoriesApplyFilters), style: .callout)
         }
-        .padding(.horizontal, .padding(.extraSmall))
     }
     
     @ViewBuilder
     private var sectionEmptyBudgets: some View {
         if !state.isEmptyCategories, state.isEmptyBudgets {
-            Section {
+            RefdsSection {
                 RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
                 RefdsButton { action(.addBudget(nil, state.date)) } label: {
                     RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
@@ -203,7 +196,7 @@ public struct CategoriesView: View {
     @ViewBuilder
     private var sectionEmptyCategories: some View {
         if state.isEmptyCategories {
-            Section {
+            RefdsSection {
                 RefdsText(.localizable(by: .categoriesEmptyCategoriesDescription), style: .callout)
                 RefdsButton { action(.addCategory(nil)) } label: {
                     RefdsText(.localizable(by: .categoriesEmptyCategoriesButton), style: .callout, color: .accentColor)
@@ -217,33 +210,11 @@ public struct CategoriesView: View {
     @ViewBuilder
     private var sectionFilters: some View {
         if state.isFilterEnable {
-            Section {
-                HStack {
-                    RefdsIcon(.calendar, color: .accentColor, size: .padding(.large))
-                    RefdsText(.localizable(by: .categoriesDate), style: .callout)
-                        .frame(width: 60)
-                    
-                    Spacer(minLength: .zero)
-                    
-                    HStack(spacing: .zero) {
-                        Picker(selection: bindingMonth) {
-                            let months = Calendar.current.monthSymbols
-                            ForEach(months, id: \.self) {
-                                RefdsText($0.capitalized)
-                                    .tag($0)
-                            }
-                        } label: {}
-                            .frame(width: 130)
-                        
-                        Picker(selection: bindingYear) {
-                            let currentYear = state.date.asString(withDateFormat: .year).asInt ?? .zero
-                            let years = (currentYear - 8 ... currentYear + 8).map { $0 }
-                            ForEach(years, id: \.self) {
-                                RefdsText($0.asString)
-                                    .tag($0)
-                            }
-                        } label: {}
-                            .frame(width: 80)
+            RefdsSection {
+                DateRowView(date: $state.date) {
+                    HStack(spacing: .padding(.medium)) {
+                        RefdsIcon(.calendar, color: .accentColor, style: .title3)
+                        RefdsText(.localizable(by: .categoriesDate), style: .callout)
                     }
                 }
             } header: {
@@ -257,23 +228,44 @@ public struct CategoriesView: View {
     }
     
     private var addCategoryButton: some View {
-        RefdsButton {
+        RefdsIcon(
+            .plusCircleFill,
+            color: .accentColor,
+            size: 18,
+            weight: .bold,
+            renderingMode: .hierarchical
+        )
+        .onTapGesture {
             action(.addCategory(nil))
-        } label: {
-            RefdsIcon(
-                .plusCircleFill,
-                color: .accentColor,
-                style: .subheadline,
-                weight: .bold,
-                renderingMode: .hierarchical
-            )
+        }
+    }
+    
+    @ViewBuilder
+    private var sectionBudgetsChart: some View {
+        if !state.isEmptyCategories, !state.isEmptyBudgets {
+            RefdsSection {
+                let data: [(x: String, y: Double, percentage: Double?)] = state.categories.map {
+                    (
+                        x: $0.name,
+                        y: $0.budget,
+                        percentage: $0.percentage
+                    )
+                }
+                DateChartView(data: data, isScrollable: false)
+            } header: {
+                RefdsText(
+                    .localizable(by: .categoriesChartHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
+            }
         }
     }
     
     @ViewBuilder
     private var sectionLegend: some View {
         if !state.isEmptyBudgets {
-            Section {
+            RefdsSection {
                 rowLegend(
                     title: .localizable(by: .categoriesGreenLegendTitle),
                     description: .localizable(by: .categoriesGreenLegendDescription),
@@ -309,7 +301,7 @@ public struct CategoriesView: View {
         description: String,
         color: Color
     ) -> some View {
-        HStack(spacing: .padding(.small)) {
+        HStack(spacing: .padding(.medium)) {
             ZStack {
                 Circle()
                     .fill(color)
@@ -319,7 +311,7 @@ public struct CategoriesView: View {
                     .frame(width: 10, height: 10)
             }
             
-            VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
+            VStack(alignment: .leading) {
                 RefdsText(title, style: .callout)
                 RefdsText(description, style: .footnote, color: .secondary)
             }
