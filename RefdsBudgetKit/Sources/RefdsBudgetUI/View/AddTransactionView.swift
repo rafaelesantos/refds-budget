@@ -46,6 +46,11 @@ public struct AddTransactionView: View {
             sectionDate
             sectionSaveButtonView
         }
+        #if os(macOS)
+        .listStyle(.plain)
+        #elseif os(iOS)
+        .listStyle(.insetGrouped)
+        #endif
         .refreshable { action(.fetchCategories(state.date)) }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()

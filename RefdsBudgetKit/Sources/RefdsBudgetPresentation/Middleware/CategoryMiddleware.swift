@@ -53,69 +53,47 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return completion(.updateError(.notFoundCategory))
         }
         
-        guard let date = date else {
-            let budgets = categoryRepository.getBudgets(on: categoryId).map {
-                var transactions = transactionRepository.getTransactions(on: categoryId)
-                
-                if !searchText.isEmpty {
-                    transactions = transactions.filter { $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased()) }
-                }
-                
-                let amount = transactions.map { $0.amount }.reduce(.zero, +)
-                let percentage = amount / ($0.amount == .zero ? 1 : $0.amount)
-                return (budgetRowViewDataAdapter.adapt(budgetEntity: $0, percentage: percentage), transactions)
-            }
-            var transactions = budgets.flatMap { $0.1.compactMap { $0 } }
-            
-            if !searchText.isEmpty {
-                transactions = transactions.filter { $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased()) }
-            }
-            
-            let transactionsAdapted = transactions.map {
-                transactionRowViewDataAdapter.adapt(transactionEntity: $0, categoryEntity: categoryEntity)
-            }
-            
-            let groupedTransactions = Dictionary(grouping: transactionsAdapted, by: { $0.date.asString(withDateFormat: .dayMonthYear) })
-                .map({ $0.value })
-                .sorted(by: { ($0.first?.date ?? Date()) >= ($1.first?.date ?? Date()) })
-            
-            return completion(
-                .updateData(
-                    name: categoryEntity.name,
-                    icon: categoryEntity.icon,
-                    color: Color(hex: categoryEntity.color),
-                    budgets: budgets.map { $0.0 },
-                    transactions: groupedTransactions
-                )
-            )
-        }
+        var budgetsEntity: [BudgetEntity] = []
+        var transactionsEntity: [TransactionEntity] = []
         
-        guard let budgetEntity = categoryRepository.getBudget(on: categoryId, from: date) else {
-            return completion(
-                .updateData(
-                    name: categoryEntity.name,
-                    icon: categoryEntity.icon,
-                    color: Color(hex: categoryEntity.color),
-                    budgets: [],
-                    transactions: []
-                )
-            )
+        if let date = date, let budgetEntity = categoryRepository.getBudget(on: categoryId, from: date) {
+            budgetsEntity += [budgetEntity]
+            transactionsEntity = transactionRepository.getTransactions(on: categoryId, from: date, format: .monthYear)
+        } else if date == nil {
+            budgetsEntity = categoryRepository.getBudgets(on: categoryId)
+            transactionsEntity = transactionRepository.getTransactions(on: categoryId)
         }
-        
-        var transactions = transactionRepository.getTransactions(on: categoryId, from: budgetEntity.date.date, format: .monthYear)
         
         if !searchText.isEmpty {
-            transactions = transactions.filter { $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased()) }
+            transactionsEntity = transactionsEntity.filter {
+                $0.amount.currency().lowercased().contains(searchText.lowercased()) ||
+                $0.message.lowercased().contains(searchText.lowercased())
+            }
         }
         
-        let transactionsAdapted = transactions.map { transactionRowViewDataAdapter.adapt(transactionEntity: $0, categoryEntity: categoryEntity) }
+        let budgets = budgetsEntity.map { budget in
+            let transactionsAmount = transactionsEntity.filter {
+                $0.date.asString(withDateFormat: .monthYear) ==
+                budget.date.asString(withDateFormat: .monthYear)
+            }.map { $0.amount }.reduce(.zero, +)
+            let percentage = transactionsAmount / (budget.amount == .zero ? 1 : budget.amount)
+            return budgetRowViewDataAdapter.adapt(budgetEntity: budget, percentage: percentage)
+        }
         
-        let amount = transactions.map { $0.amount }.reduce(.zero, +)
-        let percentage = amount / (budgetEntity.amount == .zero ? 1 : budgetEntity.amount)
-        let budgets = [budgetRowViewDataAdapter.adapt(budgetEntity: budgetEntity, percentage: percentage)]
-        let groupedTransactions = Dictionary(grouping: transactionsAdapted, by: { $0.date.asString(withDateFormat: .dayMonthYear) })
-            .map({ $0.value })
-            .sorted(by: { ($0.first?.date ?? Date()) >= ($1.first?.date ?? Date()) })
+        let transactions = transactionsEntity.map {
+            transactionRowViewDataAdapter.adapt(
+                transactionEntity: $0,
+                categoryEntity: categoryEntity
+            )
+        }
+        
+        let groupedTransactions = Dictionary(
+            grouping: transactions,
+            by: { $0.date.asString(withDateFormat: .dayMonthYear) }
+        ).map({ $0.value }).sorted(by: {
+            ($0.first?.date ?? Date()) >=
+            ($1.first?.date ?? Date())
+        })
         
         return completion(
             .updateData(

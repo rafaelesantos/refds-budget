@@ -33,8 +33,7 @@ public struct CategoryView: View {
         #endif
         .searchable(text: $state.searchText)
         .navigationTitle(state.name.capitalized)
-        .onAppear { reloadDelayData() }
-        .refreshable { reloadData() }
+        .onAppear { reloadData() }
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
@@ -51,23 +50,9 @@ public struct CategoryView: View {
         .refdsToast(item: $state.error)
     }
     
-    private func reloadDelayData() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            reloadData()
-        }
-    }
-    
     private func reloadData() {
-        action(.fetchData(state.isFilterEnable ? state.date : nil, state.id, state.searchText))
-    }
-    
-    private var bindingFilterEnable: Binding<Bool> {
-        Binding {
-            state.isFilterEnable
-        } set: { isEnable in
-            withAnimation {
-                state.isFilterEnable = isEnable
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            action(.fetchData(state.isFilterEnable ? state.date : nil, state.id, state.searchText))
         }
     }
     
@@ -86,7 +71,7 @@ public struct CategoryView: View {
     }
     
     private var rowApplyFilter: some View {
-        RefdsToggle(isOn: bindingFilterEnable) {
+        RefdsToggle(isOn: $state.isFilterEnable) {
             RefdsText(.localizable(by: .categoriesApplyFilters), style: .callout)
         }
         .padding(.horizontal, .padding(.extraSmall))

@@ -31,6 +31,14 @@ struct ContentView: View {
         Binding {
             store.state.itemNavigation?.rawValue ?? .zero
         } set: {
+            if store.state.itemNavigation?.rawValue == $0, let item = ItemNavigation(rawValue: $0) {
+                switch item {
+                case .categories: store.state.categoriesRouter.popToRoot()
+                case .home: break
+                case .transactions: store.state.transactionsRouter.popToRoot()
+                case .settings: break
+                }
+            }
             store.state.itemNavigation = ItemNavigation(rawValue: $0)
         }
     }

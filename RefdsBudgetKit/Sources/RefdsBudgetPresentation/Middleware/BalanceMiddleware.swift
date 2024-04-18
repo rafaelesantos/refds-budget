@@ -113,7 +113,8 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
             
             if !searchText.isEmpty {
                 transactions = transactions.filter {
-                    $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased())
+                    $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
+                    $0.message.lowercased().contains(searchText.lowercased())
                 }
             }
             
@@ -133,7 +134,8 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         if !searchText.isEmpty {
             transactions = transactions.filter {
-                $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased())
+                $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
+                $0.message.lowercased().contains(searchText.lowercased())
             }
         }
         

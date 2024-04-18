@@ -339,7 +339,7 @@ public struct CategoriesView: View {
         
         var body: some View {
             RefdsRoutingReduxView(
-                router: $store.state.router,
+                router: $store.state.categoriesRouter,
                 state: bindingState,
                 action: store.dispatch(action:)
             ) {

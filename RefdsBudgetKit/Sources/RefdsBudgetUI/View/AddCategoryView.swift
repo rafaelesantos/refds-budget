@@ -41,6 +41,11 @@ public struct AddCategoryView: View {
             sectionIconsView
             sectionSaveButtonView
         }
+        #if os(macOS)
+        .listStyle(.plain)
+        #elseif os(iOS)
+        .listStyle(.insetGrouped)
+        #endif
         .refdsDismissesKeyboad()
         .onAppear { action(.fetchCategory(state)) }
         .refdsToast(item: $state.error)

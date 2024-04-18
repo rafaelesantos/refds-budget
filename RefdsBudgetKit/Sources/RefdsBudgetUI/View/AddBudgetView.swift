@@ -58,6 +58,11 @@ public struct AddBudgetView: View {
             sectionCategory
             sectionSaveButton
         }
+        #if os(macOS)
+        .listStyle(.plain)
+        #elseif os(iOS)
+        .listStyle(.insetGrouped)
+        #endif
         .refreshable { action(.fetchCategories(state.month)) }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()

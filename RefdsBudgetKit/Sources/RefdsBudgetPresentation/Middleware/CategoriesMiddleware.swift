@@ -40,40 +40,38 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (CategoriesAction) -> Void
     ) {
         let allEntities = categoryRepository.getAllCategories()
-        guard let date = date else {
-            let categories = allEntities.map {
-                let budgets = categoryRepository.getBudgets(on: $0.id)
-                let budget = budgets.map { $0.amount }.reduce(.zero, +)
-                let transactions = transactionRepository.getTransactions(on: $0.id)
-                let spend = transactions.map { $0.amount }.reduce(.zero, +)
-                let percentage = spend / (budget == .zero ? 1 : budget)
-                return categoryAdapter.adapt(
-                    entity: $0,
-                    budgetId: budgets.first?.id ?? .init(),
-                    budgetDescription: nil,
-                    budget: budget,
-                    percentage: percentage,
-                    transactionsAmount: transactions.count,
-                    spend: spend
-                )
-            }
-            
-            return completion(.updateCategories(categories, allEntities.isEmpty))
+        var categoriesEntity: [CategoryEntity] = []
+        
+        if let date = date {
+            categoriesEntity = categoryRepository.getCategories(from: date)
+        } else {
+            categoriesEntity = allEntities
         }
         
-        let entities = categoryRepository.getCategories(from: date)
-        let categories = entities.map {
-            let budget = categoryRepository.getBudget(on: $0.id, from: date)
-            let transactions = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear)
-            let spend = transactions.map { $0.amount }.reduce(.zero, +)
-            let percentage = spend / ((budget?.amount ?? 1) == .zero ? 1 : (budget?.amount ?? 1))
+        let categories: [CategoryRowViewDataProtocol] = categoriesEntity.compactMap {
+            var budgetsEntity: [BudgetEntity] = []
+            var transactionsEntity: [TransactionEntity] = []
+            
+            if let date = date, let budget = categoryRepository.getBudget(on: $0.id, from: date) {
+                budgetsEntity += [budget]
+                transactionsEntity = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear)
+            } else if date == nil {
+                budgetsEntity = categoryRepository.getBudgets(on: $0.id)
+                transactionsEntity = transactionRepository.getTransactions(on: $0.id)
+            }
+            
+            guard let budget = budgetsEntity.last else { return nil }
+            let budgetAmount = budgetsEntity.map { $0.amount }.reduce(.zero, +)
+            let spend = transactionsEntity.map { $0.amount }.reduce(.zero, +)
+            let percentage = spend / (budgetAmount == .zero ? 1 : budgetAmount)
+            
             return categoryAdapter.adapt(
                 entity: $0,
-                budgetId: budget?.id ?? .init(),
-                budgetDescription: budget?.message,
-                budget: budget?.amount ?? .zero,
+                budgetId: budget.id,
+                budgetDescription: budget.message,
+                budget: budgetAmount,
                 percentage: percentage,
-                transactionsAmount: transactions.count,
+                transactionsAmount: transactionsEntity.count,
                 spend: spend
             )
         }
