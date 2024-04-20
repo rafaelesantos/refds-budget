@@ -20,6 +20,12 @@ public enum LocalizableKey: String {
     case errorCantDeleteBudgetDescription
     case errorExistingBudgetDescription
     case errorCantSaveOnDatabaseDescription
+    case errorExistingTagTitle
+    case errorNotFoundTagTitle
+    case errorCantDeleteTagTitle
+    case errorExistingTagDescription
+    case errorNotFoundTagDescription
+    case errorCantDeleteTagDescription
     // MARK: - Loading Row
     case loadinginRowTitle
     case loadinginRowDescription
@@ -102,4 +108,20 @@ public enum LocalizableKey: String {
     case transactionsMoreMultiMenuHeader
     case transactionsMoreMenuHeader
     case transactionsAddTransaction
+    case transactionsFilterByDate
+    case transactionsCleanCategoriesFilter
+    case transactionsCategoriesFilterHeader
+    case transactionsCategorieAllSelected
+    // MARK: - Home
+    // MARK: - Tags
+    case tagsNavigationTitle
+    case tagsInputHeader
+    case tagsInputNamePlaceholder
+    case tagsSaveButton
+    case tagsCollapsedHeader
+    case tagsChartSectionHeader
+    case tagsMenuSelectHeader
+    case tagsRemoveTag
+    case tagsCleanSelected
+    case menuCleanSelections
 }

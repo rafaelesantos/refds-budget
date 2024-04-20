@@ -56,7 +56,6 @@ public struct AddTransactionView: View {
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
         .navigationTitle(String.localizable(by: .addTransactionNavigationTitle))
-        .overlay(alignment: .bottom) { saveButton.padding(20).background() }
         .refdsToast(item: $state.error)
     }
     
@@ -224,7 +223,6 @@ public struct AddTransactionView: View {
     private var sectionSaveButtonView: some View {
         RefdsSection {} footer: {
             saveButton
-                .opacity(0)
         }
     }
     

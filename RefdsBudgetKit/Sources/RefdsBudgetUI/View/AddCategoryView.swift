@@ -93,7 +93,7 @@ public struct AddCategoryView: View {
     
     private var rowColors: some View {
         HStack(spacing: .padding(.medium)) {
-            bubbleColorView(for: state.color, isSelected: true)
+            BubbleColorView(color: state.color, isSelected: true)
             Divider().frame(height: 30)
             ScrollView(.horizontal) {
                 HStack {
@@ -102,7 +102,7 @@ public struct AddCategoryView: View {
                         RefdsButton {
                             state.color = color.rawValue
                         } label: {
-                            bubbleColorView(for: color.rawValue)
+                            BubbleColorView(color: color.rawValue)
                         }
                     }
                 }
@@ -111,21 +111,6 @@ public struct AddCategoryView: View {
             .scrollIndicators(.never)
             .padding(.horizontal, -20)
         }
-    }
-    
-    private func bubbleColorView(for color: Color, isSelected: Bool = false) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(color)
-                .frame(width: 30, height: 30)
-            if isSelected {
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(Color.white.opacity(0.7))
-                    .frame(width: 10, height: 10)
-            }
-        }
-        .animation(.default, value: color)
-        .padding(.vertical, .padding(.extraSmall))
     }
     
     private var rowHexColor: some View {
@@ -228,7 +213,6 @@ public struct AddCategoryView: View {
             ) {
                 action(.save(state))
             }
-            .padding(.horizontal, -20)
         }
     }
 }

@@ -67,7 +67,6 @@ public struct AddBudgetView: View {
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
-        .overlay(alignment: .bottom) { saveButton.padding(20).background() }
     }
     
     private func fetchDataOnAppear() {
@@ -209,7 +208,6 @@ public struct AddBudgetView: View {
     private var sectionSaveButton: some View {
         RefdsSection {} footer: {
             saveButton
-                .opacity(0)
         }
     }
     

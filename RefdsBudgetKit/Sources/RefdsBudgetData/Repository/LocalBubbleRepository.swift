@@ -32,13 +32,13 @@ public final class LocalBubbleRepository: BubbleUseCase {
         guard let bubble = getBubble(by: id) else {
             let bubble = BubbleEntity(context: database.viewContext)
             bubble.id = id
-            bubble.name = name.uppercased()
+            bubble.name = name
             bubble.color = color.asHex()
             try database.viewContext.save()
             return
         }
         bubble.id = id
-        bubble.name = name.uppercased()
+        bubble.name = name
         bubble.color = color.asHex()
         try database.viewContext.save()
     }

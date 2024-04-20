@@ -73,6 +73,26 @@ struct ContentView: View {
             .tag(ItemNavigation.categories.rawValue)
             
             RefdsRoutingReduxView(
+                router: $store.state.homeRouter,
+                state: bindingState,
+                action: store.dispatch(action:)
+            ) {
+                AnyView(
+                    viewFactory.makeTagView(
+                        state: $store.state.tags,
+                        action: store.dispatch(action:)
+                    )
+                )
+            }
+            .tabItem {
+                Label(
+                    ItemNavigation.home.title,
+                    systemImage: ItemNavigation.home.icon.rawValue
+                )
+            }
+            .tag(ItemNavigation.home.rawValue)
+            
+            RefdsRoutingReduxView(
                 router: $store.state.transactionsRouter,
                 state: bindingState,
                 action: store.dispatch(action:)

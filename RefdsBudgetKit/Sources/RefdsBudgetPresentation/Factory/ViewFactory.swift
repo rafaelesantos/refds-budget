@@ -30,4 +30,9 @@ public protocol ViewFactoryProtocol {
         state: Binding<TransactionsStateProtocol>,
         action: @escaping (TransactionsAction) -> Void
     ) -> any View
+    
+    func makeTagView(
+        state: Binding<TagsStateProtocol>,
+        action: @escaping (TagAction) -> Void
+    ) -> any View
 }

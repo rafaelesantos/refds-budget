@@ -7,6 +7,7 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var tagRepository: BubbleUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     
@@ -29,8 +30,8 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: (CategoriesAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date): 
-            let balance = getCurrentBalance(from: date)
+        case let .fetchData(date, tagsName):
+            let balance = getCurrentBalance(from: date, tagsName: tagsName)
             completion(.updateBalance(balance))
         default:
             break
@@ -43,7 +44,11 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         switch action {
         case let .fetchData(date, categoryId, searchText):
-            let balance = getCurrentBalance(from: date, id: categoryId, searchText: searchText)
+            let balance = getCurrentBalance(
+                from: date,
+                and: [categoryId],
+                searchText: searchText
+            )
             completion(.updateBalance(balance))
         default:
             break
@@ -55,82 +60,56 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: (TransactionsAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, searchText):
-            let balance = getCurrentBalance(from: date, searchText: searchText)
+        case let .fetchData(date, searchText, categoriesName, tagsName):
+            let ids = categoryRepository.getAllCategories().filter { categoriesName.contains($0.name) }.map { $0.id }
+            let balance = getCurrentBalance(from: date, and: Set(ids), tagsName: tagsName, searchText: searchText)
             completion(.updateBalance(balance))
         default:
             break
         }
     }
     
-    private func getCurrentBalance(from date: Date?, searchText: String = "") -> BalanceRowViewDataProtocol {
-        guard let date = date else {
-            var transactions = transactionRepository.getTransactions()
-            
-            if !searchText.isEmpty {
-                transactions = transactions.filter {
-                    $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased())
+    private func getCurrentBalance(
+        from date: Date?,
+        and categoryIds: Set<UUID> = [],
+        tagsName: Set<String> = [],
+        searchText: String = "",
+        title: String = .localizable(by: .categoriesBalanceTitle),
+        subititle: String = .localizable(by: .categoriesBalanceSubtitle)
+    ) -> BalanceRowViewDataProtocol {
+        var transactions: [TransactionEntity] = []
+        var budgets: [BudgetEntity] = []
+        
+        if let date = date {
+            transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
+            budgets = categoryRepository.getBudgets(from: date)
+        } else {
+            transactions = transactionRepository.getTransactions()
+            budgets = categoryRepository.getAllBudgets()
+        }
+        
+        if !categoryIds.isEmpty {
+            transactions = transactions.filter { categoryIds.contains($0.category) }
+            budgets = budgets.filter { categoryIds.contains($0.category) }
+        }
+        
+        if !tagsName.isEmpty {
+            transactions = transactions.filter { transaction in
+                for tagName in tagsName {
+                    if transaction.message
+                        .folding(options: .diacriticInsensitive, locale: .current)
+                        .lowercased()
+                        .contains(
+                            tagName
+                                .folding(options: .diacriticInsensitive, locale: .current)
+                                .lowercased()
+                        ) {
+                        return true
+                    }
                 }
-            }
-            
-            let expense = transactions.map { $0.amount }.reduce(.zero, +)
-            let budget = categoryRepository.getAllBudgets().map { $0.amount }.reduce(.zero, +)
-            let balance = BalanceRowViewData(
-                title: .localizable(by: .categoriesBalanceTitle),
-                subtitle: .localizable(by: .categoriesBalanceSubtitle),
-                expense: expense,
-                income: .zero,
-                budget: budget
-            )
-            return balance
-        }
-        
-        var transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
-        
-        if !searchText.isEmpty {
-            transactions = transactions.filter {
-                $0.amount.asString.lowercased().contains(searchText.lowercased()) || $0.message.lowercased().contains(searchText.lowercased())
+                return false
             }
         }
-        
-        let expense = transactions.map { $0.amount }.reduce(.zero, +)
-        let budget = categoryRepository.getBudgets(from: date).map { $0.amount }.reduce(.zero, +)
-        let balance = BalanceRowViewData(
-            title: .localizable(by: .categoriesBalanceTitle),
-            subtitle: .localizable(by: .categoriesBalanceSubtitle),
-            expense: expense,
-            income: .zero,
-            budget: budget
-        )
-        return balance
-    }
-    
-    private func getCurrentBalance(from date: Date?, id: UUID, searchText: String) -> BalanceRowViewDataProtocol {
-        let category = categoryRepository.getCategory(by: id)
-        
-        guard let date = date else {
-            var transactions = transactionRepository.getTransactions(on: id)
-            
-            if !searchText.isEmpty {
-                transactions = transactions.filter {
-                    $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
-                    $0.message.lowercased().contains(searchText.lowercased())
-                }
-            }
-            
-            let expense = transactions.map { $0.amount }.reduce(.zero, +)
-            let budget = categoryRepository.getBudgets(on: id).map { $0.amount }.reduce(.zero, +)
-            let balance = BalanceRowViewData(
-                title: .localizable(by: .categoryBalanceTitle, with: category?.name ?? ""),
-                subtitle: .localizable(by: .categoryBalanceSubtitle, with: category?.name ?? ""),
-                expense: expense,
-                income: .zero,
-                budget: budget
-            )
-            return balance
-        }
-
-        var transactions = transactionRepository.getTransactions(on: id, from: date, format: .monthYear)
         
         if !searchText.isEmpty {
             transactions = transactions.filter {
@@ -140,10 +119,10 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         let expense = transactions.map { $0.amount }.reduce(.zero, +)
-        let budget = categoryRepository.getBudget(on: id, from: date)?.amount ?? .zero
+        let budget = budgets.map { $0.amount }.reduce(.zero, +)
         let balance = BalanceRowViewData(
-            title: .localizable(by: .categoryBalanceTitle, with: category?.name ?? ""),
-            subtitle: .localizable(by: .categoryBalanceSubtitle, with: category?.name ?? ""),
+            title: title,
+            subtitle: subititle,
             expense: expense,
             income: .zero,
             budget: budget

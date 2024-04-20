@@ -7,6 +7,7 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var tagRepository: BubbleUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
@@ -28,7 +29,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (TransactionsAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, searchText): fetchData(with: searchText, from: date, on: completion)
+        case let .fetchData(date, searchText, categoriesName, tagsName): fetchData(with: searchText, and: categoriesName, tagsName: tagsName, from: date, on: completion)
         case let .fetchTransactionForEdit(transactionId): fetchTransactionForEdit(with: transactionId, on: completion)
         case let .removeTransaction(id): removeTransaction(with: state, by: id, on: completion)
         case let .removeTransactions(ids): removeTransactions(with: state, by: ids, on: completion)
@@ -39,15 +40,44 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     private func fetchData(
         with searchText: String,
+        and categoriesName: Set<String>,
+        tagsName: Set<String>,
         from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
         var transactions: [TransactionEntity] = []
+        var categories: [CategoryEntity] = []
+        let tags = tagRepository.getBubbles().map { $0.name }
         
         if let date = date {
             transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
+            categories = categoryRepository.getCategories(from: date)
         } else {
             transactions = transactionRepository.getTransactions()
+            categories = categoryRepository.getAllCategories()
+        }
+        
+        if !categoriesName.isEmpty {
+            let categoriesId = categoryRepository.getAllCategories().filter { categoriesName.contains($0.name) }.map { $0.id }
+            transactions = transactions.filter { categoriesId.contains($0.category) }
+        }
+        
+        if !tagsName.isEmpty {
+            transactions = transactions.filter { transaction in
+                for tagName in tagsName {
+                    if transaction.message
+                        .folding(options: .diacriticInsensitive, locale: .current)
+                        .lowercased()
+                        .contains(
+                            tagName
+                                .folding(options: .diacriticInsensitive, locale: .current)
+                                .lowercased()
+                        ) {
+                        return true
+                    }
+                }
+                return false
+            }
         }
         
         if !searchText.isEmpty {
@@ -73,7 +103,13 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             ($1.first?.date ?? Date())
         })
         
-        return completion(.updateData(transactions: groupedTransactions))
+        
+        
+        return completion(.updateData(
+            transactions: groupedTransactions,
+            categories: categories.map { $0.name },
+            tags: tags
+        ))
     }
     
     private func fetchTransactionForEdit(
@@ -127,7 +163,13 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try transactionRepository.removeTransaction(by: id)
         } catch { completion(.updateError(.notFoundTransaction)) }
         
-        fetchData(with: state.searchText, from: state.isFilterEnable ? state.date : nil, on: completion)
+        fetchData(
+            with: state.searchText,
+            and: state.selectedCategories,
+            tagsName: state.selectedTags,
+            from: state.isFilterEnable ? state.date : nil,
+            on: completion
+        )
     }
     
     private func removeTransactions(
@@ -138,7 +180,13 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         ids.forEach { id in
             try? transactionRepository.removeTransaction(by: id)
         }
-        fetchData(with: state.searchText, from: state.isFilterEnable ? state.date : nil, on: completion)
+        fetchData(
+            with: state.searchText,
+            and: state.selectedCategories,
+            tagsName: state.selectedTags,
+            from: state.isFilterEnable ? state.date : nil,
+            on: completion
+        )
     }
     
     private func copyTransactions(

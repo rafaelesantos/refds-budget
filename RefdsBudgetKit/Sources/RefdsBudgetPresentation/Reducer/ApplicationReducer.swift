@@ -14,6 +14,7 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         state.categoryState = CategoryReducer().reduce(state.categoryState, action)
         state.addTransaction = AddTransactionReducer().reduce(state.addTransaction, action)
         state.transactions = TransactionsReducer().reduce(state.transactions, action)
+        state.tags = TagReducer().reduce(state.tags, action)
         
         switch action {
         case let action as CategoriesAction:

@@ -7,6 +7,7 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var tagRepository: BubbleUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
@@ -14,33 +15,37 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
+        guard let state = state as? ApplicationStateProtocol else { return }
         switch action {
-        case let action as CategoriesAction: self.handler(for: action, on: completion)
+        case let action as CategoriesAction: self.handler(with: state.categoriesState, for: action, on: completion)
         default: break
         }
     }
     
     private func handler(
+        with state: CategoriesStateProtocol,
         for categoriesAction: CategoriesAction,
         on completion: @escaping (CategoriesAction) -> Void
     ) {
         switch categoriesAction {
-        case let .fetchData(date): fetchData(from: date, on: completion)
+        case let .fetchData(date, tagsName): fetchData(from: date, tagsName: tagsName, on: completion)
         case let .fetchBudgetForEdit(date, categoryId, budgetId): fetchBudgetForEdit(from: date, categoryId: categoryId, budgetId: budgetId, on: completion)
         case let .fetchCategoryForEdit(categoryId): fetchCategoryForEdit(with: categoryId, on: completion)
-        case let .removeBudget(date, id): removeBudget(from: date, by: id, on: completion)
-        case let .removeCategory(date, id): removeCategory(from: date, by: id, on: completion)
+        case let .removeBudget(date, id): removeBudget(with: state, from: date, by: id, on: completion)
+        case let .removeCategory(date, id): removeCategory(with: state, from: date, by: id, on: completion)
         default: break
         }
     }
     
     private func fetchData(
         from date: Date?,
+        tagsName: Set<String>,
         on completion: @escaping (CategoriesAction) -> Void
     ) {
         let allEntities = categoryRepository.getAllCategories()
         var categoriesEntity: [CategoryEntity] = []
+        let tags = tagRepository.getBubbles().map { $0.name }
         
         if let date = date {
             categoriesEntity = categoryRepository.getCategories(from: date)
@@ -60,6 +65,24 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 transactionsEntity = transactionRepository.getTransactions(on: $0.id)
             }
             
+            if !tagsName.isEmpty {
+                transactionsEntity = transactionsEntity.filter { transaction in
+                    for tagName in tagsName {
+                        if transaction.message
+                            .folding(options: .diacriticInsensitive, locale: .current)
+                            .lowercased()
+                            .contains(
+                                tagName
+                                    .folding(options: .diacriticInsensitive, locale: .current)
+                                    .lowercased()
+                            ) {
+                            return true
+                        }
+                    }
+                    return false
+                }
+            }
+            
             guard let budget = budgetsEntity.last else { return nil }
             let budgetAmount = budgetsEntity.map { $0.amount }.reduce(.zero, +)
             let spend = transactionsEntity.map { $0.amount }.reduce(.zero, +)
@@ -76,7 +99,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             )
         }
         
-        completion(.updateCategories(categories, allEntities.isEmpty))
+        completion(.updateCategories(categories.sorted(by: { $0.spend > $1.spend }), allEntities.isEmpty, tags))
     }
     
     private func fetchBudgetForEdit(
@@ -111,6 +134,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func removeBudget(
+        with state: CategoriesStateProtocol,
         from date: Date,
         by id: UUID,
         on completion: @escaping (CategoriesAction) -> Void
@@ -144,10 +168,11 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return
         }
         
-        fetchData(from: date, on: completion)
+        completion(.fetchData(date, state.selectedTags))
     }
     
     private func removeCategory(
+        with state: CategoriesStateProtocol,
         from date: Date?,
         by id: UUID,
         on completion: @escaping (CategoriesAction) -> Void
@@ -166,6 +191,6 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try categoryRepository.removeCategory(id: categoryEntity.id)
         } catch { completion(.updateError(.cantDeleteCategory)) }
         
-        fetchData(from: date, on: completion)
+        completion(.fetchData(date, state.selectedTags))
     }
 }

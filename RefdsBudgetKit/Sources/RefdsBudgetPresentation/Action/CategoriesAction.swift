@@ -4,11 +4,10 @@ import RefdsBudgetData
 
 public enum CategoriesAction: RefdsReduxAction {
     case updateError(RefdsBudgetError)
-    case updateCategories([CategoryRowViewDataProtocol], Bool)
+    case updateCategories([CategoryRowViewDataProtocol], Bool, [String])
     case updateBalance(BalanceRowViewDataProtocol)
     
-    case fetchData(Date?)
-    case fetchBalance(Date?)
+    case fetchData(Date?, Set<String>)
     case fetchBudgetForEdit(Date, UUID, UUID)
     case fetchCategoryForEdit(UUID)
     

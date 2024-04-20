@@ -11,6 +11,8 @@ public protocol CategoriesStateProtocol: RefdsReduxState {
     var categories: [CategoryRowViewDataProtocol] { get set }
     var isEmptyCategories: Bool { get set }
     var isEmptyBudgets: Bool { get }
+    var tags: [String] { get set }
+    var selectedTags: Set<String> { get set }
     var balance: BalanceRowViewDataProtocol? { get set }
     var error: RefdsBudgetError? { get set }
 }
@@ -22,6 +24,8 @@ public struct CategoriesState: CategoriesStateProtocol {
     public var date: Date
     public var categories: [CategoryRowViewDataProtocol]
     public var isEmptyCategories: Bool
+    public var tags: [String]
+    public var selectedTags: Set<String> = []
     public var balance: BalanceRowViewDataProtocol?
     public var error: RefdsBudgetError?
     
@@ -34,6 +38,7 @@ public struct CategoriesState: CategoriesStateProtocol {
         date: Date = .current,
         categories: [CategoryRowViewDataProtocol] = [],
         isEmptyCategories: Bool = true,
+        tags: [String] = [],
         balance: BalanceRowViewDataProtocol? = nil
     ) {
         self.isLoading = isLoading
@@ -42,6 +47,7 @@ public struct CategoriesState: CategoriesStateProtocol {
         self.date = date
         self.categories = categories
         self.isEmptyCategories = isEmptyCategories
+        self.tags = tags
         self.balance = balance
     }
 }

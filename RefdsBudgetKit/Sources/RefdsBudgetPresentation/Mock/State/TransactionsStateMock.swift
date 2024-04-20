@@ -8,6 +8,10 @@ public struct TransactionsStateMock: TransactionsStateProtocol {
     public var isLoading: Bool = true
     public var searchText: String = ""
     public var transactions: [[TransactionRowViewDataProtocol]] = [(1 ... 5).map { _ in TransactionRowViewDataMock() }]
+    public var categories: [String] = (1 ... 5).map { _ in CategoryRowViewDataMock().name }
+    public var selectedCategories: Set<String> = []
+    public var tags: [String] = (1 ... 5).map { _ in TagRowViewDataMock().name }
+    public var selectedTags: Set<String> = []
     public var balance: (BalanceRowViewDataProtocol)? = BalanceRowViewDataMock()
     public var error: RefdsBudgetError? = nil
     

@@ -61,7 +61,6 @@ public struct CategoryView: View {
         if let balance = state.balance {
             RefdsSection {
                 BalanceRowView(viewData: balance)
-                rowApplyFilter
                 editCategoryButton
                 removeCategoryButton
             } header: {
@@ -74,26 +73,25 @@ public struct CategoryView: View {
         RefdsToggle(isOn: $state.isFilterEnable) {
             RefdsText(.localizable(by: .categoriesApplyFilters), style: .callout)
         }
-        .padding(.horizontal, .padding(.extraSmall))
     }
     
-    @ViewBuilder
     private var sectionFilters: some View {
-        if state.isFilterEnable {
-            RefdsSection {
+        RefdsSection {
+            rowApplyFilter
+            if state.isFilterEnable {
                 DateRowView(date: $state.date) {
                     HStack {
-                        RefdsIcon(.calendar, color: .accentColor, style: .title3)
+                        RefdsIconRow(.calendar)
                         RefdsText(.localizable(by: .categoriesDate), style: .callout)
                     }
                 }
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesFilter),
-                    style: .footnote,
-                    color: .secondary
-                )
             }
+        } header: {
+            RefdsText(
+                .localizable(by: .categoriesFilter),
+                style: .footnote,
+                color: .secondary
+            )
         }
     }
     

@@ -1,5 +1,8 @@
 // MARK: - Error
 
+"errorExistingTagTitle" = "Tag existente";
+"errorNotFoundTagTitle" = "Tag não encontrada";
+"errorCantDeleteTagTitle" = "Tag não pode ser removida";
 "errorExistingCategoryTitle" = "Categoria existente";
 "errorNotFoundCategoryTitle" = "Categoria não encontrada";
 "errorNotFoundBudgetTitle" = "Budget não encontrado";
@@ -19,6 +22,9 @@
 "errorCantDeleteBudgetDescription" = "O orçamento que você está tentando remover está sendo usado em alguma transação";
 "errorExistingBudgetDescription" = "Já existe um orçamento para o mês informado";
 "errorCantSaveOnDatabaseDescription" = "A informação não pôde ser persistida no dispositivo";
+"errorExistingTagDescription" = "A tag informada já existe no sistema";
+"errorNotFoundTagDescription" = "Não foi possível encontrar a tag";
+"errorCantDeleteTagDescription" = "A tag que deseja remover não foi encontrada";
 
 // MARK: - Loading Row
 
@@ -121,3 +127,22 @@
 "transactionsMoreMultiMenuHeader" = "%d Transações Selecionadas";
 "transactionsMoreMenuHeader" = "Transações";
 "transactionsAddTransaction" = "Adicionar transação";
+"transactionsFilterByDate" = "Filtra por data";
+"transactionsCleanCategoriesFilter" = "Limpar";
+"transactionsCategoriesFilterHeader" = "Selecione uma ou mais categorias";
+"transactionsCategorieAllSelected" = "Todas";
+
+// MARK: - Home
+
+// MARK: - Tags
+
+"tagsNavigationTitle" = "Tags";
+"tagsInputHeader" = "Informações da tag";
+"tagsInputNamePlaceholder" = "Informe o nome da tag";
+"tagsSaveButton" = "Salvar tag";
+"tagsCollapsedHeader" = "Tags criadas";
+"tagsChartSectionHeader" = "Gráfico Comparativo";
+"tagsMenuSelectHeader" = "Selecione uma ou mais tags";
+"tagsRemoveTag" = "Remover tag";
+"tagsCleanSelected" = "Limpar";
+"menuCleanSelections" = "Limpar Seleção";

@@ -36,6 +36,7 @@ public struct CategoriesView: View {
         .navigationTitle(String.localizable(by: .categoriesNavigationTitle))
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
+        .onChange(of: state.selectedTags) { reloadData() }
         .toolbar { ToolbarItem { addCategoryButton } }
         .refreshable { reloadData() }
         .onAppear { reloadData() }
@@ -43,7 +44,7 @@ public struct CategoriesView: View {
     }
     
     private func reloadData() {
-        action(.fetchData(state.isFilterEnable ? state.date : nil))
+        action(.fetchData(state.isFilterEnable ? state.date : nil, state.selectedTags))
     }
     
     private var bindingFilterEnable: Binding<Bool> {
@@ -53,15 +54,6 @@ public struct CategoriesView: View {
             withAnimation {
                 state.isFilterEnable = isEnable
             }
-        }
-    }
-    
-    private var bindingDate: Binding<Date> {
-        Binding {
-            state.date
-        } set: {
-            state.date = $0
-            action(.fetchData(state.date))
         }
     }
     
@@ -137,7 +129,6 @@ public struct CategoriesView: View {
         if let balance = state.balance {
             RefdsSection {
                 BalanceRowView(viewData: balance)
-                rowApplyFilter
                 rowAddBudget
             } header: {
                 RefdsText(
@@ -207,24 +198,35 @@ public struct CategoriesView: View {
         }
     }
     
-    @ViewBuilder
     private var sectionFilters: some View {
-        if state.isFilterEnable {
-            RefdsSection {
+        RefdsSection {
+            rowApplyFilter
+            if state.isFilterEnable {
                 DateRowView(date: $state.date) {
                     HStack(spacing: .padding(.medium)) {
-                        RefdsIcon(.calendar, color: .accentColor, style: .title3)
+                        RefdsIconRow(.calendar)
                         RefdsText(.localizable(by: .categoriesDate), style: .callout)
                     }
                 }
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesFilter),
-                    style: .footnote,
-                    color: .secondary
-                )
             }
+            selectTagRowView
+        } header: {
+            RefdsText(
+                .localizable(by: .categoriesFilter),
+                style: .footnote,
+                color: .secondary
+            )
         }
+    }
+    
+    private var selectTagRowView: some View {
+        SelectMenuRowView(
+            header: .tagsMenuSelectHeader,
+            icon: .bookmarkFill,
+            title: .tagsNavigationTitle,
+            data: state.tags,
+            selectedData: $state.selectedTags
+        )
     }
     
     private var addCategoryButton: some View {

@@ -9,6 +9,10 @@ public protocol TransactionsStateProtocol: RefdsReduxState {
     var isLoading: Bool { get set }
     var searchText: String { get set }
     var transactions: [[TransactionRowViewDataProtocol]] { get set }
+    var categories: [String] { get set }
+    var selectedCategories: Set<String> { get set }
+    var tags: [String] { get set }
+    var selectedTags: Set<String> { get set }
     var balance: BalanceRowViewDataProtocol? { get set }
     var error: RefdsBudgetError? { get set }
 }
@@ -19,6 +23,10 @@ public struct TransactionsState: TransactionsStateProtocol {
     public var isLoading: Bool
     public var searchText: String
     public var transactions: [[TransactionRowViewDataProtocol]]
+    public var categories: [String]
+    public var selectedCategories: Set<String> = []
+    public var tags: [String]
+    public var selectedTags: Set<String> = []
     public var balance: BalanceRowViewDataProtocol?
     public var error: RefdsBudgetError?
     
@@ -28,6 +36,8 @@ public struct TransactionsState: TransactionsStateProtocol {
         isLoading: Bool = true,
         searchText: String = "",
         transactions: [[TransactionRowViewDataProtocol]] = [],
+        categories: [String] = [],
+        tags: [String] = [],
         error: RefdsBudgetError? = nil
     ) {
         self.date = date
@@ -35,6 +45,8 @@ public struct TransactionsState: TransactionsStateProtocol {
         self.isLoading = isLoading
         self.searchText = searchText
         self.transactions = transactions
+        self.categories = categories
+        self.tags = tags
         self.error = error
     }
 }

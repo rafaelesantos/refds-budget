@@ -51,9 +51,9 @@ public class RefdsReduxStoreFactory {
     private static func registerAdapterDependencies() {
         RefdsContainer.register(type: BudgetAdapterProtocol.self) { BudgetAdapter() }
         RefdsContainer.register(type: CategoryAdapterProtocol.self) { CategoryAdapter() }
-        RefdsContainer.register(type: TransactionAdapterProtocol.self) { TransactionAdapter() }
         RefdsContainer.register(type: BudgetRowViewDataAdapterProtocol.self) { BudgetRowViewDataAdapter() }
         RefdsContainer.register(type: TransactionRowViewDataAdapterProtocol.self) { TransactionRowViewDataAdapter() }
+        RefdsContainer.register(type: TagRowViewDataAdapterProtocol.self) { TagRowViewDataAdapter() }
     }
     
     private func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {
@@ -65,6 +65,7 @@ public class RefdsReduxStoreFactory {
             CategoriesMiddleware<ApplicationStateProtocol>().middleware,
             AddTransactionMiddleware<ApplicationStateProtocol>().middleware,
             TransactionsMiddleware<ApplicationStateProtocol>().middleware,
+            TagMiddleware<ApplicationStateProtocol>().middleware,
             RouteMiddleware<ApplicationStateProtocol>().middleware,
         ]
     }

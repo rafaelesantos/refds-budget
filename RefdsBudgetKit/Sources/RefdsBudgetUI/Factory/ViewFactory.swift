@@ -64,4 +64,14 @@ public class ViewFactory: ViewFactoryProtocol {
             action: action
         )
     }
+    
+    public func makeTagView(
+        state: Binding<TagsStateProtocol>,
+        action: @escaping (TagAction) -> Void
+    ) -> any View {
+        TagsView(
+            state: state,
+            action: action
+        )
+    }
 }

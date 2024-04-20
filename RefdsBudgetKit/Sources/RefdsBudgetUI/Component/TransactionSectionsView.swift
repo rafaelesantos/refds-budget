@@ -97,7 +97,10 @@ public struct TransactionSectionsView: View {
         RefdsButton {
             remove?(transaction)
         } label: {
-            Label("Remover", systemImage: RefdsIconSymbol.trashFill.rawValue)
+            Label(
+                String.localizable(by: .transactionsRemoveTransactions),
+                systemImage: RefdsIconSymbol.trashFill.rawValue
+            )
         }
     }
     

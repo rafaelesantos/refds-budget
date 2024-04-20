@@ -17,7 +17,6 @@ public struct DateChartView<X: Plottable, Y: Plottable>: View {
                 buildMark(x: data.x, y: data.y, percentage: data.percentage)
             }
         }
-        .chartLegend(position: .overlay, alignment: .top, spacing: -20)
         .chartYAxis { AxisMarks(position: .trailing) }
         .if(isScrollable) {
             $0.chartScrollableAxes(.horizontal)
@@ -29,8 +28,8 @@ public struct DateChartView<X: Plottable, Y: Plottable>: View {
     
     func buildMark(x: X, y: Y, percentage: Double?) -> some ChartContent {
         BarMark(
-            x: .value("Data", x),
-            y: .value("Value", y),
+            x: .value("x", x),
+            y: .value("y", y),
             width: 20
         )
         .foregroundStyle(percentage?.riskColor ?? .accentColor)

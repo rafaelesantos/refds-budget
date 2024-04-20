@@ -36,6 +36,8 @@ public struct TransactionsView: View {
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
+        .onChange(of: state.selectedCategories) { reloadData() }
+        .onChange(of: state.selectedTags) { reloadData() }
         .toolbar {
             ToolbarItemGroup {
                 #if os(macOS)
@@ -50,7 +52,14 @@ public struct TransactionsView: View {
     }
     
     private func reloadData() {
-        action(.fetchData(state.isFilterEnable ? state.date : nil, state.searchText))
+        action(
+            .fetchData(
+                state.isFilterEnable ? state.date : nil,
+                state.searchText,
+                state.selectedCategories,
+                state.selectedTags
+            )
+        )
     }
     
     private var bindingFilterEnable: Binding<Bool> {
@@ -68,7 +77,6 @@ public struct TransactionsView: View {
         if let balance = state.balance {
             RefdsSection {
                 BalanceRowView(viewData: balance)
-                rowApplyFilter
                 addTransactionButton
             } header: {
                 RefdsText(.localizable(by: .categoriesBalance), style: .footnote, color: .secondary)
@@ -76,31 +84,52 @@ public struct TransactionsView: View {
         }
     }
     
-    private var rowApplyFilter: some View {
-        RefdsToggle(isOn: bindingFilterEnable) {
-            RefdsText(.localizable(by: .categoriesApplyFilters), style: .callout)
-        }
-        .padding(.horizontal, .padding(.extraSmall))
-    }
-    
-    @ViewBuilder
     private var sectionFilters: some View {
-        if state.isFilterEnable {
-            RefdsSection {
+        RefdsSection {
+            rowApplyDateFilter
+            if state.isFilterEnable {
                 DateRowView(date: $state.date) {
-                    HStack {
-                        RefdsIcon(.calendar, color: .accentColor, style: .title3)
+                    HStack(spacing: .padding(.medium)) {
+                        RefdsIconRow(.calendar)
                         RefdsText(.localizable(by: .categoriesDate), style: .callout)
                     }
                 }
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesFilter),
-                    style: .footnote,
-                    color: .secondary
-                )
             }
+            selectCategoryRowView
+            selectTagRowView
+        } header: {
+            RefdsText(
+                .localizable(by: .categoriesFilter),
+                style: .footnote,
+                color: .secondary
+            )
         }
+    }
+    
+    private var rowApplyDateFilter: some View {
+        RefdsToggle(isOn: bindingFilterEnable) {
+            RefdsText(.localizable(by: .transactionsFilterByDate), style: .callout)
+        }
+    }
+    
+    private var selectCategoryRowView: some View {
+        SelectMenuRowView(
+            header: .transactionsCategoriesFilterHeader,
+            icon: .squareStack3dForwardDottedlineFill,
+            title: .categoriesNavigationTitle,
+            data: state.categories,
+            selectedData: $state.selectedCategories
+        )
+    }
+    
+    private var selectTagRowView: some View {
+        SelectMenuRowView(
+            header: .tagsMenuSelectHeader,
+            icon: .bookmarkFill,
+            title: .tagsNavigationTitle,
+            data: state.tags,
+            selectedData: $state.selectedTags
+        )
     }
     
     private var sectionTransactions: some View {

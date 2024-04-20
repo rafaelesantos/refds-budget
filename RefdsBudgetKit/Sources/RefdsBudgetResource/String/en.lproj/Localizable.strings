@@ -1,5 +1,8 @@
 // MARK: - Error
 
+"errorExistingTagTitle" = "Existing Tag";
+"errorNotFoundTagTitle" = "Tag Not Found";
+"errorCantDeleteTagTitle" = "Tag Cannot Be Removed";
 "errorExistingCategoryTitle" = "Existing Category";
 "errorNotFoundCategoryTitle" = "Category Not Found";
 "errorNotFoundBudgetTitle" = "Budget Not Found";
@@ -19,6 +22,9 @@
 "errorCantDeleteBudgetDescription" = "The budget you are trying to remove is being used in some transaction";
 "errorExistingBudgetDescription" = "There is already a budget for the informed month";
 "errorCantSaveOnDatabaseDescription" = "The information could not be persisted on the device";
+"errorExistingTagDescription" = "The specified tag already exists in the system";
+"errorNotFoundTagDescription" = "Could not find the tag";
+"errorCantDeleteTagDescription" = "The tag you want to remove was not found";
 
 // MARK: - Loading Row
 
@@ -121,3 +127,22 @@
 "transactionsMoreMultiMenuHeader" = "%d Transactions Selected";
 "transactionsMoreMenuHeader" = "Transactions";
 "transactionsAddTransaction" = "Add transaction";
+"transactionsFilterByDate" = "Filter by date";
+"transactionsCleanCategoriesFilter" = "Clear";
+"transactionsCategoriesFilterHeader" = "Select one or more categories";
+"transactionsCategorieAllSelected" = "All";
+
+// MARK: - Home
+
+// MARK: - Tags
+
+"tagsNavigationTitle" = "Tags";
+"tagsInputHeader" = "Tag Information";
+"tagsInputNamePlaceholder" = "Enter the tag name";
+"tagsSaveButton" = "Save tag";
+"tagsCollapsedHeader" = "Created Tags";
+"tagsChartSectionHeader" = "Comparative Chart";
+"tagsMenuSelectHeader" = "Select one or more tags";
+"tagsRemoveTag" = "Remove tag";
+"tagsCleanSelected" = "Clear";
+"menuCleanSelections" = "Clear Selection";
