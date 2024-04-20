@@ -112,24 +112,30 @@ public struct TransactionsView: View {
         }
     }
     
+    @ViewBuilder
     private var selectCategoryRowView: some View {
-        SelectMenuRowView(
-            header: .transactionsCategoriesFilterHeader,
-            icon: .squareStack3dForwardDottedlineFill,
-            title: .categoriesNavigationTitle,
-            data: state.categories,
-            selectedData: $state.selectedCategories
-        )
+        if !state.categories.isEmpty {
+            SelectMenuRowView(
+                header: .transactionsCategoriesFilterHeader,
+                icon: .squareStack3dForwardDottedlineFill,
+                title: .categoriesNavigationTitle,
+                data: state.categories,
+                selectedData: $state.selectedCategories
+            )
+        }
     }
     
+    @ViewBuilder
     private var selectTagRowView: some View {
-        SelectMenuRowView(
-            header: .tagsMenuSelectHeader,
-            icon: .bookmarkFill,
-            title: .tagsNavigationTitle,
-            data: state.tags,
-            selectedData: $state.selectedTags
-        )
+        if !state.tags.isEmpty {
+            SelectMenuRowView(
+                header: .tagsMenuSelectHeader,
+                icon: .bookmarkFill,
+                title: .tagsNavigationTitle,
+                data: state.tags,
+                selectedData: $state.selectedTags
+            )
+        }
     }
     
     private var sectionTransactions: some View {

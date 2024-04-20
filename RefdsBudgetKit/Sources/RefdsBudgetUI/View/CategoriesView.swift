@@ -219,14 +219,17 @@ public struct CategoriesView: View {
         }
     }
     
+    @ViewBuilder
     private var selectTagRowView: some View {
-        SelectMenuRowView(
-            header: .tagsMenuSelectHeader,
-            icon: .bookmarkFill,
-            title: .tagsNavigationTitle,
-            data: state.tags,
-            selectedData: $state.selectedTags
-        )
+        if !state.tags.isEmpty {
+            SelectMenuRowView(
+                header: .tagsMenuSelectHeader,
+                icon: .bookmarkFill,
+                title: .tagsNavigationTitle,
+                data: state.tags,
+                selectedData: $state.selectedTags
+            )
+        }
     }
     
     private var addCategoryButton: some View {
