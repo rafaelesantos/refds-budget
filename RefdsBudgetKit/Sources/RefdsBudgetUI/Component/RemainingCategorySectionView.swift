@@ -25,6 +25,12 @@ public struct RemainingCategorySectionView<Header: View>: View {
         RefdsSection {
             header()
             collapseRemainingCategories
+        } header: {
+            RefdsText(
+                .localizable(by: .homeRemainingHeader),
+                style: .footnote,
+                color: .secondary
+            )
         }
     }
     

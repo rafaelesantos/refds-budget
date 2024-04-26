@@ -13,7 +13,7 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
         switch action {
         case let action as CategoriesAction:
             self.handler(for: action, on: completion)
@@ -21,6 +21,9 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
             self.handler(for: action, on: completion)
         case let action as TransactionsAction:
             self.handler(for: action, on: completion)
+        case let action as HomeAction:
+            guard let state = state as? ApplicationStateProtocol else { return }
+            self.handler(with: state.homeState, for: action, on: completion)
         default: break
         }
     }
@@ -64,6 +67,29 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
             let ids = categoryRepository.getAllCategories().filter { categoriesName.contains($0.name) }.map { $0.id }
             let balance = getCurrentBalance(from: date, and: Set(ids), tagsName: tagsName, searchText: searchText)
             completion(.updateBalance(balance))
+        default:
+            break
+        }
+    }
+    
+    private func handler(
+        with state: HomeStateProtocol,
+        for action: HomeAction,
+        on completion: (HomeAction) -> Void
+    ) {
+        switch action {
+        case let .fetchData(date):
+            let ids = categoryRepository.getAllCategories().filter { state.selectedCategories.contains($0.name) }.map { $0.id }
+            let balance = getCurrentBalance(from: date, and: Set(ids), tagsName: state.selectedTags)
+            var remainingBalance = balance
+            remainingBalance.expense = balance.budget - balance.expense
+            remainingBalance.title = .localizable(by: .homeRemainingTitle)
+            completion(
+                .updateBalance(
+                    balance: balance,
+                    remainingBalace: remainingBalance
+                )
+            )
         default:
             break
         }

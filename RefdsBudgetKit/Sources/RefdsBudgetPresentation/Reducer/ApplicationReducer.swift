@@ -12,9 +12,10 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         state.addCategoryState = AddCategoryReducer().reduce(state.addCategoryState, action)
         state.categoriesState = CategoriesReducer().reduce(state.categoriesState, action)
         state.categoryState = CategoryReducer().reduce(state.categoryState, action)
-        state.addTransaction = AddTransactionReducer().reduce(state.addTransaction, action)
-        state.transactions = TransactionsReducer().reduce(state.transactions, action)
-        state.tags = TagReducer().reduce(state.tags, action)
+        state.addTransactionState = AddTransactionReducer().reduce(state.addTransactionState, action)
+        state.transactionsState = TransactionsReducer().reduce(state.transactionsState, action)
+        state.tagsState = TagReducer().reduce(state.tagsState, action)
+        state.homeState = HomeReducer().reduce(state.homeState, action)
         
         switch action {
         case let action as CategoriesAction:
@@ -24,6 +25,8 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         case let action as AddTransactionAction:
             state = self.handler(with: state, for: action)
         case let action as TransactionsAction:
+            state = self.handler(with: state, for: action)
+        case let action as HomeAction:
             state = self.handler(with: state, for: action)
         default: break
         }
@@ -60,7 +63,7 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         case let .editBudget(budget, _):
             state.addBudgetState = budget
         case let .addTransaction(transaction):
-            state.addTransaction = transaction ?? AddTransactionState()
+            state.addTransactionState = transaction ?? AddTransactionState()
         default:
             break
         }
@@ -90,7 +93,21 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         var state: State = state
         switch action {
         case let .addTransaction(transaction):
-            state.addTransaction = transaction ?? AddTransactionState()
+            state.addTransactionState = transaction ?? AddTransactionState()
+        default:
+            break
+        }
+        return state
+    }
+    
+    private func handler(
+        with state: State,
+        for action: HomeAction
+    ) -> State {
+        var state: State = state
+        switch action {
+        case let .manageTags:
+            state.tagsState = TagsState()
         default:
             break
         }

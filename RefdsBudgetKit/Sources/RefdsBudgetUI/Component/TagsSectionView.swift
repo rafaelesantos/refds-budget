@@ -6,12 +6,12 @@ import RefdsBudgetPresentation
 
 public struct TagsSectionView: View {
     private let tags: [TagRowViewDataProtocol]
-    @Binding private var selectedTag: TagRowViewDataProtocol
-    private let action: (TagAction) -> Void
+    @State private var selectedTag: TagRowViewDataProtocol?
+    private let action: () -> Void
     
     private var bindindAngleSelection: Binding<Double?> {
         Binding {
-            selectedTag.value
+            selectedTag?.value
         } set: { value in
             if let value = value, let tag = selectedTag(for: value) {
                 withAnimation {
@@ -33,11 +33,9 @@ public struct TagsSectionView: View {
     
     public init(
         tags: [TagRowViewDataProtocol],
-        selectedTag: Binding<TagRowViewDataProtocol>,
-        action: @escaping (TagAction) -> Void
+        action: @escaping () -> Void
     ) {
-        self.tags = tags
-        self._selectedTag = selectedTag
+        self.tags = tags.sorted(by: { ($0.value ?? .zero) > ($1.value ?? .zero) })
         self.action = action
     }
     
@@ -50,7 +48,7 @@ public struct TagsSectionView: View {
                     chartView
                 }
                 .padding()
-                
+                rowManageTagsView
                 rowCollapsedView
             } header: {
                 RefdsText(
@@ -59,12 +57,14 @@ public struct TagsSectionView: View {
                     color: .secondary
                 )
             }
+            .onChange(of: tags.count) { selectedTag = tags.first }
+            .onAppear { selectedTag = tags.first }
         }
     }
     
     @ViewBuilder
     private var headerView: some View {
-        if let value = selectedTag.value {
+        if let selectedTag = selectedTag, let value = selectedTag.value {
             VStack {
                 RefdsText(value.currency(), style: .title, weight: .bold)
                     .contentTransition(.numericText())
@@ -77,13 +77,13 @@ public struct TagsSectionView: View {
         Chart(tags, id: \.id) {
             SectorMark(
                 angle: .value("y", $0.value ?? .zero),
-                innerRadius: .ratio(selectedTag.id == $0.id ? 0.4 : 0.5),
-                outerRadius: .ratio(selectedTag.id == $0.id ? 1 : 0.9),
+                innerRadius: .ratio(selectedTag?.id == $0.id ? 0.4 : 0.5),
+                outerRadius: .ratio(selectedTag?.id == $0.id ? 1 : 0.9),
                 angularInset: 3
             )
             .cornerRadius(5)
             .foregroundStyle(by: .value("x", $0.name))
-            .opacity(selectedTag.id == $0.id ? 1 : 0.8)
+            .opacity(selectedTag?.id == $0.id ? 1 : 0.8)
         }
         .chartForegroundStyleScale(
             domain: tags.map  { $0.name },
@@ -94,8 +94,24 @@ public struct TagsSectionView: View {
         .frame(height: 320)
     }
     
+    private var rowManageTagsView: some View {
+        RefdsButton {
+            action()
+        } label: {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(.tagFill)
+                RefdsText(
+                    .localizable(by: .homeManageTags),
+                    style: .callout
+                )
+                Spacer()
+                RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
+            }
+        }
+    }
+    
     private var rowCollapsedView: some View {
-        RefdsCollapse(isCollapsed: true) {
+        RefdsCollapse(isCollapsed: false) {
             RefdsText(.localizable(by: .tagsCollapsedHeader), style: .callout)
         } content: {
             rowTags
@@ -108,10 +124,10 @@ public struct TagsSectionView: View {
             let tags = tags.sorted(by: { ($0.value ?? .zero) > ($1.value ?? .zero) })
             ForEach(tags.indices, id: \.self) {
                 let tag = tags[$0]
-                TagRowView(viewData: tag) { tag in
+                RefdsButton {
                     withAnimation { selectedTag = tag }
-                } remove: {
-                    action(.removeTag($0.id))
+                } label: {
+                    TagRowView(viewData: tag)
                 }
             }
         }
@@ -119,8 +135,9 @@ public struct TagsSectionView: View {
 }
 
 #Preview {
-    TagsSectionView(
-        tags: (1 ... 5).map { _ in TagRowViewDataMock() },
-        selectedTag: .constant(TagRowViewData())
-    ) { _ in }
+    List {
+        TagsSectionView(
+            tags: (1 ... 5).map { _ in TagRowViewDataMock() }
+        ) {  }
+    }
 }

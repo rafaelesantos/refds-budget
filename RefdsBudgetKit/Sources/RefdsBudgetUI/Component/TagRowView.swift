@@ -5,62 +5,30 @@ import RefdsBudgetPresentation
 
 public struct TagRowView: View {
     private let viewData: TagRowViewDataProtocol
-    private let action: ((TagRowViewDataProtocol) -> Void)?
-    private let remove: ((TagRowViewDataProtocol) -> Void)?
     
-    public init(
-        viewData: TagRowViewDataProtocol,
-        action: ((TagRowViewDataProtocol) -> Void)? = nil,
-        remove: ((TagRowViewDataProtocol) -> Void)? = nil
-    ) {
+    public init(viewData: TagRowViewDataProtocol) {
         self.viewData = viewData
-        self.action = action
-        self.remove = remove
     }
     
     public var body: some View {
-        RefdsButton {
-            action?(viewData)
-        } label: {
-            content
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            swipeRemoveButton
-        }
-        .contextMenu {
-            contextRemoveButton
-        }
+        content
     }
     
     private var content: some View {
         HStack(spacing: .padding(.medium)) {
-            BubbleColorView(color: viewData.color, isSelected: false)
-                .scaleEffect(0.6)
-            RefdsText(viewData.name, style: .callout)
+            BubbleColorView(color: viewData.color, isSelected: false, size: 18)
+            VStack(alignment: .leading) {
+                RefdsText(viewData.name, style: .callout)
+                
+                if let amount = viewData.amount {
+                    RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: amount), style: .callout, color: .secondary)
+                }
+            }
+            
             Spacer(minLength: .zero)
             if let value = viewData.value {
-                RefdsText(value.currency(), style: .callout, weight: .light)
+                RefdsText(value.currency(), style: .callout)
             }
-        }
-    }
-    
-    private var swipeRemoveButton: some View {
-        RefdsButton { 
-            remove?(viewData)
-        } label: {
-            RefdsIcon(.trashFill)
-        }
-        .tint(.red)
-    }
-    
-    private var contextRemoveButton: some View {
-        RefdsButton {
-            remove?(viewData)
-        } label: {
-            Label(
-                String.localizable(by: .tagsRemoveTag),
-                systemImage: RefdsIconSymbol.trashFill.rawValue
-            )
         }
     }
 }

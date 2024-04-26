@@ -131,8 +131,15 @@
 "transactionsCleanCategoriesFilter" = "Limpar";
 "transactionsCategoriesFilterHeader" = "Selecione uma ou mais categorias";
 "transactionsCategorieAllSelected" = "Todas";
+"transactionsLargestPurchaseHeader" = "Maiores Compras";
 
 // MARK: - Home
+
+"homeNavigationTitle" = "Início";
+"homeRemainingHeader" = "Restante";
+"homeRemainingTitle" = "Total Restante";
+"homeRemainingCategoryTransactions" = "%d transações";
+"homeManageTags" = "Gerenciar Tags";
 
 // MARK: - Tags
 
@@ -144,5 +151,6 @@
 "tagsChartSectionHeader" = "Gráfico Comparativo";
 "tagsMenuSelectHeader" = "Selecione uma ou mais tags";
 "tagsRemoveTag" = "Remover tag";
+"tagsEditTag" = "Editar tag";
 "tagsCleanSelected" = "Limpar";
 "menuCleanSelections" = "Limpar Seleção";

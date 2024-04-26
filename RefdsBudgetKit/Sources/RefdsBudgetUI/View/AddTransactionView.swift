@@ -241,7 +241,7 @@ public struct AddTransactionView: View {
         @StateObject private var store = RefdsReduxStoreFactory(mock: true).mock
         
         var body: some View {
-            AddTransactionView(state: $store.state.addTransaction) {
+            AddTransactionView(state: $store.state.addTransactionState) {
                 store.dispatch(action: $0)
             }
         }

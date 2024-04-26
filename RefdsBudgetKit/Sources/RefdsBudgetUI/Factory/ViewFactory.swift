@@ -74,4 +74,14 @@ public class ViewFactory: ViewFactoryProtocol {
             action: action
         )
     }
+    
+    public func makeHomeView(
+        state: Binding<HomeStateProtocol>,
+        action: @escaping (HomeAction) -> Void
+    ) -> any View {
+        HomeView(
+            state: state,
+            action: action
+        )
+    }
 }

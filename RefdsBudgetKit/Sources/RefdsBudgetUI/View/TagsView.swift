@@ -1,7 +1,7 @@
 import SwiftUI
 import RefdsUI
-import Charts
 import RefdsRedux
+import RefdsShared
 import RefdsBudgetPresentation
 
 public struct TagsView: View {
@@ -28,22 +28,15 @@ public struct TagsView: View {
         List {
             sectionInput
             sectionSaveButton
-            sectionFilters
-            TagsSectionView(
-                tags: state.tags,
-                selectedTag: $state.selectedTag,
-                action: action
-            )
+            sectionTags
         }
         #if os(macOS)
         .listStyle(.plain)
         #elseif os(iOS)
         .listStyle(.insetGrouped)
         #endif
-        .refreshable { action(.fetchData(state.isFilterEnable ? state.date : nil)) }
+        .refreshable { action(.fetchData) }
         .onAppear { fetchDataOnAppear() }
-        .onChange(of: state.date) { action(.fetchData(state.isFilterEnable ? state.date : nil)) }
-        .onChange(of: state.isFilterEnable) { action(.fetchData(state.isFilterEnable ? state.date : nil)) }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
         .navigationTitle(String.localizable(by: .tagsNavigationTitle))
@@ -51,43 +44,7 @@ public struct TagsView: View {
     
     private func fetchDataOnAppear() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchData(state.isFilterEnable ? state.date : nil))
-        }
-    }
-    
-    private var sectionFilters: some View {
-        RefdsSection {
-            rowApplyDateFilter
-            if state.isFilterEnable {
-                DateRowView(date: $state.date) {
-                    HStack(spacing: .padding(.medium)) {
-                        RefdsIconRow(.calendar)
-                        RefdsText(.localizable(by: .categoriesDate), style: .callout)
-                    }
-                }
-            }
-        } header: {
-            RefdsText(
-                .localizable(by: .categoriesFilter),
-                style: .footnote,
-                color: .secondary
-            )
-        }
-    }
-    
-    private var bindingFilterEnable: Binding<Bool> {
-        Binding {
-            state.isFilterEnable
-        } set: { isEnable in
-            withAnimation {
-                state.isFilterEnable = isEnable
-            }
-        }
-    }
-    
-    private var rowApplyDateFilter: some View {
-        RefdsToggle(isOn: bindingFilterEnable) {
-            RefdsText(.localizable(by: .transactionsFilterByDate), style: .callout)
+            action(.fetchData)
         }
     }
     
@@ -163,6 +120,33 @@ public struct TagsView: View {
         }
     }
     
+    private var sectionTags: some View {
+        RefdsSection {
+            ForEach(state.tags.indices, id: \.self) { index in
+                let tag = state.tags[index]
+                RefdsButton {
+                    withAnimation { state.selectedTag = tag }
+                } label: {
+                    TagRowView(viewData: tag)
+                }
+                .contextMenu {
+                    contextRemoveButton(at: index)
+                    contextEditButton(at: index)
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    swipeRemoveButton(at: index)
+                    swipeEditButton(at: index)
+                }
+            }
+        } header: {
+            RefdsText(
+                .localizable(by: .tagsNavigationTitle),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
     private var sectionSaveButton: some View {
         RefdsSection {} footer: {
             saveButton
@@ -194,6 +178,46 @@ public struct TagsView: View {
             }
         }
     }
+    
+    private func swipeRemoveButton(at index: Int) -> some View {
+        RefdsButton {
+            action(.removeTag(state.tags[index].id))
+        } label: {
+            RefdsIcon(.trashFill)
+        }
+        .tint(.red)
+    }
+    
+    private func contextRemoveButton(at index: Int) -> some View {
+        RefdsButton {
+            action(.removeTag(state.tags[index].id))
+        } label: {
+            Label(
+                String.localizable(by: .tagsRemoveTag),
+                systemImage: RefdsIconSymbol.trashFill.rawValue
+            )
+        }
+    }
+    
+    private func swipeEditButton(at index: Int) -> some View {
+        RefdsButton {
+            state.selectedTag = state.tags[index]
+        } label: {
+            RefdsIcon(.squareAndPencil)
+        }
+        .tint(.orange)
+    }
+    
+    private func contextEditButton(at index: Int) -> some View {
+        RefdsButton {
+            state.selectedTag = state.tags[index]
+        } label: {
+            Label(
+                String.localizable(by: .tagsEditTag),
+                systemImage: RefdsIconSymbol.squareAndPencil.rawValue
+            )
+        }
+    }
 }
 
 #Preview {
@@ -202,7 +226,7 @@ public struct TagsView: View {
         
         var body: some View {
             NavigationStack {
-                TagsView(state: $store.state.tags) {
+                TagsView(state: $store.state.tagsState) {
                     store.dispatch(action: $0)
                 }
             }

@@ -10,9 +10,10 @@ public struct ApplicationStateMock: ApplicationStateProtocol {
     public var addCategoryState: AddCategoryStateProtocol = AddCategoryStateMock()
     public var categoryState: CategoryStateProtocol = CategoryStateMock()
     public var categoriesState: CategoriesStateProtocol = CategoriesStateMock()
-    public var addTransaction: AddTransactionStateProtocol = AddTransactionStateMock()
-    public var transactions: TransactionsStateProtocol = TransactionsStateMock()
-    public var tags: TagsStateProtocol = TagsStateMock()
+    public var addTransactionState: AddTransactionStateProtocol = AddTransactionStateMock()
+    public var transactionsState: TransactionsStateProtocol = TransactionsStateMock()
+    public var tagsState: TagsStateProtocol = TagsStateMock()
+    public var homeState: HomeStateProtocol = HomeStateMock()
     
     public init() {}
 }

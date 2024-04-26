@@ -156,8 +156,7 @@ public struct CategoriesView: View {
                     RefdsIcon(
                         .chevronRight,
                         color: .secondary.opacity(0.5),
-                        style: .callout,
-                        weight: .bold
+                        style: .callout
                     )
                 }
             }
@@ -224,7 +223,7 @@ public struct CategoriesView: View {
         if !state.tags.isEmpty {
             SelectMenuRowView(
                 header: .tagsMenuSelectHeader,
-                icon: .bookmarkFill,
+                icon: .tagFill,
                 title: .tagsNavigationTitle,
                 data: state.tags,
                 selectedData: $state.selectedTags

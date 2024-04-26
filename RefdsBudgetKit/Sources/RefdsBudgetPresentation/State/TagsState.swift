@@ -6,8 +6,6 @@ import RefdsBudgetData
 public protocol TagsStateProtocol: RefdsReduxState {
     var selectedTag: TagRowViewDataProtocol { get set }
     var tags: [TagRowViewDataProtocol] { get set }
-    var isFilterEnable: Bool { get set }
-    var date: Date { get set }
     var error: RefdsBudgetError? { get set }
     var canSave: Bool { get }
 }
@@ -15,8 +13,6 @@ public protocol TagsStateProtocol: RefdsReduxState {
 public struct TagsState: TagsStateProtocol {
     public var selectedTag: TagRowViewDataProtocol
     public var tags: [TagRowViewDataProtocol]
-    public var isFilterEnable: Bool
-    public var date: Date
     public var error: RefdsBudgetError?
     
     public var canSave: Bool {
@@ -26,13 +22,9 @@ public struct TagsState: TagsStateProtocol {
     
     public init(
         selectedTag: TagRowViewDataProtocol = TagRowViewData(),
-        tags: [TagRowViewDataProtocol] = [],
-        isFilterEnable: Bool = true,
-        date: Date = .current
+        tags: [TagRowViewDataProtocol] = []
     ) {
         self.selectedTag = selectedTag
         self.tags = tags
-        self.isFilterEnable = isFilterEnable
-        self.date = date
     }
 }

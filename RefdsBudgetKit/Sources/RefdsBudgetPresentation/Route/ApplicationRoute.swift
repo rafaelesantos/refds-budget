@@ -8,6 +8,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
     case addCategory
     case category
     case addTransaction
+    case manageTags
     
     public var navigationType: RefdsNavigationType {
         .push
@@ -37,7 +38,8 @@ public enum ApplicationRoute: RefdsRoutableRedux {
             case .addBudget: AnyView(viewFactory.makeAddBudgetView(state: state.addBudgetState, action: action))
             case .addCategory: AnyView(viewFactory.makeAddCategoryView(state: state.addCategoryState, action: action))
             case .category: AnyView(viewFactory.makeCategoryView(state: state.categoryState, action: action))
-            case .addTransaction: AnyView(viewFactory.makeAddTransactionView(state: state.addTransaction, action: action))
+            case .addTransaction: AnyView(viewFactory.makeAddTransactionView(state: state.addTransactionState, action: action))
+            case .manageTags: AnyView(viewFactory.makeTagView(state: state.tagsState, action: action))
             }
         }
     }

@@ -13,9 +13,10 @@ public protocol ApplicationStateProtocol: RefdsReduxState {
     var addCategoryState: AddCategoryStateProtocol { get set }
     var categoryState: CategoryStateProtocol { get set }
     var categoriesState: CategoriesStateProtocol { get set }
-    var addTransaction: AddTransactionStateProtocol { get set }
-    var transactions: TransactionsStateProtocol { get set }
-    var tags: TagsStateProtocol { set get }
+    var addTransactionState: AddTransactionStateProtocol { get set }
+    var transactionsState: TransactionsStateProtocol { get set }
+    var tagsState: TagsStateProtocol { get set }
+    var homeState: HomeStateProtocol { get set }
 }
 
 public struct ApplicationState: ApplicationStateProtocol {
@@ -27,9 +28,10 @@ public struct ApplicationState: ApplicationStateProtocol {
     public var addCategoryState: AddCategoryStateProtocol
     public var categoryState: CategoryStateProtocol
     public var categoriesState: CategoriesStateProtocol
-    public var addTransaction: AddTransactionStateProtocol
-    public var transactions: TransactionsStateProtocol
-    public var tags: TagsStateProtocol
+    public var addTransactionState: AddTransactionStateProtocol
+    public var transactionsState: TransactionsStateProtocol
+    public var tagsState: TagsStateProtocol
+    public var homeState: HomeStateProtocol
     
     public init(
         itemNavigation: ItemNavigation? = .categories,
@@ -40,9 +42,10 @@ public struct ApplicationState: ApplicationStateProtocol {
         addCategoryState: AddCategoryStateProtocol = AddCategoryState(),
         categoryState: CategoryStateProtocol = CategoryState(),
         categoriesState: CategoriesStateProtocol = CategoriesState(),
-        addTransaction: AddTransactionStateProtocol = AddTransactionState(),
-        transactions: TransactionsStateProtocol = TransactionsState(),
-        tags: TagsStateProtocol = TagsState()
+        addTransactionState: AddTransactionStateProtocol = AddTransactionState(),
+        transactionsState: TransactionsStateProtocol = TransactionsState(),
+        tagsState: TagsStateProtocol = TagsState(),
+        homeState: HomeStateProtocol = HomeState()
     ) {
         self.itemNavigation = itemNavigation
         self.categoriesRouter = categoriesRouter
@@ -52,8 +55,9 @@ public struct ApplicationState: ApplicationStateProtocol {
         self.addCategoryState = addCategoryState
         self.categoryState = categoryState
         self.categoriesState = categoriesState
-        self.addTransaction = addTransaction
-        self.transactions = transactions
-        self.tags = tags
+        self.addTransactionState = addTransactionState
+        self.transactionsState = transactionsState
+        self.tagsState = tagsState
+        self.homeState = homeState
     }
 }

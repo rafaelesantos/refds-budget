@@ -35,4 +35,9 @@ public protocol ViewFactoryProtocol {
         state: Binding<TagsStateProtocol>,
         action: @escaping (TagAction) -> Void
     ) -> any View
+    
+    func makeHomeView(
+        state: Binding<HomeStateProtocol>,
+        action: @escaping (HomeAction) -> Void
+    ) -> any View
 }

@@ -42,16 +42,18 @@ public struct RemainingCategoryRowView: View {
             HStack(spacing: .zero) {
                 VStack(spacing: .padding(.extraSmall)) {
                     HStack(spacing: .padding(.small)) {
-                        RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
+                        HStack {
+                            statusIconView
+                            RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
+                        }
                         Spacer(minLength: .zero)
                         RefdsText(budget.currency(), style: .callout, lineLimit: 1)
                             .contentTransition(.numericText())
                     }
                     
                     HStack(spacing: .padding(.small)) {
-                        ProgressView(value: percentage, total: 1)
-                            .tint(percentage.riskColor)
-                            .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                        RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: viewData.transactionsAmount), style: .callout, color: .secondary)
+                        Spacer(minLength: .zero)
                         RefdsText((1 - viewData.percentage).percent(), style: .callout, color: .secondary)
                     }
                 }
@@ -59,10 +61,19 @@ public struct RemainingCategoryRowView: View {
         }
     }
     
+    private var statusIconView: some View {
+        RefdsIcon(
+            budget > 0 ? .arrowtriangleUpSquareFill : .arrowtriangleDownSquareFill,
+            color: percentage.riskColor,
+            size: 15,
+            renderingMode: .hierarchical
+        )
+    }
+    
     private func updateStateValue() {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             withAnimation {
-                budget = viewData.budget
+                budget = viewData.budget - viewData.spend
                 percentage = viewData.percentage > 1 ? 1 : viewData.percentage
             }
         }

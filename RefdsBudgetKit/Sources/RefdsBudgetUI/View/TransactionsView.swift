@@ -130,7 +130,7 @@ public struct TransactionsView: View {
         if !state.tags.isEmpty {
             SelectMenuRowView(
                 header: .tagsMenuSelectHeader,
-                icon: .bookmarkFill,
+                icon: .tagFill,
                 title: .tagsNavigationTitle,
                 data: state.tags,
                 selectedData: $state.selectedTags
@@ -158,8 +158,7 @@ public struct TransactionsView: View {
                 RefdsIcon(
                     .chevronRight,
                     color: .secondary.opacity(0.5),
-                    style: .callout,
-                    weight: .bold
+                    style: .callout
                 )
             }
         }
@@ -221,7 +220,7 @@ public struct TransactionsView: View {
         
         var body: some View {
             NavigationStack {
-                TransactionsView(state: $store.state.transactions) {
+                TransactionsView(state: $store.state.transactionsState) {
                     store.dispatch(action: $0)
                 }
             }

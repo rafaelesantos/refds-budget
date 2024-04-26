@@ -112,7 +112,13 @@ public enum LocalizableKey: String {
     case transactionsCleanCategoriesFilter
     case transactionsCategoriesFilterHeader
     case transactionsCategorieAllSelected
+    case transactionsLargestPurchaseHeader
     // MARK: - Home
+    case homeNavigationTitle
+    case homeRemainingHeader
+    case homeRemainingTitle
+    case homeRemainingCategoryTransactions
+    case homeManageTags
     // MARK: - Tags
     case tagsNavigationTitle
     case tagsInputHeader
@@ -122,6 +128,7 @@ public enum LocalizableKey: String {
     case tagsChartSectionHeader
     case tagsMenuSelectHeader
     case tagsRemoveTag
+    case tagsEditTag
     case tagsCleanSelected
     case menuCleanSelections
 }

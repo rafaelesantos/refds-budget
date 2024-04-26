@@ -78,8 +78,8 @@ struct ContentView: View {
                 action: store.dispatch(action:)
             ) {
                 AnyView(
-                    viewFactory.makeTagView(
-                        state: $store.state.tags,
+                    viewFactory.makeHomeView(
+                        state: $store.state.homeState,
                         action: store.dispatch(action:)
                     )
                 )
@@ -99,7 +99,7 @@ struct ContentView: View {
             ) {
                 AnyView(
                     viewFactory.makeTransactionsView(
-                        state: $store.state.transactions,
+                        state: $store.state.transactionsState,
                         action: store.dispatch(action:)
                     )
                 )
@@ -138,7 +138,7 @@ struct ContentView: View {
             case .transactions:
                 AnyView(
                     viewFactory.makeTransactionsView(
-                        state: $store.state.transactions,
+                        state: $store.state.transactionsState,
                         action: store.dispatch(action:)
                     )
                 )
@@ -170,7 +170,7 @@ struct ContentView: View {
                 ) {
                     AnyView(
                         viewFactory.makeAddTransactionView(
-                            state: $store.state.addTransaction,
+                            state: $store.state.addTransactionState,
                             action: store.dispatch(action:)
                         )
                     )

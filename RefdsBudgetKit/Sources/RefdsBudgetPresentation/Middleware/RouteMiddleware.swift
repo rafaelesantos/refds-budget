@@ -31,6 +31,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             self.handler(for: action, on: completion)
         case let action as TransactionsAction:
             self.handler(for: action, on: completion)
+        case let action as HomeAction:
+            self.handler(for: action, on: completion)
         default: break
         }
     }
@@ -49,7 +51,9 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 case .categories:
                     state.categoriesRouter.popToRoot()
                     state.categoriesRouter.route(to: route)
-                case .home: break
+                case .home: 
+                    state.homeRouter.popToRoot()
+                    state.homeRouter.route(to: route)
                 case .transactions:
                     state.transactionsRouter.popToRoot()
                     state.transactionsRouter.route(to: route)
@@ -61,7 +65,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 switch state.itemNavigation {
                 case .categories:
                     state.categoriesRouter.route(to: route)
-                case .home: break
+                case .home:
+                    state.homeRouter.route(to: route)
                 case .transactions:
                     state.transactionsRouter.route(to: route)
                 case .settings: break
@@ -73,7 +78,9 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             case .categories:
                 state.categoriesRouter.popToRoot()
                 state.categoriesRouter.route(to: route)
-            case .home: break
+            case .home:
+                state.homeRouter.popToRoot()
+                state.homeRouter.route(to: route)
             case .transactions:
                 state.transactionsRouter.popToRoot()
                 state.transactionsRouter.route(to: route)
@@ -85,7 +92,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             switch state.itemNavigation {
             case .categories:
                 state.categoriesRouter.dismiss()
-            case .home: break
+            case .home:
+                state.homeRouter.dismiss()
             case .transactions:
                 state.transactionsRouter.dismiss()
             case .settings: break
@@ -156,6 +164,16 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         switch action {
         case .addTransaction: completion(.updateRoute(.addTransaction))
+        default: break
+        }
+    }
+    
+    private func handler(
+        for action: HomeAction,
+        on completion: @escaping (ApplicationAction) -> Void
+    ) {
+        switch action {
+        case .manageTags: completion(.updateRoute(.manageTags))
         default: break
         }
     }

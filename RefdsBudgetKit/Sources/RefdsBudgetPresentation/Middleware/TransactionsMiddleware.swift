@@ -18,7 +18,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
     public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
         guard let state = state as? ApplicationStateProtocol else { return }
         switch action {
-        case let action as TransactionsAction: self.handler(with: state.transactions, for: action, on: completion)
+        case let action as TransactionsAction: self.handler(with: state.transactionsState, for: action, on: completion)
         default: break
         }
     }
