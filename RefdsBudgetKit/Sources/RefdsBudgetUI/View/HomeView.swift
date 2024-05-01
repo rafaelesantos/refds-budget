@@ -28,7 +28,10 @@ public struct HomeView: View {
     public var body: some View {
         List {
             balanceSectionView
+            LoadingRowView(isLoading: state.isLoading)
             sectionFilters
+            emptyBudgetView
+            spendBudgetSectionView
             remainingSectionView
             tagsSectionView
             largestPurchaseSectionView
@@ -117,6 +120,13 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
+    private var spendBudgetSectionView: some View {
+        if !state.remaining.isEmpty {
+            SpendBudgetSectionView(viewData: state.remaining)
+        }
+    }
+    
+    @ViewBuilder
     private var remainingSectionView: some View {
         if let balance = state.remainingBalance {
             RemainingCategorySectionView(
@@ -139,6 +149,21 @@ public struct HomeView: View {
     private var largestPurchaseSectionView: some View {
         if !state.largestPurchase.isEmpty {
             LargestPurchaseSectionView(transactions: state.largestPurchase)
+        }
+    }
+    
+    @ViewBuilder
+    private var emptyBudgetView: some View {
+        if state.remaining.isEmpty, state.largestPurchase.isEmpty {
+            RefdsSection {
+                EmptyRowView(title: .emptyBudgetsTitle)
+            } header: {
+                RefdsText(
+                    .localizable(by: .categoryBudgetsHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
+            }
         }
     }
 }

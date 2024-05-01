@@ -1,5 +1,6 @@
 import SwiftUI
 import RefdsUI
+import RefdsShared
 import RefdsRedux
 import RefdsBudgetPresentation
 
@@ -200,7 +201,21 @@ public struct AddBudgetView: View {
                         .tag($0)
                 }
             } label: {
-                RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
+                HStack(spacing: .padding(.medium)) {
+                    if let category = state.category,
+                       let icon = RefdsIconSymbol(rawValue: category.icon) {
+                        RefdsIcon(
+                            icon,
+                            color: category.color,
+                            size: .padding(.medium)
+                        )
+                        .frame(width: .padding(.medium), height: .padding(.medium))
+                        .padding(10)
+                        .background(category.color.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: .cornerRadius))
+                    }
+                    RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
+                }
             }
         }
     }

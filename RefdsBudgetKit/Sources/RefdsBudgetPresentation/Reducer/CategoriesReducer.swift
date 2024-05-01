@@ -18,13 +18,12 @@ public final class CategoriesReducer: RefdsReduxReducerProtocol {
             state.error = error
             
         case let .updateCategories(categories, isEmptyCategories, tags):
-            state.isLoading = false
             state.categories = categories
             state.isEmptyCategories = isEmptyCategories
             state.tags = tags
+            state.isLoading = false
             
         case let .updateBalance(balance):
-            state.isLoading = false
             state.balance = balance
             
         case .removeBudget,

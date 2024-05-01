@@ -140,6 +140,11 @@
 "homeRemainingTitle" = "Total Remaining";
 "homeRemainingCategoryTransactions" = "%d transactions";
 "homeManageTags" = "Manage Tags";
+"homeSpendBudgetHeader" = "Budgets vs Expenditures";
+"homeSpendBudgetCategory" = "Category";
+"homeSpendBudgetBudgetTitle" = "Budget";
+"homeSpendBudgetSpendTitle" = "Expenditure";
+"homeSpendBudgetPercentageResult" = "Percentage Result";
 
 // MARK: - Tags
 

@@ -106,7 +106,7 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
     ) -> State {
         var state: State = state
         switch action {
-        case let .manageTags:
+        case .manageTags:
             state.tagsState = TagsState()
         default:
             break

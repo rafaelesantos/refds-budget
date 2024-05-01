@@ -17,8 +17,10 @@ public struct LargestPurchaseSectionView: View {
                     rowTransaction(for: index)
                 }
             }
+            #if os(iOS)
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
+            #endif
             .frame(height: 260)
             .padding(.horizontal, -20)
         } header: {

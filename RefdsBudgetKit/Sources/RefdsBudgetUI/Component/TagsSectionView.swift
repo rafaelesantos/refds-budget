@@ -35,20 +35,24 @@ public struct TagsSectionView: View {
         tags: [TagRowViewDataProtocol],
         action: @escaping () -> Void
     ) {
-        self.tags = tags.sorted(by: { ($0.value ?? .zero) > ($1.value ?? .zero) })
+        self.tags = tags.filter {
+            ($0.value ?? .zero) > .zero
+        }.sorted(by: {
+            ($0.value ?? .zero) > ($1.value ?? .zero)
+        })
         self.action = action
     }
     
     @ViewBuilder
     public var body: some View {
-        if tags.allSatisfy({ $0.value != nil }), !tags.isEmpty {
+        if tags.allSatisfy({ $0.value != nil && ($0.value ?? .zero) > .zero }), !tags.isEmpty {
             RefdsSection {
+                rowManageTagsView
                 VStack {
                     headerView
                     chartView
                 }
-                .padding()
-                rowManageTagsView
+                .padding(.padding(.extraLarge))
                 rowCollapsedView
             } header: {
                 RefdsText(
@@ -89,17 +93,16 @@ public struct TagsSectionView: View {
             domain: tags.map  { $0.name },
             range: tags.map { $0.color }
         )
-        .chartLegend(position: .bottom, alignment: .bottom)
+        .chartLegend(.hidden)
         .chartAngleSelection(value: bindindAngleSelection)
-        .frame(height: 320)
+        .frame(height: 250)
     }
     
     private var rowManageTagsView: some View {
         RefdsButton {
             action()
         } label: {
-            HStack(spacing: .padding(.medium)) {
-                RefdsIconRow(.tagFill)
+            HStack {
                 RefdsText(
                     .localizable(by: .homeManageTags),
                     style: .callout

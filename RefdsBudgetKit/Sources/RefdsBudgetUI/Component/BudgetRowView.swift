@@ -34,7 +34,9 @@ public struct BudgetRowView: View {
                 HStack(spacing: .padding(.medium)) {
                     ProgressView(value: percentage, total: 1)
                         .tint(percentage.riskColor)
+                    #if os(iOS)
                         .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                    #endif
                         .padding(.vertical, .padding(.extraSmall))
                     RefdsText(percentage.percent(), style: .footnote, color: .secondary)
                 }

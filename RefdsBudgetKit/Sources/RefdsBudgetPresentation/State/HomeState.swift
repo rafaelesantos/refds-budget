@@ -3,6 +3,7 @@ import RefdsRedux
 import RefdsBudgetData
 
 public protocol HomeStateProtocol: RefdsReduxState {
+    var isLoading: Bool { get set }
     var balance: BalanceRowViewDataProtocol? { get set }
     var remainingBalance: BalanceRowViewDataProtocol? { get set }
     var remaining: [CategoryRowViewDataProtocol] { get set }
@@ -18,6 +19,7 @@ public protocol HomeStateProtocol: RefdsReduxState {
 }
 
 public struct HomeState: HomeStateProtocol {
+    public var isLoading: Bool = true
     public var balance: BalanceRowViewDataProtocol?
     public var remainingBalance: BalanceRowViewDataProtocol?
     public var remaining: [CategoryRowViewDataProtocol] = []

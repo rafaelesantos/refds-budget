@@ -119,6 +119,11 @@ public enum LocalizableKey: String {
     case homeRemainingTitle
     case homeRemainingCategoryTransactions
     case homeManageTags
+    case homeSpendBudgetHeader
+    case homeSpendBudgetCategory
+    case homeSpendBudgetBudgetTitle
+    case homeSpendBudgetSpendTitle
+    case homeSpendBudgetPercentageResult
     // MARK: - Tags
     case tagsNavigationTitle
     case tagsInputHeader

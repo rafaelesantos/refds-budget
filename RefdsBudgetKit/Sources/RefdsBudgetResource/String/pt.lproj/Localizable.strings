@@ -140,6 +140,11 @@
 "homeRemainingTitle" = "Total Restante";
 "homeRemainingCategoryTransactions" = "%d transações";
 "homeManageTags" = "Gerenciar Tags";
+"homeSpendBudgetHeader" = "Orçamentos vs Gastos";
+"homeSpendBudgetCategory" = "Categoria";
+"homeSpendBudgetBudgetTitle" = "Orçamento";
+"homeSpendBudgetSpendTitle" = "Gasto";
+"homeSpendBudgetPercentageResult" = "Resultado Percentual";
 
 // MARK: - Tags
 

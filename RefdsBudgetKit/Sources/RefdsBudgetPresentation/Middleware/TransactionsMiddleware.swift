@@ -103,8 +103,6 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             ($1.first?.date ?? Date())
         })
         
-        
-        
         return completion(.updateData(
             transactions: groupedTransactions,
             categories: categories.map { $0.name },
@@ -163,12 +161,13 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try transactionRepository.removeTransaction(by: id)
         } catch { completion(.updateError(.notFoundTransaction)) }
         
-        fetchData(
-            with: state.searchText,
-            and: state.selectedCategories,
-            tagsName: state.selectedTags,
-            from: state.isFilterEnable ? state.date : nil,
-            on: completion
+        completion(
+            .fetchData(
+                state.isFilterEnable ? state.date : nil,
+                state.searchText,
+                state.selectedCategories,
+                state.selectedTags
+            )
         )
     }
     
@@ -180,12 +179,13 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         ids.forEach { id in
             try? transactionRepository.removeTransaction(by: id)
         }
-        fetchData(
-            with: state.searchText,
-            and: state.selectedCategories,
-            tagsName: state.selectedTags,
-            from: state.isFilterEnable ? state.date : nil,
-            on: completion
+        completion(
+            .fetchData(
+                state.isFilterEnable ? state.date : nil,
+                state.searchText,
+                state.selectedCategories,
+                state.selectedTags
+            )
         )
     }
     
@@ -219,7 +219,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         #if os(macOS)
         NSPasteboard.general.setString(transactions, forType: .string)
-        #else
+        #elseif os(iOS)
         UIPasteboard.general.string = transactions
         #endif
     }

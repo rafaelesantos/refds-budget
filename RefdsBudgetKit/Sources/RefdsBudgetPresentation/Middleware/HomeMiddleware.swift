@@ -82,7 +82,7 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
             for: categoryEntities,
             on: transactionEntities,
             with: budgetEntities
-        )
+        ).sorted(by: { $0.spend > $1.spend })
         
         let tags = getTagsRow(
             for: transactionEntities,

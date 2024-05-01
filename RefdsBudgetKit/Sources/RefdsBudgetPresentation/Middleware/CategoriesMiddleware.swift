@@ -99,7 +99,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             )
         }
         
-        completion(.updateCategories(categories.sorted(by: { $0.spend > $1.spend }), allEntities.isEmpty, tags))
+        completion(.updateCategories(categories.sorted(by: { $0.name < $1.name }), allEntities.isEmpty, tags))
     }
     
     private func fetchBudgetForEdit(

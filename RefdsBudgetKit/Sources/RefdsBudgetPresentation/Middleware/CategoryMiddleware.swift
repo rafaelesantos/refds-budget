@@ -298,7 +298,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         #if os(macOS)
         NSPasteboard.general.setString(transactions, forType: .string)
-        #else
+        #elseif os(iOS)
         UIPasteboard.general.string = transactions
         #endif
     }

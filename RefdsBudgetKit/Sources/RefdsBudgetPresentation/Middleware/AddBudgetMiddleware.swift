@@ -35,7 +35,12 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         from date: Date,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
-        let categories = categoryRepository.getAllCategories().map { entity in
+        let categoryEntities: [(CategoryEntity, Double)] = categoryRepository.getAllCategories().map {
+            let budget = categoryRepository.getBudget(on: $0.id, from: date)?.amount ?? .zero
+            return ($0, budget)
+        }.sorted(by: { $0.1 < $1.1 })
+        
+        let categories = categoryEntities.map { $0.0 }.map { entity in
             categoryAdapter.adapt(entity: entity)
         }
         

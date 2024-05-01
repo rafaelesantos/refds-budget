@@ -119,18 +119,23 @@ struct ContentView: View {
             List(ItemNavigation.allCases, selection: $store.state.itemNavigation) { item in
                 NavigationLink(value: item) {
                     Label(item.title, systemImage: item.icon.rawValue)
-                        .font(.title3)
                 }
-                .padding(.vertical, 3)
             }
             .listStyle(.sidebar)
-            .navigationSplitViewColumnWidth(250)
         } content: {
             switch store.state.itemNavigation {
             case .categories:
                 AnyView(
                     viewFactory.makeCegoriesView(
                         state: $store.state.categoriesState,
+                        action: store.dispatch(action:)
+                    )
+                )
+                .navigationSplitViewColumnWidth(360)
+            case .home:
+                AnyView(
+                    viewFactory.makeHomeView(
+                        state: $store.state.homeState,
                         action: store.dispatch(action:)
                     )
                 )

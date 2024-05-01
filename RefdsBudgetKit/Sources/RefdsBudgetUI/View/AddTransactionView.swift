@@ -108,7 +108,6 @@ public struct AddTransactionView: View {
         if !state.isEmptyCategories, !state.isEmptyBudgets {
             RefdsSection {
                 rowCategories
-                rowPercentage
             } header: {
                 RefdsText(
                     .localizable(by: .addBudgetCategoryHeader),
@@ -133,22 +132,31 @@ public struct AddTransactionView: View {
     @ViewBuilder
     private var rowCategories: some View {
         if !state.categories.isEmpty {
-            Picker(selection: bindingCategory) {
-                ForEach(state.categories.map { $0.name }, id: \.self) {
-                    RefdsText($0)
-                        .tag($0)
+            HStack(spacing: .padding(.medium)) {
+                if let category = state.category,
+                   let icon = RefdsIconSymbol(rawValue: category.icon) {
+                    RefdsIcon(
+                        icon,
+                        color: category.color,
+                        size: .padding(.medium)
+                    )
+                    .frame(width: .padding(.medium), height: .padding(.medium))
+                    .padding(10)
+                    .background(category.color.opacity(0.2))
+                    .clipShape(.rect(cornerRadius: .cornerRadius))
                 }
-            } label: {
-                HStack(spacing: .padding(.medium)) {
-                    if let category = state.category, let icon = RefdsIconSymbol(rawValue: category.icon) {
-                        RefdsIcon(icon, color: category.color)
-                            .frame(width: 20, height: 20)
-                            .padding(5)
-                            .background(category.color.opacity(0.2))
-                            .clipShape(.rect(cornerRadius: 6))
+                
+                VStack(spacing: .zero) {
+                    Picker(selection: bindingCategory) {
+                        ForEach(state.categories.map { $0.name }, id: \.self) {
+                            RefdsText($0)
+                                .tag($0)
+                        }
+                    } label: {
+                        RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
                     }
                     
-                    RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
+                    rowPercentage
                 }
             }
         }
@@ -162,7 +170,9 @@ public struct AddTransactionView: View {
                 let percentage = spend / (category.budget == .zero ? 1 : category.budget)
                 ProgressView(value: percentage > 1 ? 1 : percentage, total: 1)
                     .tint(percentage.riskColor)
+                #if os(iOS)
                     .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                #endif
                     .animation(.default, value: percentage)
                 RefdsText(percentage.percent(), style: .callout, color: .secondary)
             }

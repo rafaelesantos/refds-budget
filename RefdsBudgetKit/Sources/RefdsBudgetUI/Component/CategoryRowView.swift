@@ -55,7 +55,9 @@ public struct CategoryRowView: View {
                     HStack(spacing: .padding(.small)) {
                         ProgressView(value: percentage, total: 1)
                             .tint(percentage.riskColor)
+                        #if os(iOS)
                             .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                        #endif
                         RefdsText(viewData.percentage.percent(), style: .callout, color: .secondary)
                     }
                 }

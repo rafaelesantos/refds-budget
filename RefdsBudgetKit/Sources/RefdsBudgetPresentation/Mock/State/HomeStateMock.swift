@@ -2,6 +2,7 @@ import Foundation
 import RefdsBudgetData
 
 public struct HomeStateMock: HomeStateProtocol {
+    public var isLoading: Bool = true
     public var balance: BalanceRowViewDataProtocol? = BalanceRowViewDataMock()
     public var remainingBalance: BalanceRowViewDataProtocol? = BalanceRowViewDataMock()
     public var remaining: [CategoryRowViewDataProtocol] = (1 ... 5).map { _ in CategoryRowViewDataMock() }

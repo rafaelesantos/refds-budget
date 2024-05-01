@@ -67,7 +67,7 @@ public struct TagsView: View {
         #if os(macOS)
         RefdsTextField(
             .localizable(by: .tagsInputNamePlaceholder),
-            text: $state.newTagName,
+            text: $state.selectedTag.name,
             axis: .vertical,
             style: .callout
         )

@@ -21,16 +21,19 @@ public struct RemainingCategorySectionView<Header: View>: View {
         self.action = action
     }
     
+    @ViewBuilder
     public var body: some View {
-        RefdsSection {
-            header()
-            collapseRemainingCategories
-        } header: {
-            RefdsText(
-                .localizable(by: .homeRemainingHeader),
-                style: .footnote,
-                color: .secondary
-            )
+        if !viewData.isEmpty {
+            RefdsSection {
+                header()
+                collapseRemainingCategories
+            } header: {
+                RefdsText(
+                    .localizable(by: .homeRemainingHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
+            }
         }
     }
     

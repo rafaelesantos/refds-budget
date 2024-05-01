@@ -21,11 +21,11 @@ public struct CategoriesView: View {
     public var body: some View {
         List {
             sectionBalance
+            LoadingRowView(isLoading: state.isLoading)
             sectionFilters
             sectionEmptyCategories
             sectionEmptyBudgets
             sectionsCategory
-            sectionBudgetsChart
             sectionLegend
         }
         #if os(macOS)
@@ -241,28 +241,6 @@ public struct CategoriesView: View {
         )
         .onTapGesture {
             action(.addCategory(nil))
-        }
-    }
-    
-    @ViewBuilder
-    private var sectionBudgetsChart: some View {
-        if !state.isEmptyCategories, !state.isEmptyBudgets {
-            RefdsSection {
-                let data: [(x: String, y: Double, percentage: Double?)] = state.categories.map {
-                    (
-                        x: $0.name,
-                        y: $0.budget,
-                        percentage: $0.percentage
-                    )
-                }
-                DateChartView(data: data, isScrollable: false)
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesChartHeader),
-                    style: .footnote,
-                    color: .secondary
-                )
-            }
         }
     }
     
