@@ -8,6 +8,7 @@ public protocol BalanceRowViewDataProtocol: RefdsReduxState {
     var income: Double { get set }
     var budget: Double { get set }
     var spendPercentage: Double { get }
+    var amount: Int { get set }
 }
 
 public struct BalanceRowViewData: BalanceRowViewDataProtocol {
@@ -16,6 +17,7 @@ public struct BalanceRowViewData: BalanceRowViewDataProtocol {
     public var expense: Double
     public var income: Double
     public var budget: Double
+    public var amount: Int
     
     public var spendPercentage: Double {
         expense / (budget == 0 ? 1 : budget)
@@ -26,12 +28,14 @@ public struct BalanceRowViewData: BalanceRowViewDataProtocol {
         subtitle: String? = nil,
         expense: Double = .zero,
         income: Double = .zero,
-        budget: Double = .zero
+        budget: Double = .zero,
+        amount: Int = .zero
     ) {
         self.title = title
         self.subtitle = subtitle
         self.expense = expense
         self.income = income
         self.budget = budget
+        self.amount = amount
     }
 }

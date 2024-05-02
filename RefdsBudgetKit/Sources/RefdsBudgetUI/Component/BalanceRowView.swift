@@ -19,12 +19,27 @@ public struct BalanceRowView: View {
         HStack {
             VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
                 if let title = viewData.title {
-                    RefdsText(
-                        title.uppercased(),
-                        style: .caption,
-                        color: .accentColor,
-                        weight: .bold
-                    )
+                    HStack(spacing: .padding(.small)) {
+                        if !isRemaining {
+                            RefdsText(
+                                viewData.amount.asString,
+                                style: .footnote,
+                                color: .accentColor,
+                                weight: .bold
+                            )
+                            .padding(3)
+                            .padding(.horizontal, 3)
+                            .background(Color.accentColor.opacity(0.1))
+                            .clipShape(.rect(cornerRadius: 3))
+                        }
+                        
+                        RefdsText(
+                            title.uppercased(),
+                            style: .caption,
+                            color: .accentColor,
+                            weight: .bold
+                        )
+                    }
                 }
                 
                 RefdsText(
@@ -49,10 +64,14 @@ public struct BalanceRowView: View {
                         
                         RefdsText(
                             viewData.budget.currency(),
-                            style: .callout,
+                            style: .footnote,
                             color: .secondary,
                             weight: .bold
                         )
+                        .padding(3)
+                        .padding(.horizontal, 3)
+                        .background(Color.secondary.opacity(0.1))
+                        .clipShape(.rect(cornerRadius: 3))
                     }
                 }
             }

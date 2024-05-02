@@ -4,23 +4,29 @@ import RefdsUI
 public struct LoadingRowView: View {
     @State private var loading: Bool = false
     private let isLoading: Bool
+    private let isToolbar: Bool
     
-    public init(isLoading: Bool) {
+    public init(isLoading: Bool, isToolbar: Bool = false) {
         self.isLoading = isLoading
+        self.isToolbar = isToolbar
     }
     
     @ViewBuilder
     public var body: some View {
         Group {
             if loading {
-                RefdsSection {
-                    HStack(spacing: .padding(.extraLarge)) {
-                        VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
-                            RefdsText(.localizable(by: .loadinginRowTitle), style: .callout, weight: .bold)
-                            RefdsText(.localizable(by: .loadinginRowDescription), style: .callout, color: .secondary)
+                if isToolbar {
+                    RefdsLoadingView()
+                } else {
+                    RefdsSection {
+                        HStack(spacing: .padding(.extraLarge)) {
+                            VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
+                                RefdsText(.localizable(by: .loadinginRowTitle), style: .callout, weight: .bold)
+                                RefdsText(.localizable(by: .loadinginRowDescription), style: .callout, color: .secondary)
+                            }
+                            Spacer()
+                            RefdsLoadingView()
                         }
-                        Spacer()
-                        RefdsLoadingView()
                     }
                 }
             }

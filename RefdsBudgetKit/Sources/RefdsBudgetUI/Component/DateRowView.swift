@@ -34,26 +34,41 @@ public struct DateRowView<Content: View>: View {
     }
     
     public var body: some View {
-        HStack(spacing: .zero) {
-            Picker(selection: bindingMonth) {
-                let months = Calendar.current.monthSymbols
-                ForEach(months, id: \.self) {
-                    RefdsText($0.capitalized)
-                        .tag($0)
+        Menu {
+            let months = Calendar.current.monthSymbols
+            ForEach(months, id: \.self) { month in
+                RefdsButton {
+                    withAnimation {
+                        bindingMonth.wrappedValue = month
+                    }
+                } label: {
+                    Label(
+                        month.capitalized,
+                        systemImage: bindingMonth.wrappedValue == month ? RefdsIconSymbol.checkmark.rawValue : ""
+                    )
                 }
-            } label: {
-                content()
             }
-            
-            Picker(selection: bindingYear) {
-                let currentYear = date.asString(withDateFormat: .year).asInt ?? .zero
-                let years = (currentYear - 8 ... currentYear + 8).map { $0 }
-                ForEach(years, id: \.self) {
-                    RefdsText($0.asString)
-                        .tag($0)
+        } label: {
+            RefdsText(.localizable(by: .filterDateMonth))
+        }
+        
+        Menu {
+            let currentYear = date.asString(withDateFormat: .year).asInt ?? .zero
+            let years = (currentYear - 8 ... currentYear + 8).map { $0 }
+            ForEach(years, id: \.self) { year in
+                RefdsButton {
+                    withAnimation {
+                        bindingYear.wrappedValue = year
+                    }
+                } label: {
+                    Label(
+                        year.asString,
+                        systemImage: bindingYear.wrappedValue == year ? RefdsIconSymbol.checkmark.rawValue : ""
+                    )
                 }
-            } label: {}
-                .frame(width: 90)
+            }
+        } label: {
+            RefdsText(.localizable(by: .filterDateYear))
         }
     }
 }

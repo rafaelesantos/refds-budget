@@ -219,7 +219,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return
         }
         
-        fetchData(with: categoryId, and: state.searchText, from: date, on: completion)
+        completion(
+            .fetchData(
+                date,
+                categoryId,
+                state.searchText
+            )
+        )
     }
     
     private func removeCategory(
@@ -242,7 +248,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try categoryRepository.removeCategory(id: categoryEntity.id)
         } catch { completion(.updateError(.cantDeleteCategory)) }
         
-        fetchData(with: id, and: state.searchText, from: date, on: completion)
+        completion(
+            .fetchData(
+                state.isFilterEnable ? state.date : nil,
+                id,
+                state.searchText
+            )
+        )
     }
     
     private func removeTransaction(
@@ -254,7 +266,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try transactionRepository.removeTransaction(by: id)
         } catch { completion(.updateError(.notFoundTransaction)) }
         
-        fetchData(with: state.id, and: state.searchText, from: state.isFilterEnable ? state.date : nil, on: completion)
+        completion(
+            .fetchData(
+                state.isFilterEnable ? state.date : nil,
+                state.id,
+                state.searchText
+            )
+        )
     }
     
     private func removeTransactions(
@@ -265,7 +283,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         ids.forEach { id in
             try? transactionRepository.removeTransaction(by: id)
         }
-        fetchData(with: state.id, and: state.searchText, from: state.isFilterEnable ? state.date : nil, on: completion)
+        completion(
+            .fetchData(
+                state.isFilterEnable ? state.date : nil,
+                state.id,
+                state.searchText
+            )
+        )
     }
     
     private func copyTransactions(

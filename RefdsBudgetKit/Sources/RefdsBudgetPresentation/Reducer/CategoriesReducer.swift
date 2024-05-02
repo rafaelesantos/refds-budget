@@ -26,14 +26,7 @@ public final class CategoriesReducer: RefdsReduxReducerProtocol {
         case let .updateBalance(balance):
             state.balance = balance
             
-        case .removeBudget,
-                .removeCategory,
-                .fetchCategoryForEdit,
-                .fetchBudgetForEdit,
-                .showCategory,
-                .addCategory,
-                .addBudget, nil:
-            break
+        default: break
         }
         
         return state

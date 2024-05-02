@@ -5,6 +5,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct CategoryView: View {
+    @Environment(\.editMode) private var editMode
     @Binding private var state: CategoryStateProtocol
     @State private var multiSelection = Set<UUID>()
     private let action: (CategoryAction) -> Void
@@ -39,10 +40,6 @@ public struct CategoryView: View {
         .onChange(of: state.searchText) { reloadData() }
         .toolbar {
             ToolbarItemGroup {
-                #if os(macOS)
-                #else
-                EditButton()
-                #endif
                 moreButton
             }
         }
@@ -69,29 +66,29 @@ public struct CategoryView: View {
         }
     }
     
-    private var rowApplyFilter: some View {
-        RefdsToggle(isOn: $state.isFilterEnable) {
-            RefdsText(.localizable(by: .categoriesApplyFilters), style: .callout)
-        }
-    }
-    
     private var sectionFilters: some View {
-        RefdsSection {
-            rowApplyFilter
-            if state.isFilterEnable {
-                DateRowView(date: $state.date) {
-                    HStack {
-                        RefdsIconRow(.calendar)
-                        RefdsText(.localizable(by: .categoriesDate), style: .callout)
-                    }
-                }
+        Menu {
+            RefdsButton {
+                withAnimation { state.isFilterEnable.toggle() }
+            } label: {
+                Label(
+                    String.localizable(by: .transactionsFilterByDate),
+                    systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
+                )
             }
-        } header: {
-            RefdsText(
-                .localizable(by: .categoriesFilter),
-                style: .footnote,
-                color: .secondary
-            )
+            
+            if state.isFilterEnable {
+                DateRowView(date: $state.date, content: {})
+            }
+        } label: {
+            HStack {
+                RefdsText(.localizable(by: .categoriesFilter), style: .callout)
+                Spacer()
+                if state.isFilterEnable {
+                    RefdsText(state.date.asString(withDateFormat: .custom("MMMM, yyyy")), style: .callout, color: .secondary)
+                }
+                RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
+            }
         }
     }
     
@@ -130,22 +127,14 @@ public struct CategoryView: View {
     @ViewBuilder
     private var sectionBudgetsChart: some View {
         if state.budgtes.count > 1 {
-            RefdsSection {
-                let data: [(x: String, y: Double, percentage: Double?)] = state.budgtes.map {
-                    (
-                        x: $0.date.asString(withDateFormat: .monthYear),
-                        y: $0.amount,
-                        percentage: $0.percentage
-                    )
-                }
-                DateChartView(data: data)
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesChartHeader),
-                    style: .footnote,
-                    color: .secondary
+            let data: [(x: Date, y: Double, percentage: Double?)] = state.budgtes.map {
+                (
+                    x: $0.date,
+                    y: $0.amount,
+                    percentage: $0.percentage
                 )
             }
+            DateChartView(data: data)
         }
     }
     
@@ -192,26 +181,39 @@ public struct CategoryView: View {
     
     private var moreButton: some View {
         Menu {
+            RefdsText(.localizable(by: .transactionsMoreMenuHeader, with: multiSelection.count))
+            Divider()
+            
+            RefdsButton {
+                withAnimation { editMode?.wrappedValue.toggle() }
+            } label: {
+                Label(
+                    editMode.isEditing ? String.localizable(by: .transactionsOptionsSelectDone) : String.localizable(by: .transactionsOptionsSelect),
+                    systemImage: RefdsIconSymbol.checkmarkCircle.rawValue
+                )
+            }
+            
             if !multiSelection.isEmpty {
-                RefdsText(.localizable(by: .transactionsMoreMultiMenuHeader, with: multiSelection.count))
-                Divider()
-                RefdsButton {
+                Button(role: .destructive) {
                     action(.removeTransactions(multiSelection))
+                    if editMode.isEditing {
+                        withAnimation { editMode?.wrappedValue.toggle() }
+                    }
                 } label: {
                     Label(
                         String.localizable(by: .transactionsRemoveTransactions),
                         systemImage: RefdsIconSymbol.trashFill.rawValue
                     )
                 }
-            } else {
-                RefdsText(.localizable(by: .transactionsMoreMenuHeader, with: multiSelection.count))
-                Divider()
             }
             
             if !state.transactions.isEmpty {
                 let ids = multiSelection.isEmpty ? Set(state.transactions.flatMap { $0 }.map { $0.id }) : multiSelection
                 RefdsButton {
                     action(.copyTransactions(ids))
+                    if editMode.isEditing {
+                        withAnimation { editMode?.wrappedValue.toggle() }
+                    }
                 } label: {
                     Label(
                         String.localizable(by: .transactionsCopyTransactions),

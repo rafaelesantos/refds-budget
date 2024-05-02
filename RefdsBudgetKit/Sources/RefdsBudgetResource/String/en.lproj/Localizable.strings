@@ -119,19 +119,22 @@
 
 // MARK: - Transactions
 
+"transactionNavigationTitle" = "Transactions";
+"transactionEditNavigationTitle" = "%d Selected";
 "transactionsCopyHeader" = "Total of %d transactions for the period from %@ to %@\n\n";
 "transactionsCopyFooter" = "TOTAL: %@";
 "transactionsRemoveTransactions" = "Remove";
 "transactionsCopyTransactions" = "Copy";
 "transactionsNewTransactions" = "Add";
-"transactionsMoreMultiMenuHeader" = "%d Transactions Selected";
-"transactionsMoreMenuHeader" = "Transactions";
+"transactionsMoreMenuHeader" = "Options";
 "transactionsAddTransaction" = "Add transaction";
 "transactionsFilterByDate" = "Filter by date";
 "transactionsCleanCategoriesFilter" = "Clear";
 "transactionsCategoriesFilterHeader" = "Select one or more categories";
 "transactionsCategorieAllSelected" = "All";
 "transactionsLargestPurchaseHeader" = "Largest Purchases";
+"transactionsOptionsSelect" = "Select";
+"transactionsOptionsSelectDone" = "Done";
 
 // MARK: - Home
 
@@ -159,3 +162,10 @@
 "tagsEditTag" = "Edit tag";
 "tagsCleanSelected" = "Clear";
 "menuCleanSelections" = "Clear Selection";
+
+// MARK: - Filter
+
+"filterDateMonth" = "Month";
+"filterDateYear" = "Year";
+"filterCategory" = "Categories";
+"filterTags" = "Tags";

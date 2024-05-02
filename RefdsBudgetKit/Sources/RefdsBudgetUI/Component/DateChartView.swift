@@ -1,16 +1,73 @@
 import SwiftUI
+import RefdsUI
 import Charts
 
-public struct DateChartView<X: Plottable, Y: Plottable>: View {
-    private let data: [(x: X, y: Y, percentage: Double?)]
-    private let isScrollable: Bool
+public struct DateChartView: View {
+    @State private var chartSelection: String = ""
+    private let data: [(x: Date, y: Double, percentage: Double?)]
+    private let format: String.DateFormat
     
-    init(data: [(x: X, y: Y, percentage: Double?)], isScrollable: Bool = true) {
-        self.data = data
-        self.isScrollable = isScrollable
+    init(data: [(x: Date, y: Double, percentage: Double?)], format: String.DateFormat = .custom("MMMM, yyyy")) {
+        self.data = data.reversed()
+        self.format = format
     }
     
     public var body: some View {
+        RefdsSection {
+            seletedBarView
+            chartView
+                .padding(.top, -15)
+        } header: {
+            RefdsText(
+                .localizable(by: .categoriesChartHeader),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+        .onAppear {
+            withAnimation {
+                if let date = data.first?.x.asString(withDateFormat: format) {
+                    chartSelection = date
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var seletedBarView: some View {
+        if let value = data.first(where: { chartSelection == $0.x.asString(withDateFormat: format) })?.y,
+           let position = data.sorted(by: { $0.y > $1.y }).firstIndex(where: { chartSelection == $0.x.asString(withDateFormat: format) })?.asString.asInt {
+            HStack(spacing: .padding(.medium)) {
+                if position < 9 {
+                    rankSealView(for: position)
+                }
+                RefdsText(chartSelection, style: .callout)
+                Spacer()
+                RefdsText(value.currency(), style: .callout, weight: .bold)
+                    .contentTransition(.numericText())
+            }
+        }
+    }
+    
+    private func rankSealView(for index: Int) -> some View {
+        ZStack {
+            RefdsIcon(
+                .sealFill,
+                color: .yellow,
+                size: 25
+            )
+            
+            RefdsText(
+                (index + 1).asString,
+                style: .callout,
+                color: .white,
+                weight: .heavy
+            )
+        }
+        .padding(.vertical, 2)
+    }
+    
+    private var chartView: some View {
         Chart {
             ForEach(data.indices, id: \.self) { index in
                 let data = data[index]
@@ -18,17 +75,31 @@ public struct DateChartView<X: Plottable, Y: Plottable>: View {
             }
         }
         .chartYAxis { AxisMarks(position: .trailing) }
-        .if(isScrollable) {
-            $0.chartScrollableAxes(.horizontal)
-        }
+        .chartScrollableAxes(.horizontal)
+        .chartXVisibleDomain(length: 4)
         .frame(height: 200)
         .padding(.vertical)
         .padding(.top)
+        .chartOverlay { proxy in
+            GeometryReader { geometry in
+                ZStack(alignment: .top) {
+                    Rectangle()
+                        .fill(.clear)
+                        .contentShape(.rect)
+                        .onTapGesture { location in
+                            guard let plotFrame = proxy.plotFrame else { return }
+                            let position = location.x - geometry[plotFrame].origin.x
+                            guard let date: String = proxy.value(atX: position) else { return }
+                            withAnimation { chartSelection = date.asDate(withFormat: .dayMonthYear)?.asString(withDateFormat: format) ?? "" }
+                        }
+                }
+            }
+        }
     }
     
-    func buildMark(x: X, y: Y, percentage: Double?) -> some ChartContent {
+    private func buildMark(x: Date, y: Double, percentage: Double?) -> some ChartContent {
         BarMark(
-            x: .value("x", x),
+            x: .value("x", x.asString(withDateFormat: .dayMonthYear)),
             y: .value("y", y),
             width: 20
         )

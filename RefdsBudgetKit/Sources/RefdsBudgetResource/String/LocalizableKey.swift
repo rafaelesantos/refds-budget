@@ -100,6 +100,8 @@ public enum LocalizableKey: String {
     case addTransactionNavigationTitle
     case addTransactionDescriptionPrompt
     // MARK: - Transactions
+    case transactionNavigationTitle
+    case transactionEditNavigationTitle
     case transactionsCopyHeader
     case transactionsCopyFooter
     case transactionsRemoveTransactions
@@ -113,6 +115,8 @@ public enum LocalizableKey: String {
     case transactionsCategoriesFilterHeader
     case transactionsCategorieAllSelected
     case transactionsLargestPurchaseHeader
+    case transactionsOptionsSelect
+    case transactionsOptionsSelectDone
     // MARK: - Home
     case homeNavigationTitle
     case homeRemainingHeader
@@ -136,4 +140,9 @@ public enum LocalizableKey: String {
     case tagsEditTag
     case tagsCleanSelected
     case menuCleanSelections
+    // MARK: - Filter
+    case filterDateMonth
+    case filterDateYear
+    case filterCategory
+    case filterTags
 }

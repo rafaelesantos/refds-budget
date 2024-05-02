@@ -34,7 +34,7 @@ public struct ApplicationState: ApplicationStateProtocol {
     public var homeState: HomeStateProtocol
     
     public init(
-        itemNavigation: ItemNavigation? = .categories,
+        itemNavigation: ItemNavigation? = .home,
         categoriesRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
         transactionsRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
         homeRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),

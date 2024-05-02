@@ -27,17 +27,14 @@ public struct SelectMenuRowView: View {
     }
     
     public var body: some View {
-        HStack(spacing: .padding(.medium)) {
-            RefdsIconRow(icon)
-            Menu {
-                menuHeader
-                Divider()
-                menuOptions
-                Divider()
-                menuFooter
-            } label: {
-                menuLabel
-            }
+        Menu {
+            menuHeader
+            Divider()
+            menuOptions
+            Divider()
+            menuFooter
+        } label: {
+            menuLabel
         }
     }
     
@@ -83,7 +80,7 @@ public struct SelectMenuRowView: View {
             RefdsText(.localizable(by: title), style: .callout)
             Spacer()
             menuLabelDetail
-            RefdsIcon(.chevronUpChevronDown, color: .secondary)
+            RefdsIcon(icon)
         }
     }
     

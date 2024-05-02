@@ -2,6 +2,7 @@ import SwiftUI
 import RefdsUI
 import RefdsRedux
 import RefdsRouter
+import RefdsShared
 import RefdsInjection
 import RefdsBudgetResource
 import RefdsBudgetPresentation
@@ -45,16 +46,6 @@ public struct CategoriesView: View {
     
     private func reloadData() {
         action(.fetchData(state.isFilterEnable ? state.date : nil, state.selectedTags))
-    }
-    
-    private var bindingFilterEnable: Binding<Bool> {
-        Binding {
-            state.isFilterEnable
-        } set: { isEnable in
-            withAnimation {
-                state.isFilterEnable = isEnable
-            }
-        }
     }
     
     private var sectionsCategory: some View {
@@ -163,12 +154,6 @@ public struct CategoriesView: View {
         }
     }
     
-    private var rowApplyFilter: some View {
-        RefdsToggle(isOn: bindingFilterEnable) {
-            RefdsText(.localizable(by: .categoriesApplyFilters), style: .callout)
-        }
-    }
-    
     @ViewBuilder
     private var sectionEmptyBudgets: some View {
         if !state.isEmptyCategories, state.isEmptyBudgets {
@@ -197,24 +182,39 @@ public struct CategoriesView: View {
         }
     }
     
+    @ViewBuilder
     private var sectionFilters: some View {
-        RefdsSection {
-            rowApplyFilter
-            if state.isFilterEnable {
-                DateRowView(date: $state.date) {
-                    HStack(spacing: .padding(.medium)) {
-                        RefdsIconRow(.calendar)
-                        RefdsText(.localizable(by: .categoriesDate), style: .callout)
-                    }
-                }
+        Menu {
+            RefdsButton {
+                withAnimation { state.isFilterEnable.toggle() }
+            } label: {
+                Label(
+                    String.localizable(by: .transactionsFilterByDate),
+                    systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
+                )
             }
+            
+            if state.isFilterEnable {
+                DateRowView(date: $state.date, content: {})
+            }
+            
             selectTagRowView
-        } header: {
-            RefdsText(
-                .localizable(by: .categoriesFilter),
-                style: .footnote,
-                color: .secondary
-            )
+        } label: {
+            HStack {
+                RefdsText(.localizable(by: .categoriesFilter), style: .callout)
+                Spacer()
+                if state.isFilterEnable {
+                    RefdsText(state.date.asString(withDateFormat: .custom("MMMM, yyyy")), style: .callout, color: .secondary)
+                }
+                RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
+            }
+        }
+        
+        let words = Array(state.selectedTags)
+        let sentence = words.joined(separator: " • ").uppercased()
+        
+        if !sentence.isEmpty {
+            RefdsText(sentence, style: .footnote, color: .secondary)
         }
     }
     

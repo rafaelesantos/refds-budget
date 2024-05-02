@@ -5,6 +5,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct TransactionsView: View {
+    @Environment(\.editMode) private var editMode
     @Binding private var state: TransactionsStateProtocol
     @State private var multiSelection = Set<UUID>()
     private let action: (TransactionsAction) -> Void
@@ -30,7 +31,7 @@ public struct TransactionsView: View {
         .listStyle(.insetGrouped)
         #endif
         .searchable(text: $state.searchText)
-        .navigationTitle(String.localizable(by: .transactionsMoreMenuHeader))
+        .navigationTitle(editMode.isEditing ? String.localizable(by: .transactionEditNavigationTitle, with: multiSelection.count) : String.localizable(by: .transactionNavigationTitle))
         .onAppear { reloadData() }
         .refreshable { reloadData() }
         .onChange(of: state.isFilterEnable) { reloadData() }
@@ -40,10 +41,6 @@ public struct TransactionsView: View {
         .onChange(of: state.selectedTags) { reloadData() }
         .toolbar {
             ToolbarItemGroup {
-                #if os(macOS)
-                #else
-                EditButton()
-                #endif
                 moreButton
             }
         }
@@ -62,16 +59,6 @@ public struct TransactionsView: View {
         )
     }
     
-    private var bindingFilterEnable: Binding<Bool> {
-        Binding {
-            state.isFilterEnable
-        } set: { isEnable in
-            withAnimation {
-                state.isFilterEnable = isEnable
-            }
-        }
-    }
-    
     @ViewBuilder
     private var sectionBalance: some View {
         if let balance = state.balance {
@@ -81,60 +68,6 @@ public struct TransactionsView: View {
             } header: {
                 RefdsText(.localizable(by: .categoriesBalance), style: .footnote, color: .secondary)
             }
-        }
-    }
-    
-    private var sectionFilters: some View {
-        RefdsSection {
-            rowApplyDateFilter
-            if state.isFilterEnable {
-                DateRowView(date: $state.date) {
-                    HStack(spacing: .padding(.medium)) {
-                        RefdsIconRow(.calendar)
-                        RefdsText(.localizable(by: .categoriesDate), style: .callout)
-                    }
-                }
-            }
-            selectCategoryRowView
-            selectTagRowView
-        } header: {
-            RefdsText(
-                .localizable(by: .categoriesFilter),
-                style: .footnote,
-                color: .secondary
-            )
-        }
-    }
-    
-    private var rowApplyDateFilter: some View {
-        RefdsToggle(isOn: bindingFilterEnable) {
-            RefdsText(.localizable(by: .transactionsFilterByDate), style: .callout)
-        }
-    }
-    
-    @ViewBuilder
-    private var selectCategoryRowView: some View {
-        if !state.categories.isEmpty {
-            SelectMenuRowView(
-                header: .transactionsCategoriesFilterHeader,
-                icon: .squareStack3dForwardDottedlineFill,
-                title: .categoriesNavigationTitle,
-                data: state.categories,
-                selectedData: $state.selectedCategories
-            )
-        }
-    }
-    
-    @ViewBuilder
-    private var selectTagRowView: some View {
-        if !state.tags.isEmpty {
-            SelectMenuRowView(
-                header: .tagsMenuSelectHeader,
-                icon: .tagFill,
-                title: .tagsNavigationTitle,
-                data: state.tags,
-                selectedData: $state.selectedTags
-            )
         }
     }
     
@@ -166,26 +99,39 @@ public struct TransactionsView: View {
     
     private var moreButton: some View {
         Menu {
+            RefdsText(.localizable(by: .transactionsMoreMenuHeader, with: multiSelection.count))
+            Divider()
+            
+            RefdsButton {
+                withAnimation { editMode?.wrappedValue.toggle() }
+            } label: {
+                Label(
+                    editMode.isEditing ? String.localizable(by: .transactionsOptionsSelectDone) : String.localizable(by: .transactionsOptionsSelect),
+                    systemImage: RefdsIconSymbol.checkmarkCircle.rawValue
+                )
+            }
+            
             if !multiSelection.isEmpty {
-                RefdsText(.localizable(by: .transactionsMoreMultiMenuHeader, with: multiSelection.count))
-                Divider()
-                RefdsButton {
+                Button(role: .destructive) {
                     action(.removeTransactions(multiSelection))
+                    if editMode.isEditing { 
+                        withAnimation { editMode?.wrappedValue.toggle() }
+                    }
                 } label: {
                     Label(
                         String.localizable(by: .transactionsRemoveTransactions),
                         systemImage: RefdsIconSymbol.trashFill.rawValue
                     )
                 }
-            } else {
-                RefdsText(.localizable(by: .transactionsMoreMenuHeader, with: multiSelection.count))
-                Divider()
             }
             
             if !state.transactions.isEmpty {
                 let ids = multiSelection.isEmpty ? Set(state.transactions.flatMap { $0 }.map { $0.id }) : multiSelection
                 RefdsButton {
                     action(.copyTransactions(ids))
+                    if editMode.isEditing { 
+                        withAnimation { editMode?.wrappedValue.toggle() }
+                    }
                 } label: {
                     Label(
                         String.localizable(by: .transactionsCopyTransactions),
@@ -209,6 +155,69 @@ public struct TransactionsView: View {
                 size: 18,
                 weight: .bold,
                 renderingMode: .hierarchical
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private var sectionFilters: some View {
+        Menu {
+            RefdsButton {
+                withAnimation { state.isFilterEnable.toggle() }
+            } label: {
+                Label(
+                    String.localizable(by: .transactionsFilterByDate),
+                    systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
+                )
+            }
+            
+            if state.isFilterEnable {
+                DateRowView(date: $state.date, content: {})
+            }
+            
+            selectCategoryRowView
+            selectTagRowView
+        } label: {
+            HStack {
+                RefdsText(.localizable(by: .categoriesFilter), style: .callout)
+                Spacer()
+                if state.isFilterEnable {
+                    RefdsText(state.date.asString(withDateFormat: .custom("MMMM, yyyy")), style: .callout, color: .secondary)
+                }
+                RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
+            }
+        }
+        
+        let words = Array(state.selectedTags) + Array(state.selectedCategories)
+        let sentence = words.joined(separator: " • ").uppercased()
+        
+        if !sentence.isEmpty {
+            RefdsText(sentence, style: .footnote, color: .secondary)
+        }
+    }
+    
+    @ViewBuilder
+    private var selectCategoryRowView: some View {
+        if !state.categories.isEmpty {
+            SelectMenuRowView(
+                header: .transactionsCategoriesFilterHeader,
+                icon: .squareStack3dForwardDottedlineFill,
+                title: .categoriesNavigationTitle,
+                data: state.categories,
+                selectedData: $state.selectedCategories
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private var selectTagRowView: some View {
+        if !state.tags.isEmpty {
+            SelectMenuRowView(
+                header: .tagsMenuSelectHeader,
+                icon: .tagFill,
+                title: .tagsNavigationTitle,
+                data: state.tags,
+                selectedData: $state.selectedTags
             )
         }
     }

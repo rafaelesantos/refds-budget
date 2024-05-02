@@ -33,6 +33,9 @@ public struct TransactionSectionsView: View {
         } else {
             ForEach(viewData.indices, id: \.self) { index in
                 let transactions = viewData[index]
+                if index == 1 {
+                    sectionChart
+                }
                 RefdsSection {
                     ForEach(transactions.indices, id: \.self) { index in
                         let transaction = transactions[index]
@@ -111,6 +114,22 @@ public struct TransactionSectionsView: View {
             RefdsIcon(.trashFill)
         }
         .tint(.red)
+    }
+    
+    @ViewBuilder
+    private var sectionChart: some View {
+        if viewData.count > 1 {
+            let data: [(x: Date, y: Double, percentage: Double?)] = viewData.map {
+                let date = $0.first?.date ?? .current
+                let amount = $0.map { $0.amount }.reduce(.zero, +)
+                return (
+                    x: date,
+                    y: amount,
+                    percentage: nil
+                )
+            }
+            DateChartView(data: data, format: .custom("EEEE dd, MMMM yyyy"))
+        }
     }
 }
 

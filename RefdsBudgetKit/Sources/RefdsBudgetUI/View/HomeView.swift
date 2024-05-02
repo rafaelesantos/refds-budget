@@ -15,16 +15,6 @@ public struct HomeView: View {
         self.action = action
     }
     
-    private var bindingFilterEnable: Binding<Bool> {
-        Binding {
-            state.isFilterEnable
-        } set: { isEnable in
-            withAnimation {
-                state.isFilterEnable = isEnable
-            }
-        }
-    }
-    
     public var body: some View {
         List {
             balanceSectionView
@@ -65,31 +55,40 @@ public struct HomeView: View {
         }
     }
     
+    @ViewBuilder
     private var sectionFilters: some View {
-        RefdsSection {
-            rowApplyFilter
-            if state.isFilterEnable {
-                DateRowView(date: $state.date) {
-                    HStack(spacing: .padding(.medium)) {
-                        RefdsIconRow(.calendar)
-                        RefdsText(.localizable(by: .categoriesDate), style: .callout)
-                    }
-                }
+        Menu {
+            RefdsButton {
+                withAnimation { state.isFilterEnable.toggle() }
+            } label: {
+                Label(
+                    String.localizable(by: .transactionsFilterByDate),
+                    systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
+                )
             }
+            
+            if state.isFilterEnable {
+                DateRowView(date: $state.date, content: {})
+            }
+            
             selectCategoryRowView
             selectTagRowView
-        } header: {
-            RefdsText(
-                .localizable(by: .categoriesFilter),
-                style: .footnote,
-                color: .secondary
-            )
+        } label: {
+            HStack {
+                RefdsText(.localizable(by: .categoriesFilter), style: .callout)
+                Spacer()
+                if state.isFilterEnable {
+                    RefdsText(state.date.asString(withDateFormat: .custom("MMMM, yyyy")), style: .callout, color: .secondary)
+                }
+                RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
+            }
         }
-    }
-    
-    private var rowApplyFilter: some View {
-        RefdsToggle(isOn: bindingFilterEnable) {
-            RefdsText(.localizable(by: .transactionsFilterByDate), style: .callout)
+        
+        let words = Array(state.selectedTags) + Array(state.selectedCategories)
+        let sentence = words.joined(separator: " • ").uppercased()
+        
+        if !sentence.isEmpty {
+            RefdsText(sentence, style: .footnote, color: .secondary)
         }
     }
     

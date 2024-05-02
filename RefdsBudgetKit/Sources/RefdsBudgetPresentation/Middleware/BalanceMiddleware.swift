@@ -151,7 +151,8 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
             subtitle: subititle,
             expense: expense,
             income: .zero,
-            budget: budget
+            budget: budget,
+            amount: transactions.count
         )
         return balance
     }
