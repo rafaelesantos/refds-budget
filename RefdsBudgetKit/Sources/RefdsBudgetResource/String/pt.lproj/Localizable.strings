@@ -178,3 +178,5 @@
 "widgetRemaining" = "Restante";
 "widgetTitleSystemSmallExpanseTracker" = "Monitor de Gastos";
 "widgetDescriptionSystemSmallExpanseTracker" = "Acompanhe seus gastos e orçamento em tempo real.";
+"widgetTitleSystemSmallTransactions" = "Últimos Gastos";
+"widgetDescriptionSystemSmallTransactions" = "Visualize seus gastos mais recentes e acompanhe seu orçamento de forma rápida e fácil.";

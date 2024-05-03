@@ -152,4 +152,6 @@ public enum LocalizableKey: String {
     case widgetRemaining
     case widgetTitleSystemSmallExpanseTracker
     case widgetDescriptionSystemSmallExpanseTracker
+    case widgetTitleSystemSmallTransactions
+    case widgetDescriptionSystemSmallTransactions
 }

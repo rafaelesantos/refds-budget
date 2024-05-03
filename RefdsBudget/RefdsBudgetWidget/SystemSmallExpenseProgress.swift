@@ -6,10 +6,10 @@ import RefdsBudgetUI
 import RefdsBudgetPresentation
 import AppIntents
 
-struct SystemSmallExpenseTrackerProvider: AppIntentTimelineProvider {
+struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetWidgetPresenter()
     
-    func placeholder(in context: Context) -> SystemSmallExpenseTrackerEntry {
+    func placeholder(in context: Context) -> SystemSmallExpenseProgressEntry {
         let viewData = SystemSmallExpenseTrackerViewData(
             isFilterByDate: true,
             category: .localizable(by: .transactionsCategorieAllSelected),
@@ -18,34 +18,34 @@ struct SystemSmallExpenseTrackerProvider: AppIntentTimelineProvider {
             spend: .zero,
             budget: .zero
         )
-        return SystemSmallExpenseTrackerEntry(viewData: viewData)
+        return SystemSmallExpenseProgressEntry(viewData: viewData)
     }
 
-    func snapshot(for configuration: SystemSmallExpenseTrackerAppIntent, in context: Context) async -> SystemSmallExpenseTrackerEntry {
+    func snapshot(for configuration: SystemSmallExpenseProgressAppIntent, in context: Context) async -> SystemSmallExpenseProgressEntry {
         let viewData = presenter.getSystemSmallExpenseTrackerViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
         )
-        return SystemSmallExpenseTrackerEntry(viewData: viewData)
+        return SystemSmallExpenseProgressEntry(viewData: viewData)
     }
     
-    func timeline(for configuration: SystemSmallExpenseTrackerAppIntent, in context: Context) async -> Timeline<SystemSmallExpenseTrackerEntry> {
+    func timeline(for configuration: SystemSmallExpenseProgressAppIntent, in context: Context) async -> Timeline<SystemSmallExpenseProgressEntry> {
         let viewData = presenter.getSystemSmallExpenseTrackerViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
         )
-        let entries: [SystemSmallExpenseTrackerEntry] = [
-            SystemSmallExpenseTrackerEntry(viewData: viewData)
+        let entries: [SystemSmallExpenseProgressEntry] = [
+            SystemSmallExpenseProgressEntry(viewData: viewData)
         ]
         return Timeline(entries: entries, policy: .never)
     }
 }
 
-struct SystemSmallExpenseTrackerAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "SystemSmallExpenseTrackerAppIntent"
-    static var description = IntentDescription("SystemSmallExpenseTrackerAppIntent")
+struct SystemSmallExpenseProgressAppIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "SystemSmallExpenseProgressAppIntent"
+    static var description = IntentDescription("SystemSmallExpenseProgressAppIntent")
 
     @Parameter(title: "Filter by date", default: true)
     var isFilterByDate: Bool
@@ -81,16 +81,16 @@ struct SystemSmallExpenseTrackerAppIntent: WidgetConfigurationIntent {
     }
 }
 
-struct SystemSmallExpenseTrackerEntry: TimelineEntry {
+struct SystemSmallExpenseProgressEntry: TimelineEntry {
     var date: Date = .current
     let viewData: SystemSmallExpenseTrackerViewDataProtocol
 }
 
-struct SystemSmallExpenseTrackerView: View {
-    var entry: SystemSmallExpenseTrackerProvider.Entry
+struct SystemSmallExpenseProgressView: View {
+    var entry: SystemSmallExpenseProgressProvider.Entry
     
     var body: some View {
-        RefdsBudgetUI.SystemSmallExpenseTracker(viewData: entry.viewData)
+        RefdsBudgetUI.SystemSmallExpenseProgress(viewData: entry.viewData)
             .widgetURL(
                 Deeplink.url(
                     host: .openHome,
@@ -100,16 +100,16 @@ struct SystemSmallExpenseTrackerView: View {
     }
 }
 
-struct SystemSmallExpenseTracker: Widget {
-    let kind: String = "SystemSmallExpenseTracker"
+struct SystemSmallExpenseProgress: Widget {
+    let kind: String = "SystemSmallExpenseProgress"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
-            intent: SystemSmallExpenseTrackerAppIntent.self,
-            provider: SystemSmallExpenseTrackerProvider()
+            intent: SystemSmallExpenseProgressAppIntent.self,
+            provider: SystemSmallExpenseProgressProvider()
         ) { entry in
-            SystemSmallExpenseTrackerView(entry: entry)
+            SystemSmallExpenseProgressView(entry: entry)
                 .containerBackground(.background, for: .widget)
         }
         .configurationDisplayName(String.localizable(by: .widgetTitleSystemSmallExpanseTracker))
@@ -119,15 +119,15 @@ struct SystemSmallExpenseTracker: Widget {
 }
 
 #Preview(as: .systemSmall) {
-    SystemSmallExpenseTracker()
+    SystemSmallExpenseProgress()
 } timeline: {
-    SystemSmallExpenseTrackerEntry(
+    SystemSmallExpenseProgressEntry(
         viewData: SystemSmallExpenseTrackerViewDataMock()
     )
-    SystemSmallExpenseTrackerEntry(
+    SystemSmallExpenseProgressEntry(
         viewData: SystemSmallExpenseTrackerViewDataMock()
     )
-    SystemSmallExpenseTrackerEntry(
+    SystemSmallExpenseProgressEntry(
         viewData: SystemSmallExpenseTrackerViewDataMock()
     )
 }

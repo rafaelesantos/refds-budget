@@ -143,10 +143,10 @@
 "homeRemainingTitle" = "Total Remaining";
 "homeRemainingCategoryTransactions" = "%d transactions";
 "homeManageTags" = "Manage Tags";
-"homeSpendBudgetHeader" = "Budgets vs Expenditures";
+"homeSpendBudgetHeader" = "Budgets vs Spends";
 "homeSpendBudgetCategory" = "Category";
 "homeSpendBudgetBudgetTitle" = "Budget";
-"homeSpendBudgetSpendTitle" = "Expenditure";
+"homeSpendBudgetSpendTitle" = "Spend";
 "homeSpendBudgetPercentageResult" = "Percentage Result";
 
 // MARK: - Tags
@@ -178,3 +178,5 @@
 "widgetRemaining" = "Remaining";
 "widgetTitleSystemSmallExpanseTracker" = "Expense Tracker";
 "widgetDescriptionSystemSmallExpanseTracker" = "Keep track of your spending and budget in real-time.";
+"widgetTitleSystemSmallTransactions" = "Recent Expenses";
+"widgetDescriptionSystemSmallTransactions" = "Visualize your most recent expenses and track your budget quickly and easily.";

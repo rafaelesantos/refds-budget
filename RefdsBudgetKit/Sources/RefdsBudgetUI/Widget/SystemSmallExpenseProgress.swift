@@ -3,38 +3,30 @@ import RefdsUI
 import RefdsShared
 import RefdsBudgetPresentation
 
-public struct SystemSmallExpenseTracker: View {
+public struct SystemSmallExpenseProgress: View {
     private let viewData: SystemSmallExpenseTrackerViewDataProtocol
     
     public init(viewData: SystemSmallExpenseTrackerViewDataProtocol) {
         self.viewData = viewData
     }
     
-    private var hasFilter: Bool {
-        viewData.category != String.localizable(by: .transactionsCategorieAllSelected) ||
-        viewData.tag != String.localizable(by: .transactionsCategorieAllSelected)
-    }
-    
     public var body: some View {
-        VStack(alignment: .leading) {
+        VStack {
             headerView
             Spacer(minLength: .zero)
             contentView
             Spacer(minLength: .zero)
-            remainingView
         }
     }
     
     private var headerView: some View {
-        HStack {
+        HStack(spacing: .padding(.extraSmall)) {
             RefdsText(
                 .localizable(by: .widgetAppName),
                 style: .title3,
                 weight: .bold,
                 lineLimit: 1
             )
-            
-            Spacer(minLength: .zero)
             
             if viewData.isFilterByDate {
                 RefdsText(
@@ -50,43 +42,25 @@ public struct SystemSmallExpenseTracker: View {
     }
     
     private var contentView: some View {
-        VStack(alignment: .leading) {
-            RefdsText(
-                .localizable(by: .widgetCurrentSpend).uppercased(),
-                style: .system(size: 7),
-                color: .secondary
-            )
-            
+        VStack(spacing: 10) {
             RefdsText(
                 viewData.spend.currency(),
-                style: .title3,
-                color: viewData.percent.riskColor,
+                style: .system(size: 15),
+                color: .secondary,
                 weight: .bold,
                 lineLimit: 1
             )
-            .minimumScaleFactor(0.5)
+            .minimumScaleFactor(0.8)
             
-            RefdsText(
-                viewData.budget.currency(),
-                style: .title3,
-                weight: .bold,
-                lineLimit: 1
+            RefdsCircularProgressView(
+                viewData.percent,
+                size: 90,
+                color: viewData.percent.riskColor,
+                hasAnimation: false
             )
-            .minimumScaleFactor(0.5)
-            .if(hasFilter) { view in
-                view.padding(.bottom, -7)
-            }
+            .padding(.bottom, -15)
             
             HStack(spacing: 3) {
-                if !hasFilter {
-                    RefdsText(
-                        .localizable(by: .widgetTotalBudget).uppercased(),
-                        style: .system(size: 7),
-                        color: .secondary,
-                        lineLimit: 1
-                    )
-                }
-                
                 if viewData.category != String.localizable(by: .transactionsCategorieAllSelected) {
                     RefdsText(
                         viewData.category.uppercased(),
@@ -114,14 +88,12 @@ public struct SystemSmallExpenseTracker: View {
     
     private var remainingView: some View {
         VStack(alignment: .leading) {
-            if !hasFilter {
-                RefdsText(
-                    .localizable(by: .widgetRemaining).uppercased(),
-                    style: .system(size: 7),
-                    color: .secondary,
-                    lineLimit: 1
-                )
-            }
+            RefdsText(
+                .localizable(by: .widgetRemaining).uppercased(),
+                style: .system(size: 7),
+                color: .secondary,
+                lineLimit: 1
+            )
             
             HStack {
                 RefdsText(
@@ -143,13 +115,13 @@ public struct SystemSmallExpenseTracker: View {
             ProgressView(value: viewData.percent > 1 ? 1 : viewData.percent, total: 1)
                 .tint(viewData.percent.riskColor)
                 .scaleEffect(2)
-                .padding(.horizontal, 34)
+                .padding(.horizontal, 32)
         }
     }
 }
 
 #Preview {
-    SystemSmallExpenseTracker(viewData: SystemSmallExpenseTrackerViewDataMock())
+    SystemSmallExpenseProgress(viewData: SystemSmallExpenseTrackerViewDataMock())
         .frame(width: 130, height: 130)
         .refdsCard(padding: .medium, hasShadow: true)
 }

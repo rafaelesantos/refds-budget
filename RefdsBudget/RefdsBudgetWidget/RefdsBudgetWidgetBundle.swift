@@ -12,5 +12,7 @@ import SwiftUI
 struct RefdsBudgetWidgetBundle: WidgetBundle {
     var body: some Widget {
         SystemSmallExpenseTracker()
+        SystemSmallExpenseProgress()
+        SystemSmallTransactions()
     }
 }

@@ -6,46 +6,47 @@ import RefdsBudgetUI
 import RefdsBudgetPresentation
 import AppIntents
 
-struct SystemSmallExpenseTrackerProvider: AppIntentTimelineProvider {
+struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetWidgetPresenter()
     
-    func placeholder(in context: Context) -> SystemSmallExpenseTrackerEntry {
-        let viewData = SystemSmallExpenseTrackerViewData(
+    func placeholder(in context: Context) -> SystemSmallTransactionsEntry {
+        let viewData = SystemSmallTransactionsViewData(
             isFilterByDate: true,
             category: .localizable(by: .transactionsCategorieAllSelected),
             tag: .localizable(by: .transactionsCategorieAllSelected),
             date: .current,
             spend: .zero,
-            budget: .zero
+            transactions: [],
+            amount: .zero
         )
-        return SystemSmallExpenseTrackerEntry(viewData: viewData)
+        return SystemSmallTransactionsEntry(viewData: viewData)
     }
 
-    func snapshot(for configuration: SystemSmallExpenseTrackerAppIntent, in context: Context) async -> SystemSmallExpenseTrackerEntry {
-        let viewData = presenter.getSystemSmallExpenseTrackerViewData(
+    func snapshot(for configuration: SystemSmallTransactionsAppIntent, in context: Context) async -> SystemSmallTransactionsEntry {
+        let viewData = presenter.getSystemSmallTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
         )
-        return SystemSmallExpenseTrackerEntry(viewData: viewData)
+        return SystemSmallTransactionsEntry(viewData: viewData)
     }
     
-    func timeline(for configuration: SystemSmallExpenseTrackerAppIntent, in context: Context) async -> Timeline<SystemSmallExpenseTrackerEntry> {
-        let viewData = presenter.getSystemSmallExpenseTrackerViewData(
+    func timeline(for configuration: SystemSmallTransactionsAppIntent, in context: Context) async -> Timeline<SystemSmallTransactionsEntry> {
+        let viewData = presenter.getSystemSmallTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
         )
-        let entries: [SystemSmallExpenseTrackerEntry] = [
-            SystemSmallExpenseTrackerEntry(viewData: viewData)
+        let entries: [SystemSmallTransactionsEntry] = [
+            SystemSmallTransactionsEntry(viewData: viewData)
         ]
         return Timeline(entries: entries, policy: .never)
     }
 }
 
-struct SystemSmallExpenseTrackerAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "SystemSmallExpenseTrackerAppIntent"
-    static var description = IntentDescription("SystemSmallExpenseTrackerAppIntent")
+struct SystemSmallTransactionsAppIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "SystemSmallTransactionsAppIntent"
+    static var description = IntentDescription("SystemSmallTransactionsAppIntent")
 
     @Parameter(title: "Filter by date", default: true)
     var isFilterByDate: Bool
@@ -81,53 +82,53 @@ struct SystemSmallExpenseTrackerAppIntent: WidgetConfigurationIntent {
     }
 }
 
-struct SystemSmallExpenseTrackerEntry: TimelineEntry {
+struct SystemSmallTransactionsEntry: TimelineEntry {
     var date: Date = .current
-    let viewData: SystemSmallExpenseTrackerViewDataProtocol
+    let viewData: SystemSmallTransactionsViewDataProtocol
 }
 
-struct SystemSmallExpenseTrackerView: View {
-    var entry: SystemSmallExpenseTrackerProvider.Entry
+struct SystemSmallTransactionsView: View {
+    var entry: SystemSmallTransactionsProvider.Entry
     
     var body: some View {
-        RefdsBudgetUI.SystemSmallExpenseTracker(viewData: entry.viewData)
+        RefdsBudgetUI.SystemSmallTransactions(viewData: entry.viewData)
             .widgetURL(
                 Deeplink.url(
-                    host: .openHome,
-                    path: .none
+                    host: .openTransactions,
+                    path: .addTransaction
                 )
             )
     }
 }
 
-struct SystemSmallExpenseTracker: Widget {
-    let kind: String = "SystemSmallExpenseTracker"
+struct SystemSmallTransactions: Widget {
+    let kind: String = "SystemSmallTransactions"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
-            intent: SystemSmallExpenseTrackerAppIntent.self,
-            provider: SystemSmallExpenseTrackerProvider()
+            intent: SystemSmallTransactionsAppIntent.self,
+            provider: SystemSmallTransactionsProvider()
         ) { entry in
-            SystemSmallExpenseTrackerView(entry: entry)
+            SystemSmallTransactionsView(entry: entry)
                 .containerBackground(.background, for: .widget)
         }
-        .configurationDisplayName(String.localizable(by: .widgetTitleSystemSmallExpanseTracker))
-        .description(String.localizable(by: .widgetDescriptionSystemSmallExpanseTracker))
+        .configurationDisplayName(String.localizable(by: .widgetTitleSystemSmallTransactions))
+        .description(String.localizable(by: .widgetDescriptionSystemSmallTransactions))
         .supportedFamilies([.systemSmall])
     }
 }
 
 #Preview(as: .systemSmall) {
-    SystemSmallExpenseTracker()
+    SystemSmallTransactions()
 } timeline: {
-    SystemSmallExpenseTrackerEntry(
-        viewData: SystemSmallExpenseTrackerViewDataMock()
+    SystemSmallTransactionsEntry(
+        viewData: SystemSmallTransactionsViewDataMock()
     )
-    SystemSmallExpenseTrackerEntry(
-        viewData: SystemSmallExpenseTrackerViewDataMock()
+    SystemSmallTransactionsEntry(
+        viewData: SystemSmallTransactionsViewDataMock()
     )
-    SystemSmallExpenseTrackerEntry(
-        viewData: SystemSmallExpenseTrackerViewDataMock()
+    SystemSmallTransactionsEntry(
+        viewData: SystemSmallTransactionsViewDataMock()
     )
 }

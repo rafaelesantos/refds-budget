@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -14,6 +18,19 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>br.com.rafaelescaleira.Budget</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>br.com.rafaelescaleira.Budget</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>refdsbudget</string>
 			</array>
 		</dict>
 	</array>

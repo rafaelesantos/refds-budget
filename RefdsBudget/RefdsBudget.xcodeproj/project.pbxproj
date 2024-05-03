@@ -22,7 +22,8 @@
 		6CE513372BE3F491005085CE /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6CE5133D2BE3F94C005085CE /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6CE5133C2BE3F94C005085CE /* RefdsBudgetKit */; };
 		6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */; };
-		6CE513412BE41D86005085CE /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE513402BE41D86005085CE /* AppIntent.swift */; };
+		6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */; };
+		6CE5135D2BE552B4005085CE /* SystemSmallTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +69,8 @@
 		6CE513332BE3F491005085CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CE513342BE3F491005085CE /* RefdsBudgetWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RefdsBudgetWidget.entitlements; sourceTree = "<group>"; };
 		6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefdsBudgetWidgetPresenter.swift; sourceTree = "<group>"; };
-		6CE513402BE41D86005085CE /* AppIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallExpenseProgress.swift; sourceTree = "<group>"; };
+		6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallTransactions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,8 +151,9 @@
 			children = (
 				6CE5132B2BE3F490005085CE /* RefdsBudgetWidgetBundle.swift */,
 				6CE5132D2BE3F490005085CE /* SystemSmallExpenseTracker.swift */,
+				6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */,
+				6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */,
 				6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */,
-				6CE513402BE41D86005085CE /* AppIntent.swift */,
 				6CE513312BE3F491005085CE /* Assets.xcassets */,
 				6CE513332BE3F491005085CE /* Info.plist */,
 				6CE513342BE3F491005085CE /* RefdsBudgetWidget.entitlements */,
@@ -279,8 +282,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CE5135D2BE552B4005085CE /* SystemSmallTransactions.swift in Sources */,
+				6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */,
 				6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */,
-				6CE513412BE41D86005085CE /* AppIntent.swift in Sources */,
 				6CE5132C2BE3F490005085CE /* RefdsBudgetWidgetBundle.swift in Sources */,
 				6CE5132E2BE3F490005085CE /* SystemSmallExpenseTracker.swift in Sources */,
 			);

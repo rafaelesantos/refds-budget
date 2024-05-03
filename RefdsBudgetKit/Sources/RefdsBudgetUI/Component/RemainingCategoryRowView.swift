@@ -41,23 +41,25 @@ public struct RemainingCategoryRowView: View {
             
             HStack(spacing: .zero) {
                 VStack(spacing: .padding(.extraSmall)) {
-                    HStack(spacing: .padding(.small)) {
+                    HStack {
                         HStack {
                             statusIconView
-                            RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
+                            RefdsText(viewData.name.capitalized, style: .callout, weight: .bold, lineLimit: 1)
                         }
                         Spacer(minLength: .zero)
                         RefdsText(budget.currency(), style: .callout, lineLimit: 1)
                             .contentTransition(.numericText())
                     }
                     
-                    HStack(spacing: .padding(.small)) {
+                    HStack {
                         RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: viewData.transactionsAmount), style: .callout, color: .secondary)
                         Spacer(minLength: .zero)
                         RefdsText((1 - viewData.percentage).percent(), style: .callout, color: .secondary)
                     }
                 }
             }
+            
+            RefdsCircularProgressView(viewData.percentage, size: 50)
         }
     }
     

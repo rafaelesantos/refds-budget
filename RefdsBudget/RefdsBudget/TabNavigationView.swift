@@ -10,6 +10,7 @@ import RefdsBudgetUI
 struct TabNavigationView: View {
     @EnvironmentObject var store: RefdsReduxStore<ApplicationStateProtocol>
     @RefdsInjection private var viewFactory: ViewFactoryProtocol
+    private var deeplink: Deeplink = .shared
     
     private var bindingState: Binding<RefdsReduxState> {
         Binding { store.state } set: {
@@ -27,7 +28,6 @@ struct TabNavigationView: View {
                 case .categories: store.state.categoriesRouter.popToRoot()
                 case .home: store.state.homeRouter.popToRoot()
                 case .transactions: store.state.transactionsRouter.popToRoot()
-                case .settings: break
                 }
             }
             store.state.itemNavigation = ItemNavigation(rawValue: $0)
@@ -39,6 +39,13 @@ struct TabNavigationView: View {
             categoriesItemView
             homeItemView
             transactionsItemView
+        }
+        .onOpenURL {
+            deeplink.trigger(
+                state: store.state,
+                itemNavigation: bindingItemNavigation,
+                url: $0
+            )
         }
     }
     
