@@ -192,7 +192,24 @@ public struct TransactionsView: View {
         let sentence = words.joined(separator: " • ").uppercased()
         
         if !sentence.isEmpty {
-            RefdsText(sentence, style: .footnote, color: .secondary)
+            HStack(spacing: .padding(.medium)) {
+                RefdsText(sentence, style: .footnote, color: .secondary)
+                Spacer(minLength: .zero)
+                RefdsButton {
+                    withAnimation {
+                        state.selectedTags = []
+                        state.selectedCategories = []
+                    }
+                } label: {
+                    RefdsIcon(
+                        .xmarkCircleFill,
+                        color: .secondary.opacity(0.8),
+                        size: 18,
+                        weight: .bold,
+                        renderingMode: .hierarchical
+                    )
+                }
+            }
         }
     }
     

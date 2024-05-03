@@ -145,4 +145,11 @@ public enum LocalizableKey: String {
     case filterDateYear
     case filterCategory
     case filterTags
+    // MARK: - Widget
+    case widgetAppName
+    case widgetCurrentSpend
+    case widgetTotalBudget
+    case widgetRemaining
+    case widgetTitleSystemSmallExpanseTracker
+    case widgetDescriptionSystemSmallExpanseTracker
 }

@@ -119,7 +119,7 @@ public struct TransactionSectionsView: View {
     @ViewBuilder
     private var sectionChart: some View {
         if viewData.count > 1 {
-            let data: [(x: Date, y: Double, percentage: Double?)] = viewData.map {
+            let data: [(x: Date, y: Double, percentage: Double?)] = viewData.reversed().map {
                 let date = $0.first?.date ?? .current
                 let amount = $0.map { $0.amount }.reduce(.zero, +)
                 return (

@@ -37,7 +37,7 @@ public struct DateChartView: View {
     private var seletedBarView: some View {
         if let value = data.first(where: { chartSelection == $0.x.asString(withDateFormat: format) })?.y,
            let position = data.sorted(by: { $0.y > $1.y }).firstIndex(where: { chartSelection == $0.x.asString(withDateFormat: format) })?.asString.asInt {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .padding(.small)) {
                 if position < 9 {
                     rankSealView(for: position)
                 }
@@ -53,18 +53,18 @@ public struct DateChartView: View {
         ZStack {
             RefdsIcon(
                 .sealFill,
-                color: .yellow,
+                color: .yellow.opacity(0.2),
                 size: 25
             )
             
             RefdsText(
                 (index + 1).asString,
-                style: .callout,
-                color: .white,
+                style: .caption2,
+                color: .yellow,
                 weight: .heavy
             )
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 3)
     }
     
     private var chartView: some View {

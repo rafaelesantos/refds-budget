@@ -66,8 +66,8 @@ public struct SpendBudgetSectionView: View {
             
             VStack(spacing: .zero) {
                 HStack(spacing: .padding(.small)) {
-                    RefdsText(.localizable(by: .homeSpendBudgetSpendTitle), style: .callout, color: .secondary)
                     BubbleColorView(color: .teal, size: 14)
+                    RefdsText(.localizable(by: .homeSpendBudgetSpendTitle), style: .callout, color: .secondary)
                 }
                 RefdsText(category.spend.currency(), style: .title3, weight: .bold)
                     .contentTransition(.numericText())
@@ -105,7 +105,7 @@ public struct SpendBudgetSectionView: View {
         .chartLegend(.hidden)
         .chartScrollableAxes(.horizontal)
         .chartXVisibleDomain(length: 3)
-        .frame(height: 200)
+        .frame(height: 120)
         .padding(.vertical)
         .padding(.top)
         .chartForegroundStyleScale([

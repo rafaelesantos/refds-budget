@@ -169,3 +169,12 @@
 "filterDateYear" = "Ano";
 "filterCategory" = "Categorias";
 "filterTags" = "Tags";
+
+// MARK: - Widget
+
+"widgetAppName" = "Budget";
+"widgetCurrentSpend" = "Gasto atual";
+"widgetTotalBudget" = "Orçamento total";
+"widgetRemaining" = "Restante";
+"widgetTitleSystemSmallExpanseTracker" = "Monitor de Gastos";
+"widgetDescriptionSystemSmallExpanseTracker" = "Acompanhe seus gastos e orçamento em tempo real.";

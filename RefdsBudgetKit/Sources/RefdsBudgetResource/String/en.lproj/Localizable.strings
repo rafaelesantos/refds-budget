@@ -169,3 +169,12 @@
 "filterDateYear" = "Year";
 "filterCategory" = "Categories";
 "filterTags" = "Tags";
+
+// MARK: - Widget
+
+"widgetAppName" = "Budget";
+"widgetCurrentSpend" = "Current Spend";
+"widgetTotalBudget" = "Total Budget";
+"widgetRemaining" = "Remaining";
+"widgetTitleSystemSmallExpanseTracker" = "Expense Tracker";
+"widgetDescriptionSystemSmallExpanseTracker" = "Keep track of your spending and budget in real-time.";
