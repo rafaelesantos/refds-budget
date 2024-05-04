@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import WidgetKit
 import RefdsRedux
 import RefdsShared
 import RefdsInjection
@@ -95,7 +96,7 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 icon: category.icon
             )
         } catch { return completion(.updateError(.existingCategory)) }
-        
+        WidgetCenter.shared.reloadAllTimelines()
         completion(.dismiss)
     }
 }

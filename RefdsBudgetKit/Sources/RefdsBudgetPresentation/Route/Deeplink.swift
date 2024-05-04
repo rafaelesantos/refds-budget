@@ -16,7 +16,7 @@ public final class Deeplink {
     }
     
     public func trigger(
-        state: ApplicationStateProtocol,
+        state: Binding<ApplicationStateProtocol>,
         itemNavigation: Binding<Int>,
         url: URL
     ) {
@@ -25,9 +25,13 @@ public final class Deeplink {
             itemNavigation.wrappedValue = item.rawValue
             guard let route = route else { return }
             switch item {
-            case .categories: state.categoriesRouter.route(to: route)
-            case .home: state.homeRouter.route(to: route)
-            case .transactions: state.transactionsRouter.route(to: route)
+            case .categories: 
+                state.wrappedValue.categoriesRouter.route(to: route)
+            case .home:
+                state.wrappedValue.homeRouter.route(to: route)
+            case .transactions:
+                state.wrappedValue.addTransactionState = AddTransactionState()
+                state.wrappedValue.transactionsRouter.route(to: route)
             }
         }
     }

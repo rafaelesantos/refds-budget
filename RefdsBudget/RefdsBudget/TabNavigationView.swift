@@ -42,7 +42,7 @@ struct TabNavigationView: View {
         }
         .onOpenURL {
             deeplink.trigger(
-                state: store.state,
+                state: $store.state,
                 itemNavigation: bindingItemNavigation,
                 url: $0
             )

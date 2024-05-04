@@ -5,6 +5,7 @@ import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
 import RefdsBudgetResource
+import WidgetKit
 
 public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
     @RefdsInjection private var tagRepository: BubbleUseCase
@@ -160,7 +161,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         do {
             try transactionRepository.removeTransaction(by: id)
         } catch { completion(.updateError(.notFoundTransaction)) }
-        
+        WidgetCenter.shared.reloadAllTimelines()
         completion(
             .fetchData(
                 state.isFilterEnable ? state.date : nil,
@@ -179,6 +180,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         ids.forEach { id in
             try? transactionRepository.removeTransaction(by: id)
         }
+        WidgetCenter.shared.reloadAllTimelines()
         completion(
             .fetchData(
                 state.isFilterEnable ? state.date : nil,

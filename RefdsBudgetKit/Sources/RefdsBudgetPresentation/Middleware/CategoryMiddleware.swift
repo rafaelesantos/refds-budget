@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import WidgetKit
 import RefdsRedux
 import RefdsShared
 import RefdsInjection
@@ -219,6 +220,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return
         }
         
+        WidgetCenter.shared.reloadAllTimelines()
         completion(
             .fetchData(
                 date,
@@ -248,6 +250,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try categoryRepository.removeCategory(id: categoryEntity.id)
         } catch { completion(.updateError(.cantDeleteCategory)) }
         
+        WidgetCenter.shared.reloadAllTimelines()
         completion(
             .fetchData(
                 state.isFilterEnable ? state.date : nil,
@@ -266,6 +269,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try transactionRepository.removeTransaction(by: id)
         } catch { completion(.updateError(.notFoundTransaction)) }
         
+        WidgetCenter.shared.reloadAllTimelines()
         completion(
             .fetchData(
                 state.isFilterEnable ? state.date : nil,
@@ -283,6 +287,8 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         ids.forEach { id in
             try? transactionRepository.removeTransaction(by: id)
         }
+        
+        WidgetCenter.shared.reloadAllTimelines()
         completion(
             .fetchData(
                 state.isFilterEnable ? state.date : nil,

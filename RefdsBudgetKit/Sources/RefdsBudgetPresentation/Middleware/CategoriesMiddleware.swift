@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import WidgetKit
 import RefdsRedux
 import RefdsShared
 import RefdsInjection
@@ -168,6 +169,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return
         }
         
+        WidgetCenter.shared.reloadAllTimelines()
         completion(.fetchData(date, state.selectedTags))
     }
     
@@ -191,6 +193,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try categoryRepository.removeCategory(id: categoryEntity.id)
         } catch { completion(.updateError(.cantDeleteCategory)) }
         
+        WidgetCenter.shared.reloadAllTimelines()
         completion(.fetchData(date, state.selectedTags))
     }
 }

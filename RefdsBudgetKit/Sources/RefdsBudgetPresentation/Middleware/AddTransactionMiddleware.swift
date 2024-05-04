@@ -5,6 +5,7 @@ import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
 import RefdsBudgetResource
+import WidgetKit
 
 public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol {
     @RefdsInjection private var categoryRepository: CategoryUseCase
@@ -73,7 +74,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
         } catch {
             return completion(.updateError(.existingTransaction))
         }
-        
+        WidgetCenter.shared.reloadAllTimelines()
         completion(.dismiss)
     }
 }
