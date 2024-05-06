@@ -10,7 +10,7 @@ struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetWidgetPresenter()
     
     func placeholder(in context: Context) -> SystemSmallExpenseProgressEntry {
-        let viewData = SystemSmallExpenseTrackerViewData(
+        let viewData = WidgetExpenseTrackerViewData(
             isFilterByDate: true,
             category: .localizable(by: .transactionsCategorieAllSelected),
             tag: .localizable(by: .transactionsCategorieAllSelected),
@@ -22,7 +22,7 @@ struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: SystemSmallExpenseProgressAppIntent, in context: Context) async -> SystemSmallExpenseProgressEntry {
-        let viewData = presenter.getSystemSmallExpenseTrackerViewData(
+        let viewData = presenter.getWidgetExpenseTrackerViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
@@ -31,7 +31,7 @@ struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
     }
     
     func timeline(for configuration: SystemSmallExpenseProgressAppIntent, in context: Context) async -> Timeline<SystemSmallExpenseProgressEntry> {
-        let viewData = presenter.getSystemSmallExpenseTrackerViewData(
+        let viewData = presenter.getWidgetExpenseTrackerViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
@@ -83,7 +83,7 @@ struct SystemSmallExpenseProgressAppIntent: WidgetConfigurationIntent {
 
 struct SystemSmallExpenseProgressEntry: TimelineEntry {
     var date: Date = .current
-    let viewData: SystemSmallExpenseTrackerViewDataProtocol
+    let viewData: WidgetExpenseTrackerViewDataProtocol
 }
 
 struct SystemSmallExpenseProgressView: View {
@@ -122,12 +122,12 @@ struct SystemSmallExpenseProgress: Widget {
     SystemSmallExpenseProgress()
 } timeline: {
     SystemSmallExpenseProgressEntry(
-        viewData: SystemSmallExpenseTrackerViewDataMock()
+        viewData: WidgetExpenseTrackerViewDataMock()
     )
     SystemSmallExpenseProgressEntry(
-        viewData: SystemSmallExpenseTrackerViewDataMock()
+        viewData: WidgetExpenseTrackerViewDataMock()
     )
     SystemSmallExpenseProgressEntry(
-        viewData: SystemSmallExpenseTrackerViewDataMock()
+        viewData: WidgetExpenseTrackerViewDataMock()
     )
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol SystemSmallExpenseTrackerViewDataProtocol {
+public protocol WidgetExpenseTrackerViewDataProtocol {
     var isFilterByDate: Bool { get set }
     var category: String { get set }
     var tag: String { get set }
@@ -11,7 +11,7 @@ public protocol SystemSmallExpenseTrackerViewDataProtocol {
     var remaining: Double { get }
 }
 
-public struct SystemSmallExpenseTrackerViewData: SystemSmallExpenseTrackerViewDataProtocol {
+public struct WidgetExpenseTrackerViewData: WidgetExpenseTrackerViewDataProtocol {
     public var isFilterByDate: Bool
     public var category: String
     public var tag: String

@@ -4,9 +4,9 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct SystemSmallExpenseTracker: View {
-    private let viewData: SystemSmallExpenseTrackerViewDataProtocol
+    private let viewData: WidgetExpenseTrackerViewDataProtocol
     
-    public init(viewData: SystemSmallExpenseTrackerViewDataProtocol) {
+    public init(viewData: WidgetExpenseTrackerViewDataProtocol) {
         self.viewData = viewData
     }
     
@@ -149,7 +149,7 @@ public struct SystemSmallExpenseTracker: View {
 }
 
 #Preview {
-    SystemSmallExpenseTracker(viewData: SystemSmallExpenseTrackerViewDataMock())
+    SystemSmallExpenseTracker(viewData: WidgetExpenseTrackerViewDataMock())
         .frame(width: 130, height: 130)
         .refdsCard(padding: .medium, hasShadow: true)
 }

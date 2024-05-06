@@ -14,5 +14,7 @@ struct RefdsBudgetWidgetBundle: WidgetBundle {
         SystemSmallExpenseTracker()
         SystemSmallExpenseProgress()
         SystemSmallTransactions()
+        SystemMediumExpenseTracker()
+        SystemLargeExpenseTracker()
     }
 }

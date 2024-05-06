@@ -7,16 +7,16 @@ import RefdsBudgetData
 import RefdsBudgetPresentation
 
 protocol RefdsBudgetWidgetPresenterProtocol {
-    func getSystemSmallExpenseTrackerViewData(
+    func getWidgetExpenseTrackerViewData(
         isFilterByDate: Bool,
         category: String,
         tag: String
-    ) -> SystemSmallExpenseTrackerViewDataProtocol
-    func getSystemSmallTransactionsViewData(
+    ) -> WidgetExpenseTrackerViewDataProtocol
+    func getWidgetTransactionsViewData(
         isFilterByDate: Bool,
         category: String,
         tag: String
-    ) -> SystemSmallTransactionsViewDataProtocol
+    ) -> WidgetTransactionsViewDataProtocol
     func getCategories() -> [String]
     func getTags() -> [String]
 }
@@ -33,11 +33,11 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
         tagRepository = LocalBubbleRepository()
     }
     
-    func getSystemSmallExpenseTrackerViewData(
+    func getWidgetExpenseTrackerViewData(
         isFilterByDate: Bool,
         category: String,
         tag: String
-    ) -> SystemSmallExpenseTrackerViewDataProtocol {
+    ) -> WidgetExpenseTrackerViewDataProtocol {
         var budgets: [BudgetEntity] = []
         var transactions: [TransactionEntity] = []
         
@@ -67,7 +67,7 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
             }
         }
         
-        return SystemSmallExpenseTrackerViewData(
+        return WidgetExpenseTrackerViewData(
             isFilterByDate: isFilterByDate,
             category: category,
             tag: tag,
@@ -77,20 +77,23 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
         )
     }
     
-    func getSystemSmallTransactionsViewData(
+    func getWidgetTransactionsViewData(
         isFilterByDate: Bool,
         category: String,
         tag: String
-    ) -> SystemSmallTransactionsViewDataProtocol {
+    ) -> WidgetTransactionsViewDataProtocol {
         var budgets: [BudgetEntity] = []
+        var categories: [CategoryEntity] = []
         var transactions: [TransactionEntity] = []
         
         if isFilterByDate {
             transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear)
             budgets = categoryRepository.getBudgets(from: .current)
+            categories = categoryRepository.getCategories(from: .current)
         } else {
             transactions = transactionsRepository.getTransactions()
             budgets = categoryRepository.getAllBudgets()
+            categories = categoryRepository.getAllCategories()
         }
         
         if category != String.localizable(by: .transactionsCategorieAllSelected) {
@@ -103,12 +106,35 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
                 let entity = categoryRepository.getCategory(by: $0.category)
                 return entity?.name.lowercased() == category.lowercased()
             }
+            
+            categories = categories.filter {
+                $0.name.lowercased() == category.lowercased()
+            }
         }
         
         if tag != String.localizable(by: .transactionsCategorieAllSelected) {
             transactions = transactions.filter {
                 $0.message.lowercased().contains(tag.lowercased())
             }
+        }
+        
+        let categoriesAdapted: [CategoryRowViewDataProtocol] = categories.compactMap { entity in
+            guard let budget = budgets.first(where: { $0.category == entity.id }) else { return nil }
+            let transactions = transactions.filter { $0.category == entity.id }
+            let spend = transactions.map { $0.amount }.reduce(.zero, +)
+            let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
+            return CategoryRowViewData(
+                categoryId: entity.id,
+                budgetId: budget.id,
+                icon: entity.icon,
+                name: entity.name,
+                description: budget.message,
+                color: Color(hex: entity.color),
+                budget: budget.amount,
+                percentage: percentage,
+                transactionsAmount: transactions.count,
+                spend: spend
+            )
         }
         
         let transactionsAdapted: [TransactionRowViewDataProtocol] = transactions.compactMap { transaction in
@@ -123,12 +149,14 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
             )
         }
         
-        return SystemSmallTransactionsViewData(
+        return WidgetTransactionsViewData(
             isFilterByDate: isFilterByDate,
             category: category,
             tag: tag,
             date: .current,
             spend: transactions.map { $0.amount }.reduce(.zero, +),
+            budget: budgets.map { $0.amount }.reduce(.zero, +),
+            categories: categoriesAdapted,
             transactions: transactionsAdapted,
             amount: transactionsAdapted.count
         )

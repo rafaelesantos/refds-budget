@@ -10,12 +10,14 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetWidgetPresenter()
     
     func placeholder(in context: Context) -> SystemSmallTransactionsEntry {
-        let viewData = SystemSmallTransactionsViewData(
+        let viewData = WidgetTransactionsViewData(
             isFilterByDate: true,
             category: .localizable(by: .transactionsCategorieAllSelected),
             tag: .localizable(by: .transactionsCategorieAllSelected),
             date: .current,
             spend: .zero,
+            budget: .zero,
+            categories: [],
             transactions: [],
             amount: .zero
         )
@@ -23,7 +25,7 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: SystemSmallTransactionsAppIntent, in context: Context) async -> SystemSmallTransactionsEntry {
-        let viewData = presenter.getSystemSmallTransactionsViewData(
+        let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
@@ -32,7 +34,7 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     }
     
     func timeline(for configuration: SystemSmallTransactionsAppIntent, in context: Context) async -> Timeline<SystemSmallTransactionsEntry> {
-        let viewData = presenter.getSystemSmallTransactionsViewData(
+        let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag
@@ -84,7 +86,7 @@ struct SystemSmallTransactionsAppIntent: WidgetConfigurationIntent {
 
 struct SystemSmallTransactionsEntry: TimelineEntry {
     var date: Date = .current
-    let viewData: SystemSmallTransactionsViewDataProtocol
+    let viewData: WidgetTransactionsViewDataProtocol
 }
 
 struct SystemSmallTransactionsView: View {
@@ -123,12 +125,12 @@ struct SystemSmallTransactions: Widget {
     SystemSmallTransactions()
 } timeline: {
     SystemSmallTransactionsEntry(
-        viewData: SystemSmallTransactionsViewDataMock()
+        viewData: WidgetTransactionsViewDataMock()
     )
     SystemSmallTransactionsEntry(
-        viewData: SystemSmallTransactionsViewDataMock()
+        viewData: WidgetTransactionsViewDataMock()
     )
     SystemSmallTransactionsEntry(
-        viewData: SystemSmallTransactionsViewDataMock()
+        viewData: WidgetTransactionsViewDataMock()
     )
 }

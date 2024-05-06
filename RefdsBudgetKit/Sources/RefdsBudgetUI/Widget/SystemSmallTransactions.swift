@@ -4,18 +4,15 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct SystemSmallTransactions: View {
-    private let viewData: SystemSmallTransactionsViewDataProtocol
+    private let viewData: WidgetTransactionsViewDataProtocol
     
-    public init(viewData: SystemSmallTransactionsViewDataProtocol) {
+    public init(viewData: WidgetTransactionsViewDataProtocol) {
         self.viewData = viewData
     }
     
     public var body: some View {
         VStack(alignment: .leading) {
             headerView
-                .if(hasFilter) {
-                    $0.padding(.bottom, 2)
-                }
             Spacer(minLength: .zero)
             contentView
             Spacer(minLength: .zero)
@@ -57,36 +54,38 @@ public struct SystemSmallTransactions: View {
     
     private var contentView: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: 5) {
+            HStack(spacing: 2) {
+                RefdsText(
+                    .localizable(by: .widgetCurrentSpend).uppercased(),
+                    style: .system(size: 7),
+                    color: .secondary
+                )
+                
+                if hasFilter {
+                    RefdsText(
+                        "•",
+                        style: .system(size: 7),
+                        color: .secondary
+                    )
+                }
+                
                 if viewData.category != String.localizable(by: .transactionsCategorieAllSelected) {
                     RefdsText(
                         viewData.category.uppercased(),
                         style: .system(size: 7),
-                        color: .primary,
-                        weight: .heavy,
+                        color: .secondary,
                         lineLimit: 1
                     )
-                    .refdsTag()
                 }
                 
                 if viewData.tag != String.localizable(by: .transactionsCategorieAllSelected) {
                     RefdsText(
                         viewData.tag.uppercased(),
                         style: .system(size: 7),
-                        color: .primary,
-                        weight: .heavy,
+                        color: .secondary,
                         lineLimit: 1
                     )
-                    .refdsTag()
                 }
-            }
-            
-            if !hasFilter {
-                RefdsText(
-                    .localizable(by: .widgetCurrentSpend).uppercased(),
-                    style: .system(size: 7),
-                    color: .secondary
-                )
             }
             
             RefdsText(
@@ -96,16 +95,13 @@ public struct SystemSmallTransactions: View {
                 lineLimit: 1
             )
             .minimumScaleFactor(0.5)
-            .if(hasFilter) {
-                $0.padding(.top, -6)
-            }
             
             Spacer(minLength: .zero)
         }
     }
     
     private var transactionsView: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 2) {
             if viewData.transactions.isEmpty {
                 RefdsText(
                     .localizable(by: .emptyDescriptions),
@@ -113,16 +109,18 @@ public struct SystemSmallTransactions: View {
                     color: .secondary
                 )
             } else {
-                ForEach(viewData.transactions.prefix(4).indices, id: \.self) {
+                ForEach(viewData.transactions.prefix(3).indices, id: \.self) {
                     let transaction = viewData.transactions[$0]
                     HStack {
                         if let icon = RefdsIconSymbol(rawValue: transaction.icon) {
-                            RefdsIcon(icon, color: transaction.color, size: 10)
-                                .frame(width: 10, height: 10)
+                            RefdsIcon(icon, color: transaction.color, size: 8)
+                                .frame(width: 12, height: 12)
+                                .padding(.horizontal, -3)
+                                .refdsTag(color: transaction.color)
                         }
                         
                         RefdsText(
-                            (transaction.description.components(separatedBy: " ").first ?? "") + "...",
+                            transaction.description,
                             style: .system(size: 10),
                             color: .secondary,
                             lineLimit: 1
@@ -136,6 +134,12 @@ public struct SystemSmallTransactions: View {
                             lineLimit: 1
                         )
                     }
+                    
+                    if $0 < 2, $0 < viewData.transactions.count - 1 {
+                        Divider()
+                            .opacity(0.7)
+                            .padding(.leading, 27)
+                    }
                 }
             }
         }
@@ -143,7 +147,7 @@ public struct SystemSmallTransactions: View {
 }
 
 #Preview {
-    SystemSmallTransactions(viewData: SystemSmallTransactionsViewDataMock())
+    SystemSmallTransactions(viewData: WidgetTransactionsViewDataMock())
         .frame(width: 130, height: 130)
         .refdsCard(padding: .medium, hasShadow: true)
 }

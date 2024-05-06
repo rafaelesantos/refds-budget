@@ -1,7 +1,7 @@
 import Foundation
 import RefdsBudgetResource
 
-public struct SystemSmallExpenseTrackerViewDataMock: SystemSmallExpenseTrackerViewDataProtocol {
+public struct WidgetExpenseTrackerViewDataMock: WidgetExpenseTrackerViewDataProtocol {
     public var isFilterByDate: Bool = true
     public var category: String = .localizable(by: .transactionsCategorieAllSelected)
     public var tag: String = .localizable(by: .transactionsCategorieAllSelected)
