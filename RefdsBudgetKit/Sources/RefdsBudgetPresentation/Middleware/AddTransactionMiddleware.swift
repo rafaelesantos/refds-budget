@@ -69,7 +69,8 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
                 date: transaction.date,
                 message: transaction.description,
                 category: category.categoryId,
-                amount: transaction.amount
+                amount: transaction.amount,
+                status: transaction.status
             )
         } catch {
             return completion(.updateError(.existingTransaction))

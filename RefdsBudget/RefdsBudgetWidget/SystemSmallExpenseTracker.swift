@@ -3,6 +3,7 @@ import SwiftUI
 import RefdsUI
 import RefdsShared
 import RefdsBudgetUI
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 import AppIntents
 
@@ -25,7 +26,8 @@ struct SystemSmallExpenseTrackerProvider: AppIntentTimelineProvider {
         let viewData = presenter.getWidgetExpenseTrackerViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
-            tag: configuration.tag
+            tag: configuration.tag,
+            status: configuration.status
         )
         return SystemSmallExpenseTrackerEntry(viewData: viewData)
     }
@@ -34,7 +36,8 @@ struct SystemSmallExpenseTrackerProvider: AppIntentTimelineProvider {
         let viewData = presenter.getWidgetExpenseTrackerViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
-            tag: configuration.tag
+            tag: configuration.tag,
+            status: configuration.status
         )
         let entries: [SystemSmallExpenseTrackerEntry] = [
             SystemSmallExpenseTrackerEntry(viewData: viewData)
@@ -55,6 +58,9 @@ struct SystemSmallExpenseTrackerAppIntent: WidgetConfigurationIntent {
     
     @Parameter(title: "Tag", optionsProvider: TagsOptionsProvider())
     var tag: String
+    
+    @Parameter(title: "Status", optionsProvider: StatusOptionsProvider())
+    var status: String
     
     private struct CategoriesOptionsProvider: DynamicOptionsProvider {
         private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
@@ -77,6 +83,19 @@ struct SystemSmallExpenseTrackerAppIntent: WidgetConfigurationIntent {
         
         func results() async throws -> [String] {
             presenter.getTags()
+        }
+    }
+    
+    private struct StatusOptionsProvider: DynamicOptionsProvider {
+        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        
+        func defaultResult() async -> String? {
+            .localizable(by: .transactionsCategorieAllSelected)
+        }
+        
+        func results() async throws -> [String] {
+            let status: [TransactionStatus] = [.pending, .cleared]
+            return status.map { $0.description } + [.localizable(by: .transactionsCategorieAllSelected)]
         }
     }
 }

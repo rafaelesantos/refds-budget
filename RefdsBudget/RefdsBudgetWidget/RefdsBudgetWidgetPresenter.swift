@@ -10,12 +10,14 @@ protocol RefdsBudgetWidgetPresenterProtocol {
     func getWidgetExpenseTrackerViewData(
         isFilterByDate: Bool,
         category: String,
-        tag: String
+        tag: String,
+        status: String
     ) -> WidgetExpenseTrackerViewDataProtocol
     func getWidgetTransactionsViewData(
         isFilterByDate: Bool,
         category: String,
-        tag: String
+        tag: String,
+        status: String
     ) -> WidgetTransactionsViewDataProtocol
     func getCategories() -> [String]
     func getTags() -> [String]
@@ -36,16 +38,30 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
     func getWidgetExpenseTrackerViewData(
         isFilterByDate: Bool,
         category: String,
-        tag: String
+        tag: String,
+        status: String
     ) -> WidgetExpenseTrackerViewDataProtocol {
         var budgets: [BudgetEntity] = []
         var transactions: [TransactionEntity] = []
         
         if isFilterByDate {
-            transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear)
+            transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear).filter {
+                if status == .localizable(by: .transactionsCategorieAllSelected) {
+                    return $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue
+                } else {
+                    return status == TransactionStatus(rawValue: $0.status)?.description
+                }
+            }
             budgets = categoryRepository.getBudgets(from: .current)
         } else {
-            transactions = transactionsRepository.getTransactions()
+            transactions = transactionsRepository.getTransactions().filter {
+                if status == .localizable(by: .transactionsCategorieAllSelected) {
+                    return true
+                } else {
+                    return status == TransactionStatus(rawValue: $0.status)?.description
+                }
+            }
             budgets = categoryRepository.getAllBudgets()
         }
         
@@ -80,18 +96,32 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
     func getWidgetTransactionsViewData(
         isFilterByDate: Bool,
         category: String,
-        tag: String
+        tag: String,
+        status: String
     ) -> WidgetTransactionsViewDataProtocol {
         var budgets: [BudgetEntity] = []
         var categories: [CategoryEntity] = []
         var transactions: [TransactionEntity] = []
         
         if isFilterByDate {
-            transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear)
+            transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear).filter {
+                if status == .localizable(by: .transactionsCategorieAllSelected) {
+                    return $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue
+                } else {
+                    return status == TransactionStatus(rawValue: $0.status)?.description
+                }
+            }
             budgets = categoryRepository.getBudgets(from: .current)
             categories = categoryRepository.getCategories(from: .current)
         } else {
-            transactions = transactionsRepository.getTransactions()
+            transactions = transactionsRepository.getTransactions().filter {
+                if status == .localizable(by: .transactionsCategorieAllSelected) {
+                    return true
+                } else {
+                    return status == TransactionStatus(rawValue: $0.status)?.description
+                }
+            }
             budgets = categoryRepository.getAllBudgets()
             categories = categoryRepository.getAllCategories()
         }
@@ -145,7 +175,8 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
                 color: Color(hex: category.color),
                 amount: transaction.amount,
                 description: transaction.message,
-                date: transaction.date.date
+                date: transaction.date.date,
+                status: TransactionStatus(rawValue: transaction.status) ?? .spend
             )
         }
         

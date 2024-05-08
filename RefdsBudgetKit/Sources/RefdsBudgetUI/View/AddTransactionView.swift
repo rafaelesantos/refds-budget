@@ -1,6 +1,7 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct AddTransactionView: View {
@@ -40,6 +41,7 @@ public struct AddTransactionView: View {
         List {
             sectionAmount
             sectionDescription
+            sectionStatus
             sectionEmptyCategories
             sectionEmptyBudgets
             sectionCategory
@@ -97,6 +99,26 @@ public struct AddTransactionView: View {
         } header: {
             RefdsText(
                 .localizable(by: .addBudgetDescriptionHeader),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
+    private var sectionStatus: some View {
+        RefdsSection {
+            Picker(selection: $state.status) {
+                ForEach(TransactionStatus.allCases.indices, id: \.self) {
+                    let status = TransactionStatus.allCases[$0]
+                    RefdsText(status.description)
+                        .tag(status)
+                }
+            } label: {
+                RefdsText(.localizable(by: .addTransactionStatusSelect), style: .callout)
+            }
+        } header: {
+            RefdsText(
+                .localizable(by: .addTransactionStatusHeader),
                 style: .footnote,
                 color: .secondary
             )

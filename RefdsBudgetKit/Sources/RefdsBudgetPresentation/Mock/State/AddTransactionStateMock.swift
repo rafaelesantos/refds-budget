@@ -1,10 +1,12 @@
 import Foundation
+import RefdsBudgetDomain
 import RefdsBudgetData
 
 public struct AddTransactionStateMock: AddTransactionStateProtocol {
     public var id: UUID = .init()
     public var amount: Double = .random(in: 250 ... 750)
     public var description: String = .someParagraph()
+    public var status: TransactionStatus = .spend
     public var category: CategoryRowViewDataProtocol? = CategoryRowViewDataMock()
     public var categories: [CategoryRowViewDataProtocol] = (1 ... 4).map { _ in CategoryRowViewDataMock() }
     public var remaining: Double? = .random(in: 25 ... 750)

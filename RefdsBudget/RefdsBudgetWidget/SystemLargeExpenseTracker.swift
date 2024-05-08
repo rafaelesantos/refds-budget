@@ -3,6 +3,7 @@ import SwiftUI
 import RefdsUI
 import RefdsShared
 import RefdsBudgetUI
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 import AppIntents
 
@@ -28,7 +29,8 @@ struct SystemLargeExpenseTrackerProvider: AppIntentTimelineProvider {
         let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: configuration.tag
+            tag: configuration.tag,
+            status: configuration.status
         )
         return SystemLargeExpenseTrackerEntry(viewData: viewData)
     }
@@ -37,7 +39,8 @@ struct SystemLargeExpenseTrackerProvider: AppIntentTimelineProvider {
         let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: configuration.tag
+            tag: configuration.tag,
+            status: configuration.status
         )
         let entries: [SystemLargeExpenseTrackerEntry] = [
             SystemLargeExpenseTrackerEntry(viewData: viewData)
@@ -56,6 +59,9 @@ struct SystemLargeExpenseTrackerAppIntent: WidgetConfigurationIntent {
     @Parameter(title: "Tag", optionsProvider: TagsOptionsProvider())
     var tag: String
     
+    @Parameter(title: "Status", optionsProvider: StatusOptionsProvider())
+    var status: String
+    
     private struct TagsOptionsProvider: DynamicOptionsProvider {
         private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
         
@@ -65,6 +71,19 @@ struct SystemLargeExpenseTrackerAppIntent: WidgetConfigurationIntent {
         
         func results() async throws -> [String] {
             presenter.getTags()
+        }
+    }
+    
+    private struct StatusOptionsProvider: DynamicOptionsProvider {
+        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        
+        func defaultResult() async -> String? {
+            .localizable(by: .transactionsCategorieAllSelected)
+        }
+        
+        func results() async throws -> [String] {
+            let status: [TransactionStatus] = [.pending, .cleared]
+            return status.map { $0.description } + [.localizable(by: .transactionsCategorieAllSelected)]
         }
     }
 }

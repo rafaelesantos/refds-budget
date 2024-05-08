@@ -31,7 +31,14 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (CategoryAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, categoryId, searchText): fetchData(with: categoryId, and: searchText, from: date, on: completion)
+        case .fetchData:
+            let date = state.isFilterEnable ? state.date : nil
+            fetchData(
+                with: state.id,
+                and: state.searchText,
+                from: date,
+                on: completion
+            )
         case let .fetchBudgetForEdit(date, categoryId, budgetId): fetchBudgetForEdit(from: date, categoryId: categoryId, budgetId: budgetId, on: completion)
         case let .fetchCategoryForEdit(categoryId): fetchCategoryForEdit(with: categoryId, on: completion)
         case let .fetchTransactionForEdit(transactionId): fetchTransactionForEdit(with: transactionId, on: completion)
@@ -40,6 +47,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         case let .removeTransaction(id): removeTransaction(with: state, by: id, on: completion)
         case let .removeTransactions(ids): removeTransactions(with: state, by: ids, on: completion)
         case let .copyTransactions(ids): copyTransactions(by: ids, on: completion)
+        case let .updateStatus(id): updateStatus(for: id, on: completion)
         default: break
         }
     }
@@ -173,6 +181,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             id: transaction.id,
             amount: transaction.amount,
             description: transaction.message,
+            status: TransactionStatus(rawValue: transaction.status) ?? .spend,
             category: category,
             categories: categories,
             remaining: nil,
@@ -197,8 +206,6 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return completion(.updateError(.notFoundCategory))
         }
         
-        let categoryId = category.id
-        
         let transactions = transactionRepository.getTransactions(
             on: category.id,
             from: budgetEntity.date.date,
@@ -221,13 +228,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         WidgetCenter.shared.reloadAllTimelines()
-        completion(
-            .fetchData(
-                date,
-                categoryId,
-                state.searchText
-            )
-        )
+        completion(.dismiss)
     }
     
     private func removeCategory(
@@ -251,13 +252,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         } catch { completion(.updateError(.cantDeleteCategory)) }
         
         WidgetCenter.shared.reloadAllTimelines()
-        completion(
-            .fetchData(
-                state.isFilterEnable ? state.date : nil,
-                id,
-                state.searchText
-            )
-        )
+        completion(.dismiss)
     }
     
     private func removeTransaction(
@@ -270,13 +265,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         } catch { completion(.updateError(.notFoundTransaction)) }
         
         WidgetCenter.shared.reloadAllTimelines()
-        completion(
-            .fetchData(
-                state.isFilterEnable ? state.date : nil,
-                state.id,
-                state.searchText
-            )
-        )
+        completion(.fetchData)
     }
     
     private func removeTransactions(
@@ -289,13 +278,32 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         WidgetCenter.shared.reloadAllTimelines()
-        completion(
-            .fetchData(
-                state.isFilterEnable ? state.date : nil,
-                state.id,
-                state.searchText
+        completion(.fetchData)
+    }
+    
+    private func updateStatus(
+        for id: UUID,
+        on completion: @escaping (CategoryAction) -> Void
+    ) {
+        guard let transaction = transactionRepository.getTransaction(by: id) else {
+            return completion(.updateError(.notFoundTransaction))
+        }
+        var status = TransactionStatus(rawValue: transaction.status) ?? .spend
+        status = status == .pending ? .cleared : status == .cleared ? .pending : .spend
+        
+        do {
+            try transactionRepository.addTransaction(
+                id: transaction.id,
+                date: transaction.date.date,
+                message: transaction.message,
+                category: transaction.category,
+                amount: transaction.amount,
+                status: status
             )
-        )
+            completion(.fetchData)
+        } catch {
+            completion(.updateError(.cantSaveOnDatabase))
+        }
     }
     
     private func copyTransactions(

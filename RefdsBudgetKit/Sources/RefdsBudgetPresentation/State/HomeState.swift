@@ -13,6 +13,7 @@ public protocol HomeStateProtocol: RefdsReduxState {
     var selectedCategories: Set<String> { get set }
     var tags: [String] { get set }
     var selectedTags: Set<String> { get set }
+    var selectedStatus: Set<String> { get set }
     var isFilterEnable: Bool { get set }
     var date: Date { get set }
     var error: RefdsBudgetError? { get set }
@@ -30,6 +31,7 @@ public struct HomeState: HomeStateProtocol {
     public var selectedCategories: Set<String> = []
     public var tags: [String] = []
     public var selectedTags: Set<String> = []
+    public var selectedStatus: Set<String> = []
     
     public var isFilterEnable: Bool = true
     public var date: Date = .current

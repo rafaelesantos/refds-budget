@@ -24,6 +24,7 @@ public protocol TransactionUseCase {
         date: Date,
         message: String,
         category: UUID,
-        amount: Double
+        amount: Double,
+        status: TransactionStatus
     ) throws
 }

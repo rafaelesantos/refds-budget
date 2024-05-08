@@ -23,19 +23,7 @@ public final class CategoryReducer: RefdsReduxReducerProtocol {
             state.balance = balance
         case let .updateError(error):
             state.error = error
-        case nil,
-                .editBudget,
-                .editCategory,
-                .removeBudget,
-                .removeCategory,
-                .fetchBudgetForEdit,
-                .fetchCategoryForEdit,
-                .fetchTransactionForEdit,
-                .addTransaction,
-                .removeTransaction,
-                .copyTransactions,
-                .removeTransactions:
-            break
+        default: break
         }
         
         return state

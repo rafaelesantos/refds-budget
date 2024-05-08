@@ -99,6 +99,11 @@ public enum LocalizableKey: String {
     case addTransactionSaveButton
     case addTransactionNavigationTitle
     case addTransactionDescriptionPrompt
+    case addTransactionStatusHeader
+    case addTransactionStatusSelect
+    case addTransactionStatusSpend
+    case addTransactionStatusPending
+    case addTransactionStatusCleared
     // MARK: - Transactions
     case transactionNavigationTitle
     case transactionEditNavigationTitle

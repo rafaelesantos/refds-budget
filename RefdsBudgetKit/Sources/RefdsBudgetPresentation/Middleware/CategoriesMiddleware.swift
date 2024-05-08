@@ -30,7 +30,14 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (CategoriesAction) -> Void
     ) {
         switch categoriesAction {
-        case let .fetchData(date, tagsName): fetchData(from: date, tagsName: tagsName, on: completion)
+        case .fetchData: 
+            let date = state.isFilterEnable ? state.date : nil
+            fetchData(
+                from: date,
+                tagsName: state.selectedTags,
+                status: state.selectedStatus,
+                on: completion
+            )
         case let .fetchBudgetForEdit(date, categoryId, budgetId): fetchBudgetForEdit(from: date, categoryId: categoryId, budgetId: budgetId, on: completion)
         case let .fetchCategoryForEdit(categoryId): fetchCategoryForEdit(with: categoryId, on: completion)
         case let .removeBudget(date, id): removeBudget(with: state, from: date, by: id, on: completion)
@@ -42,6 +49,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
     private func fetchData(
         from date: Date?,
         tagsName: Set<String>,
+        status: Set<String>,
         on completion: @escaping (CategoriesAction) -> Void
     ) {
         let allEntities = categoryRepository.getAllCategories()
@@ -60,10 +68,24 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             
             if let date = date, let budget = categoryRepository.getBudget(on: $0.id, from: date) {
                 budgetsEntity += [budget]
-                transactionsEntity = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear)
+                transactionsEntity = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear).filter {
+                    if status.isEmpty {
+                        return $0.status != TransactionStatus.pending.rawValue &&
+                        $0.status != TransactionStatus.cleared.rawValue
+                    } else {
+                        return true
+                    }
+                }
             } else if date == nil {
                 budgetsEntity = categoryRepository.getBudgets(on: $0.id)
-                transactionsEntity = transactionRepository.getTransactions(on: $0.id)
+                transactionsEntity = transactionRepository.getTransactions(on: $0.id).filter {
+                    if status.isEmpty {
+                        return $0.status != TransactionStatus.pending.rawValue &&
+                        $0.status != TransactionStatus.cleared.rawValue
+                    } else {
+                        return true
+                    }
+                }
             }
             
             if !tagsName.isEmpty {
@@ -81,6 +103,12 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
                         }
                     }
                     return false
+                }
+            }
+            
+            if !status.isEmpty {
+                transactionsEntity = transactionsEntity.filter {
+                    status.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
                 }
             }
             
@@ -170,7 +198,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         WidgetCenter.shared.reloadAllTimelines()
-        completion(.fetchData(date, state.selectedTags))
+        completion(.fetchData)
     }
     
     private func removeCategory(
@@ -194,6 +222,6 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         } catch { completion(.updateError(.cantDeleteCategory)) }
         
         WidgetCenter.shared.reloadAllTimelines()
-        completion(.fetchData(date, state.selectedTags))
+        completion(.fetchData)
     }
 }

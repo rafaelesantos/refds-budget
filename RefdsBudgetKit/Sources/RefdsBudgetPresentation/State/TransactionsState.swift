@@ -13,6 +13,7 @@ public protocol TransactionsStateProtocol: RefdsReduxState {
     var selectedCategories: Set<String> { get set }
     var tags: [String] { get set }
     var selectedTags: Set<String> { get set }
+    var selectedStatus: Set<String> { get set }
     var balance: BalanceRowViewDataProtocol? { get set }
     var error: RefdsBudgetError? { get set }
 }
@@ -27,6 +28,7 @@ public struct TransactionsState: TransactionsStateProtocol {
     public var selectedCategories: Set<String> = []
     public var tags: [String]
     public var selectedTags: Set<String> = []
+    public var selectedStatus: Set<String> = []
     public var balance: BalanceRowViewDataProtocol?
     public var error: RefdsBudgetError?
     

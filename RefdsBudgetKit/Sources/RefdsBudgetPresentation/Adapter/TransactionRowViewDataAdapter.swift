@@ -23,7 +23,8 @@ public final class TransactionRowViewDataAdapter: TransactionRowViewDataAdapterP
             color: Color(hex: categoryEntity.color),
             amount: transactionEntity.amount,
             description: transactionEntity.message,
-            date: transactionEntity.date.date
+            date: transactionEntity.date.date,
+            status: TransactionStatus(rawValue: transactionEntity.status) ?? .spend
         )
     }
 }

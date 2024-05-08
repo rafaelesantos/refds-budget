@@ -12,6 +12,7 @@ public struct TransactionsStateMock: TransactionsStateProtocol {
     public var selectedCategories: Set<String> = []
     public var tags: [String] = (1 ... 5).map { _ in TagRowViewDataMock().name }
     public var selectedTags: Set<String> = []
+    public var selectedStatus: Set<String> = []
     public var balance: (BalanceRowViewDataProtocol)? = BalanceRowViewDataMock()
     public var error: RefdsBudgetError? = nil
     

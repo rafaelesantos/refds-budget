@@ -21,12 +21,7 @@ public final class TransactionsReducer: RefdsReduxReducerProtocol {
             state.balance = balance
         case let .updateError(error):
             state.error = error
-        case nil, 
-                .fetchTransactionForEdit,
-                .addTransaction,
-                .removeTransaction,
-                .removeTransactions,
-                .copyTransactions:
+        default:
             break
         }
         

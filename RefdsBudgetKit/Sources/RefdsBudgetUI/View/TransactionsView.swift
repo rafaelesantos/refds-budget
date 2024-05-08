@@ -2,6 +2,7 @@ import SwiftUI
 import RefdsUI
 import RefdsRedux
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct TransactionsView: View {
@@ -39,6 +40,7 @@ public struct TransactionsView: View {
         .onChange(of: state.searchText) { reloadData() }
         .onChange(of: state.selectedCategories) { reloadData() }
         .onChange(of: state.selectedTags) { reloadData() }
+        .onChange(of: state.selectedStatus) { reloadData() }
         .toolbar {
             ToolbarItemGroup {
                 moreButton
@@ -49,14 +51,7 @@ public struct TransactionsView: View {
     }
     
     private func reloadData() {
-        action(
-            .fetchData(
-                state.isFilterEnable ? state.date : nil,
-                state.searchText,
-                state.selectedCategories,
-                state.selectedTags
-            )
-        )
+        action(.fetchData)
     }
     
     @ViewBuilder
@@ -76,6 +71,8 @@ public struct TransactionsView: View {
             action(.fetchTransactionForEdit($0.id))
         } remove: { id in
             action(.removeTransaction(id))
+        } resolve: { id in
+            action(.updateStatus(id))
         }
     }
     
@@ -177,6 +174,7 @@ public struct TransactionsView: View {
             
             selectCategoryRowView
             selectTagRowView
+            selectStatusRowView
         } label: {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
@@ -188,7 +186,7 @@ public struct TransactionsView: View {
             }
         }
         
-        let words = Array(state.selectedTags) + Array(state.selectedCategories)
+        let words = Array(state.selectedStatus) + Array(state.selectedTags) + Array(state.selectedCategories)
         let sentence = words.joined(separator: " • ").uppercased()
         
         if !sentence.isEmpty {
@@ -199,6 +197,7 @@ public struct TransactionsView: View {
                     withAnimation {
                         state.selectedTags = []
                         state.selectedCategories = []
+                        state.selectedStatus = []
                     }
                 } label: {
                     RefdsIcon(
@@ -209,6 +208,7 @@ public struct TransactionsView: View {
                         renderingMode: .hierarchical
                     )
                 }
+                .buttonStyle(.plain)
             }
         }
     }
@@ -237,6 +237,18 @@ public struct TransactionsView: View {
                 selectedData: $state.selectedTags
             )
         }
+    }
+    
+    @ViewBuilder
+    private var selectStatusRowView: some View{
+        let status: [TransactionStatus] = [.pending, .cleared]
+        SelectMenuRowView(
+            header: .addTransactionStatusSpend,
+            icon: .listDashHeaderRectangle,
+            title: .addTransactionStatusSpend,
+            data: status.map { $0.description },
+            selectedData: $state.selectedStatus
+        )
     }
 }
 

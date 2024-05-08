@@ -116,6 +116,11 @@
 "addTransactionSaveButton" = "Save transaction";
 "addTransactionNavigationTitle" = "Transaction";
 "addTransactionDescriptionPrompt" = "Provide a description for your expense";
+"addTransactionStatusHeader" = "Status";
+"addTransactionStatusSelect" = "Select the status";
+"addTransactionStatusSpend" = "Spend";
+"addTransactionStatusPending" = "Pending";
+"addTransactionStatusCleared" = "Cleared";
 
 // MARK: - Transactions
 

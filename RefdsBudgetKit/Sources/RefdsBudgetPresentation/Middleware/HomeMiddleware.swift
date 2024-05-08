@@ -30,13 +30,12 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (HomeAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date): fetchData(from: date, state: state, on: completion)
+        case .fetchData: fetchData(state: state, on: completion)
         default: break
         }
     }
     
     private func fetchData(
-        from date: Date?,
         state: HomeStateProtocol,
         on completion: @escaping (HomeAction) -> Void
     ) {
@@ -45,7 +44,8 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
         var transactionEntities: [TransactionEntity] = []
         let tagEntities = tagRepository.getBubbles()
         
-        if let date = date {
+        if state.isFilterEnable {
+            let date = state.date
             transactionEntities = transactionRepository.getTransactions(from: date, format: .monthYear)
             categoryEntities = categoryRepository.getCategories(from: date)
             budgetEntities = categoryRepository.getBudgets(from: date)
@@ -78,20 +78,29 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
             }
         }
         
+        if !state.selectedStatus.isEmpty {
+            transactionEntities = transactionEntities.filter {
+                state.selectedStatus.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
+            }
+        }
+        
         let remaining = getRemaining(
             for: categoryEntities,
             on: transactionEntities,
-            with: budgetEntities
+            with: budgetEntities,
+            status: state.selectedStatus
         ).sorted(by: { $0.spend > $1.spend })
         
         let tags = getTagsRow(
             for: transactionEntities,
-            with: tagEntities
+            with: tagEntities,
+            status: state.selectedStatus
         )
         
         let largestPurchase = getLargestPurchase(
             on: transactionEntities,
-            with: categoryEntities
+            with: categoryEntities,
+            status: state.selectedStatus
         )
         
         completion(
@@ -108,11 +117,19 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     private func getRemaining(
         for categoryEntities: [CategoryEntity],
         on transactionEntities: [TransactionEntity],
-        with budgetEntities: [BudgetEntity]
+        with budgetEntities: [BudgetEntity],
+        status: Set<String>
     ) -> [CategoryRowViewDataProtocol] {
         categoryEntities.compactMap { entity in
             let budgetEntities = budgetEntities.filter { $0.category == entity.id }
-            let transactionEntities = transactionEntities.filter { $0.category == entity.id }
+            let transactionEntities = transactionEntities.filter { $0.category == entity.id }.filter {
+                if status.isEmpty {
+                    return $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue
+                } else {
+                    return true
+                }
+            }
             
             guard let budget = budgetEntities.last else { return nil }
             let budgetAmount = budgetEntities.map { $0.amount }.reduce(.zero, +)
@@ -133,7 +150,8 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     private func getTagsRow(
         for transactionEntities: [TransactionEntity],
-        with tagEntities: [BubbleEntity]
+        with tagEntities: [BubbleEntity],
+        status: Set<String>
     ) -> [TagRowViewDataProtocol] {
         tagEntities.compactMap { tag in
             guard let tagName = tag.name.applyingTransform(.stripDiacritics, reverse: false) else { return nil }
@@ -142,6 +160,13 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
                     .applyingTransform(.stripDiacritics, reverse: false)?
                     .lowercased()
                     .contains(tagName.lowercased()) ?? false
+            }.filter {
+                if status.isEmpty {
+                    return $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue
+                } else {
+                    return true
+                }
             }.map { $0.amount }
             return tagRowViewDataAdapter.adapt(
                 entity: tag,
@@ -153,9 +178,17 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     private func getLargestPurchase(
         on transactionEntities: [TransactionEntity],
-        with categoryEntities: [CategoryEntity]
+        with categoryEntities: [CategoryEntity],
+        status: Set<String>
     ) -> [TransactionRowViewDataProtocol] {
-        let transactionEntities = transactionEntities.sorted(by: { $0.amount > $1.amount }).prefix(5)
+        let transactionEntities = transactionEntities.filter {
+            if status.isEmpty {
+                return $0.status != TransactionStatus.pending.rawValue &&
+                $0.status != TransactionStatus.cleared.rawValue
+            } else {
+                return true
+            }
+        }.sorted(by: { $0.amount > $1.amount }).prefix(5)
         return transactionEntities.compactMap { entity in
             guard let category = categoryEntities.first(where: { $0.id == entity.category }) else { return nil }
             return transactionRowViewDataAdapter.adapt(

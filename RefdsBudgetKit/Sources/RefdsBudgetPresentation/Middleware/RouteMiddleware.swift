@@ -138,6 +138,7 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
         case .editBudget: completion(.updateRoute(.addBudget))
         case .editCategory: completion(.updateRoute(.addCategory))
         case .addTransaction: completion(.updateRoute(.addTransaction))
+        case .dismiss: completion(.dismiss)
         default: break
         }
     }

@@ -2,7 +2,7 @@ import Foundation
 import RefdsRedux
 
 public enum HomeAction: RefdsReduxAction {
-    case fetchData(Date?)
+    case fetchData
     case updateData(
         remaining: [CategoryRowViewDataProtocol],
         tags: [TagRowViewDataProtocol],

@@ -4,6 +4,7 @@ import RefdsRedux
 import RefdsRouter
 import RefdsShared
 import RefdsInjection
+import RefdsBudgetDomain
 import RefdsBudgetResource
 import RefdsBudgetPresentation
 
@@ -38,6 +39,7 @@ public struct CategoriesView: View {
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.selectedTags) { reloadData() }
+        .onChange(of: state.selectedStatus) { reloadData() }
         .toolbar { ToolbarItem { addCategoryButton } }
         .refreshable { reloadData() }
         .onAppear { reloadData() }
@@ -45,7 +47,7 @@ public struct CategoriesView: View {
     }
     
     private func reloadData() {
-        action(.fetchData(state.isFilterEnable ? state.date : nil, state.selectedTags))
+        action(.fetchData)
     }
     
     private var sectionsCategory: some View {
@@ -199,6 +201,7 @@ public struct CategoriesView: View {
             }
             
             selectTagRowView
+            selectStatusRowView
         } label: {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
@@ -210,7 +213,7 @@ public struct CategoriesView: View {
             }
         }
         
-        let words = Array(state.selectedTags)
+        let words = Array(state.selectedTags) + Array(state.selectedStatus)
         let sentence = words.joined(separator: " • ").uppercased()
         
         if !sentence.isEmpty {
@@ -220,6 +223,7 @@ public struct CategoriesView: View {
                 RefdsButton {
                     withAnimation {
                         state.selectedTags = []
+                        state.selectedStatus = []
                     }
                 } label: {
                     RefdsIcon(
@@ -245,6 +249,18 @@ public struct CategoriesView: View {
                 selectedData: $state.selectedTags
             )
         }
+    }
+    
+    @ViewBuilder
+    private var selectStatusRowView: some View{
+        let status: [TransactionStatus] = [.pending, .cleared]
+        SelectMenuRowView(
+            header: .addTransactionStatusSpend,
+            icon: .listDashHeaderRectangle,
+            title: .addTransactionStatusSpend,
+            data: status.map { $0.description },
+            selectedData: $state.selectedStatus
+        )
     }
     
     private var addCategoryButton: some View {

@@ -52,7 +52,14 @@ public final class LocalTransactionRepository: TransactionUseCase {
         try database.viewContext.save()
     }
     
-    public func addTransaction(id: UUID, date: Date, message: String, category: UUID, amount: Double) throws {
+    public func addTransaction(
+        id: UUID,
+        date: Date,
+        message: String,
+        category: UUID,
+        amount: Double,
+        status: TransactionStatus
+    ) throws {
         guard let transaction = getTransaction(by: id) else {
             let transaction = TransactionEntity(context: database.viewContext)
             transaction.id = id
@@ -60,6 +67,7 @@ public final class LocalTransactionRepository: TransactionUseCase {
             transaction.message = message
             transaction.category = category
             transaction.amount = amount
+            transaction.status = status.rawValue
             try database.viewContext.save()
             return
         }
@@ -68,6 +76,7 @@ public final class LocalTransactionRepository: TransactionUseCase {
         transaction.message = message
         transaction.category = category
         transaction.amount = amount
+        transaction.status = status.rawValue
         try database.viewContext.save()
     }
 }

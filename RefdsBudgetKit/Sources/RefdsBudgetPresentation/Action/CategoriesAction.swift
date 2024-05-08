@@ -7,7 +7,7 @@ public enum CategoriesAction: RefdsReduxAction {
     case updateCategories([CategoryRowViewDataProtocol], Bool, [String])
     case updateBalance(BalanceRowViewDataProtocol)
     
-    case fetchData(Date?, Set<String>)
+    case fetchData
     case fetchBudgetForEdit(Date, UUID, UUID)
     case fetchCategoryForEdit(UUID)
     

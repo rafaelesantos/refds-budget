@@ -13,6 +13,7 @@ public protocol CategoriesStateProtocol: RefdsReduxState {
     var isEmptyBudgets: Bool { get }
     var tags: [String] { get set }
     var selectedTags: Set<String> { get set }
+    var selectedStatus: Set<String> { get set }
     var balance: BalanceRowViewDataProtocol? { get set }
     var error: RefdsBudgetError? { get set }
 }
@@ -26,6 +27,7 @@ public struct CategoriesState: CategoriesStateProtocol {
     public var isEmptyCategories: Bool
     public var tags: [String]
     public var selectedTags: Set<String> = []
+    public var selectedStatus: Set<String> = []
     public var balance: BalanceRowViewDataProtocol?
     public var error: RefdsBudgetError?
     

@@ -1,6 +1,7 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct HomeView: View {
@@ -33,11 +34,12 @@ public struct HomeView: View {
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.selectedTags) { reloadData() }
         .onChange(of: state.selectedCategories) { reloadData() }
+        .onChange(of: state.selectedStatus) { reloadData() }
         .refdsToast(item: $state.error)
     }
     
     private func reloadData() {
-        action(.fetchData(state.isFilterEnable ? state.date : nil))
+        action(.fetchData)
     }
     
     @ViewBuilder
@@ -73,6 +75,7 @@ public struct HomeView: View {
             
             selectCategoryRowView
             selectTagRowView
+            selectStatusRowView
         } label: {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
@@ -84,7 +87,7 @@ public struct HomeView: View {
             }
         }
         
-        let words = Array(state.selectedTags) + Array(state.selectedCategories)
+        let words = Array(state.selectedStatus) + Array(state.selectedTags) + Array(state.selectedCategories)
         let sentence = words.joined(separator: " • ").uppercased()
         
         if !sentence.isEmpty {
@@ -95,6 +98,7 @@ public struct HomeView: View {
                     withAnimation {
                         state.selectedTags = []
                         state.selectedCategories = []
+                        state.selectedStatus = []
                     }
                 } label: {
                     RefdsIcon(
@@ -133,6 +137,18 @@ public struct HomeView: View {
                 selectedData: $state.selectedTags
             )
         }
+    }
+    
+    @ViewBuilder
+    private var selectStatusRowView: some View{
+        let status: [TransactionStatus] = [.pending, .cleared]
+        SelectMenuRowView(
+            header: .addTransactionStatusSpend,
+            icon: .listDashHeaderRectangle,
+            title: .addTransactionStatusSpend,
+            data: status.map { $0.description },
+            selectedData: $state.selectedStatus
+        )
     }
     
     @ViewBuilder

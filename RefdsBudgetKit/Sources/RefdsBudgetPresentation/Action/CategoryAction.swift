@@ -3,7 +3,7 @@ import RefdsRedux
 import RefdsBudgetData
 
 public enum CategoryAction: RefdsReduxAction {
-    case fetchData(Date?, UUID, String)
+    case fetchData
     case fetchBudgetForEdit(Date, UUID, UUID)
     case fetchCategoryForEdit(UUID)
     case fetchTransactionForEdit(UUID)
@@ -17,6 +17,7 @@ public enum CategoryAction: RefdsReduxAction {
     )
     case updateBalance(BalanceRowViewDataProtocol)
     case updateError(RefdsBudgetError)
+    case updateStatus(UUID)
     
     case editBudget(AddBudgetStateProtocol, Date)
     case editCategory(AddCategoryStateProtocol)
@@ -28,4 +29,5 @@ public enum CategoryAction: RefdsReduxAction {
     
     case copyTransactions(Set<UUID>)
     case removeTransactions(Set<UUID>)
+    case dismiss
 }

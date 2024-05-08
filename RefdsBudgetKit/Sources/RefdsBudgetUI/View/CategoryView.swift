@@ -49,7 +49,7 @@ public struct CategoryView: View {
     
     private func reloadData() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchData(state.isFilterEnable ? state.date : nil, state.id, state.searchText))
+            action(.fetchData)
         }
     }
     
@@ -176,6 +176,8 @@ public struct CategoryView: View {
             action(.fetchTransactionForEdit($0.id))
         } remove: { id in
             action(.removeTransaction(id))
+        } resolve: { id in
+            action(.updateStatus(id))
         }
     }
     

@@ -37,6 +37,7 @@ public final class RefdsBudgetDatabase: RefdsBudgetDatabaseProtocol {
                     .attribute(name: "message", type: .stringAttributeType, isOptional: true),
                     .attribute(name: "category", type: .UUIDAttributeType, isOptional: true),
                     .attribute(name: "date", type: .dateAttributeType, isOptional: true),
+                    .attribute(name: "status", type: .stringAttributeType, isOptional: true, defaultValue: TransactionStatus.spend.rawValue)
                 ]
             ),
             .entity(

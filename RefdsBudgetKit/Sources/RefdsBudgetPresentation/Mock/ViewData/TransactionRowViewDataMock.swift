@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import RefdsShared
+import RefdsBudgetDomain
 
 public struct TransactionRowViewDataMock: TransactionRowViewDataProtocol {
     public var id: UUID = .init()
@@ -9,6 +10,7 @@ public struct TransactionRowViewDataMock: TransactionRowViewDataProtocol {
     public var amount: Double = .random(in: 10 ... 700)
     public var description: String = .someParagraph()
     public var date: Date = .random
+    public var status: TransactionStatus = .pending
 
     public init() {}
 }

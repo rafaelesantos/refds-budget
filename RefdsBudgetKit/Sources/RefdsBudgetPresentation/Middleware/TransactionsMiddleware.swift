@@ -30,11 +30,21 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (TransactionsAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, searchText, categoriesName, tagsName): fetchData(with: searchText, and: categoriesName, tagsName: tagsName, from: date, on: completion)
+        case .fetchData:
+            let date = state.isFilterEnable ? state.date : nil
+            fetchData(
+                with: state.searchText,
+                and: state.selectedCategories,
+                tagsName: state.selectedTags,
+                status: state.selectedStatus,
+                from: date,
+                on: completion
+            )
         case let .fetchTransactionForEdit(transactionId): fetchTransactionForEdit(with: transactionId, on: completion)
         case let .removeTransaction(id): removeTransaction(with: state, by: id, on: completion)
         case let .removeTransactions(ids): removeTransactions(with: state, by: ids, on: completion)
         case let .copyTransactions(ids): copyTransactions(by: ids, on: completion)
+        case let .updateStatus(id): updateStatus(for: id, on: completion)
         default: break
         }
     }
@@ -43,6 +53,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         with searchText: String,
         and categoriesName: Set<String>,
         tagsName: Set<String>,
+        status: Set<String>,
         from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
@@ -85,6 +96,12 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             transactions = transactions.filter {
                 $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
                 $0.message.lowercased().contains(searchText.lowercased())
+            }
+        }
+        
+        if !status.isEmpty {
+            transactions = transactions.filter {
+                status.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
             }
         }
         
@@ -143,6 +160,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             id: transaction.id,
             amount: transaction.amount,
             description: transaction.message,
+            status: TransactionStatus(rawValue: transaction.status) ?? .spend,
             category: category,
             categories: categories,
             remaining: nil,
@@ -162,14 +180,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try transactionRepository.removeTransaction(by: id)
         } catch { completion(.updateError(.notFoundTransaction)) }
         WidgetCenter.shared.reloadAllTimelines()
-        completion(
-            .fetchData(
-                state.isFilterEnable ? state.date : nil,
-                state.searchText,
-                state.selectedCategories,
-                state.selectedTags
-            )
-        )
+        completion(.fetchData)
     }
     
     private func removeTransactions(
@@ -181,14 +192,32 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try? transactionRepository.removeTransaction(by: id)
         }
         WidgetCenter.shared.reloadAllTimelines()
-        completion(
-            .fetchData(
-                state.isFilterEnable ? state.date : nil,
-                state.searchText,
-                state.selectedCategories,
-                state.selectedTags
+        completion(.fetchData)
+    }
+    
+    private func updateStatus(
+        for id: UUID,
+        on completion: @escaping (TransactionsAction) -> Void
+    ) {
+        guard let transaction = transactionRepository.getTransaction(by: id) else {
+            return completion(.updateError(.notFoundTransaction))
+        }
+        var status = TransactionStatus(rawValue: transaction.status) ?? .spend
+        status = status == .pending ? .cleared : status == .cleared ? .pending : .spend
+        
+        do {
+            try transactionRepository.addTransaction(
+                id: transaction.id,
+                date: transaction.date.date,
+                message: transaction.message,
+                category: transaction.category,
+                amount: transaction.amount,
+                status: status
             )
-        )
+            completion(.fetchData)
+        } catch {
+            completion(.updateError(.cantSaveOnDatabase))
+        }
     }
     
     private func copyTransactions(

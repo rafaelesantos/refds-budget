@@ -31,5 +31,12 @@ public final class LocalTransactionRepositoryMock: TransactionUseCase {
     
     public func removeTransaction(by id: UUID) throws {}
     
-    public func addTransaction(id: UUID, date: Date, message: String, category: UUID, amount: Double) throws {}
+    public func addTransaction(
+        id: UUID,
+        date: Date,
+        message: String,
+        category: UUID,
+        amount: Double,
+        status: TransactionStatus
+    ) throws {}
 }

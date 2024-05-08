@@ -14,27 +14,29 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
     public init() {}
     
     public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
+        guard let state = state as? ApplicationStateProtocol else { return }
         switch action {
         case let action as CategoriesAction:
-            self.handler(for: action, on: completion)
+            self.handler(with: state.categoriesState, for: action, on: completion)
         case let action as CategoryAction:
-            self.handler(for: action, on: completion)
+            self.handler(with: state.categoryState, for: action, on: completion)
         case let action as TransactionsAction:
-            self.handler(for: action, on: completion)
+            self.handler(with: state.transactionsState, for: action, on: completion)
         case let action as HomeAction:
-            guard let state = state as? ApplicationStateProtocol else { return }
             self.handler(with: state.homeState, for: action, on: completion)
         default: break
         }
     }
     
     private func handler(
+        with state: CategoriesStateProtocol,
         for action: CategoriesAction,
         on completion: (CategoriesAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, tagsName):
-            let balance = getCurrentBalance(from: date, tagsName: tagsName)
+        case .fetchData:
+            let date = state.isFilterEnable ? state.date : nil
+            let balance = getCurrentBalance(from: date, tagsName: state.selectedTags)
             completion(.updateBalance(balance))
         default:
             break
@@ -42,15 +44,17 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func handler(
+        with state: CategoryStateProtocol,
         for action: CategoryAction,
         on completion: (CategoryAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, categoryId, searchText):
+        case .fetchData:
+            let date = state.isFilterEnable ? state.date : nil
             let balance = getCurrentBalance(
                 from: date,
-                and: [categoryId],
-                searchText: searchText
+                and: [state.id],
+                searchText: state.searchText
             )
             completion(.updateBalance(balance))
         default:
@@ -59,13 +63,22 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func handler(
+        with state: TransactionsStateProtocol,
         for action: TransactionsAction,
         on completion: (TransactionsAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date, searchText, categoriesName, tagsName):
-            let ids = categoryRepository.getAllCategories().filter { categoriesName.contains($0.name) }.map { $0.id }
-            let balance = getCurrentBalance(from: date, and: Set(ids), tagsName: tagsName, searchText: searchText)
+        case .fetchData:
+            let ids = categoryRepository.getAllCategories().filter {
+                state.selectedCategories.contains($0.name)
+            }.map { $0.id }
+            let date = state.isFilterEnable ? state.date : nil
+            let balance = getCurrentBalance(
+                from: date,
+                and: Set(ids),
+                tagsName: state.selectedTags,
+                searchText: state.searchText
+            )
             completion(.updateBalance(balance))
         default:
             break
@@ -78,8 +91,9 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: (HomeAction) -> Void
     ) {
         switch action {
-        case let .fetchData(date):
+        case .fetchData:
             let ids = categoryRepository.getAllCategories().filter { state.selectedCategories.contains($0.name) }.map { $0.id }
+            let date = state.isFilterEnable ? state.date : nil
             let balance = getCurrentBalance(from: date, and: Set(ids), tagsName: state.selectedTags)
             var remainingBalance = balance
             remainingBalance.expense = balance.budget - balance.expense
@@ -99,6 +113,7 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         from date: Date?,
         and categoryIds: Set<UUID> = [],
         tagsName: Set<String> = [],
+        status: Set<String> = [],
         searchText: String = "",
         title: String = .localizable(by: .categoriesBalanceTitle),
         subititle: String = .localizable(by: .categoriesBalanceSubtitle)
@@ -107,10 +122,24 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         var budgets: [BudgetEntity] = []
         
         if let date = date {
-            transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
+            transactions = transactionRepository.getTransactions(from: date, format: .monthYear).filter {
+                if status.isEmpty {
+                    return $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue
+                } else {
+                    return true
+                }
+            }
             budgets = categoryRepository.getBudgets(from: date)
         } else {
-            transactions = transactionRepository.getTransactions()
+            transactions = transactionRepository.getTransactions().filter {
+                if status.isEmpty {
+                    return $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue
+                } else {
+                    return true
+                }
+            }
             budgets = categoryRepository.getAllBudgets()
         }
         
@@ -141,6 +170,12 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
             transactions = transactions.filter {
                 $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
                 $0.message.lowercased().contains(searchText.lowercased())
+            }
+        }
+        
+        if !status.isEmpty {
+            transactions = transactions.filter {
+                status.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
             }
         }
         
