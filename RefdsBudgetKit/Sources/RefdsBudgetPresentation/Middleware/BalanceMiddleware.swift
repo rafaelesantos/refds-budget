@@ -36,7 +36,11 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         switch action {
         case .fetchData:
             let date = state.isFilterEnable ? state.date : nil
-            let balance = getCurrentBalance(from: date, tagsName: state.selectedTags)
+            let balance = getCurrentBalance(
+                from: date,
+                tagsName: state.selectedTags,
+                status: state.selectedStatus
+            )
             completion(.updateBalance(balance))
         default:
             break
@@ -77,6 +81,7 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 from: date,
                 and: Set(ids),
                 tagsName: state.selectedTags,
+                status: state.selectedStatus,
                 searchText: state.searchText
             )
             completion(.updateBalance(balance))
@@ -94,7 +99,12 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         case .fetchData:
             let ids = categoryRepository.getAllCategories().filter { state.selectedCategories.contains($0.name) }.map { $0.id }
             let date = state.isFilterEnable ? state.date : nil
-            let balance = getCurrentBalance(from: date, and: Set(ids), tagsName: state.selectedTags)
+            let balance = getCurrentBalance(
+                from: date,
+                and: Set(ids),
+                tagsName: state.selectedTags,
+                status: state.selectedStatus
+            )
             var remainingBalance = balance
             remainingBalance.expense = balance.budget - balance.expense
             remainingBalance.title = .localizable(by: .homeRemainingTitle)

@@ -15,6 +15,7 @@ struct SystemMediumExpenseTrackerProvider: AppIntentTimelineProvider {
             isFilterByDate: true,
             category: .localizable(by: .transactionsCategorieAllSelected),
             tag: .localizable(by: .transactionsCategorieAllSelected),
+            status: .localizable(by: .transactionsCategorieAllSelected),
             date: .current,
             spend: .zero,
             budget: .zero,

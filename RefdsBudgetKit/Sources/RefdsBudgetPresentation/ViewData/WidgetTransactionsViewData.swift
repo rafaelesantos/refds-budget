@@ -7,6 +7,7 @@ public protocol WidgetTransactionsViewDataProtocol {
     var date: Date { get set }
     var spend: Double { get set }
     var budget: Double { get set }
+    var status: String { get set }
     var categories: [CategoryRowViewDataProtocol] { get set }
     var transactions: [TransactionRowViewDataProtocol] { get set }
     var amount: Int { get set }
@@ -17,6 +18,7 @@ public struct WidgetTransactionsViewData: WidgetTransactionsViewDataProtocol {
     public var isFilterByDate: Bool
     public var category: String
     public var tag: String
+    public var status: String
     public var date: Date
     public var spend: Double
     public var budget: Double
@@ -32,6 +34,7 @@ public struct WidgetTransactionsViewData: WidgetTransactionsViewDataProtocol {
         isFilterByDate: Bool,
         category: String,
         tag: String,
+        status: String,
         date: Date,
         spend: Double,
         budget: Double,
@@ -42,6 +45,7 @@ public struct WidgetTransactionsViewData: WidgetTransactionsViewDataProtocol {
         self.isFilterByDate = isFilterByDate
         self.category = category
         self.tag = tag
+        self.status = status
         self.date = date
         self.spend = spend
         self.budget = budget

@@ -4,6 +4,7 @@ public protocol WidgetExpenseTrackerViewDataProtocol {
     var isFilterByDate: Bool { get set }
     var category: String { get set }
     var tag: String { get set }
+    var status: String { get set }
     var date: Date { get set }
     var spend: Double { get set }
     var budget: Double { get set }
@@ -15,6 +16,7 @@ public struct WidgetExpenseTrackerViewData: WidgetExpenseTrackerViewDataProtocol
     public var isFilterByDate: Bool
     public var category: String
     public var tag: String
+    public var status: String
     public var date: Date
     public var spend: Double
     public var budget: Double
@@ -31,6 +33,7 @@ public struct WidgetExpenseTrackerViewData: WidgetExpenseTrackerViewDataProtocol
         isFilterByDate: Bool,
         category: String,
         tag: String,
+        status: String,
         date: Date,
         spend: Double,
         budget: Double
@@ -38,6 +41,7 @@ public struct WidgetExpenseTrackerViewData: WidgetExpenseTrackerViewDataProtocol
         self.isFilterByDate = isFilterByDate
         self.category = category
         self.tag = tag
+        self.status = status
         self.date = date
         self.spend = spend
         self.budget = budget

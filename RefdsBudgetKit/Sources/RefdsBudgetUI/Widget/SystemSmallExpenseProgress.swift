@@ -1,6 +1,7 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct SystemSmallExpenseProgress: View {
@@ -52,12 +53,24 @@ public struct SystemSmallExpenseProgress: View {
             )
             .minimumScaleFactor(0.8)
             
-            RefdsCircularProgressView(
-                viewData.percent,
-                size: 90,
-                color: viewData.percent.riskColor,
-                hasAnimation: false
-            )
+            ZStack {
+                RefdsCircularProgressView(
+                    viewData.percent,
+                    size: 90,
+                    color: viewData.percent.riskColor,
+                    hasAnimation: false
+                )
+                
+                if let status = TransactionStatus.allCases.first(where: { $0.description == viewData.status }),
+                   let icon = status.icon {
+                    RefdsIcon(
+                        icon,
+                        color: status.color,
+                        size: 15
+                    )
+                    .padding(.top, -25)
+                }
+            }
             .padding(.bottom, -15)
             
             HStack(spacing: 3) {

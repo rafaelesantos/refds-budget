@@ -101,7 +101,7 @@ public struct TransactionSectionsView: View {
             }
             
             HStack {
-                VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
+                VStack(alignment: .leading) {
                     HStack(spacing: .padding(.small)) {
                         RefdsText(transaction.amount.currency(), style: .callout, color: transaction.status.color, lineLimit: 1)
                         Spacer(minLength: .zero)

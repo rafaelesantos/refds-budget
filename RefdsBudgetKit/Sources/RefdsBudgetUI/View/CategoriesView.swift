@@ -255,7 +255,7 @@ public struct CategoriesView: View {
     private var selectStatusRowView: some View{
         let status: [TransactionStatus] = [.pending, .cleared]
         SelectMenuRowView(
-            header: .addTransactionStatusSpend,
+            header: .addTransactionStatusSelect,
             icon: .listDashHeaderRectangle,
             title: .addTransactionStatusSpend,
             data: status.map { $0.description },

@@ -1,6 +1,7 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct SystemSmallTransactions: View {
@@ -55,11 +56,22 @@ public struct SystemSmallTransactions: View {
     private var contentView: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 2) {
+                if let status = TransactionStatus.allCases.first(where: { $0.description == viewData.status }),
+                   let icon = status.icon {
+                    RefdsIcon(
+                        icon,
+                        color: status.color,
+                        size: 10
+                    )
+                    .padding(.trailing, 3)
+                }
+                
                 RefdsText(
                     .localizable(by: .widgetCurrentSpend).uppercased(),
                     style: .system(size: 7),
                     color: .secondary
                 )
+                .padding(.top, 3)
                 
                 if hasFilter {
                     RefdsText(

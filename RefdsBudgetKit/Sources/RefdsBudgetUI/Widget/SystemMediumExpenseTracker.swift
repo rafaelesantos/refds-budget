@@ -2,6 +2,7 @@ import SwiftUI
 import RefdsUI
 import Charts
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct SystemMediumExpenseTracker: View {
@@ -63,6 +64,16 @@ public struct SystemMediumExpenseTracker: View {
     private var spendView: some View {
         VStack {
             HStack(spacing: .zero) {
+                if let status = TransactionStatus.allCases.first(where: { $0.description == viewData.status }),
+                   let icon = status.icon {
+                    RefdsIcon(
+                        icon,
+                        color: status.color,
+                        size: 15
+                    )
+                    .padding(.trailing, 5)
+                }
+                
                 RefdsText(
                     viewData.transactions.count.asString,
                     style: .caption2,

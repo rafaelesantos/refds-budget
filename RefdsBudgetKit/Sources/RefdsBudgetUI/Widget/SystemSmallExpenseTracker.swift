@@ -1,6 +1,7 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct SystemSmallExpenseTracker: View {
@@ -124,6 +125,16 @@ public struct SystemSmallExpenseTracker: View {
             }
             
             HStack {
+                if let status = TransactionStatus.allCases.first(where: { $0.description == viewData.status }),
+                   let icon = status.icon {
+                    RefdsIcon(
+                        icon,
+                        color: status.color,
+                        size: 10
+                    )
+                    .padding(.trailing, -5)
+                }
+                
                 RefdsText(
                     viewData.remaining.currency(),
                     style: .system(size: 12),

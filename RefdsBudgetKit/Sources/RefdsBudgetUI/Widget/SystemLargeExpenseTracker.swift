@@ -2,6 +2,7 @@ import SwiftUI
 import RefdsUI
 import Charts
 import RefdsShared
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct SystemLargeExpenseTracker: View {
@@ -66,11 +67,22 @@ public struct SystemLargeExpenseTracker: View {
     private var spendView: some View {
         VStack {
             HStack(spacing: .zero) {
+                if let status = TransactionStatus.allCases.first(where: { $0.description == viewData.status }),
+                   let icon = status.icon {
+                    RefdsIcon(
+                        icon,
+                        color: status.color,
+                        size: 15
+                    )
+                    .padding(.trailing, 5)
+                }
+                
                 RefdsText(
                     viewData.transactions.count.asString,
                     style: .caption2,
                     color: viewData.percent.riskColor,
-                    weight: .bold
+                    weight: .bold,
+                    lineLimit: 1
                 )
                 .refdsTag(color: viewData.percent.riskColor)
                 .padding(.trailing, 5)
@@ -78,7 +90,8 @@ public struct SystemLargeExpenseTracker: View {
                 RefdsText(
                     viewData.spend.currency(),
                     style: .footnote,
-                    weight: .bold
+                    weight: .bold,
+                    lineLimit: 1
                 )
                 
                 Spacer(minLength: .zero)
@@ -87,7 +100,8 @@ public struct SystemLargeExpenseTracker: View {
                     viewData.percent.percent(),
                     style: .footnote,
                     color: .secondary,
-                    weight: .bold
+                    weight: .bold,
+                    lineLimit: 1
                 )
             }
             
@@ -114,9 +128,9 @@ public struct SystemLargeExpenseTracker: View {
                     
                     VStack {
                         HStack {
-                            RefdsText(category.name, style: .caption2, weight: .bold)
+                            RefdsText(category.name, style: .caption2, weight: .bold, lineLimit: 1)
                             Spacer(minLength: .zero)
-                            RefdsText(category.percentage.percent(), style: .caption2)
+                            RefdsText(category.percentage.percent(), style: .caption2, lineLimit: 1)
                         }
                         
                         ProgressView(value: category.percentage > 1 ? 1 : category.percentage, total: 1)

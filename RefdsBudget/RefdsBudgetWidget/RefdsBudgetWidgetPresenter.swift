@@ -87,6 +87,7 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
             isFilterByDate: isFilterByDate,
             category: category,
             tag: tag,
+            status: status,
             date: .current,
             spend: transactions.map { $0.amount }.reduce(.zero, +),
             budget: budgets.map { $0.amount }.reduce(.zero, +)
@@ -184,6 +185,7 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
             isFilterByDate: isFilterByDate,
             category: category,
             tag: tag,
+            status: status,
             date: .current,
             spend: transactions.map { $0.amount }.reduce(.zero, +),
             budget: budgets.map { $0.amount }.reduce(.zero, +),
