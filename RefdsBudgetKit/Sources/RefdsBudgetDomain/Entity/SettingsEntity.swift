@@ -9,6 +9,7 @@ public class SettingsEntity: NSManagedObject {
 
     @NSManaged public var date: Date
     @NSManaged public var theme: String
+    @NSManaged public var icon: String
     @NSManaged public var appearence: Double
     @NSManaged public var notifications: Bool
     @NSManaged public var reminderNotification: Bool

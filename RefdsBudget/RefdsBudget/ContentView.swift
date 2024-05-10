@@ -17,9 +17,22 @@ struct ContentView: View {
     }
     
     var body: some View {
+        contentView
+            .environmentObject(store)
+            .preferredColorScheme(store.state.settingsState.colorScheme)
+            .tint(store.state.settingsState.tintColor)
+            .onAppear { reloadSettings() }
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
         switch horizontalSizeClass {
-        case .compact: TabNavigationView().environmentObject(store)
-        default: SideNavigationView().environmentObject(store)
+        case .compact: TabNavigationView()
+        default: SideNavigationView()
         }
+    }
+    
+    private func reloadSettings() {
+        store.dispatch(action: SettingsAction.fetchData)
     }
 }

@@ -148,6 +148,7 @@ public struct AddBudgetView: View {
                 style: .callout
             )
         }
+        .tint(.secondary)
     }
     
     private var rowYear: some View {
@@ -165,6 +166,7 @@ public struct AddBudgetView: View {
                 style: .callout
             )
         }
+        .tint(.secondary)
     }
     
     private var sectionCategory: some View {
@@ -217,12 +219,15 @@ public struct AddBudgetView: View {
                     RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
                 }
             }
+            .tint(.secondary)
         }
     }
     
     private var sectionSaveButton: some View {
         RefdsSection {} footer: {
             saveButton
+                .padding(.horizontal, -20)
+                .padding(.bottom, 20)
         }
     }
     

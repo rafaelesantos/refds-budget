@@ -28,6 +28,7 @@ struct TabNavigationView: View {
                 case .categories: store.state.categoriesRouter.popToRoot()
                 case .home: store.state.homeRouter.popToRoot()
                 case .transactions: store.state.transactionsRouter.popToRoot()
+                case .settings: store.state.settingsRouter.popToRoot()
                 }
             }
             store.state.itemNavigation = ItemNavigation(rawValue: $0)
@@ -39,6 +40,7 @@ struct TabNavigationView: View {
             categoriesItemView
             homeItemView
             transactionsItemView
+            settingsItemView
         }
         .onOpenURL {
             deeplink.trigger(
@@ -113,6 +115,28 @@ struct TabNavigationView: View {
             )
         }
         .tag(ItemNavigation.transactions.rawValue)
+    }
+    
+    private var settingsItemView: some View {
+        RefdsRoutingReduxView(
+            router: $store.state.settingsRouter,
+            state: bindingState,
+            action: store.dispatch(action:)
+        ) {
+            AnyView(
+                viewFactory.makeSettingsView(
+                    state: $store.state.settingsState,
+                    action: store.dispatch(action:)
+                )
+            )
+        }
+        .tabItem {
+            Label(
+                ItemNavigation.settings.title,
+                systemImage: ItemNavigation.settings.icon.rawValue
+            )
+        }
+        .tag(ItemNavigation.settings.rawValue)
     }
 }
 

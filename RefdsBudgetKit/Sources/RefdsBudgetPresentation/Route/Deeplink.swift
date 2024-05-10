@@ -32,6 +32,8 @@ public final class Deeplink {
             case .transactions:
                 state.wrappedValue.addTransactionState = AddTransactionState()
                 state.wrappedValue.transactionsRouter.route(to: route)
+            case .settings:
+                state.wrappedValue.settingsRouter.route(to: route)
             }
         }
     }
@@ -60,12 +62,14 @@ public extension Deeplink {
         case openCategories = "open-categories"
         case openHome = "open-home"
         case openTransactions = "open-transactions"
+        case openSettings = "open-settings"
         
         public var itemNavigation: ItemNavigation {
             switch self {
             case .openCategories: return .categories
             case .openHome: return .home
             case .openTransactions: return .transactions
+            case .openSettings: return .settings
             }
         }
     }

@@ -1,10 +1,11 @@
-import Foundation
 import SwiftUI
+import RefdsBudgetResource
 
 public protocol SettingsUseCase {
     func getSettings() -> SettingsEntity
     func addSettings(
         theme: Color?,
+        icon: ApplicationIcon,
         appearence: Double?,
         notifications: Bool?,
         reminderNotification: Bool?,

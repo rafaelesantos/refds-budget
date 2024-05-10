@@ -54,6 +54,7 @@ public class RefdsReduxStoreFactory {
         RefdsContainer.register(type: BudgetRowViewDataAdapterProtocol.self) { BudgetRowViewDataAdapter() }
         RefdsContainer.register(type: TransactionRowViewDataAdapterProtocol.self) { TransactionRowViewDataAdapter() }
         RefdsContainer.register(type: TagRowViewDataAdapterProtocol.self) { TagRowViewDataAdapter() }
+        RefdsContainer.register(type: SettingsAdapterProtocol.self) { SettingsAdapter() }
     }
     
     private func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {
@@ -68,6 +69,7 @@ public class RefdsReduxStoreFactory {
             TagMiddleware<ApplicationStateProtocol>().middleware,
             HomeMiddleware<ApplicationStateProtocol>().middleware,
             RouteMiddleware<ApplicationStateProtocol>().middleware,
+            SettingsMiddleware<ApplicationStateProtocol>().middleware
         ]
     }
 }

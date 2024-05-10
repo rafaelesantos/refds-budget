@@ -57,6 +57,7 @@ public final class RefdsBudgetDatabase: RefdsBudgetDatabaseProtocol {
                 attributes: [
                     .attribute(name: "date", type: .dateAttributeType, isOptional: true),
                     .attribute(name: "theme", type: .stringAttributeType, isOptional: true),
+                    .attribute(name: "icon", type: .stringAttributeType, isOptional: true),
                     .attribute(name: "appearence", type: .doubleAttributeType, isOptional: true),
                     .attribute(name: "notifications", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "reminderNotification", type: .booleanAttributeType, isOptional: true),

@@ -1,8 +1,8 @@
-import Foundation
 import SwiftUI
 import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
+import RefdsBudgetResource
 
 public final class LocalSettingsRepositoryMock: SettingsUseCase {
     @RefdsInjection private var database: RefdsBudgetDatabaseProtocol
@@ -15,6 +15,7 @@ public final class LocalSettingsRepositoryMock: SettingsUseCase {
     
     public func addSettings(
         theme: Color?,
+        icon: ApplicationIcon,
         appearence: Double?,
         notifications: Bool?,
         reminderNotification: Bool?,

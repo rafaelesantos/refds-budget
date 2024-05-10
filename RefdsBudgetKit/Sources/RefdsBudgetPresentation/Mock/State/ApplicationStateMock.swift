@@ -6,6 +6,7 @@ public struct ApplicationStateMock: ApplicationStateProtocol {
     public var categoriesRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
     public var transactionsRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
     public var homeRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
+    public var settingsRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
     public var addBudgetState: AddBudgetStateProtocol = AddBudgetStateMock()
     public var addCategoryState: AddCategoryStateProtocol = AddCategoryStateMock()
     public var categoryState: CategoryStateProtocol = CategoryStateMock()
@@ -14,6 +15,7 @@ public struct ApplicationStateMock: ApplicationStateProtocol {
     public var transactionsState: TransactionsStateProtocol = TransactionsStateMock()
     public var tagsState: TagsStateProtocol = TagsStateMock()
     public var homeState: HomeStateProtocol = HomeStateMock()
+    public var settingsState: SettingsStateProtocol = SettingsStateMock()
     
     public init() {}
 }

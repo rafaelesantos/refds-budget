@@ -185,3 +185,13 @@
 "widgetDescriptionSystemSmallExpanseTracker" = "Keep track of your spending and budget in real-time.";
 "widgetTitleSystemSmallTransactions" = "Recent Expenses";
 "widgetDescriptionSystemSmallTransactions" = "Visualize your most recent expenses and track your budget quickly and easily.";
+
+// MARK: - Application Icon
+
+"appIconDefault" = "Default";
+"appIconLight" = "Light Default";
+"appIconDark" = "Dark Default";
+"appIconSystem" = "System";
+"appIconLightSystem" = "Light System";
+"appIconDarkSystem" = "Dark System";
+"appIconLgbt" = "LGBT";

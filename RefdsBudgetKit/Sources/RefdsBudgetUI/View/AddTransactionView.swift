@@ -116,6 +116,7 @@ public struct AddTransactionView: View {
             } label: {
                 RefdsText(.localizable(by: .addTransactionStatusSelect), style: .callout)
             }
+            .tint(.secondary)
         } header: {
             RefdsText(
                 .localizable(by: .addTransactionStatusHeader),
@@ -177,7 +178,7 @@ public struct AddTransactionView: View {
                     } label: {
                         RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
                     }
-                    
+                    .tint(.secondary)
                     rowPercentage
                 }
             }
@@ -255,6 +256,8 @@ public struct AddTransactionView: View {
     private var sectionSaveButtonView: some View {
         RefdsSection {} footer: {
             saveButton
+                .padding(.horizontal, -20)
+                .padding(.bottom, 20)
         }
     }
     

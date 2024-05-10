@@ -9,9 +9,13 @@ public enum ApplicationRoute: RefdsRoutableRedux {
     case category
     case addTransaction
     case manageTags
+    case settings
     
     public var navigationType: RefdsNavigationType {
-        .push
+        switch self {
+        case .settings: return .sheet
+        default: return .push
+        }
     }
     
     private var viewFactory: ViewFactoryProtocol {
@@ -40,6 +44,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
             case .category: AnyView(viewFactory.makeCategoryView(state: state.categoryState, action: action))
             case .addTransaction: AnyView(viewFactory.makeAddTransactionView(state: state.addTransactionState, action: action))
             case .manageTags: AnyView(viewFactory.makeTagView(state: state.tagsState, action: action))
+            case .settings: AnyView(viewFactory.makeSettingsView(state: state.settingsState, action: action))
             }
         }
     }

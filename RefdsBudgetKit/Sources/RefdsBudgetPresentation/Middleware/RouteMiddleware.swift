@@ -57,6 +57,9 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 case .transactions:
                     state.transactionsRouter.popToRoot()
                     state.transactionsRouter.route(to: route)
+                case .settings:
+                    state.settingsRouter.popToRoot()
+                    state.settingsRouter.route(to: route)
                 case nil: break
                 }
                 
@@ -68,6 +71,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                     state.homeRouter.route(to: route)
                 case .transactions:
                     state.transactionsRouter.route(to: route)
+                case .settings:
+                    state.settingsRouter.route(to: route)
                 case nil: break
                 }
             }
@@ -82,6 +87,9 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             case .transactions:
                 state.transactionsRouter.popToRoot()
                 state.transactionsRouter.route(to: route)
+            case .settings:
+                state.settingsRouter.popToRoot()
+                state.settingsRouter.route(to: route)
             case nil: break
             }
             #endif
@@ -93,6 +101,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 state.homeRouter.dismiss()
             case .transactions:
                 state.transactionsRouter.dismiss()
+            case .settings:
+                state.settingsRouter.dismiss()
             case nil: break
             }
         }
@@ -171,6 +181,7 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         switch action {
         case .manageTags: completion(.updateRoute(.manageTags))
+        case .showSettings: completion(.updateRoute(.settings))
         default: break
         }
     }

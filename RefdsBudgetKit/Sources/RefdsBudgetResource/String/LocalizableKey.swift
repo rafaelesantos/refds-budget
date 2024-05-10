@@ -159,4 +159,12 @@ public enum LocalizableKey: String {
     case widgetDescriptionSystemSmallExpanseTracker
     case widgetTitleSystemSmallTransactions
     case widgetDescriptionSystemSmallTransactions
+    // MARK: - Application Icon
+    case appIconDefault
+    case appIconLight
+    case appIconDark
+    case appIconSystem
+    case appIconLightSystem
+    case appIconDarkSystem
+    case appIconLgbt
 }

@@ -300,6 +300,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 amount: transaction.amount,
                 status: status
             )
+            WidgetCenter.shared.reloadAllTimelines()
             completion(.fetchData)
         } catch {
             completion(.updateError(.cantSaveOnDatabase))

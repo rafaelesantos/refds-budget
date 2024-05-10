@@ -133,22 +133,14 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         if let date = date {
             transactions = transactionRepository.getTransactions(from: date, format: .monthYear).filter {
-                if status.isEmpty {
-                    return $0.status != TransactionStatus.pending.rawValue &&
-                    $0.status != TransactionStatus.cleared.rawValue
-                } else {
-                    return true
-                }
+                status.isEmpty ? $0.status != TransactionStatus.pending.rawValue &&
+                $0.status != TransactionStatus.cleared.rawValue : true
             }
             budgets = categoryRepository.getBudgets(from: date)
         } else {
             transactions = transactionRepository.getTransactions().filter {
-                if status.isEmpty {
-                    return $0.status != TransactionStatus.pending.rawValue &&
-                    $0.status != TransactionStatus.cleared.rawValue
-                } else {
-                    return true
-                }
+                status.isEmpty ? $0.status != TransactionStatus.pending.rawValue &&
+                    $0.status != TransactionStatus.cleared.rawValue : true
             }
             budgets = categoryRepository.getAllBudgets()
         }

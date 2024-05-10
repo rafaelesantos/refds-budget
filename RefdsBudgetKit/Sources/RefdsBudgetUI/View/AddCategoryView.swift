@@ -213,6 +213,8 @@ public struct AddCategoryView: View {
             ) {
                 action(.save(state))
             }
+            .padding(.horizontal, -20)
+            .padding(.bottom, 20)
         }
     }
 }

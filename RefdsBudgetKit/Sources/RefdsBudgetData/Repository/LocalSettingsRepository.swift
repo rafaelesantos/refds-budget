@@ -3,6 +3,7 @@ import SwiftUI
 import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
+import RefdsBudgetResource
 
 public final class LocalSettingsRepository: SettingsUseCase {
     @RefdsInjection private var database: RefdsBudgetDatabaseProtocol
@@ -16,6 +17,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
             let settings = SettingsEntity(context: database.viewContext)
             settings.date = .current
             settings.theme = Color.green.asHex()
+            settings.icon = ApplicationIcon.default.rawValue
             settings.appearence = .zero
             settings.notifications = true
             settings.reminderNotification = true
@@ -33,6 +35,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
     
     public func addSettings(
         theme: Color?,
+        icon: ApplicationIcon,
         appearence: Double?,
         notifications: Bool?,
         reminderNotification: Bool?,
@@ -46,6 +49,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         let settings = getSettings()
         settings.date = .current
         settings.theme = theme?.asHex() ?? settings.theme
+        settings.icon = icon.rawValue
         settings.appearence = appearence ?? settings.appearence
         settings.notifications = notifications ?? settings.notifications
         settings.reminderNotification = reminderNotification ?? settings.reminderNotification

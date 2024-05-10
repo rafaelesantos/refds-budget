@@ -40,4 +40,9 @@ public protocol ViewFactoryProtocol {
         state: Binding<HomeStateProtocol>,
         action: @escaping (HomeAction) -> Void
     ) -> any View
+    
+    func makeSettingsView(
+        state: Binding<SettingsStateProtocol>,
+        action: @escaping (SettingsAction) -> Void
+    ) -> any View
 }

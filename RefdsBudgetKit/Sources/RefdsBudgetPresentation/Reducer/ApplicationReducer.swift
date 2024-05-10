@@ -16,6 +16,7 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         state.transactionsState = TransactionsReducer().reduce(state.transactionsState, action)
         state.tagsState = TagReducer().reduce(state.tagsState, action)
         state.homeState = HomeReducer().reduce(state.homeState, action)
+        state.settingsState = SettingsReducer().reduce(state.settingsState, action)
         
         switch action {
         case let action as CategoriesAction:
@@ -108,6 +109,8 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         switch action {
         case .manageTags:
             state.tagsState = TagsState()
+        case .showSettings:
+            state.settingsState = SettingsState()
         default:
             break
         }

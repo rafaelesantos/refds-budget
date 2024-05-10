@@ -84,4 +84,14 @@ public class ViewFactory: ViewFactoryProtocol {
             action: action
         )
     }
+    
+    public func makeSettingsView(
+        state: Binding<SettingsStateProtocol>,
+        action: @escaping (SettingsAction) -> Void
+    ) -> any View {
+        SettingsView(
+            state: state,
+            action: action
+        )
+    }
 }

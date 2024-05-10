@@ -17,4 +17,5 @@ public enum HomeAction: RefdsReduxAction {
     )
     
     case manageTags
+    case showSettings
 }
