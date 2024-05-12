@@ -7,6 +7,7 @@ public protocol SettingsUseCase {
         theme: Color?,
         icon: Asset,
         appearence: Double?,
+        hasAuthRequest: Bool,
         notifications: Bool?,
         reminderNotification: Bool?,
         warningNotification: Bool?,

@@ -46,6 +46,7 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 theme: state.tintColor,
                 icon: state.icon,
                 appearence: Double(appearence),
+                hasAuthRequest: state.hasAuthRequest,
                 notifications: nil,
                 reminderNotification: nil,
                 warningNotification: nil,

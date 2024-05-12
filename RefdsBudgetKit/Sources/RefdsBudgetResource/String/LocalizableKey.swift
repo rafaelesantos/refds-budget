@@ -171,6 +171,9 @@ public enum LocalizableKey: String {
     case settingsNavigationTitle
     case settingsSectionCustomization
     case settingsRowAppearence
+    case settingsRowAppearenceDark
+    case settingsRowAppearenceLight
+    case settingsRowAppearenceSystem
     case settingsRowTheme
     case settingsSectionIcons
     case settingsSectionMoreOptions
@@ -186,6 +189,7 @@ public enum LocalizableKey: String {
     case settingsApplicationDescription
     case settingsSectionSecurity
     case settingsPrivacyPolicy
+    case settingsRowFaceID
     //MARK: - Welcome
     case welcomeCategoryTitle
     case welcomeCategoryDescription

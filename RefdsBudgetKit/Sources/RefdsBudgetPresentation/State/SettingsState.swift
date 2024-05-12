@@ -5,6 +5,7 @@ import RefdsBudgetResource
 
 public protocol SettingsStateProtocol: RefdsReduxState {
     var isLoading: Bool { get set }
+    var hasAuthRequest: Bool { get set }
     var colorScheme: ColorScheme? { get set }
     var tintColor: Color { get set }
     var icon: Asset { get set }
@@ -16,6 +17,7 @@ public struct SettingsState: SettingsStateProtocol {
     public var isLoading: Bool
     public var colorScheme: ColorScheme?
     public var tintColor: Color
+    public var hasAuthRequest: Bool
     public var icon: Asset
     public var icons: [Asset]
     public var error: RefdsBudgetError?
@@ -24,6 +26,7 @@ public struct SettingsState: SettingsStateProtocol {
         isLoading: Bool = true,
         colorScheme: ColorScheme? = nil,
         tintColor: Color = .green,
+        hasAuthRequest: Bool = false,
         icon: Asset = .default,
         icons: [Asset] = Asset.allCases,
         error: RefdsBudgetError? = nil
@@ -31,6 +34,7 @@ public struct SettingsState: SettingsStateProtocol {
         self.isLoading = isLoading
         self.colorScheme = colorScheme
         self.tintColor = tintColor
+        self.hasAuthRequest = hasAuthRequest
         self.icon = icon
         self.icons = icons
         self.error = error
@@ -40,9 +44,9 @@ public struct SettingsState: SettingsStateProtocol {
 public extension Optional<ColorScheme> {
     var description: String {
         switch self {
-        case .light: return "Claro"
-        case .dark: return "Escuro"
-        default: return "Sistema"
+        case .light: return .localizable(by: .settingsRowAppearenceLight)
+        case .dark: return .localizable(by: .settingsRowAppearenceDark)
+        default: return .localizable(by: .settingsRowAppearenceSystem)
         }
     }
 }

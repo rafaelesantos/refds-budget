@@ -25,6 +25,7 @@ public final class WelcomeViewData: ObservableObject {
     @Published public var footer: RefdsWelcomeFooterViewData
     @Published public var viewData: RefdsWelcomeViewData
     @Published public var isLoading: Bool = true
+    @Published public var isAuthenticated: Bool = false
     
     public init() {
         let header = RefdsWelcomeHeaderViewData(

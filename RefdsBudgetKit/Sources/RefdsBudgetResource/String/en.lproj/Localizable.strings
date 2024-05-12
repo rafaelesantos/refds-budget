@@ -201,6 +201,9 @@
 "settingsNavigationTitle" = "Settings";
 "settingsSectionCustomization" = "Customization";
 "settingsRowAppearence" = "Appearance";
+"settingsRowAppearenceDark" = "Escuro";
+"settingsRowAppearenceLight" = "Claro";
+"settingsRowAppearenceSystem" = "System";
 "settingsRowTheme" = "Theme";
 "settingsSectionIcons" = "Icons";
 "settingsSectionMoreOptions" = "More Options";
@@ -216,6 +219,7 @@
 "settingsApplicationDescription" = "Budget simplifies financial management, allowing you to plan monthly expenses by category and access detailed reports for control and savings.";
 "settingsSectionSecurity" = "Security";
 "settingsPrivacyPolicy" = "Privacy Policy";
+"settingsRowFaceID" = "Require Face ID";
 
 //MARK: - Welcome
 

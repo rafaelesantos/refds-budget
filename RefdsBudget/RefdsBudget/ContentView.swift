@@ -1,4 +1,5 @@
 import SwiftUI
+import RefdsAuth
 import RefdsRedux
 import RefdsRouter
 import RefdsInjection
@@ -10,9 +11,12 @@ import RefdsBudgetUI
 
 struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
     @StateObject private var store = RefdsReduxStoreFactory().production
-    @AppStorage("isWelcomePresented") private var isWelcomePresented = false
     @StateObject private var welcome = WelcomeViewData()
+    
+    @AppStorage("isWelcomePresented") private var isWelcomePresented = false
+    @AppStorage("isAuthRequested") private var isAuthRequested = false
     
     private var viewFactory = ViewFactory()
     
@@ -41,6 +45,13 @@ struct ContentView: View {
                 .environmentObject(store)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
+                .if(store.state.settingsState.hasAuthRequest) {
+                    $0.refdsAuth(
+                        isAuthenticated: $welcome.isAuthenticated,
+                        applicationIcon: store.state.settingsState.icon.image
+                    )
+                    .accentColor(store.state.settingsState.tintColor)
+                }
         }
     }
     

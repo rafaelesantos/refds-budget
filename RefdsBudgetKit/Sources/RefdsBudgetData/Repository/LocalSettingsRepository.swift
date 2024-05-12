@@ -19,10 +19,11 @@ public final class LocalSettingsRepository: SettingsUseCase {
             settings.theme = Color.green.asHex()
             settings.icon = Asset.default.rawValue
             settings.appearence = .zero
-            settings.notifications = true
-            settings.reminderNotification = true
-            settings.warningNotification = true
-            settings.breakingNotification = true
+            settings.hasAuthRequest = false
+            settings.notifications = false
+            settings.reminderNotification = false
+            settings.warningNotification = false
+            settings.breakingNotification = false
             settings.currentWarningNotificationAppears = [.init()]
             settings.currentBreakingNotificationAppears = [.init()]
             settings.liveActivity = .init()
@@ -37,6 +38,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         theme: Color?,
         icon: Asset,
         appearence: Double?,
+        hasAuthRequest: Bool,
         notifications: Bool?,
         reminderNotification: Bool?,
         warningNotification: Bool?,
@@ -51,6 +53,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         settings.theme = theme?.asHex() ?? settings.theme
         settings.icon = icon.rawValue
         settings.appearence = appearence ?? settings.appearence
+        settings.hasAuthRequest = hasAuthRequest
         settings.notifications = notifications ?? settings.notifications
         settings.reminderNotification = reminderNotification ?? settings.reminderNotification
         settings.warningNotification = warningNotification ?? settings.warningNotification

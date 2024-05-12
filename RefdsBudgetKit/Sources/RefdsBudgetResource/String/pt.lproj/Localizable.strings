@@ -201,6 +201,9 @@
 "settingsNavigationTitle" = "Configurações";
 "settingsSectionCustomization" = "Customização";
 "settingsRowAppearence" = "Aparência";
+"settingsRowAppearenceDark" = "Escuro";
+"settingsRowAppearenceLight" = "Claro";
+"settingsRowAppearenceSystem" = "System";
 "settingsRowTheme" = "Tema";
 "settingsSectionIcons" = "Ícones";
 "settingsSectionMoreOptions" = "Mais Opções";
@@ -216,6 +219,7 @@
 "settingsApplicationDescription" = "Budget simplifica a gestão financeira, permitindo planejar gastos mensais por categoria e acessar relatórios detalhados para controle e economia.";
 "settingsSectionSecurity" = "Segurança";
 "settingsPrivacyPolicy" = "Política de Privacidade";
+"settingsRowFaceID" = "Exigir Face ID";
 
 //MARK: - Welcome
 

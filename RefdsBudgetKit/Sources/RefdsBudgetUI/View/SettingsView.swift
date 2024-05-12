@@ -33,6 +33,7 @@ public struct SettingsView: View {
         .onChange(of: state.colorScheme) { updateData() }
         .onChange(of: state.tintColor) { updateData() }
         .onChange(of: state.icon) { updateData() }
+        .onChange(of: state.hasAuthRequest) { updateData() }
         .refdsToast(item: $state.error)
     }
     
@@ -156,6 +157,7 @@ public struct SettingsView: View {
     
     private var sectionSecurity: some View {
         RefdsSection {
+            rowBiometry
             rowPrivacyPolicy
         } header: {
             RefdsText(
@@ -176,6 +178,18 @@ public struct SettingsView: View {
                     color: .orange
                 )
                 RefdsText(.localizable(by: .settingsPrivacyPolicy))
+            }
+        }
+    }
+    
+    private var rowBiometry: some View {
+        HStack(spacing: .padding(.medium)) {
+            RefdsIconRow(
+                .lockShieldFill,
+                color: .indigo
+            )
+            RefdsToggle(isOn: $state.hasAuthRequest) {
+                RefdsText(.localizable(by: .settingsRowFaceID))
             }
         }
     }

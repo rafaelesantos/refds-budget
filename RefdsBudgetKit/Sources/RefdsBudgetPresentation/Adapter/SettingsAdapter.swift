@@ -18,6 +18,7 @@ public final class SettingsAdapter: SettingsAdapterProtocol {
             isLoading: false,
             colorScheme: colorScheme,
             tintColor: tintColor,
+            hasAuthRequest: entity.hasAuthRequest,
             icon: icon,
             error: nil
         )

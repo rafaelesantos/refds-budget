@@ -59,6 +59,7 @@ public final class RefdsBudgetDatabase: RefdsBudgetDatabaseProtocol {
                     .attribute(name: "theme", type: .stringAttributeType, isOptional: true),
                     .attribute(name: "icon", type: .stringAttributeType, isOptional: true),
                     .attribute(name: "appearence", type: .doubleAttributeType, isOptional: true),
+                    .attribute(name: "hasAuthRequest", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "notifications", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "reminderNotification", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "warningNotification", type: .booleanAttributeType, isOptional: true),

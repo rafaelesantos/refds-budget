@@ -34,7 +34,8 @@ let package = Package(
         .package(url: "https://github.com/rafaelesantos/refds-design-patterns.git", branch: "main"),
         .package(url: "https://github.com/rafaelesantos/refds-design-system.git", branch: "main"),
         .package(url: "https://github.com/rafaelesantos/refds-router.git", branch: "main"),
-        .package(url: "https://github.com/rafaelesantos/refds-welcome.git", branch: "main")
+        .package(url: "https://github.com/rafaelesantos/refds-welcome.git", branch: "main"),
+        .package(url: "https://github.com/rafaelesantos/refds-auth.git", branch: "main")
     ],
     targets: [
         .target(name: "RefdsBudgetResource"),
@@ -61,7 +62,8 @@ let package = Package(
         .target(name: "RefdsBudgetUI", dependencies: [
             "RefdsBudgetPresentation",
             "RefdsBudgetResource",
-            .product(name: "RefdsUI", package: "refds-design-system")
+            .product(name: "RefdsUI", package: "refds-design-system"),
+            .product(name: "RefdsAuth", package: "refds-auth")
         ])
     ]
 )
