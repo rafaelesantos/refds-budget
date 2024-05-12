@@ -17,7 +17,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
             let settings = SettingsEntity(context: database.viewContext)
             settings.date = .current
             settings.theme = Color.green.asHex()
-            settings.icon = ApplicationIcon.default.rawValue
+            settings.icon = Asset.default.rawValue
             settings.appearence = .zero
             settings.notifications = true
             settings.reminderNotification = true
@@ -35,7 +35,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
     
     public func addSettings(
         theme: Color?,
-        icon: ApplicationIcon,
+        icon: Asset,
         appearence: Double?,
         notifications: Bool?,
         reminderNotification: Bool?,

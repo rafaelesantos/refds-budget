@@ -32,6 +32,7 @@ struct SideNavigationView: View {
             case .categories: categoriesView
             case .home: homeView
             case .transactions: transactionsView
+            case .settings: settingsView
             default: EmptyView()
             }
             
@@ -70,6 +71,16 @@ struct SideNavigationView: View {
         AnyView(
             viewFactory.makeTransactionsView(
                 state: $store.state.transactionsState,
+                action: store.dispatch(action:)
+            )
+        )
+        .navigationSplitViewColumnWidth(360)
+    }
+    
+    private var settingsView: some View {
+        AnyView(
+            viewFactory.makeSettingsView(
+                state: $store.state.settingsState,
                 action: store.dispatch(action:)
             )
         )

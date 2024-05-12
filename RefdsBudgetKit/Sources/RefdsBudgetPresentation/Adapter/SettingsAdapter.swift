@@ -11,9 +11,9 @@ public final class SettingsAdapter: SettingsAdapterProtocol {
     public init() {}
     
     public func adapt(entity: SettingsEntity) -> SettingsStateProtocol {
-        let colorScheme = ColorScheme(UIUserInterfaceStyle(rawValue: Int(entity.appearence)) ?? .light) ?? .light
+        let colorScheme: ColorScheme? = entity.appearence == .zero ? .none : entity.appearence == 1 ? .light : .dark
         let tintColor = Color(hex: entity.theme)
-        let icon = ApplicationIcon(rawValue: entity.icon) ?? .default
+        let icon = Asset(rawValue: entity.icon) ?? .default
         return SettingsState(
             isLoading: false,
             colorScheme: colorScheme,

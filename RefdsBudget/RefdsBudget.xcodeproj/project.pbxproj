@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6C3523322BE9306C00077307 /* SystemMediumExpenseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3523312BE9306C00077307 /* SystemMediumExpenseTracker.swift */; };
 		6C3523342BE94EB400077307 /* SystemLargeExpenseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3523332BE94EB400077307 /* SystemLargeExpenseTracker.swift */; };
+		6C3523352BEDD40E00077307 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6C44A7142BC6075200C94C2C /* RefdsBudgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C44A7132BC6075200C94C2C /* RefdsBudgetApp.swift */; };
 		6C44A7162BC6075200C94C2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C44A7152BC6075200C94C2C /* ContentView.swift */; };
 		6C44A7182BC6075500C94C2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A7172BC6075500C94C2C /* Assets.xcassets */; };
@@ -21,7 +22,6 @@
 		6CE5132C2BE3F490005085CE /* RefdsBudgetWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5132B2BE3F490005085CE /* RefdsBudgetWidgetBundle.swift */; };
 		6CE5132E2BE3F490005085CE /* SystemSmallExpenseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5132D2BE3F490005085CE /* SystemSmallExpenseTracker.swift */; };
 		6CE513322BE3F491005085CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CE513312BE3F491005085CE /* Assets.xcassets */; };
-		6CE513372BE3F491005085CE /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6CE5133D2BE3F94C005085CE /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6CE5133C2BE3F94C005085CE /* RefdsBudgetKit */; };
 		6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */; };
 		6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */; };
@@ -45,7 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6CE513372BE3F491005085CE /* RefdsBudgetWidget.appex in Embed Foundation Extensions */,
+				6C3523352BEDD40E00077307 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -457,15 +457,15 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -503,15 +503,15 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -522,7 +522,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -541,7 +541,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -560,7 +560,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -579,7 +579,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

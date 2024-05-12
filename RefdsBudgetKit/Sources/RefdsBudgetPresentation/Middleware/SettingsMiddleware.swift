@@ -24,8 +24,8 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) {
         switch action {
-        case .fetchData: self.fetchData(on: completion)
-        case .updateData: self.updateData(with: state, on: completion)
+        case .fetchData: fetchData(on: completion)
+        case .updateData: updateData(with: state, on: completion)
         default: break
         }
     }
@@ -41,7 +41,7 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) {
         do {
-            let appearence = UIUserInterfaceStyle(state.colorScheme).rawValue
+            let appearence: Int = state.colorScheme == .none ? .zero : state.colorScheme == .light ? 1 : 2
             try settingsRepository.addSettings(
                 theme: state.tintColor,
                 icon: state.icon,

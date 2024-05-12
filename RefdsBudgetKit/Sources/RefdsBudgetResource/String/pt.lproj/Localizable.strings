@@ -195,3 +195,35 @@
 "appIconLightSystem" = "Sistema claro";
 "appIconDarkSystem" = "Sistema escuro";
 "appIconLgbt" = "LGBT";
+
+// MARK: - Settings
+
+"settingsNavigationTitle" = "Configurações";
+"settingsSectionCustomization" = "Customização";
+"settingsRowAppearence" = "Aparência";
+"settingsRowTheme" = "Tema";
+"settingsSectionIcons" = "Ícones";
+"settingsSectionMoreOptions" = "Mais Opções";
+"settingsRowTestFlight" = "TestFlight";
+"settingsTagBeta" = "Beta";
+"settingsRowReviewDetail" = "Seu feedback é importante";
+"settingsRowReview" = "Avaliar";
+"settingsRowShare" = "Compartilhar";
+"settingsSectionAbout" = "Sobre";
+"settingsDevJob" = "Desenvolvedor iOS na Globo";
+"settingsApplicationName" = "Budget";
+"settingsApplicationVersion" = "Versão";
+"settingsApplicationDescription" = "Budget simplifica a gestão financeira, permitindo planejar gastos mensais por categoria e acessar relatórios detalhados para controle e economia.";
+"settingsSectionSecurity" = "Segurança";
+"settingsPrivacyPolicy" = "Política de Privacidade";
+
+//MARK: - Welcome
+
+"welcomeCategoryTitle" = "Categorias";
+"welcomeCategoryDescription" = "Crie categorias personalizadas com cores, ícones e nomes, e estabeleça orçamentos mensais para um acompanhamento organizado e envolvente dos seus gastos.";
+"welcomeBudgetTitle" = "Relatórios";
+"welcomeBudgetDescription" = "Um assistente financeiro prático! Relatórios mensais exibem saldos por categoria, com gráficos visuais mostrando as principais despesas e gastos em bolhas proporcionais.";
+"welcomeTransactionTitle" = "Transações";
+"welcomeTransactionDescription" = "Inicie sua jornada financeira! Crie e explore transações, acompanhe gastos por categoria e tome decisões inteligentes com confiança.";
+"welcomeFooterDescription" = "Desenvolvido e projetado para facilitar a sua organização financeira.";
+"welcomeFooterButton" = "Continuar";

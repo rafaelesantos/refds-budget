@@ -60,7 +60,16 @@
       "location" : "https://github.com/rafaelesantos/refds-shared.git",
       "state" : {
         "branch" : "main",
-        "revision" : "a0aa243ef167e85880bbf7133c6891171fb2222d"
+        "revision" : "3e949ea343e8ddd3b4bfb7c250a40499193214a4"
+      }
+    },
+    {
+      "identity" : "refds-welcome",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rafaelesantos/refds-welcome.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e3e2859e72f47dca69c120a7235c645b11e48e53"
       }
     }
   ],

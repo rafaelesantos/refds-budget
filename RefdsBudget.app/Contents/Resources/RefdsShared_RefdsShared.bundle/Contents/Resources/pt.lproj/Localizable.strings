@@ -1,0 +1,14 @@
+// MARK: - Lock Screen
+
+"lockScreenTitle" = "Dê um passo adiante";
+"lockScreenDescription" = "É com grande satisfação que o recebemos novamente. Prepare-se para uma experiência cuidadosamente projetada para atender às suas necessidades";
+"lockScreenButtonTitle" = "Prosseguir";
+"lockScreenRequestAuthReason" = "Para proteger seus tesouros monetários, pedimos gentilmente que autentique sua identidade antes de embarcar no app";
+"lockScreenAlertAuthError" = "Parece que encontramos um pequeno obstáculo ao tentar autenticar você";
+
+// MARK: - Risk
+
+"riskLowDescription" = "Baixo";
+"riskMediumDescription" = "Médio";
+"riskHighDescription" = "Alto";
+"riskWarningDescription" = "Muito Alto";

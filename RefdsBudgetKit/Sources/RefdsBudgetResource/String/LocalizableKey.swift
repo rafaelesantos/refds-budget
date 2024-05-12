@@ -167,4 +167,32 @@ public enum LocalizableKey: String {
     case appIconLightSystem
     case appIconDarkSystem
     case appIconLgbt
+    // MARK: - Settings
+    case settingsNavigationTitle
+    case settingsSectionCustomization
+    case settingsRowAppearence
+    case settingsRowTheme
+    case settingsSectionIcons
+    case settingsSectionMoreOptions
+    case settingsRowTestFlight
+    case settingsTagBeta
+    case settingsRowReviewDetail
+    case settingsRowReview
+    case settingsRowShare
+    case settingsSectionAbout
+    case settingsDevJob
+    case settingsApplicationName
+    case settingsApplicationVersion
+    case settingsApplicationDescription
+    case settingsSectionSecurity
+    case settingsPrivacyPolicy
+    //MARK: - Welcome
+    case welcomeCategoryTitle
+    case welcomeCategoryDescription
+    case welcomeBudgetTitle
+    case welcomeBudgetDescription
+    case welcomeTransactionTitle
+    case welcomeTransactionDescription
+    case welcomeFooterDescription
+    case welcomeFooterButton
 }

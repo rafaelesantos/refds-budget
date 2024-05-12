@@ -1,0 +1,210 @@
+// MARK: - Error
+
+"errorExistingTagTitle" = "Existing Tag";
+"errorNotFoundTagTitle" = "Tag Not Found";
+"errorCantDeleteTagTitle" = "Tag Cannot Be Removed";
+"errorExistingCategoryTitle" = "Existing Category";
+"errorNotFoundCategoryTitle" = "Category Not Found";
+"errorNotFoundBudgetTitle" = "Budget Not Found";
+"errorExistingTransactionTitle" = "Existing Transaction";
+"errorNotFoundTransactionTitle" = "Transaction Not Found";
+"errorCantDeleteCategoryTitle" = "Cannot Delete Category";
+"errorCantDeleteBudgetTitle" = "Cannot Delete Budget";
+"errorExistingBudgetTitle" = "Existing Budget";
+"errorCantSaveOnDatabaseTitle" = "Error Saving";
+
+"errorExistingCategoryDescription" = "The informed category already exists in the system";
+"errorNotFoundCategoryDescription" = "The category could not be found";
+"errorNotFoundBudgetDescription" = "The budget could not be found";
+"errorExistingTransactionDescription" = "The informed transaction already exists in the system";
+"errorNotFoundTransactionDescription" = "The transaction could not be found";
+"errorCantDeleteCategoryDescription" = "The category you are trying to remove is being used in some transaction";
+"errorCantDeleteBudgetDescription" = "The budget you are trying to remove is being used in some transaction";
+"errorExistingBudgetDescription" = "There is already a budget for the informed month";
+"errorCantSaveOnDatabaseDescription" = "The information could not be persisted on the device";
+"errorExistingTagDescription" = "The specified tag already exists in the system";
+"errorNotFoundTagDescription" = "Could not find the tag";
+"errorCantDeleteTagDescription" = "The tag you want to remove was not found";
+
+// MARK: - Loading Row
+
+"loadinginRowTitle" = "Please Wait";
+"loadinginRowDescription" = "While the data is being loaded, we’re preparing everything for you.";
+
+// MARK: - Category
+
+"categoryRowTransactions" = "Transactions";
+
+// MARK: - Add Budget
+
+"addBudgetDescriptionBudget" = "Budget Description";
+"addBudgetDescriptionHeader" = "Description";
+"addBudgetSelectedMonth" = "Select the month";
+"addBudgetSelectedYear" = "Select the year";
+"addBudgetDateHeader" = "Date";
+"addBudgetAdd" = "Save budget";
+"addBudgetEmptyCategories" = "There are no categories for this period";
+"addBudgetSelectedCategory" = "Select";
+"addBudgetCategoryHeader" = "Category";
+
+// MARK: - Add Category
+
+"addCategoryInputName" = "Enter the name";
+"addCategoryColorHeader" = "Color";
+"addCategoryInputHex" = "Enter the hex";
+"addCategoryIconsHeader" = "Icons";
+"addCategorySelectedIcon" = "Selected";
+"addCategoryShowLessIcons" = "Show fewer icons";
+"addCategoryShowMoreIcons" = "Show more icons";
+"addCategorySaveCategoryButton" = "Save category";
+
+// MARK: - Categories
+
+"categoriesNavigationTitle" = "Categories";
+"categoriesBalanceTitle" = "Total Transactions";
+"categoriesBalanceSubtitle" = "Total Budget";
+"categoriesPeriod" = "Period";
+"categoriesBalance" = "Balance";
+"categoriesEmptyCategoriesTitle" = "Create a category for your expenses";
+"categoriesEmptyCategoriesDescription" = "It seems you don't have any categories for your expenses yet. To keep your finances organized, we recommend creating one now.";
+"categoriesEmptyCategoriesButton" = "Add category";
+"categoriesEmptyBudgetsTitle" = "Create a budget for this month";
+"categoriesEmptyBudgetsDescription" = "It seems you haven't created a budget for your expenses this month yet. To ensure you stay within your financial limits, we suggest creating one now.";
+"categoriesEmptyBudgetsButton" = "Add budget";
+"categoriesEditBudget" = "Edit Budget";
+"categoriesEditCategory" = "Edit Category";
+"categoriesRemoveBudget" = "Remove Budget";
+"categoriesRemoveCategory" = "Remove Category";
+"categoriesApplyFilters" = "Apply Filters";
+"categoriesDate" = "Date";
+"categoriesFilter" = "Filters";
+"categoriesLegend" = "Legend";
+"categoriesGreenLegendTitle" = "Within Budget";
+"categoriesGreenLegendDescription" = "You are managing your budget wisely. Keep it up!";
+"categoriesYellowLegendTitle" = "Keep an Eye";
+"categoriesYellowLegendDescription" = "Be careful! You are approaching the limit. Monitor your spending closely.";
+"categoriesOrangeLegendTitle" = "High Alert";
+"categoriesOrangeLegendDescription" = "You are in the red! Almost reaching the limit. It's time to reassess expenses.";
+"categoriesRedLegendTitle" = "Budget Exceeded";
+"categoriesRedLegendDescription" = "You have exceeded the limit! It's time to rethink your spending habits.";
+"categoriesChartHeader" = "Chart";
+
+// MARK: - Category
+
+"categoryBalanceTitle" = "Transactions in %@";
+"categoryBalanceSubtitle" = "Budget in %@";
+"categoryBudgetsHeader" = "Budgets";
+"categoryTransactionsHeader" = "Transactions";
+
+// MARK: - Empty Budget
+
+"emptyTitle" = "Data Unavailable";
+"emptyDescriptions" = "No data found with the requested information. Please try again later or revise your search criteria.";
+"emptyBudgetsTitle" = "Budgets Unavailable";
+"emptyTransactionsTitle" = "Transactions Unavailable";
+
+// MARK: - Item Navigation
+
+"itemNavigationCategories" = "Categories";
+"itemNavigationHome" = "Home";
+"itemNavigationTransactions" = "Transactions";
+"itemNavigationSettings" = "Settings";
+
+// MARK: - Add Transaction
+
+"addTransactionRemaining" = "Remaining";
+"addTransactionSaveButton" = "Save transaction";
+"addTransactionNavigationTitle" = "Transaction";
+"addTransactionDescriptionPrompt" = "Provide a description for your expense";
+"addTransactionStatusHeader" = "Status";
+"addTransactionStatusSelect" = "Select the status";
+"addTransactionStatusSpend" = "Spend";
+"addTransactionStatusPending" = "Pending";
+"addTransactionStatusCleared" = "Cleared";
+
+// MARK: - Transactions
+
+"transactionNavigationTitle" = "Transactions";
+"transactionEditNavigationTitle" = "%d Selected";
+"transactionsCopyHeader" = "Total of %d transactions for the period from %@ to %@\n\n";
+"transactionsCopyFooter" = "TOTAL: %@";
+"transactionsRemoveTransactions" = "Remove";
+"transactionsCopyTransactions" = "Copy";
+"transactionsNewTransactions" = "Add";
+"transactionsMoreMenuHeader" = "Options";
+"transactionsAddTransaction" = "Add transaction";
+"transactionsFilterByDate" = "Filter by date";
+"transactionsCleanCategoriesFilter" = "Clear";
+"transactionsCategoriesFilterHeader" = "Select one or more categories";
+"transactionsCategorieAllSelected" = "All";
+"transactionsLargestPurchaseHeader" = "Largest Purchases";
+"transactionsOptionsSelect" = "Select";
+"transactionsOptionsSelectDone" = "Done";
+
+// MARK: - Home
+
+"homeNavigationTitle" = "Home";
+"homeRemainingHeader" = "Remaining";
+"homeRemainingTitle" = "Total Remaining";
+"homeRemainingCategoryTransactions" = "%d transactions";
+"homeManageTags" = "Manage Tags";
+"homeSpendBudgetHeader" = "Budgets vs Spends";
+"homeSpendBudgetCategory" = "Category";
+"homeSpendBudgetBudgetTitle" = "Budget";
+"homeSpendBudgetSpendTitle" = "Spend";
+"homeSpendBudgetPercentageResult" = "Percentage Result";
+
+// MARK: - Tags
+
+"tagsNavigationTitle" = "Tags";
+"tagsInputHeader" = "Tag Information";
+"tagsInputNamePlaceholder" = "Enter the tag name";
+"tagsSaveButton" = "Save tag";
+"tagsCollapsedHeader" = "Created Tags";
+"tagsChartSectionHeader" = "Comparative Chart";
+"tagsMenuSelectHeader" = "Select one or more tags";
+"tagsRemoveTag" = "Remove tag";
+"tagsEditTag" = "Edit tag";
+"tagsCleanSelected" = "Clear";
+"menuCleanSelections" = "Clear Selection";
+
+// MARK: - Filter
+
+"filterDateMonth" = "Month";
+"filterDateYear" = "Year";
+"filterCategory" = "Categories";
+"filterTags" = "Tags";
+
+// MARK: - Widget
+
+"widgetAppName" = "Budget";
+"widgetCurrentSpend" = "Current Spend";
+"widgetTotalBudget" = "Total Budget";
+"widgetRemaining" = "Remaining";
+"widgetTitleSystemSmallExpanseTracker" = "Expense Tracker";
+"widgetDescriptionSystemSmallExpanseTracker" = "Keep track of your spending and budget in real-time.";
+"widgetTitleSystemSmallTransactions" = "Recent Expenses";
+"widgetDescriptionSystemSmallTransactions" = "Visualize your most recent expenses and track your budget quickly and easily.";
+
+// MARK: - Application Icon
+
+"appIconDefault" = "Default";
+"appIconLight" = "Light Default";
+"appIconDark" = "Dark Default";
+"appIconSystem" = "System";
+"appIconLightSystem" = "Light System";
+"appIconDarkSystem" = "Dark System";
+"appIconLgbt" = "LGBT";
+
+// MARK: - Settings
+
+"settingsNavigationTitle" = "Settings";
+"settingsSectionCustomization" = "Customization";
+"settingsRowAppearence" = "Appearance";
+"settingsRowTheme" = "Theme";
+"settingsSectionIcons" = "Icons";
+"settingsSectionMoreOptions" = "More Options";
+"settingsRowReview" = "Review";
+"settingsRowShare" = "Share";
+"settingsSectionAbout" = "About";
+"settingsDevJob" = "iOS Developer at Globo";

@@ -195,3 +195,35 @@
 "appIconLightSystem" = "Light System";
 "appIconDarkSystem" = "Dark System";
 "appIconLgbt" = "LGBT";
+
+// MARK: - Settings
+
+"settingsNavigationTitle" = "Settings";
+"settingsSectionCustomization" = "Customization";
+"settingsRowAppearence" = "Appearance";
+"settingsRowTheme" = "Theme";
+"settingsSectionIcons" = "Icons";
+"settingsSectionMoreOptions" = "More Options";
+"settingsRowTestFlight" = "TestFlight";
+"settingsTagBeta" = "Beta";
+"settingsRowReviewDetail" = "Your feedback is important";
+"settingsRowReview" = "Review";
+"settingsRowShare" = "Share";
+"settingsSectionAbout" = "About";
+"settingsDevJob" = "iOS Developer at Globo";
+"settingsApplicationName" = "Budget";
+"settingsApplicationVersion" = "Version";
+"settingsApplicationDescription" = "Budget simplifies financial management, allowing you to plan monthly expenses by category and access detailed reports for control and savings.";
+"settingsSectionSecurity" = "Security";
+"settingsPrivacyPolicy" = "Privacy Policy";
+
+//MARK: - Welcome
+
+"welcomeCategoryTitle" = "Categories";
+"welcomeCategoryDescription" = "Create customized categories with colors, icons, and names, and set monthly budgets for organized and engaging tracking of your expenses.";
+"welcomeBudgetTitle" = "Reports";
+"welcomeBudgetDescription" = "A practical financial assistant! Monthly reports display balances by category, with visual graphs highlighting major expenses and proportional spending shown in bubble charts.";
+"welcomeTransactionTitle" = "Transactions";
+"welcomeTransactionDescription" = "Start your financial journey! Create and explore transactions, track expenses by category, and make confident, informed decisions.";
+"welcomeFooterDescription" = "Developed and designed to facilitate your financial organization.";
+"welcomeFooterButton" = "Continue";

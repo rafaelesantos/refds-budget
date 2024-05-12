@@ -5,7 +5,7 @@ public protocol SettingsUseCase {
     func getSettings() -> SettingsEntity
     func addSettings(
         theme: Color?,
-        icon: ApplicationIcon,
+        icon: Asset,
         appearence: Double?,
         notifications: Bool?,
         reminderNotification: Bool?,

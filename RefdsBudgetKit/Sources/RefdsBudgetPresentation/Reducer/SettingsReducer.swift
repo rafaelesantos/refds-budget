@@ -10,6 +10,8 @@ public final class SettingsReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? SettingsAction {
+        case .fetchData:
+            state.isLoading = true
         case let .receiveData(newState):
             state = newState
         default: break

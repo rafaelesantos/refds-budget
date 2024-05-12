@@ -1,10 +1,12 @@
 import SwiftUI
 import RefdsUI
+import StoreKit
 import RefdsRedux
 import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct SettingsView: View {
+    @Environment(\.requestReview) private var requestReview
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.openURL) var openURL
     @Binding private var state: SettingsStateProtocol
@@ -22,12 +24,15 @@ public struct SettingsView: View {
         List {
             sectionCustomization
             sectionIcons
+            sectionSecurity
+            sectionMoreOptions
             sectionAbout
         }
-        .navigationTitle("Configurações")
+        .navigationTitle(String.localizable(by: .settingsNavigationTitle))
         .onAppear { reloadData() }
         .onChange(of: state.colorScheme) { updateData() }
         .onChange(of: state.tintColor) { updateData() }
+        .onChange(of: state.icon) { updateData() }
         .refdsToast(item: $state.error)
     }
     
@@ -45,7 +50,7 @@ public struct SettingsView: View {
             rowTintColor
         } header: {
             RefdsText(
-                "Customização",
+                .localizable(by: .settingsSectionCustomization),
                 style: .footnote,
                 color: .secondary
             )
@@ -68,7 +73,7 @@ public struct SettingsView: View {
                         .tag(scheme)
                 }
             } label: {
-                RefdsText("Aparência")
+                RefdsText(.localizable(by: .settingsRowAppearence))
             }
             .tint(.secondary)
         }
@@ -80,13 +85,15 @@ public struct SettingsView: View {
             
             ColorPicker(selection: $state.tintColor) {
                 HStack {
-                    RefdsText("Tema")
+                    RefdsText(.localizable(by: .settingsRowTheme))
                     Spacer(minLength: .zero)
+                    #if os(iOS)
                     RefdsText(
                         UIColor(state.tintColor).accessibilityName.capitalized,
                         color: .secondary
                     )
                     .padding(.trailing, .padding(.small))
+                    #endif
                 }
             }
         }
@@ -98,15 +105,16 @@ public struct SettingsView: View {
         RefdsSection {
             ScrollView(.horizontal) {
                 HStack(spacing: .padding(.large)) {
-                    let icons = ApplicationIcon.allCases
-                    ForEach(icons.indices, id: \.self) {
-                        let icon = icons[$0]
+                    ForEach(state.icons.indices, id: \.self) {
+                        let icon = state.icons[$0]
                         let isSelected = icon == state.icon
                         RefdsButton {
                             withAnimation {
                                 state.icon = icon
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    icon.changeIcon()
+                                }
                             }
-                            icon.changeIcon()
                         } label: {
                             VStack(spacing: .zero) {
                                 icon.image
@@ -130,30 +138,165 @@ public struct SettingsView: View {
             .padding(.horizontal, -20)
         } header: {
             HStack {
-                RefdsText("Ícones", style: .footnote, color: .secondary)
+                RefdsText(
+                    .localizable(by: .settingsSectionIcons),
+                    style: .footnote,
+                    color: .secondary
+                )
                 Spacer()
-                RefdsText(state.icon.title, style: .footnote, color: .secondary)
+                RefdsText(
+                    state.icon.title,
+                    style: .footnote,
+                    color: .secondary
+                )
             }
         }
         #endif
     }
     
+    private var sectionSecurity: some View {
+        RefdsSection {
+            rowPrivacyPolicy
+        } header: {
+            RefdsText(
+                .localizable(by: .settingsSectionSecurity),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
+    private var rowPrivacyPolicy: some View {
+        RefdsButton {
+            openURL(.budget(for: .privacyPolicy))
+        } label: {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .handRaisedFill,
+                    color: .orange
+                )
+                RefdsText(.localizable(by: .settingsPrivacyPolicy))
+            }
+        }
+    }
+    
+    private var sectionMoreOptions: some View {
+        RefdsSection {
+            rowTestFlight
+            rowAppReview
+            rowAppShare
+        } header: {
+            RefdsText(
+                .localizable(by: .settingsSectionMoreOptions),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
+    private var rowTestFlight: some View {
+        RefdsButton {
+            openURL(.budget(for: .jointTestFlight))
+        } label: {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .hammerFill,
+                    color: .blue
+                )
+                RefdsText(.localizable(by: .settingsRowTestFlight))
+                Spacer(minLength: .zero)
+                RefdsText(
+                    .localizable(by: .settingsTagBeta).uppercased(),
+                    style: .footnote,
+                    color: .accentColor,
+                    weight: .bold
+                )
+                .refdsTag(color: .accentColor)
+            }
+        }
+    }
+    
+    private var rowAppReview: some View {
+        RefdsButton {
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.requestReview()
+            }
+        } label: {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .starFill,
+                    color: .green
+                )
+                RefdsText(.localizable(by: .settingsRowReview))
+                Spacer(minLength: .zero)
+                RefdsText(.localizable(by: .settingsRowReviewDetail), color: .secondary)
+            }
+        }
+    }
+    
+    private var rowAppShare: some View {
+        ShareLink(item: .budget(for: .appleStoreReference)) {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .squareAndArrowUp,
+                    color: .pink
+                )
+                RefdsText(.localizable(by: .settingsRowShare))
+            }
+        }
+    }
+    
     private var sectionAbout: some View {
         RefdsSection {
+            rowApplicationDetail
             rowDeveloper
         } header: {
-            RefdsText("Sobre", style: .footnote, color: .secondary)
+            RefdsText(
+                .localizable(by: .settingsSectionAbout),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
+    private var rowApplicationDetail: some View {
+        HStack(spacing: .padding(.medium)) {
+            state.icon.image
+                .resizable()
+                .scaledToFit()
+                .frame(width: 33, height: 33)
+                .clipShape(.rect(cornerRadius: 8))
+                .padding(.vertical, 4)
+            
+            HStack {
+                RefdsText(.localizable(by: .settingsApplicationName))
+                
+                RefdsText(
+                    .localizable(by: .settingsApplicationVersion),
+                    color: .secondary
+                )
+            }
+            
+            Spacer(minLength: .zero)
+            
+            if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                RefdsText(
+                    appVersion,
+                    style: .footnote,
+                    color: .accentColor,
+                    weight: .bold
+                )
+                .refdsTag(color: .accentColor)
+            }
         }
     }
     
     private var rowDeveloper: some View {
         RefdsButton {
-            if let url = URL(string: "https://github.com/rafaelesantos") {
-                openURL(url)
-            }
+            openURL(.budget(for: .developerGithub))
         } label: {
             HStack(spacing: .padding(.medium)) {
-                RefdsAsyncImage(url: "https://gravatar.com/avatar/79e5c1241339f7834a159e6c0f644eaa0914c5d1c60d04f094322c0f0762c6e6") { image in
+                RefdsAsyncImage(url: URL.budget(for: .developerImage).absoluteString) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -164,7 +307,7 @@ public struct SettingsView: View {
                 
                 VStack(alignment: .leading) {
                     RefdsText("Rafael Escaleira")
-                    RefdsText("Desenvolvedor iOS na Globo", style: .callout, color: .secondary)
+                    RefdsText(.localizable(by: .settingsDevJob), style: .callout, color: .secondary)
                 }
                 
                 Spacer(minLength: .zero)
