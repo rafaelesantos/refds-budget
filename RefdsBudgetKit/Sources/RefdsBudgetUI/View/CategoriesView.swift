@@ -280,26 +280,43 @@ public struct CategoriesView: View {
     private var sectionLegend: some View {
         if !state.isEmptyBudgets {
             RefdsSection {
-                rowLegend(
-                    title: .localizable(by: .categoriesGreenLegendTitle),
-                    description: .localizable(by: .categoriesGreenLegendDescription),
-                    color: .green
-                )
-                rowLegend(
-                    title: .localizable(by: .categoriesYellowLegendTitle),
-                    description: .localizable(by: .categoriesYellowLegendDescription),
-                    color: .yellow
-                )
-                rowLegend(
-                    title: .localizable(by: .categoriesOrangeLegendTitle),
-                    description: .localizable(by: .categoriesOrangeLegendDescription),
-                    color: .orange
-                )
-                rowLegend(
-                    title: .localizable(by: .categoriesRedLegendTitle),
-                    description: .localizable(by: .categoriesRedLegendDescription),
-                    color: .red
-                )
+                HStack {
+                    let colors: [Color] = [.green, .yellow, .orange, .red]
+                    ForEach(colors, id: \.self) { color in
+                        Spacer()
+                        RefdsButton {
+                            withAnimation { state.selectedLegend = color }
+                        } label: {
+                            bubbleView(
+                                color: color,
+                                isSelected: state.selectedLegend == color
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    Spacer()
+                }
+                .padding(.vertical, 4)
+                
+                HStack(spacing: .padding(.medium)) {
+                    let title: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendTitle):
+                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendTitle) :
+                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendTitle) :
+                        .localizable(by: .categoriesRedLegendTitle)
+                    
+                    let description: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendDescription):
+                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendDescription) :
+                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendDescription) :
+                        .localizable(by: .categoriesRedLegendDescription)
+                    RefdsText(
+                        title.uppercased(),
+                        style: .footnote,
+                        color: state.selectedLegend,
+                        weight: .bold
+                    )
+                    .refdsTag(color: state.selectedLegend)
+                    RefdsText(description, style: .callout, color: .secondary)
+                }
             } header: {
                 RefdsText(
                     .localizable(by: .categoriesLegend),
@@ -310,24 +327,15 @@ public struct CategoriesView: View {
         }
     }
     
-    private func rowLegend(
-        title: String,
-        description: String,
-        color: Color
-    ) -> some View {
-        HStack(spacing: .padding(.medium)) {
-            ZStack {
-                Circle()
-                    .fill(color)
-                    .frame(width: 20, height: 20)
+    private func bubbleView(color: Color, isSelected: Bool) -> some View {
+        ZStack {
+            Circle()
+                .fill(color)
+                .frame(width: 30, height: 30)
+            if isSelected {
                 Circle()
                     .fill(Color.white.opacity(0.6))
-                    .frame(width: 10, height: 10)
-            }
-            
-            VStack(alignment: .leading) {
-                RefdsText(title, style: .callout)
-                RefdsText(description, style: .footnote, color: .secondary)
+                    .frame(width: 15, height: 15)
             }
         }
     }

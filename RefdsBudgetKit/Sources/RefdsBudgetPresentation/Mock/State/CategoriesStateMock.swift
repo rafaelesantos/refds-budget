@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 import RefdsBudgetData
 
 public struct CategoriesStateMock: CategoriesStateProtocol {
@@ -12,6 +12,7 @@ public struct CategoriesStateMock: CategoriesStateProtocol {
     public var tags: [String] = (1 ... 5).map { _ in TagRowViewDataMock().name }
     public var selectedTags: Set<String> = []
     public var selectedStatus: Set<String> = []
+    public var selectedLegend: Color = .green
     public var balance: BalanceRowViewDataProtocol? = BalanceRowViewDataMock()
     public var error: RefdsBudgetError? = Bool.random() ? nil : .notFoundCategory
     
