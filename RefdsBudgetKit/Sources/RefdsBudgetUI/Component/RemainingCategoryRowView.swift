@@ -4,6 +4,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct RemainingCategoryRowView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let viewData: CategoryRowViewDataProtocol
     private let action: ((CategoryRowViewDataProtocol) -> Void)?
     
@@ -39,27 +40,33 @@ public struct RemainingCategoryRowView: View {
                 .clipShape(.rect(cornerRadius: .cornerRadius))
             }
             
-            HStack(spacing: .zero) {
-                VStack(spacing: .padding(.extraSmall)) {
+            VStack(spacing: .zero) {
+                HStack {
                     HStack {
-                        HStack {
-                            statusIconView
-                            RefdsText(viewData.name.capitalized, style: .callout, weight: .bold, lineLimit: 1)
-                        }
-                        Spacer(minLength: .zero)
-                        RefdsText(budget.currency(), style: .callout, lineLimit: 1)
-                            .contentTransition(.numericText())
+                        statusIconView
+                        RefdsText(viewData.name.capitalized, style: .callout, weight: .bold, lineLimit: 1)
                     }
-                    
-                    HStack {
-                        RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: viewData.transactionsAmount), style: .callout, color: .secondary)
-                        Spacer(minLength: .zero)
-                        RefdsText((1 - viewData.percentage).percent(), style: .callout, color: .secondary)
-                    }
+                    Spacer(minLength: .zero)
+                    RefdsText(budget.currency(), style: .callout, lineLimit: 1)
+                        .contentTransition(.numericText())
+                        .refdsRedacted(if: privacyMode)
                 }
+                
+                HStack {
+                    RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: viewData.transactionsAmount), style: .callout, color: .secondary)
+                    Spacer(minLength: .zero)
+                    RefdsText((1 - viewData.percentage).percent(), style: .callout, color: .secondary)
+                }
+                
+                ProgressView(
+                    value: viewData.percentage > 1 ? 1 : viewData.percentage,
+                    total: 1
+                )
+                .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                .tint(viewData.percentage.riskColor)
+                .padding(.top, 10)
+                .padding(.bottom, 5)
             }
-            
-            RefdsCircularProgressView(viewData.percentage, size: 50)
         }
     }
     

@@ -5,7 +5,9 @@ import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct HomeView: View {
+    @Environment(\.privacyMode) private var privacyMode
     @Binding private var state: HomeStateProtocol
+    @State private var privacyModeEditable = false
     private let action: (HomeAction) -> Void
     
     public init(
@@ -23,11 +25,13 @@ public struct HomeView: View {
             sectionFilters
             emptyBudgetView
             spendBudgetSectionView
-            remainingSectionView
-            tagsSectionView
             largestPurchaseSectionView
+            remainingSectionView
+            pendingClearedSectionView
+            tagsSectionView
         }
         .navigationTitle(String.localizable(by: .homeNavigationTitle))
+        .toolbar { ToolbarItem { moreButton } }
         .onAppear { reloadData() }
         .refreshable { reloadData() }
         .onChange(of: state.isFilterEnable) { reloadData() }
@@ -35,10 +39,12 @@ public struct HomeView: View {
         .onChange(of: state.selectedTags) { reloadData() }
         .onChange(of: state.selectedCategories) { reloadData() }
         .onChange(of: state.selectedStatus) { reloadData() }
+        .environment(\.privacyMode, privacyModeEditable)
         .refdsToast(item: $state.error)
     }
     
     private func reloadData() {
+        privacyModeEditable = privacyMode
         action(.fetchData)
     }
     
@@ -178,6 +184,13 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
+    private var pendingClearedSectionView: some View {
+        if let pendingCleared = state.pendingCleared {
+            PendingClearedSectionView(viewData: pendingCleared)
+        }
+    }
+    
+    @ViewBuilder
     private var largestPurchaseSectionView: some View {
         if !state.largestPurchase.isEmpty {
             LargestPurchaseSectionView(transactions: state.largestPurchase)
@@ -196,6 +209,32 @@ public struct HomeView: View {
                     color: .secondary
                 )
             }
+        }
+    }
+    
+    private var moreButton: some View {
+        Menu {
+            RefdsText(.localizable(by: .transactionsMoreMenuHeader))
+            Divider()
+            
+            RefdsButton {
+                withAnimation {
+                    privacyModeEditable.toggle()
+                }
+            } label: {
+                Label(
+                    String.localizable(by: .settingsRowPrivacyMode),
+                    systemImage: privacyModeEditable ? RefdsIconSymbol.eyeSlashFill.rawValue : RefdsIconSymbol.eyeFill.rawValue
+                )
+            }
+        } label: {
+            RefdsIcon(
+                .ellipsisCircleFill,
+                color: .accentColor,
+                size: 18,
+                weight: .bold,
+                renderingMode: .hierarchical
+            )
         }
     }
 }

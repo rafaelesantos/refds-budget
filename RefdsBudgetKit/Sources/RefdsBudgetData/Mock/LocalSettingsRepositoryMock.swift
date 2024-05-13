@@ -18,6 +18,7 @@ public final class LocalSettingsRepositoryMock: SettingsUseCase {
         icon: Asset,
         appearence: Double?,
         hasAuthRequest: Bool,
+        hasPrivacyMode: Bool,
         notifications: Bool?,
         reminderNotification: Bool?,
         warningNotification: Bool?,

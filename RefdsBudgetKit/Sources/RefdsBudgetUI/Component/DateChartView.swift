@@ -3,6 +3,7 @@ import RefdsUI
 import Charts
 
 public struct DateChartView: View {
+    @Environment(\.privacyMode) private var privacyMode
     @State private var chartSelection: String = ""
     private let data: [(x: Date, y: Double, percentage: Double?)]
     private let format: String.DateFormat
@@ -45,6 +46,7 @@ public struct DateChartView: View {
                 Spacer()
                 RefdsText(value.currency(), style: .callout, weight: .bold)
                     .contentTransition(.numericText())
+                    .refdsRedacted(if: privacyMode)
             }
         }
     }

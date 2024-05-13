@@ -4,6 +4,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct TagRowView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let viewData: TagRowViewDataProtocol
     
     public init(viewData: TagRowViewDataProtocol) {
@@ -28,6 +29,7 @@ public struct TagRowView: View {
             Spacer(minLength: .zero)
             if let value = viewData.value {
                 RefdsText(value.currency(), style: .callout)
+                    .refdsRedacted(if: privacyMode)
             }
         }
     }

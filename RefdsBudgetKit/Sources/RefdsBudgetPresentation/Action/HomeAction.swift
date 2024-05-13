@@ -7,6 +7,7 @@ public enum HomeAction: RefdsReduxAction {
         remaining: [CategoryRowViewDataProtocol],
         tags: [TagRowViewDataProtocol],
         largestPurchase: [TransactionRowViewDataProtocol],
+        pendingCleared: PendingClearedSectionViewDataProtocol,
         tagsMenu: [String],
         categoriesMenu: [String]
     )

@@ -4,6 +4,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct BalanceRowView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let viewData: BalanceRowViewDataProtocol
     private let isRemaining: Bool
     
@@ -50,6 +51,7 @@ public struct BalanceRowView: View {
                     alignment: .center
                 )
                 .contentTransition(.numericText())
+                .refdsRedacted(if: privacyMode)
                 
                 if !isRemaining {
                     HStack {
@@ -72,6 +74,7 @@ public struct BalanceRowView: View {
                         .padding(.horizontal, 3)
                         .background(Color.secondary.opacity(0.1))
                         .clipShape(.rect(cornerRadius: 3))
+                        .refdsRedacted(if: privacyMode)
                     }
                 }
             }

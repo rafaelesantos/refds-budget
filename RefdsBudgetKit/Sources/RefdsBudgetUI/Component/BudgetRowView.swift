@@ -3,6 +3,7 @@ import RefdsUI
 import RefdsBudgetPresentation
 
 public struct BudgetRowView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let viewData: BudgetRowViewDataProtocol
     
     @State private var percentage: Double = 0
@@ -25,6 +26,7 @@ public struct BudgetRowView: View {
                     Spacer()
                     RefdsText(amount.currency(), style: .callout)
                         .contentTransition(.numericText())
+                        .refdsRedacted(if: privacyMode)
                 }
                 
                 if let description = viewData.description, !description.isEmpty {

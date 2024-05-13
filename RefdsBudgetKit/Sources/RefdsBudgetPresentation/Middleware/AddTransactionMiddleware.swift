@@ -39,7 +39,10 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
         let allCategories = categoryRepository.getAllCategories()
         let categories: [CategoryRowViewDataProtocol] = categoryRepository.getCategories(from: date).compactMap {
             guard let budget = categoryRepository.getBudget(on: $0.id, from: date) else { return nil }
-            let transactions = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear)
+            let transactions = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear).filter {
+                let status = TransactionStatus(rawValue: $0.status)
+                return status != .pending && status != .cleared
+            }
             let spend = transactions.map { $0.amount }.reduce(.zero, +)
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(

@@ -103,11 +103,14 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
             status: state.selectedStatus
         )
         
+        let pendingCleared = getPendingCleared(on: transactionEntities)
+        
         completion(
             .updateData(
                 remaining: remaining,
                 tags: tags,
                 largestPurchase: largestPurchase,
+                pendingCleared: pendingCleared,
                 tagsMenu: tagEntities.map { $0.name },
                 categoriesMenu: categoryEntities.map { $0.name }
             )
@@ -196,5 +199,26 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 categoryEntity: category
             )
         }
+    }
+    
+    private func getPendingCleared(
+        on transactionEntities: [TransactionEntity]
+    ) -> PendingClearedSectionViewDataProtocol {
+        let pendings = transactionEntities.filter {
+            let status = TransactionStatus(rawValue: $0.status)
+            return status == .pending
+        }.map { $0.amount }
+        
+        let cleareds = transactionEntities.filter {
+            let status = TransactionStatus(rawValue: $0.status)
+            return status == .cleared
+        }.map { $0.amount }
+        
+        return PendingClearedSectionViewData(
+            pendingAmount: pendings.reduce(.zero, +),
+            clearedAmount: cleareds.reduce(.zero, +),
+            pendingCount: pendings.count,
+            clearedCount: cleareds.count
+        )
     }
 }

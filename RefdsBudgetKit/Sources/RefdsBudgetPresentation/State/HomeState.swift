@@ -9,6 +9,7 @@ public protocol HomeStateProtocol: RefdsReduxState {
     var remaining: [CategoryRowViewDataProtocol] { get set }
     var tagsRow: [TagRowViewDataProtocol] { get set }
     var largestPurchase: [TransactionRowViewDataProtocol] { get set }
+    var pendingCleared: PendingClearedSectionViewDataProtocol? { get set }
     var categories: [String] { get set }
     var selectedCategories: Set<String> { get set }
     var tags: [String] { get set }
@@ -26,6 +27,7 @@ public struct HomeState: HomeStateProtocol {
     public var remaining: [CategoryRowViewDataProtocol] = []
     public var tagsRow: [TagRowViewDataProtocol] = []
     public var largestPurchase: [TransactionRowViewDataProtocol] = []
+    public var pendingCleared: PendingClearedSectionViewDataProtocol?
     
     public var categories: [String] = []
     public var selectedCategories: Set<String> = []

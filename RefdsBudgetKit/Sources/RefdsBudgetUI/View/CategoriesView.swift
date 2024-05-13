@@ -9,7 +9,9 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct CategoriesView: View {
+    @Environment(\.privacyMode) private var privacyMode
     @Binding private var state: CategoriesStateProtocol
+    @State private var privacyModeEditable = false
     private let action: (CategoriesAction) -> Void
     
     public init(
@@ -40,13 +42,15 @@ public struct CategoriesView: View {
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.selectedTags) { reloadData() }
         .onChange(of: state.selectedStatus) { reloadData() }
-        .toolbar { ToolbarItem { addCategoryButton } }
+        .toolbar { ToolbarItem { moreButton } }
+        .environment(\.privacyMode, privacyModeEditable)
         .refreshable { reloadData() }
         .onAppear { reloadData() }
         .refdsToast(item: $state.error)
     }
     
     private func reloadData() {
+        privacyModeEditable = privacyMode
         action(.fetchData)
     }
     
@@ -263,16 +267,38 @@ public struct CategoriesView: View {
         )
     }
     
-    private var addCategoryButton: some View {
-        RefdsIcon(
-            .plusCircleFill,
-            color: .accentColor,
-            size: 18,
-            weight: .bold,
-            renderingMode: .hierarchical
-        )
-        .onTapGesture {
-            action(.addCategory(nil))
+    private var moreButton: some View {
+        Menu {
+            RefdsText(.localizable(by: .transactionsMoreMenuHeader))
+            Divider()
+            
+            RefdsButton {
+                withAnimation {
+                    privacyModeEditable.toggle()
+                }
+            } label: {
+                Label(
+                    String.localizable(by: .settingsRowPrivacyMode),
+                    systemImage: privacyModeEditable ? RefdsIconSymbol.eyeSlashFill.rawValue : RefdsIconSymbol.eyeFill.rawValue
+                )
+            }
+            
+            RefdsButton {
+                action(.addCategory(nil))
+            } label: {
+                Label(
+                    String.localizable(by: .categoriesEmptyCategoriesButton).capitalized,
+                    systemImage: RefdsIconSymbol.plus.rawValue
+                )
+            }
+        } label: {
+            RefdsIcon(
+                .ellipsisCircleFill,
+                color: .accentColor,
+                size: 18,
+                weight: .bold,
+                renderingMode: .hierarchical
+            )
         }
     }
     
@@ -280,24 +306,6 @@ public struct CategoriesView: View {
     private var sectionLegend: some View {
         if !state.isEmptyBudgets {
             RefdsSection {
-                HStack {
-                    let colors: [Color] = [.green, .yellow, .orange, .red]
-                    ForEach(colors, id: \.self) { color in
-                        Spacer()
-                        RefdsButton {
-                            withAnimation { state.selectedLegend = color }
-                        } label: {
-                            bubbleView(
-                                color: color,
-                                isSelected: state.selectedLegend == color
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    Spacer()
-                }
-                .padding(.vertical, 4)
-                
                 HStack(spacing: .padding(.medium)) {
                     let title: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendTitle):
                     state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendTitle) :
@@ -317,6 +325,24 @@ public struct CategoriesView: View {
                     .refdsTag(color: state.selectedLegend)
                     RefdsText(description, style: .callout, color: .secondary)
                 }
+                
+                HStack {
+                    let colors: [Color] = [.green, .yellow, .orange, .red]
+                    ForEach(colors, id: \.self) { color in
+                        Spacer()
+                        RefdsButton {
+                            withAnimation { state.selectedLegend = color }
+                        } label: {
+                            bubbleView(
+                                color: color,
+                                isSelected: state.selectedLegend == color
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    Spacer()
+                }
+                .padding(.vertical, 4)
             } header: {
                 RefdsText(
                     .localizable(by: .categoriesLegend),

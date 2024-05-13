@@ -4,6 +4,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct CategoryRowView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let viewData: CategoryRowViewDataProtocol
     private let action: ((CategoryRowViewDataProtocol) -> Void)?
     
@@ -50,6 +51,7 @@ public struct CategoryRowView: View {
                         Spacer(minLength: .zero)
                         RefdsText(budget.currency(), style: .callout, lineLimit: 1)
                             .contentTransition(.numericText())
+                            .refdsRedacted(if: privacyMode)
                     }
                     
                     HStack(spacing: .padding(.small)) {
@@ -80,6 +82,7 @@ public struct CategoryRowView: View {
         
             Spacer(minLength: .zero)
             RefdsText(viewData.spend.currency(), style: .callout, color: .secondary)
+                .refdsRedacted(if: privacyMode)
         }
     }
     

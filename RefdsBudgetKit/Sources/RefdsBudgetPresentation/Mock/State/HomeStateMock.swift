@@ -8,6 +8,7 @@ public struct HomeStateMock: HomeStateProtocol {
     public var remaining: [CategoryRowViewDataProtocol] = (1 ... 5).map { _ in CategoryRowViewDataMock() }
     public var tagsRow: [TagRowViewDataProtocol] = (1 ... 5).map { _ in TagRowViewDataMock() }
     public var largestPurchase: [TransactionRowViewDataProtocol] = (1 ... 5).map { _ in TransactionRowViewDataMock() }
+    public var pendingCleared: PendingClearedSectionViewDataProtocol? = PendingClearedSectionViewDataMock()
     
     
     public var categories: [String] = (1 ... 5).map { _ in CategoryRowViewDataMock().name }

@@ -43,6 +43,7 @@ struct ContentView: View {
         } else {
             contentView
                 .environmentObject(store)
+                .environment(\.privacyMode, store.state.settingsState.hasPrivacyMode)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
                 .if(store.state.settingsState.hasAuthRequest) {

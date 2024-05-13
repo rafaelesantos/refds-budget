@@ -5,8 +5,10 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct TagsSectionView: View {
-    private let tags: [TagRowViewDataProtocol]
+    @Environment(\.privacyMode) private var privacyMode
     @State private var selectedTag: TagRowViewDataProtocol?
+    private let tags: [TagRowViewDataProtocol]
+    
     private let action: () -> Void
     
     private var bindindAngleSelection: Binding<Double?> {
@@ -72,6 +74,7 @@ public struct TagsSectionView: View {
             VStack {
                 RefdsText(value.currency(), style: .title, weight: .bold)
                     .contentTransition(.numericText())
+                    .refdsRedacted(if: privacyMode)
                 RefdsText(selectedTag.name, style: .callout, color: .secondary)
             }
         }

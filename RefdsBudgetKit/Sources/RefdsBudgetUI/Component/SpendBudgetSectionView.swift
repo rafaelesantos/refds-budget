@@ -5,6 +5,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct SpendBudgetSectionView: View {
+    @Environment(\.privacyMode) private var privacyMode
     @State private var chartSelection: String = ""
     private let viewData: [CategoryRowViewDataProtocol]
     
@@ -51,26 +52,28 @@ public struct SpendBudgetSectionView: View {
         HStack {
             Spacer(minLength: .zero)
             
-            VStack(spacing: .zero) {
+            VStack(alignment: .leading, spacing: .zero) {
                 HStack(spacing: .padding(.small)) {
-                    BubbleColorView(color: .accentColor, size: 14)
+                    BubbleColorView(color: .accentColor, isSelected: true, size: 14)
                     RefdsText(.localizable(by: .homeSpendBudgetBudgetTitle), style: .callout, color: .secondary)
                 }
                 RefdsText(category.budget.currency(), style: .title3, weight: .bold)
                     .contentTransition(.numericText())
+                    .refdsRedacted(if: privacyMode)
             }
             
             Spacer(minLength: .zero)
             RefdsIcon(.xmark, color: .secondary)
             Spacer(minLength: .zero)
             
-            VStack(spacing: .zero) {
+            VStack(alignment: .trailing, spacing: .zero) {
                 HStack(spacing: .padding(.small)) {
-                    BubbleColorView(color: .teal, size: 14)
                     RefdsText(.localizable(by: .homeSpendBudgetSpendTitle), style: .callout, color: .secondary)
+                    BubbleColorView(color: .teal, isSelected: true, size: 14)
                 }
                 RefdsText(category.spend.currency(), style: .title3, weight: .bold)
                     .contentTransition(.numericText())
+                    .refdsRedacted(if: privacyMode)
             }
             
             Spacer(minLength: .zero)

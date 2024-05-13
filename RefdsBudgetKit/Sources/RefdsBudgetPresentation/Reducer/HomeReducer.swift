@@ -17,12 +17,14 @@ public final class HomeReducer: RefdsReduxReducerProtocol {
             remaining,
             tags,
             largestPurchase,
+            pendingCleared,
             tagsMenu,
             categoriesMenu
         ):
             state.remaining = remaining
             state.tagsRow = tags
             state.largestPurchase = largestPurchase
+            state.pendingCleared = pendingCleared
             state.tags = tagsMenu
             state.categories = categoriesMenu
             state.isLoading = false

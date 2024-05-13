@@ -6,9 +6,13 @@ import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct TransactionsView: View {
+    @Environment(\.privacyMode) private var privacyMode
     @Environment(\.editMode) private var editMode
     @Binding private var state: TransactionsStateProtocol
+    
     @State private var multiSelection = Set<UUID>()
+    @State private var privacyModeEditable = false
+    
     private let action: (TransactionsAction) -> Void
     
     public init(
@@ -35,6 +39,7 @@ public struct TransactionsView: View {
         .navigationTitle(editMode.isEditing ? String.localizable(by: .transactionEditNavigationTitle, with: multiSelection.count) : String.localizable(by: .transactionNavigationTitle))
         .onAppear { reloadData() }
         .refreshable { reloadData() }
+        .environment(\.privacyMode, privacyModeEditable)
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
@@ -51,6 +56,7 @@ public struct TransactionsView: View {
     }
     
     private func reloadData() {
+        privacyModeEditable = privacyMode
         action(.fetchData)
     }
     
@@ -98,6 +104,17 @@ public struct TransactionsView: View {
         Menu {
             RefdsText(.localizable(by: .transactionsMoreMenuHeader, with: multiSelection.count))
             Divider()
+            
+            RefdsButton {
+                withAnimation {
+                    privacyModeEditable.toggle()
+                }
+            } label: {
+                Label(
+                    String.localizable(by: .settingsRowPrivacyMode),
+                    systemImage: privacyModeEditable ? RefdsIconSymbol.eyeSlashFill.rawValue : RefdsIconSymbol.eyeFill.rawValue
+                )
+            }
             
             RefdsButton {
                 withAnimation { editMode?.wrappedValue.toggle() }

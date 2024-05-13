@@ -20,6 +20,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
             settings.icon = Asset.default.rawValue
             settings.appearence = .zero
             settings.hasAuthRequest = false
+            settings.hasPrivacyMode = false
             settings.notifications = false
             settings.reminderNotification = false
             settings.warningNotification = false
@@ -39,6 +40,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         icon: Asset,
         appearence: Double?,
         hasAuthRequest: Bool,
+        hasPrivacyMode: Bool,
         notifications: Bool?,
         reminderNotification: Bool?,
         warningNotification: Bool?,
@@ -54,6 +56,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         settings.icon = icon.rawValue
         settings.appearence = appearence ?? settings.appearence
         settings.hasAuthRequest = hasAuthRequest
+        settings.hasPrivacyMode = hasPrivacyMode
         settings.notifications = notifications ?? settings.notifications
         settings.reminderNotification = reminderNotification ?? settings.reminderNotification
         settings.warningNotification = warningNotification ?? settings.warningNotification

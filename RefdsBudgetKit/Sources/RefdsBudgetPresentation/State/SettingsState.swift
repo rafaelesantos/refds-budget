@@ -6,6 +6,7 @@ import RefdsBudgetResource
 public protocol SettingsStateProtocol: RefdsReduxState {
     var isLoading: Bool { get set }
     var hasAuthRequest: Bool { get set }
+    var hasPrivacyMode: Bool { get set }
     var colorScheme: ColorScheme? { get set }
     var tintColor: Color { get set }
     var icon: Asset { get set }
@@ -18,6 +19,7 @@ public struct SettingsState: SettingsStateProtocol {
     public var colorScheme: ColorScheme?
     public var tintColor: Color
     public var hasAuthRequest: Bool
+    public var hasPrivacyMode: Bool
     public var icon: Asset
     public var icons: [Asset]
     public var error: RefdsBudgetError?
@@ -27,6 +29,7 @@ public struct SettingsState: SettingsStateProtocol {
         colorScheme: ColorScheme? = nil,
         tintColor: Color = .green,
         hasAuthRequest: Bool = false,
+        hasPrivacyMode: Bool = false,
         icon: Asset = .default,
         icons: [Asset] = Asset.allCases,
         error: RefdsBudgetError? = nil
@@ -35,6 +38,7 @@ public struct SettingsState: SettingsStateProtocol {
         self.colorScheme = colorScheme
         self.tintColor = tintColor
         self.hasAuthRequest = hasAuthRequest
+        self.hasPrivacyMode = hasPrivacyMode
         self.icon = icon
         self.icons = icons
         self.error = error
@@ -48,5 +52,16 @@ public extension Optional<ColorScheme> {
         case .dark: return .localizable(by: .settingsRowAppearenceDark)
         default: return .localizable(by: .settingsRowAppearenceSystem)
         }
+    }
+}
+
+private struct PrivacyModeEnvironmentKey: EnvironmentKey {
+    static var defaultValue: Bool = false
+}
+
+public extension EnvironmentValues {
+    var privacyMode: Bool {
+        get { self[PrivacyModeEnvironmentKey.self] }
+        set { self[PrivacyModeEnvironmentKey.self] = newValue }
     }
 }

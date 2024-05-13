@@ -130,7 +130,7 @@
 "transactionsCopyFooter" = "TOTAL: %@";
 "transactionsRemoveTransactions" = "Remove";
 "transactionsCopyTransactions" = "Copy";
-"transactionsNewTransactions" = "Add";
+"transactionsNewTransactions" = "Add Transaction";
 "transactionsMoreMenuHeader" = "Options";
 "transactionsAddTransaction" = "Add transaction";
 "transactionsFilterByDate" = "Filter by date";
@@ -220,6 +220,7 @@
 "settingsSectionSecurity" = "Security";
 "settingsPrivacyPolicy" = "Privacy Policy";
 "settingsRowFaceID" = "Require Face ID";
+"settingsRowPrivacyMode" = "Privacy Mode";
 
 //MARK: - Welcome
 

@@ -18,11 +18,11 @@ public struct BubbleColorView: View {
     
     public var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.23)
+            Circle()
                 .fill(color)
                 .frame(width: size, height: size)
             if isSelected {
-                RoundedRectangle(cornerRadius: 2)
+                Circle()
                     .fill(Color.white.opacity(0.7))
                     .frame(width: size / 3, height: size / 3)
             }
@@ -33,5 +33,8 @@ public struct BubbleColorView: View {
 }
 
 #Preview {
-    BubbleColorView(color: .random)
+    HStack {
+        BubbleColorView(color: .random)
+        BubbleColorView(color: .random, isSelected: true)
+    }
 }

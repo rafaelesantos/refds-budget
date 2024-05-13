@@ -4,6 +4,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct LargestPurchaseSectionView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let transactions: [TransactionRowViewDataProtocol]
     
     public init(transactions: [TransactionRowViewDataProtocol]) {
@@ -12,68 +13,77 @@ public struct LargestPurchaseSectionView: View {
     
     public var body: some View {
         RefdsSection {
-            TabView {
-                ForEach(transactions.indices, id: \.self) { index in
-                    rowTransaction(for: index)
-                }
-            }
-            #if os(iOS)
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
-            #endif
-            .frame(height: 260)
-            .padding(.horizontal, -20)
+            
         } header: {
             RefdsText(
                 .localizable(by: .transactionsLargestPurchaseHeader),
                 style: .footnote,
                 color: .secondary
             )
+        } footer: {
+            ScrollView(.horizontal) {
+                HStack(spacing: .padding(.medium)) {
+                    ForEach(transactions.indices, id: \.self) { index in
+                        rowTransaction(for: index)
+                            .frame(width: 170, height: 125)
+                            .padding(.padding(.medium))
+                            .background()
+                            .clipShape(.rect(cornerRadius: .cornerRadius))
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
+            .scrollIndicators(.never)
+            .padding(.horizontal, -40)
         }
     }
     
     @ViewBuilder
     private func rowTransaction(for index: Int) -> some View {
         let transaction = transactions[index]
-        VStack(spacing: .padding(.medium)) {
-            if let icon = RefdsIconSymbol(rawValue: transaction.icon) {
-                VStack(spacing: .zero) {
-                    RefdsIcon(
-                        icon,
-                        color: transaction.color,
-                        size: 30
+        VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                if let icon = RefdsIconSymbol(rawValue: transaction.icon) {
+                    VStack(spacing: .zero) {
+                        RefdsIcon(
+                            icon,
+                            color: transaction.color,
+                            size: 15
+                        )
+                        .frame(width: 25, height: 25)
+                        .padding(10)
+                        .background(transaction.color.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: .cornerRadius))
+                        
+                        rankSealView(for: index)
+                            .padding(.top, -12)
+                    }
+                }
+                
+                VStack(alignment: .leading) {
+                    RefdsText(
+                        transaction.amount.currency(),
+                        weight: .bold
                     )
-                    .frame(width: 40, height: 40)
-                    .padding(10)
-                    .background(transaction.color.opacity(0.2))
-                    .clipShape(.rect(cornerRadius: .cornerRadius))
+                    .refdsRedacted(if: privacyMode)
                     
-                    rankSealView(for: index)
-                        .padding(.top, -12)
+                    RefdsText(
+                        transaction.date.asString(withDateFormat: .custom("EEEE dd, MMMM yyyy")).uppercased(),
+                        style: .caption,
+                        color: .secondary,
+                        weight: .bold
+                    )
                 }
             }
             
-            VStack {
-                RefdsText(
-                    transaction.amount.currency(),
-                    style: .title,
-                    weight: .bold
-                )
-                
-                RefdsText(
-                    transaction.date.asString(withDateFormat: .custom("EEEE dd, MMMM yyyy")).uppercased(),
-                    style: .footnote,
-                    color: .secondary,
-                    weight: .bold
-                )
-            }
-            .padding(.top, -12)
+            RefdsText(
+                transaction.description,
+                style: .callout,
+                color: .secondary
+            )
             
-            RefdsText(transaction.description, style: .callout, color: .secondary, alignment: .center)
-            Spacer()
+            Spacer(minLength: .zero)
         }
-        .padding(.padding(.medium))
-        .padding(.horizontal, .padding(.extraLarge))
     }
     
     private func rankSealView(for index: Int) -> some View {
@@ -81,12 +91,12 @@ public struct LargestPurchaseSectionView: View {
             RefdsIcon(
                 .sealFill,
                 color: .yellow,
-                size: 25
+                size: 20
             )
             
             RefdsText(
                 (index + 1).asString,
-                style: .callout,
+                style: .caption,
                 color: .white,
                 weight: .heavy
             )

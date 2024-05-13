@@ -190,6 +190,7 @@ public enum LocalizableKey: String {
     case settingsSectionSecurity
     case settingsPrivacyPolicy
     case settingsRowFaceID
+    case settingsRowPrivacyMode
     //MARK: - Welcome
     case welcomeCategoryTitle
     case welcomeCategoryDescription

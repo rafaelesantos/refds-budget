@@ -6,6 +6,7 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct TransactionSectionsView: View {
+    @Environment(\.privacyMode) private var privacyMode
     private let viewData: [[TransactionRowViewDataProtocol]]
     private let action: ((TransactionRowViewDataProtocol) -> Void)?
     private let remove: ((UUID) -> Void)?
@@ -104,6 +105,7 @@ public struct TransactionSectionsView: View {
                 VStack(alignment: .leading) {
                     HStack(spacing: .padding(.small)) {
                         RefdsText(transaction.amount.currency(), style: .callout, color: transaction.status.color, lineLimit: 1)
+                            .refdsRedacted(if: privacyMode)
                         Spacer(minLength: .zero)
                         RefdsText(transaction.date.asString(withDateFormat: .custom("HH:mm")), style: .callout, color: .secondary, weight: .light)
                     }
