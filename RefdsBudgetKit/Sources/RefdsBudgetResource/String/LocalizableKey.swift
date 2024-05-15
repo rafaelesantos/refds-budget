@@ -212,6 +212,7 @@ public enum LocalizableKey: String {
     case subscriptionBecomePremium
     case subscriptionNavigationTitle
     case subscriptionSubtitle
+    case subscriptionSubtitlePro
     case subscriptionFeaturesHeader
     case subscriptionFreeHeader
     case subscriptionPremiumHeader
@@ -219,8 +220,15 @@ public enum LocalizableKey: String {
     case subscriptionPlansHeader
     case subscriptionPriceHeader
     case subscriptionPriceObsevations
+    case subscriptionTermsButton
     case subscriptionTermsDescription
+    case subscriptionManageButton
     case subscriptionButton
+    case subscriptionButtonRestore
+    case subscriptionExpirationDate
+    case subscriptionCurrentPlanPurchaseDate
+    case subscriptionCurrentPlanRemaining
+    case subscriptionCurrentPlan
     case subscriptionFeatureTitle1
     case subscriptionFeatureTitle2
     case subscriptionFeatureTitle3

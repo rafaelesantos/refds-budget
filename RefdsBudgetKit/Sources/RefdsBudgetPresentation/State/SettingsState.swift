@@ -18,6 +18,7 @@ public protocol SettingsStateProtocol: RefdsReduxState {
     var products: [Product] { get set }
     var purchasedProductsID: Set<String> { get set }
     var features: [PremiumFeatureViewDataProtocol] { get set }
+    var transactions: [StoreKit.Transaction] { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -35,6 +36,7 @@ public struct SettingsState: SettingsStateProtocol {
     public var products: [Product]
     public var purchasedProductsID: Set<String>
     public var features: [PremiumFeatureViewDataProtocol]
+    public var transactions: [StoreKit.Transaction]
     public var error: RefdsBudgetError?
     
     public init(
@@ -50,6 +52,7 @@ public struct SettingsState: SettingsStateProtocol {
         products: [Product] = [],
         purchasedProductsID: Set<String> = [],
         features: [PremiumFeatureViewDataProtocol] = [],
+        transactions: [StoreKit.Transaction] = [],
         error: RefdsBudgetError? = nil
     ) {
         self.isLoading = isLoading
@@ -64,6 +67,7 @@ public struct SettingsState: SettingsStateProtocol {
         self.products = products
         self.purchasedProductsID = purchasedProductsID
         self.features = features
+        self.transactions = transactions
         self.error = error
     }
 }

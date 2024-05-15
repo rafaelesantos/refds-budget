@@ -28,8 +28,9 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) {
         switch action {
-        case .fetchData: fetchData(on: completion)
-        case .restore: restore(on: completion)
+        case .fetchData: fetchData(with: state, on: completion)
+        case .restore: restore(with: state, on: completion)
+        case .updatePro: updatePro(with: state, on: completion)
         case .purchase: purchase(
             with: state,
             on: completion
@@ -38,7 +39,10 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
     }
     
-    private func fetchData(on completion: @escaping (SettingsAction) -> Void) {
+    private func fetchData(
+        with state: SettingsStateProtocol,
+        on completion: @escaping (SettingsAction) -> Void
+    ) {
         Task {
             let productIDs = [
                 monthlySubscriptionID,
@@ -47,13 +51,11 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
             ]
             do {
                 let products = try await Product.products(for: productIDs)
-                completion(
-                    .receiveProducts(
-                        products: products.sorted(by: { $0.price > $1.price }),
-                        features: getFeatures()
-                    )
-                )
-                updatePurchasedProducts(on: completion)
+                let features = getFeatures()
+                var newState = state
+                newState.products = products
+                newState.features = features
+                await updatePurchasedProducts(with: newState, on: completion)
             } catch {
                 completion(.updateError(error: .notFoundProducts))
             }
@@ -66,10 +68,11 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         guard state.isAcceptedTerms else { return completion(.updateError(error: .acceptTerms)) }
         guard let product = state.selectedProduct else { return completion(.updateError(error: .notFoundProducts)) }
-        processPurchase(for: product, on: completion)
+        processPurchase(with: state, for: product, on: completion)
     }
     
     private func processPurchase(
+        with state: SettingsStateProtocol,
         for product: Product,
         on completion: @escaping (SettingsAction) -> Void
     ) {
@@ -82,32 +85,87 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
             case .userCancelled: break
             default: break
             }
-            updatePurchasedProducts(on: completion)
+            await updatePurchasedProducts(with: state, on: completion)
         }
     }
     
-    private func restore(on completion: @escaping (SettingsAction) -> Void) {
+    private func restore(
+        with state: SettingsStateProtocol,
+        on completion: @escaping (SettingsAction) -> Void
+    ) {
         Task {
             do {
                 try await AppStore.sync()
-                updatePurchasedProducts(on: completion)
+                await updatePurchasedProducts(with: state, on: completion)
             } catch {
                 completion(.updateError(error: .purchase))
             }
         }
     }
     
-    private func updatePurchasedProducts(on completion: @escaping (SettingsAction) -> Void) {
-        Task {
-            for await result in Transaction.currentEntitlements {
-                guard case .verified(let transaction) = result else { continue }
-                if transaction.revocationDate == nil {
-                    completion(.insertPurchased(id: transaction.productID))
-                } else {
-                    completion(.removePurchased(id: transaction.productID))
-                }
+    private func updatePurchasedProducts(
+        with state: SettingsStateProtocol,
+        on completion: @escaping (SettingsAction) -> Void
+    ) async {
+        var transactions: [StoreKit.Transaction] = []
+        var purchasedProductsID = state.purchasedProductsID
+        for await result in Transaction.currentEntitlements {
+            guard case .verified(let transaction) = result else { continue }
+            transactions += [transaction]
+            if transaction.revocationDate == nil {
+                purchasedProductsID.insert(transaction.productID)
+            } else {
+                purchasedProductsID.remove(transaction.productID)
             }
         }
+        transactions.sort(by: {
+            $0.expirationDate ?? .current >
+            $1.expirationDate ?? .current
+        })
+        completion(
+            .receiveProducts(
+                products: state.products,
+                features: state.features,
+                productsID: purchasedProductsID,
+                transactions: transactions
+            )
+        )
+    }
+    
+    private func getTransactions() async -> [StoreKit.Transaction] {
+        var transactions: [StoreKit.Transaction] = []
+        for await result in Transaction.currentEntitlements {
+            guard case .verified(let transaction) = result else { continue }
+            transactions += [transaction]
+        }
+        return transactions.sorted(by: { $0.expirationDate ?? .current > $1.expirationDate ?? .current })
+    }
+    
+    private func updatePro(
+        with state: SettingsStateProtocol,
+        on completion: @escaping (SettingsAction) -> Void
+    ) {
+        let isPro = !state.purchasedProductsID.isEmpty
+        let appearence: Int = isPro ? (state.colorScheme == .none ? .zero : state.colorScheme == .light ? 1 : 2) : .zero
+        let tintColor = isPro ? state.tintColor : .green
+        let hasAuthRequest = isPro ? state.hasAuthRequest : false
+        let hasPrivacyMode = isPro ? state.hasPrivacyMode : false
+        try? settingsRepository.addSettings(
+            theme: tintColor,
+            icon: state.icon,
+            appearence: Double(appearence),
+            hasAuthRequest: hasAuthRequest,
+            hasPrivacyMode: hasPrivacyMode,
+            notifications: nil,
+            reminderNotification: nil,
+            warningNotification: nil,
+            breakingNotification: nil,
+            currentWarningNotificationAppears: nil,
+            currentBreakingNotificationAppears: nil,
+            liveActivity: nil,
+            isPro: isPro
+        )
+        completion(.fetchData)
     }
     
     private func getFeatures() -> [PremiumFeatureViewDataProtocol] {

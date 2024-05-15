@@ -14,15 +14,19 @@ public final class SettingsReducer: RefdsReduxReducerProtocol {
             state.isLoading = true
         case let .receiveData(newState):
             state = newState
-        case let .receiveProducts(products, features):
+        case let .receiveProducts(
+            products,
+            features,
+            productsID,
+            transactions
+        ):
             state.products = products
             state.features = features
-        case let .insertPurchased(id):
-            state.purchasedProductsID.insert(id)
-            state.isPro = !state.purchasedProductsID.isEmpty
-        case let .removePurchased(id):
-            state.purchasedProductsID.remove(id)
-            state.isPro = !state.purchasedProductsID.isEmpty
+            state.transactions = transactions
+            state.purchasedProductsID = productsID
+            state.isPro = !productsID.isEmpty
+        case let .receivePurchaseStatus(productsID, transactions):
+            break
         case let .updateError(error):
             state.error = error
         default: break

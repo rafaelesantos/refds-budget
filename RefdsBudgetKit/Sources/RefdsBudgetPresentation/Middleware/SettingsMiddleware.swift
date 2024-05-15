@@ -47,13 +47,17 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) {
         do {
-            let appearence: Int = state.colorScheme == .none ? .zero : state.colorScheme == .light ? 1 : 2
+            let isPro = !state.purchasedProductsID.isEmpty
+            let appearence: Int = isPro ? (state.colorScheme == .none ? .zero : state.colorScheme == .light ? 1 : 2) : .zero
+            let tintColor = isPro ? state.tintColor : .green
+            let hasAuthRequest = isPro ? state.hasAuthRequest : false
+            let hasPrivacyMode = isPro ? state.hasPrivacyMode : false
             try settingsRepository.addSettings(
-                theme: state.tintColor,
+                theme: tintColor,
                 icon: state.icon,
                 appearence: Double(appearence),
-                hasAuthRequest: state.hasAuthRequest,
-                hasPrivacyMode: state.hasPrivacyMode,
+                hasAuthRequest: hasAuthRequest,
+                hasPrivacyMode: hasPrivacyMode,
                 notifications: nil,
                 reminderNotification: nil,
                 warningNotification: nil,
@@ -61,7 +65,7 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 currentWarningNotificationAppears: nil,
                 currentBreakingNotificationAppears: nil,
                 liveActivity: nil,
-                isPro: state.isPro
+                isPro: isPro
             )
             completion(.fetchData)
         } catch {

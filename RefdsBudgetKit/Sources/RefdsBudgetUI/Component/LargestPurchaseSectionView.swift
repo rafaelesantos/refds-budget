@@ -4,6 +4,7 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct LargestPurchaseSectionView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.privacyMode) private var privacyMode
     private let transactions: [TransactionRowViewDataProtocol]
     
@@ -27,7 +28,13 @@ public struct LargestPurchaseSectionView: View {
                         rowTransaction(for: index)
                             .frame(width: 170, height: 125)
                             .padding(.padding(.medium))
-                            .refdsBackground(with: .secondaryBackground)
+                            .if(colorScheme == .light) {
+                                $0.background()
+                            }
+                            .if(colorScheme == .dark) {
+                                $0.refdsBackground(with: .secondaryBackground)
+                            }
+                            .background(colorScheme == .light ? nil : Color.secondary.opacity(0.1))
                             .clipShape(.rect(cornerRadius: .cornerRadius))
                     }
                 }

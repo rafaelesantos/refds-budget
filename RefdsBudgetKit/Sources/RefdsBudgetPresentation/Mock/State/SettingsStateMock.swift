@@ -17,6 +17,7 @@ public struct SettingsStateMock: SettingsStateProtocol {
     public var products: [Product] = []
     public var purchasedProductsID: Set<String> = []
     public var features: [PremiumFeatureViewDataProtocol] = (1 ... 10).map { _ in PremiumFeatureViewDataMock() }
+    public var transactions: [StoreKit.Transaction] = []
     public var error: RefdsBudgetError? = nil
     
     public init() {}

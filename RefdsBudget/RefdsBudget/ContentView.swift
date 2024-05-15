@@ -46,6 +46,7 @@ struct ContentView: View {
                 .environment(\.isPro, store.state.settingsState.isPro)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
+                .onChange(of: store.state.settingsState.purchasedProductsID) { store.dispatch(action: SettingsAction.updatePro) }
                 .if(store.state.settingsState.hasAuthRequest) {
                     $0.refdsAuth(
                         isAuthenticated: $welcome.isAuthenticated,

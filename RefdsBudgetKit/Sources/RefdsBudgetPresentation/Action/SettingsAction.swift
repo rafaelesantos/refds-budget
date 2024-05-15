@@ -8,13 +8,17 @@ public enum SettingsAction: RefdsReduxAction {
     case restore
     case fetchData
     case updateData
-    case updatePro(Bool)
+    case updatePro
     case receiveData(state: SettingsStateProtocol)
+    case receivePurchaseStatus(
+        productsID: Set<String>,
+        transactions: [StoreKit.Transaction]
+    )
     case receiveProducts(
         products: [Product],
-        features: [PremiumFeatureViewDataProtocol]
+        features: [PremiumFeatureViewDataProtocol],
+        productsID: Set<String>,
+        transactions: [StoreKit.Transaction]
     )
     case updateError(error: RefdsBudgetError?)
-    case insertPurchased(id: String)
-    case removePurchased(id: String)
 }
