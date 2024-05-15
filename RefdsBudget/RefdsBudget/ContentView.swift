@@ -16,7 +16,6 @@ struct ContentView: View {
     @StateObject private var welcome = WelcomeViewData()
     
     @AppStorage("isWelcomePresented") private var isWelcomePresented = false
-    @AppStorage("isAuthRequested") private var isAuthRequested = false
     
     private var viewFactory = ViewFactory()
     
@@ -44,6 +43,7 @@ struct ContentView: View {
             contentView
                 .environmentObject(store)
                 .environment(\.privacyMode, store.state.settingsState.hasPrivacyMode)
+                .environment(\.isPro, store.state.settingsState.isPro)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
                 .if(store.state.settingsState.hasAuthRequest) {

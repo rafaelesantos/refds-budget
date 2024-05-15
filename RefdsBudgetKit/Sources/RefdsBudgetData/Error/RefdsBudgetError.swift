@@ -15,6 +15,9 @@ public enum RefdsBudgetError: Error, RefdsAlert, RefdsModel {
     case notFoundBudget
     case notFoundTag
     case notFoundTransaction
+    case acceptTerms
+    case notFoundProducts
+    case purchase
     
     public var title: String? {
         switch self {
@@ -30,6 +33,9 @@ public enum RefdsBudgetError: Error, RefdsAlert, RefdsModel {
         case .cantDeleteBudget: return .localizable(by: .errorCantDeleteBudgetTitle)
         case .cantDeleteTag: return .localizable(by: .errorCantDeleteTagTitle)
         case .cantSaveOnDatabase: return .localizable(by: .errorCantSaveOnDatabaseTitle)
+        case .acceptTerms: return .localizable(by: .errorAcceptTermsTitle)
+        case .notFoundProducts: return .localizable(by: .errorNotFoundProductsTitle)
+        case .purchase: return .localizable(by: .errorPurchaseTitle)
         }
     }
     
@@ -47,6 +53,9 @@ public enum RefdsBudgetError: Error, RefdsAlert, RefdsModel {
         case .cantDeleteBudget: return .localizable(by: .errorCantDeleteBudgetDescription)
         case .cantDeleteTag: return .localizable(by: .errorCantDeleteTagDescription)
         case .cantSaveOnDatabase: return .localizable(by: .errorCantSaveOnDatabaseDescription)
+        case .acceptTerms: return .localizable(by: .errorAcceptTermsDescription)
+        case .notFoundProducts: return .localizable(by: .errorNotFoundProductsDescription)
+        case .purchase: return .localizable(by: .errorPurchaseDescription)
         }
     }
 }

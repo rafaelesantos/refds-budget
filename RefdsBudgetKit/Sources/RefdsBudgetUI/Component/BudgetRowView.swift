@@ -40,7 +40,12 @@ public struct BudgetRowView: View {
                         .scaleEffect(x: 1, y: 1.5, anchor: .center)
                     #endif
                         .padding(.vertical, .padding(.extraSmall))
-                    RefdsText(percentage.percent(), style: .footnote, color: .secondary)
+                    RefdsText(
+                        percentage.percent(),
+                        style: .footnote,
+                        color: .secondary
+                    )
+                    .refdsRedacted(if: privacyMode)
                 }
             }
             

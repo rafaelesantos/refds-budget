@@ -82,8 +82,10 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         let budgets = budgetsEntity.map { budget in
             let transactionsAmount = transactionsEntity.filter {
-                $0.date.asString(withDateFormat: .monthYear) ==
-                budget.date.asString(withDateFormat: .monthYear)
+                let status = TransactionStatus(rawValue: $0.status)
+                return ($0.date.asString(withDateFormat: .monthYear) ==
+                budget.date.asString(withDateFormat: .monthYear)) &&
+                status != .pending && status != .cleared
             }.map { $0.amount }.reduce(.zero, +)
             let percentage = transactionsAmount / (budget.amount == .zero ? 1 : budget.amount)
             return budgetRowViewDataAdapter.adapt(budgetEntity: budget, percentage: percentage)

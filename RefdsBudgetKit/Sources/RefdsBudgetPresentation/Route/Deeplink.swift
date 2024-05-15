@@ -10,7 +10,7 @@ public final class Deeplink {
     
     public static func url(
         host: Deeplink.Host,
-        path: Deeplink.Path
+        path: Deeplink.Path = .none
     ) -> URL? {
         URL(string: "\(Deeplink.scheme)://\(host.rawValue)\(path.rawValue)")
     }
@@ -25,7 +25,9 @@ public final class Deeplink {
             itemNavigation.wrappedValue = item.rawValue
             guard let route = route else { return }
             switch item {
-            case .categories: 
+            case .premium:
+                state.wrappedValue.premiumRouter.route(to: route)
+            case .categories:
                 state.wrappedValue.categoriesRouter.route(to: route)
             case .home:
                 state.wrappedValue.homeRouter.route(to: route)
@@ -59,6 +61,7 @@ public final class Deeplink {
 
 public extension Deeplink {
     enum Host: String {
+        case openPremium = "open-premium"
         case openCategories = "open-categories"
         case openHome = "open-home"
         case openTransactions = "open-transactions"
@@ -66,6 +69,7 @@ public extension Deeplink {
         
         public var itemNavigation: ItemNavigation {
             switch self {
+            case .openPremium: return .premium
             case .openCategories: return .categories
             case .openHome: return .home
             case .openTransactions: return .transactions

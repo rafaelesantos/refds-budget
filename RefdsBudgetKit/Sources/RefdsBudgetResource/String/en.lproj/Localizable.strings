@@ -12,6 +12,9 @@
 "errorCantDeleteBudgetTitle" = "Cannot Delete Budget";
 "errorExistingBudgetTitle" = "Existing Budget";
 "errorCantSaveOnDatabaseTitle" = "Error Saving";
+"errorAcceptTermsTitle" = "Accept Terms";
+"errorNotFoundProductsTitle" = "Subscription Loading Error";
+"errorPurchaseTitle" = "Purchase Finalization Error";
 
 "errorExistingCategoryDescription" = "The informed category already exists in the system";
 "errorNotFoundCategoryDescription" = "The category could not be found";
@@ -25,6 +28,9 @@
 "errorExistingTagDescription" = "The specified tag already exists in the system";
 "errorNotFoundTagDescription" = "Could not find the tag";
 "errorCantDeleteTagDescription" = "The tag you want to remove was not found";
+"errorAcceptTermsDescription" = "Subscription can only be made after accepting the terms.";
+"errorNotFoundProductsDescription" = "Check your internet connection to proceed with the purchase.";
+"errorPurchaseDescription" = "There was an error finalizing your purchase.";
 
 // MARK: - Loading Row
 
@@ -105,6 +111,7 @@
 
 // MARK: - Item Navigation
 
+"itemNavigationPremium" = "Premium";
 "itemNavigationCategories" = "Categories";
 "itemNavigationHome" = "Home";
 "itemNavigationTransactions" = "Transactions";
@@ -232,3 +239,31 @@
 "welcomeTransactionDescription" = "Start your financial journey! Create and explore transactions, track expenses by category, and make confident, informed decisions.";
 "welcomeFooterDescription" = "Developed and designed to facilitate your financial organization.";
 "welcomeFooterButton" = "Continue";
+
+// MARK: - Subscription
+
+"subscriptionWelcomePremium" = "Welcome to";
+"subscriptionBecomePremium" = "Become";
+"subscriptionNavigationTitle" = "Budget Premium";
+"subscriptionSubtitle" = "and get access to all filtering, customization, and security features";
+"subscriptionFeaturesHeader" = "Features";
+"subscriptionFreeHeader" = "Free";
+"subscriptionPremiumHeader" = "Premium";
+"subscriptionRowSelectPlan" = "Select Plan";
+"subscriptionPlansHeader" = "Plans";
+"subscriptionPriceHeader" = "For only";
+"subscriptionPriceObsevations" = "This service includes the provision of %@ Budget Premium service with exclusive features. Payment of %@ will be charged to your iTunes account upon confirmation of purchase. The subscription automatically renews unless auto-renew is turned off at least 24 hours before the end of the current period. Subscriptions may be managed by you and auto-renewal may be turned off by going to your Account Settings after purchase.";
+"subscriptionTermsDescription" = "I have read and agree to the terms and conditions of the service.";
+"subscriptionButton" = "Subscribe Now for %@ / %@";
+"subscriptionFeatureTitle1" = "Unlimited Categories";
+"subscriptionFeatureTitle2" = "Unlimited Budgets";
+"subscriptionFeatureTitle3" = "Unlimited Transactions";
+"subscriptionFeatureTitle4" = "Filter by Date";
+"subscriptionFeatureTitle5" = "Unlimited Tags";
+"subscriptionFeatureTitle6" = "Budget Analysis";
+"subscriptionFeatureTitle7" = "Top Purchases";
+"subscriptionFeatureTitle8" = "Remaining Total";
+"subscriptionFeatureTitle9" = "Status Analysis";
+"subscriptionFeatureTitle10" = "Tag Comparison";
+"subscriptionFeatureTitle11" = "Custom Filters";
+"subscriptionFeatureTitle12" = "Graphical Analysis";

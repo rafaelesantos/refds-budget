@@ -60,7 +60,12 @@ public struct CategoryRowView: View {
                         #if os(iOS)
                             .scaleEffect(x: 1, y: 1.5, anchor: .center)
                         #endif
-                        RefdsText(viewData.percentage.percent(), style: .callout, color: .secondary)
+                        RefdsText(
+                            viewData.percentage.percent(),
+                            style: .callout,
+                            color: .secondary
+                        )
+                        .refdsRedacted(if: privacyMode)
                     }
                 }
                 
@@ -73,11 +78,17 @@ public struct CategoryRowView: View {
     
     private var rowTransactions: some View {
         HStack(spacing: .padding(.medium)) {
-            RefdsText(viewData.transactionsAmount.asString, style: .caption, color: .primary, weight: .bold)
-                .padding(.padding(.extraSmall))
-                .frame(width: 40)
-                .background(.secondary.opacity(0.05))
-                .clipShape(.rect(cornerRadius: 5))
+            RefdsText(
+                viewData.transactionsAmount.asString,
+                style: .caption,
+                color: .primary,
+                weight: .bold
+            )
+            .refdsRedacted(if: privacyMode)
+            .padding(.padding(.extraSmall))
+            .frame(width: 40)
+            .background(.secondary.opacity(0.05))
+            .clipShape(.rect(cornerRadius: 5))
             RefdsText(.localizable(by: .categoryRowTransactions), style: .callout)
         
             Spacer(minLength: .zero)

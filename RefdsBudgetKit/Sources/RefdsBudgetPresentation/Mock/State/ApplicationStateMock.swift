@@ -3,6 +3,7 @@ import RefdsRouter
 
 public struct ApplicationStateMock: ApplicationStateProtocol {
     public var itemNavigation: ItemNavigation? = .categories
+    public var premiumRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
     public var categoriesRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
     public var transactionsRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))
     public var homeRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none))

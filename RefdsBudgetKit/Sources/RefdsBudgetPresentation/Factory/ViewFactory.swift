@@ -45,4 +45,9 @@ public protocol ViewFactoryProtocol {
         state: Binding<SettingsStateProtocol>,
         action: @escaping (SettingsAction) -> Void
     ) -> any View
+    
+    func makeSubscriptionView(
+        state: Binding<SettingsStateProtocol>,
+        action: @escaping (SettingsAction) -> Void
+    ) -> any View
 }

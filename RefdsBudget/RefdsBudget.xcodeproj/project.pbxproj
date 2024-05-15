@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C257DDA2BF25DFC0018F556 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C257DD92BF25DFC0018F556 /* StoreKit.framework */; };
 		6C3523322BE9306C00077307 /* SystemMediumExpenseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3523312BE9306C00077307 /* SystemMediumExpenseTracker.swift */; };
 		6C3523342BE94EB400077307 /* SystemLargeExpenseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3523332BE94EB400077307 /* SystemLargeExpenseTracker.swift */; };
-		6C3523352BEDD40E00077307 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6C44A7142BC6075200C94C2C /* RefdsBudgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C44A7132BC6075200C94C2C /* RefdsBudgetApp.swift */; };
 		6C44A7162BC6075200C94C2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C44A7152BC6075200C94C2C /* ContentView.swift */; };
 		6C44A7182BC6075500C94C2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A7172BC6075500C94C2C /* Assets.xcassets */; };
 		6C44A71C2BC6075500C94C2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A71B2BC6075500C94C2C /* Preview Assets.xcassets */; };
 		6C44A7242BC607EA00C94C2C /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6C44A7232BC607EA00C94C2C /* RefdsBudgetKit */; };
+		6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6CE5131D2BE2F2A5005085CE /* SideNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */; };
 		6CE5131F2BE2F445005085CE /* TabNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131E2BE2F445005085CE /* TabNavigationView.swift */; };
 		6CE513272BE3F490005085CE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE513262BE3F490005085CE /* WidgetKit.framework */; };
@@ -26,6 +27,7 @@
 		6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */; };
 		6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */; };
 		6CE5135D2BE552B4005085CE /* SystemSmallTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */; };
+		6CFD9E242BF2A0C10028279F /* Subscription.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD9E232BF2A0BD0028279F /* Subscription.storekit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,11 +43,11 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		6CE513382BE3F491005085CE /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6C3523352BEDD40E00077307 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */,
+				6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,6 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6C257DD92BF25DFC0018F556 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6C3523312BE9306C00077307 /* SystemMediumExpenseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMediumExpenseTracker.swift; sourceTree = "<group>"; };
 		6C3523332BE94EB400077307 /* SystemLargeExpenseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLargeExpenseTracker.swift; sourceTree = "<group>"; };
 		6C44A7102BC6075100C94C2C /* RefdsBudget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefdsBudget.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +78,7 @@
 		6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefdsBudgetWidgetPresenter.swift; sourceTree = "<group>"; };
 		6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallExpenseProgress.swift; sourceTree = "<group>"; };
 		6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallTransactions.swift; sourceTree = "<group>"; };
+		6CFD9E232BF2A0BD0028279F /* Subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Subscription.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +87,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C44A7242BC607EA00C94C2C /* RefdsBudgetKit in Frameworks */,
+				6C257DDA2BF25DFC0018F556 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +131,7 @@
 				6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */,
 				6CE5131E2BE2F445005085CE /* TabNavigationView.swift */,
 				6C44A7152BC6075200C94C2C /* ContentView.swift */,
+				6CFD9E232BF2A0BD0028279F /* Subscription.storekit */,
 				6C44A7172BC6075500C94C2C /* Assets.xcassets */,
 				6C44A7192BC6075500C94C2C /* RefdsBudget.entitlements */,
 				6C44A71A2BC6075500C94C2C /* Preview Content */,
@@ -144,6 +150,7 @@
 		6CE513252BE3F490005085CE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6C257DD92BF25DFC0018F556 /* StoreKit.framework */,
 				6CE513262BE3F490005085CE /* WidgetKit.framework */,
 				6CE513282BE3F490005085CE /* SwiftUI.framework */,
 			);
@@ -220,7 +227,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					6C44A70F2BC6075100C94C2C = {
 						CreatedOnToolsVersion = 15.3;
@@ -232,11 +239,12 @@
 			};
 			buildConfigurationList = 6C44A70B2BC6075100C94C2C /* Build configuration list for PBXProject "RefdsBudget" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = "pt-BR";
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				"pt-BR",
 				Base,
+				en,
 			);
 			mainGroup = 6C44A7072BC6075100C94C2C;
 			packageReferences = (
@@ -257,6 +265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CFD9E242BF2A0C10028279F /* Subscription.storekit in Resources */,
 				6C44A71C2BC6075500C94C2C /* Preview Assets.xcassets in Resources */,
 				6C44A7182BC6075500C94C2C /* Assets.xcassets in Resources */,
 			);
@@ -313,7 +322,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD = 50;
+				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -343,6 +355,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -361,7 +375,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -374,7 +390,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD = 50;
+				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -404,6 +423,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -416,7 +437,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -433,6 +456,7 @@
 				CODE_SIGN_ENTITLEMENTS = RefdsBudget/RefdsBudget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"RefdsBudget/Preview Content\"";
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -458,7 +482,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -480,6 +504,7 @@
 				CODE_SIGN_ENTITLEMENTS = RefdsBudget/RefdsBudget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"RefdsBudget/Preview Content\"";
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -505,7 +530,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -524,7 +549,8 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -543,7 +569,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -552,6 +578,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Debug;
 		};
@@ -562,7 +589,8 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -581,7 +609,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -590,6 +618,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Release;
 		};

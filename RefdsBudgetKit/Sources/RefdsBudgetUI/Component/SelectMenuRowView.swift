@@ -5,6 +5,9 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct SelectMenuRowView: View {
+    @Environment(\.openURL) private var openURL
+    @Environment(\.isPro) private var isPro
+    
     private let header: LocalizableKey
     private let icon: RefdsIconSymbol
     private let title: LocalizableKey
@@ -27,14 +30,18 @@ public struct SelectMenuRowView: View {
     }
     
     public var body: some View {
-        Menu {
-            menuHeader
-            Divider()
-            menuOptions
-            Divider()
-            menuFooter
-        } label: {
-            menuLabel
+        if isPro {
+            Menu {
+                menuHeader
+                Divider()
+                menuOptions
+                Divider()
+                menuFooter
+            } label: {
+                menuLabel
+            }
+        } else {
+            menuLabelPremium
         }
     }
     
@@ -84,6 +91,14 @@ public struct SelectMenuRowView: View {
         }
     }
     
+    private var menuLabelPremium: some View {
+        BudgetLabel(
+            title: title,
+            icon: icon,
+            isProFeature: true
+        )
+    }
+    
     private var menuLabelDetail: some View {
         HStack {
             if selectedData.count == 1 {
@@ -108,5 +123,6 @@ public struct SelectMenuRowView: View {
             data: (1 ... 5).map { _ in CategoryRowViewDataMock().name },
             selectedData: .constant([])
         )
+        .environment(\.isPro, false)
     }
 }

@@ -48,6 +48,9 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             switch horizontalSizeClass {
             case .regular:
                 switch state.itemNavigation {
+                case .premium:
+                    state.premiumRouter.popToRoot()
+                    state.premiumRouter.route(to: route)
                 case .categories:
                     state.categoriesRouter.popToRoot()
                     state.categoriesRouter.route(to: route)
@@ -65,6 +68,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 
             default:
                 switch state.itemNavigation {
+                case .premium:
+                    state.premiumRouter.route(to: route)
                 case .categories:
                     state.categoriesRouter.route(to: route)
                 case .home:
@@ -78,6 +83,9 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             }
             #else
             switch state.itemNavigation {
+            case .premium:
+                state.premiumRouter.popToRoot()
+                state.premiumRouter.route(to: route)
             case .categories:
                 state.categoriesRouter.popToRoot()
                 state.categoriesRouter.route(to: route)
@@ -95,6 +103,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             #endif
         case .dismiss:
             switch state.itemNavigation {
+            case .premium:
+                state.premiumRouter.dismiss()
             case .categories:
                 state.categoriesRouter.dismiss()
             case .home:

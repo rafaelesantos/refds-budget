@@ -23,8 +23,11 @@ public struct PendingClearedSectionView: View {
     
     public var body: some View {
         RefdsSection {
-            rowProgressChartView
-            rowInfoView
+            Group {
+                rowProgressChartView
+                rowInfoView
+            }
+            .budgetSubscription()
         } header: {
             RefdsText(
                 headerTitle,
@@ -82,6 +85,7 @@ public struct PendingClearedSectionView: View {
                     weight: .bold
                 )
                 .contentTransition(.numericText())
+                .refdsRedacted(if: privacyMode)
                 
                 RefdsText(
                     (style == .localizable(by: .addTransactionStatusPending) ? viewData.pendingCount : viewData.clearedCount).asString,
@@ -89,6 +93,7 @@ public struct PendingClearedSectionView: View {
                     color: .white,
                     weight: .bold
                 )
+                .refdsRedacted(if: privacyMode)
                 .refdsTag(color: .white)
             }
         }

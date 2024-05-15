@@ -31,7 +31,7 @@ public struct SystemSmallExpenseProgress: View {
             
             if viewData.isFilterByDate {
                 RefdsText(
-                    viewData.date.asString(withDateFormat: .custom("MMM")).uppercased() + ".",
+                    viewData.date.asString(withDateFormat: .custom("MMM")).uppercased(),
                     style: .footnote,
                     color: viewData.percent.riskColor,
                     weight: .heavy,

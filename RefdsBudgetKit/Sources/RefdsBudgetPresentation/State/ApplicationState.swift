@@ -6,6 +6,7 @@ import RefdsBudgetData
 
 public protocol ApplicationStateProtocol: RefdsReduxState {
     var itemNavigation: ItemNavigation? { get set }
+    var premiumRouter: RefdsRouterRedux<ApplicationRoute> { get set }
     var categoriesRouter: RefdsRouterRedux<ApplicationRoute> { get set }
     var transactionsRouter: RefdsRouterRedux<ApplicationRoute> { get set }
     var homeRouter: RefdsRouterRedux<ApplicationRoute> { get set }
@@ -23,6 +24,7 @@ public protocol ApplicationStateProtocol: RefdsReduxState {
 
 public struct ApplicationState: ApplicationStateProtocol {
     public var itemNavigation: ItemNavigation?
+    public var premiumRouter: RefdsRouterRedux<ApplicationRoute>
     public var categoriesRouter: RefdsRouterRedux<ApplicationRoute>
     public var transactionsRouter: RefdsRouterRedux<ApplicationRoute>
     public var homeRouter: RefdsRouterRedux<ApplicationRoute>
@@ -39,6 +41,7 @@ public struct ApplicationState: ApplicationStateProtocol {
     
     public init(
         itemNavigation: ItemNavigation? = .home,
+        premiumRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
         categoriesRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
         transactionsRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
         homeRouter: RefdsRouterRedux<ApplicationRoute> = .init(isPresented: .constant(.none)),
@@ -54,6 +57,7 @@ public struct ApplicationState: ApplicationStateProtocol {
         settingsState: SettingsStateProtocol = SettingsState()
     ) {
         self.itemNavigation = itemNavigation
+        self.premiumRouter = premiumRouter
         self.categoriesRouter = categoriesRouter
         self.transactionsRouter = transactionsRouter
         self.homeRouter = homeRouter

@@ -15,9 +15,12 @@ public struct DateChartView: View {
     
     public var body: some View {
         RefdsSection {
-            seletedBarView
-            chartView
-                .padding(.top, -15)
+            Group {
+                seletedBarView
+                chartView
+                    .padding(.top, -15)
+            }
+            .budgetSubscription()
         } header: {
             RefdsText(
                 .localizable(by: .categoriesChartHeader),

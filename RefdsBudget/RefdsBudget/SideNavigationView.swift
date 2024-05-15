@@ -8,8 +8,9 @@ import RefdsBudgetPresentation
 import RefdsBudgetUI
 
 struct SideNavigationView: View {
-    @State private var splitVisibility: NavigationSplitViewVisibility = .all
+    @Environment(\.isPro) private var isPro
     @EnvironmentObject private var store: RefdsReduxStore<ApplicationStateProtocol>
+    @State private var splitVisibility: NavigationSplitViewVisibility = .all
     @RefdsInjection private var viewFactory: ViewFactoryProtocol
     
     private var bindingState: Binding<RefdsReduxState> {
@@ -23,7 +24,7 @@ struct SideNavigationView: View {
         NavigationSplitView(columnVisibility: bindingSplitVisibility) {
             List(ItemNavigation.allCases, selection: $store.state.itemNavigation) { item in
                 NavigationLink(value: item) {
-                    Label(item.title, systemImage: item.icon.rawValue)
+                    Label(item.title, systemImage: item.icon(isPro: isPro).rawValue)
                 }
             }
             .listStyle(.sidebar)

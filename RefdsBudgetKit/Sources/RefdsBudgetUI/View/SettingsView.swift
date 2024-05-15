@@ -1,6 +1,5 @@
 import SwiftUI
 import RefdsUI
-import StoreKit
 import RefdsRedux
 import RefdsBudgetResource
 import RefdsBudgetPresentation
@@ -8,7 +7,9 @@ import RefdsBudgetPresentation
 public struct SettingsView: View {
     @Environment(\.requestReview) private var requestReview
     @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.openURL) var openURL
+    @Environment(\.openURL) private var openURL
+    @Environment(\.isPro) private var isPro
+    
     @Binding private var state: SettingsStateProtocol
     private let action: (SettingsAction) -> Void
     
@@ -22,7 +23,8 @@ public struct SettingsView: View {
     
     public var body: some View {
         List {
-            sectionCustomization
+            SubscriptionRowView()
+            if isPro { sectionCustomization }
             sectionIcons
             sectionSecurity
             sectionMoreOptions
@@ -138,6 +140,7 @@ public struct SettingsView: View {
             }
             .scrollIndicators(.never)
             .padding(.horizontal, -20)
+            .budgetSubscription()
         } header: {
             HStack {
                 RefdsText(
@@ -158,9 +161,12 @@ public struct SettingsView: View {
     
     private var sectionSecurity: some View {
         RefdsSection {
-            rowBiometry
-            rowPrivacyMode
-            rowPrivacyPolicy
+            Group {
+                rowBiometry
+                rowPrivacyMode
+                rowPrivacyPolicy
+            }
+            .budgetSubscription()
         } header: {
             RefdsText(
                 .localizable(by: .settingsSectionSecurity),
@@ -200,7 +206,7 @@ public struct SettingsView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(
                 .eyeSlashFill,
-                color: .pink
+                color: .teal
             )
             RefdsToggle(isOn: $state.hasPrivacyMode) {
                 RefdsText(.localizable(by: .settingsRowPrivacyMode))

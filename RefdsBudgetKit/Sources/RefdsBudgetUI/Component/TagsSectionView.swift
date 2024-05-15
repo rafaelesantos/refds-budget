@@ -49,13 +49,16 @@ public struct TagsSectionView: View {
     public var body: some View {
         if tags.allSatisfy({ $0.value != nil && ($0.value ?? .zero) > .zero }), !tags.isEmpty {
             RefdsSection {
-                rowManageTagsView
-                VStack {
-                    headerView
-                    chartView
+                Group {
+                    rowManageTagsView
+                    VStack {
+                        headerView
+                        chartView
+                    }
+                    .padding(.padding(.extraLarge))
+                    rowCollapsedView
                 }
-                .padding(.padding(.extraLarge))
-                rowCollapsedView
+                .budgetSubscription()
             } header: {
                 RefdsText(
                     .localizable(by: .tagsChartSectionHeader),

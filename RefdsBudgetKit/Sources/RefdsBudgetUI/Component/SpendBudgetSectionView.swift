@@ -15,14 +15,17 @@ public struct SpendBudgetSectionView: View {
     
     public var body: some View {
         RefdsSection {
-            if let category = viewData.first(where: { $0.name == chartSelection }) {
-                compareCategorySelected(category)
-                comparePercentView(category)
-                compareView(category)
-                    .listRowSeparator(.hidden, edges: .bottom)
+            Group {
+                if let category = viewData.first(where: { $0.name == chartSelection }) {
+                    compareCategorySelected(category)
+                    comparePercentView(category)
+                    compareView(category)
+                        .listRowSeparator(.hidden, edges: .bottom)
+                }
+                chartView
+                    .padding(.top, -40)
             }
-            chartView
-                .padding(.top, -40)
+            .budgetSubscription()
         } header: {
             RefdsText(
                 .localizable(by: .homeSpendBudgetHeader),
@@ -92,6 +95,7 @@ public struct SpendBudgetSectionView: View {
                 renderingMode: .hierarchical
             )
             RefdsText(category.percentage.percent())
+                .refdsRedacted(if: privacyMode)
                 .contentTransition(.numericText())
         }
     }

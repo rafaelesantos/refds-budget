@@ -27,7 +27,7 @@ public struct SystemSmallTransactions: View {
     }
     
     private var header: String {
-        viewData.isFilterByDate ? viewData.date.asString(withDateFormat: .custom("MMMM")) :
+        viewData.isFilterByDate ? viewData.date.asString(withDateFormat: .custom("MMM")).capitalized :
             .localizable(by: .homeSpendBudgetSpendTitle)
     }
     

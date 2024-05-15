@@ -42,7 +42,7 @@ public struct SystemMediumExpenseTracker: View {
                 
                 if viewData.isFilterByDate {
                     RefdsText(
-                        viewData.date.asString(withDateFormat: .custom("MMM")).uppercased() + ".",
+                        viewData.date.asString(withDateFormat: .custom("MMM")).uppercased(),
                         style: .caption2,
                         color: viewData.percent.riskColor,
                         weight: .heavy,

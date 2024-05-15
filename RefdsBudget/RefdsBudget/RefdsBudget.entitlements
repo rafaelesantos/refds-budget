@@ -8,7 +8,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:budget.rafaelescaleira.com.br</string>
+		<string>applinks:budget.refds.com.br</string>
 	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>

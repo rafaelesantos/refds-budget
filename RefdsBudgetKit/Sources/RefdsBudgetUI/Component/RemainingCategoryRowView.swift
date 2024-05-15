@@ -53,9 +53,20 @@ public struct RemainingCategoryRowView: View {
                 }
                 
                 HStack {
-                    RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: viewData.transactionsAmount), style: .callout, color: .secondary)
+                    RefdsText(
+                        .localizable(by: .homeRemainingCategoryTransactions, with: viewData.transactionsAmount),
+                        style: .callout,
+                        color: .secondary
+                    )
+                    .refdsRedacted(if: privacyMode)
+                    
                     Spacer(minLength: .zero)
-                    RefdsText((1 - viewData.percentage).percent(), style: .callout, color: .secondary)
+                    RefdsText(
+                        (1 - viewData.percentage).percent(),
+                        style: .callout,
+                        color: .secondary
+                    )
+                    .refdsRedacted(if: privacyMode)
                 }
                 
                 ProgressView(

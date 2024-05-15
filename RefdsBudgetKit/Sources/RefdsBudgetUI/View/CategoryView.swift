@@ -5,9 +5,11 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct CategoryView: View {
+    @Environment(\.privacyMode) private var privacyMode
     @Environment(\.editMode) private var editMode
     @Binding private var state: CategoryStateProtocol
     @State private var multiSelection = Set<UUID>()
+    @State private var privacyModeEditable = false
     private let action: (CategoryAction) -> Void
     
     public init(
@@ -20,6 +22,7 @@ public struct CategoryView: View {
     
     public var body: some View {
         List(selection: $multiSelection) {
+            SubscriptionRowView()
             sectionBalance
             LoadingRowView(isLoading: state.isLoading)
             sectionFilters
@@ -35,19 +38,17 @@ public struct CategoryView: View {
         .searchable(text: $state.searchText)
         .navigationTitle(state.name.capitalized)
         .onAppear { reloadData() }
+        .environment(\.privacyMode, privacyModeEditable)
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
-        .toolbar {
-            ToolbarItemGroup {
-                moreButton
-            }
-        }
+        .toolbar { ToolbarItemGroup { moreButton } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
     
     private func reloadData() {
+        privacyModeEditable = privacyMode
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             action(.fetchData)
         }
@@ -85,7 +86,11 @@ public struct CategoryView: View {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
                 Spacer()
                 if state.isFilterEnable {
-                    RefdsText(state.date.asString(withDateFormat: .custom("MMMM, yyyy")), style: .callout, color: .secondary)
+                    RefdsText(
+                        state.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
+                        style: .callout,
+                        color: .secondary
+                    )
                 }
                 RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
             }
@@ -184,53 +189,60 @@ public struct CategoryView: View {
     private var moreButton: some View {
         Menu {
             RefdsText(.localizable(by: .transactionsMoreMenuHeader, with: multiSelection.count))
+            
             Divider()
             
-            RefdsButton {
-                withAnimation { editMode?.wrappedValue.toggle() }
-            } label: {
-                Label(
-                    editMode.isEditing ? String.localizable(by: .transactionsOptionsSelectDone) : String.localizable(by: .transactionsOptionsSelect),
-                    systemImage: RefdsIconSymbol.checkmarkCircle.rawValue
-                )
+            BudgetLabel(
+                title: .transactionsNewTransactions,
+                icon: .plus,
+                isProFeature: false
+            ) {
+                action(.addTransaction(nil))
+            }
+            
+            BudgetLabel(
+                title: editMode.isEditing ? .transactionsOptionsSelectDone : .transactionsOptionsSelect,
+                icon: editMode.isEditing ? .circle : .checkmarkCircle,
+                isProFeature: false
+            ) {
+                editMode?.wrappedValue.toggle()
             }
             
             if !multiSelection.isEmpty {
-                Button(role: .destructive) {
+                BudgetLabel(
+                    title: .transactionsRemoveTransactions,
+                    icon: .trashFill,
+                    isProFeature: false
+                ) {
                     action(.removeTransactions(multiSelection))
                     if editMode.isEditing {
-                        withAnimation { editMode?.wrappedValue.toggle() }
+                        editMode?.wrappedValue.toggle()
                     }
-                } label: {
-                    Label(
-                        String.localizable(by: .transactionsRemoveTransactions),
-                        systemImage: RefdsIconSymbol.trashFill.rawValue
-                    )
                 }
             }
+            
+            Divider()
             
             if !state.transactions.isEmpty {
                 let ids = multiSelection.isEmpty ? Set(state.transactions.flatMap { $0 }.map { $0.id }) : multiSelection
-                RefdsButton {
+                BudgetLabel(
+                    title: .transactionsCopyTransactions,
+                    icon: .docOnClipboard,
+                    isProFeature: true
+                ) {
                     action(.copyTransactions(ids))
                     if editMode.isEditing {
-                        withAnimation { editMode?.wrappedValue.toggle() }
+                        editMode?.wrappedValue.toggle()
                     }
-                } label: {
-                    Label(
-                        String.localizable(by: .transactionsCopyTransactions),
-                        systemImage: RefdsIconSymbol.docOnClipboard.rawValue
-                    )
                 }
             }
             
-            RefdsButton {
-                action(.addTransaction(nil))
-            } label: {
-                Label(
-                    String.localizable(by: .transactionsNewTransactions),
-                    systemImage: RefdsIconSymbol.plus.rawValue
-                )
+            BudgetLabel(
+                title: .settingsRowPrivacyMode,
+                icon: privacyModeEditable ? .eyeSlashFill : .eyeFill,
+                isProFeature: true
+            ) {
+                privacyModeEditable.toggle()
             }
         } label: {
             RefdsIcon(

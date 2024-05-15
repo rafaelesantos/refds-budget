@@ -11,6 +11,9 @@ public enum LocalizableKey: String {
     case errorCantDeleteBudgetTitle
     case errorExistingBudgetTitle
     case errorCantSaveOnDatabaseTitle
+    case errorAcceptTermsTitle
+    case errorNotFoundProductsTitle
+    case errorPurchaseTitle
     case errorExistingCategoryDescription
     case errorNotFoundCategoryDescription
     case errorNotFoundBudgetDescription
@@ -26,6 +29,9 @@ public enum LocalizableKey: String {
     case errorExistingTagDescription
     case errorNotFoundTagDescription
     case errorCantDeleteTagDescription
+    case errorAcceptTermsDescription
+    case errorNotFoundProductsDescription
+    case errorPurchaseDescription
     // MARK: - Loading Row
     case loadinginRowTitle
     case loadinginRowDescription
@@ -90,6 +96,7 @@ public enum LocalizableKey: String {
     case emptyBudgetsTitle
     case emptyTransactionsTitle
     // MARK: - Item Navigation
+    case itemNavigationPremium
     case itemNavigationCategories
     case itemNavigationHome
     case itemNavigationTransactions
@@ -200,4 +207,30 @@ public enum LocalizableKey: String {
     case welcomeTransactionDescription
     case welcomeFooterDescription
     case welcomeFooterButton
+    // MARK: - Subscription
+    case subscriptionWelcomePremium
+    case subscriptionBecomePremium
+    case subscriptionNavigationTitle
+    case subscriptionSubtitle
+    case subscriptionFeaturesHeader
+    case subscriptionFreeHeader
+    case subscriptionPremiumHeader
+    case subscriptionRowSelectPlan
+    case subscriptionPlansHeader
+    case subscriptionPriceHeader
+    case subscriptionPriceObsevations
+    case subscriptionTermsDescription
+    case subscriptionButton
+    case subscriptionFeatureTitle1
+    case subscriptionFeatureTitle2
+    case subscriptionFeatureTitle3
+    case subscriptionFeatureTitle4
+    case subscriptionFeatureTitle5
+    case subscriptionFeatureTitle6
+    case subscriptionFeatureTitle7
+    case subscriptionFeatureTitle8
+    case subscriptionFeatureTitle9
+    case subscriptionFeatureTitle10
+    case subscriptionFeatureTitle11
+    case subscriptionFeatureTitle12
 }

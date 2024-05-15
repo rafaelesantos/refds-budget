@@ -28,6 +28,7 @@ public struct BalanceRowView: View {
                                 color: .accentColor,
                                 weight: .bold
                             )
+                            .refdsRedacted(if: privacyMode)
                             .padding(3)
                             .padding(.horizontal, 3)
                             .background(Color.accentColor.opacity(0.1))
@@ -87,6 +88,21 @@ public struct BalanceRowView: View {
                     size: 90,
                     color: percentage.riskColor,
                     scale: 0.08
+                )
+                .refdsRedacted(if: privacyMode)
+            } else {
+                RefdsText(
+                    (1 - percentage).percent(),
+                    style: .title2,
+                    color: percentage.riskColor,
+                    weight: .heavy
+                )
+                .refdsRedacted(if: privacyMode)
+                .contentTransition(.numericText())
+                .padding(5)
+                .refdsTag(
+                    color: percentage.riskColor,
+                    cornerRadius: .cornerRadius
                 )
             }
         }

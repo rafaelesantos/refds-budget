@@ -1,0 +1,172 @@
+{
+  "identifier" : "09E0E9AB",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6448043784",
+    "_developerTeamID" : "Q7QLR2PH2X",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 737319889.227687,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : {
+          "index" : 2,
+          "type" : "generic"
+        },
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21486699",
+      "localizations" : [
+
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6502605705",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Get yearly access to all Premium features",
+              "displayName" : "Yearly",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Obtenha acesso anual aos recursos Premium",
+              "displayName" : "Anual",
+              "locale" : "pt_BR"
+            }
+          ],
+          "productID" : "br.com.refds.budget.pro.1year",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Anual",
+          "subscriptionGroupID" : "21486699",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6502604073",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Obtenha acesso mensal aos recursos Premium",
+              "displayName" : "Mensal",
+              "locale" : "pt_BR"
+            },
+            {
+              "description" : "Get monthly access to all Premium features",
+              "displayName" : "Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "br.com.refds.budget.pro.1month",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21486699",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6502605594",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Obtenha acesso semestral aos recursos Premium",
+              "displayName" : "Semestral",
+              "locale" : "pt_BR"
+            },
+            {
+              "description" : "Get semiannual access to all Premium features",
+              "displayName" : "Semiannual",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "br.com.refds.budget.pro.6months",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "Semiannual",
+          "subscriptionGroupID" : "21486699",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

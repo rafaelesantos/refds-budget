@@ -27,7 +27,7 @@ public struct LargestPurchaseSectionView: View {
                         rowTransaction(for: index)
                             .frame(width: 170, height: 125)
                             .padding(.padding(.medium))
-                            .background()
+                            .refdsBackground(with: .secondaryBackground)
                             .clipShape(.rect(cornerRadius: .cornerRadius))
                     }
                 }
@@ -36,6 +36,7 @@ public struct LargestPurchaseSectionView: View {
             .scrollIndicators(.never)
             .padding(.horizontal, -40)
         }
+        .budgetSubscription()
     }
     
     @ViewBuilder

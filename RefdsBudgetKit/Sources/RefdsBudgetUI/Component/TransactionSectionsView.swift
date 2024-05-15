@@ -6,7 +6,9 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct TransactionSectionsView: View {
+    @Environment(\.isPro) private var isPro
     @Environment(\.privacyMode) private var privacyMode
+    
     private let viewData: [[TransactionRowViewDataProtocol]]
     private let action: ((TransactionRowViewDataProtocol) -> Void)?
     private let remove: ((UUID) -> Void)?
@@ -40,6 +42,7 @@ public struct TransactionSectionsView: View {
                 let transactions = viewData[index]
                 if index == 1 {
                     sectionChart
+                        .budgetSubscription()
                 }
                 RefdsSection {
                     ForEach(transactions.indices, id: \.self) { index in

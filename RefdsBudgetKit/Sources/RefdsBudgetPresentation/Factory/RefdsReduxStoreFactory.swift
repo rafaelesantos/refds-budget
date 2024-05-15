@@ -69,7 +69,8 @@ public class RefdsReduxStoreFactory {
             TagMiddleware<ApplicationStateProtocol>().middleware,
             HomeMiddleware<ApplicationStateProtocol>().middleware,
             RouteMiddleware<ApplicationStateProtocol>().middleware,
-            SettingsMiddleware<ApplicationStateProtocol>().middleware
+            SettingsMiddleware<ApplicationStateProtocol>().middleware,
+            StoreMiddleware<ApplicationStateProtocol>().middleware
         ]
     }
 }

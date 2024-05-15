@@ -24,15 +24,21 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) {
         switch action {
-        case .fetchData: fetchData(on: completion)
+        case .fetchData: fetchData(with: state, on: completion)
         case .updateData: updateData(with: state, on: completion)
         default: break
         }
     }
     
-    private func fetchData(on completion: @escaping (SettingsAction) -> Void) {
+    private func fetchData(
+        with state: SettingsStateProtocol,
+        on completion: @escaping (SettingsAction) -> Void
+    ) {
         let settingsEntity = settingsRepository.getSettings()
-        let settingsAdapted = settingsAdapter.adapt(entity: settingsEntity)
+        let settingsAdapted = settingsAdapter.adapt(
+            entity: settingsEntity,
+            currentState: state
+        )
         completion(.receiveData(state: settingsAdapted))
     }
     
@@ -55,11 +61,11 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 currentWarningNotificationAppears: nil,
                 currentBreakingNotificationAppears: nil,
                 liveActivity: nil,
-                isPro: nil
+                isPro: state.isPro
             )
             completion(.fetchData)
         } catch {
-            
+            completion(.updateError(error: .cantSaveOnDatabase))
         }
     }
 }

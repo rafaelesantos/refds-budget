@@ -94,4 +94,14 @@ public class ViewFactory: ViewFactoryProtocol {
             action: action
         )
     }
+    
+    public func makeSubscriptionView(
+        state: Binding<SettingsStateProtocol>,
+        action: @escaping (SettingsAction) -> Void
+    ) -> any View {
+        SubscriptionView(
+            state: state,
+            action: action
+        )
+    }
 }

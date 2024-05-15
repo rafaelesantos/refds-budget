@@ -22,7 +22,12 @@ public struct TagRowView: View {
                 RefdsText(viewData.name, style: .callout)
                 
                 if let amount = viewData.amount {
-                    RefdsText(.localizable(by: .homeRemainingCategoryTransactions, with: amount), style: .callout, color: .secondary)
+                    RefdsText(
+                        .localizable(by: .homeRemainingCategoryTransactions, with: amount),
+                        style: .callout,
+                        color: .secondary
+                    )
+                    .refdsRedacted(if: privacyMode)
                 }
             }
             

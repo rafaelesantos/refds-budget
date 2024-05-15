@@ -24,6 +24,7 @@ public struct CategoriesView: View {
     
     public var body: some View {
         List {
+            SubscriptionRowView()
             sectionBalance
             LoadingRowView(isLoading: state.isLoading)
             sectionFilters
@@ -211,7 +212,11 @@ public struct CategoriesView: View {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
                 Spacer()
                 if state.isFilterEnable {
-                    RefdsText(state.date.asString(withDateFormat: .custom("MMMM, yyyy")), style: .callout, color: .secondary)
+                    RefdsText(
+                        state.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
+                        style: .callout,
+                        color: .secondary
+                    )
                 }
                 RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
             }
@@ -270,26 +275,25 @@ public struct CategoriesView: View {
     private var moreButton: some View {
         Menu {
             RefdsText(.localizable(by: .transactionsMoreMenuHeader))
+            
             Divider()
             
-            RefdsButton {
-                withAnimation {
-                    privacyModeEditable.toggle()
-                }
-            } label: {
-                Label(
-                    String.localizable(by: .settingsRowPrivacyMode),
-                    systemImage: privacyModeEditable ? RefdsIconSymbol.eyeSlashFill.rawValue : RefdsIconSymbol.eyeFill.rawValue
-                )
+            BudgetLabel(
+                title: .categoriesEmptyCategoriesButton,
+                icon: .plus,
+                isProFeature: false
+            ) {
+                action(.addCategory(nil))
             }
             
-            RefdsButton {
-                action(.addCategory(nil))
-            } label: {
-                Label(
-                    String.localizable(by: .categoriesEmptyCategoriesButton).capitalized,
-                    systemImage: RefdsIconSymbol.plus.rawValue
-                )
+            Divider()
+            
+            BudgetLabel(
+                title: .settingsRowPrivacyMode,
+                icon: privacyModeEditable ? .eyeSlashFill : .eyeFill,
+                isProFeature: true
+            ) {
+                privacyModeEditable.toggle()
             }
         } label: {
             RefdsIcon(

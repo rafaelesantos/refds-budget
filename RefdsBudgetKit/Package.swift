@@ -40,6 +40,7 @@ let package = Package(
     targets: [
         .target(name: "RefdsBudgetResource"),
         .target(name: "RefdsBudgetDomain", dependencies: [
+            "RefdsBudgetResource",
             .product(name: "RefdsShared", package: "refds-shared")
         ]),
         .target(name: "RefdsBudgetData", dependencies: [

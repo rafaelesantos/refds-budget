@@ -12,6 +12,9 @@
 "errorCantDeleteBudgetTitle" = "Budget não pode ser removido";
 "errorExistingBudgetTitle" = "Budget existente";
 "errorCantSaveOnDatabaseTitle" = "Erro ao salvar";
+"errorAcceptTermsTitle" = "Aceite os termos";
+"errorNotFoundProductsTitle" = "Erro ao carregar assinaturas";
+"errorPurchaseTitle" = "Erro ao finalizar compra";
 
 "errorExistingCategoryDescription" = "A categoria informada já existe no sistema";
 "errorNotFoundCategoryDescription" = "Não foi possível encontrar a categoria";
@@ -25,6 +28,9 @@
 "errorExistingTagDescription" = "A tag informada já existe no sistema";
 "errorNotFoundTagDescription" = "Não foi possível encontrar a tag";
 "errorCantDeleteTagDescription" = "A tag que deseja remover não foi encontrada";
+"errorAcceptTermsDescription" = "Só é possível realizar a assinatura após o aceite dos termos.";
+"errorNotFoundProductsDescription" = "Verifique sua conexão com a internet para prosseguir com a compra.";
+"errorPurchaseDescription" = "Houve um erro ao finalizar sua compra";
 
 // MARK: - Loading Row
 
@@ -105,6 +111,7 @@
 
 // MARK: - Item Navigation
 
+"itemNavigationPremium" = "Premium";
 "itemNavigationCategories" = "Categorias";
 "itemNavigationHome" = "Início";
 "itemNavigationTransactions" = "Transações";
@@ -203,7 +210,7 @@
 "settingsRowAppearence" = "Aparência";
 "settingsRowAppearenceDark" = "Escuro";
 "settingsRowAppearenceLight" = "Claro";
-"settingsRowAppearenceSystem" = "System";
+"settingsRowAppearenceSystem" = "Sistema";
 "settingsRowTheme" = "Tema";
 "settingsSectionIcons" = "Ícones";
 "settingsSectionMoreOptions" = "Mais Opções";
@@ -232,3 +239,31 @@
 "welcomeTransactionDescription" = "Inicie sua jornada financeira! Crie e explore transações, acompanhe gastos por categoria e tome decisões inteligentes com confiança.";
 "welcomeFooterDescription" = "Desenvolvido e projetado para facilitar a sua organização financeira.";
 "welcomeFooterButton" = "Continuar";
+
+// MARK: - Subscription
+
+"subscriptionWelcomePremium" = "Bem-vindo ao";
+"subscriptionBecomePremium" = "Venha Ser";
+"subscriptionNavigationTitle" = "Budget Premium";
+"subscriptionSubtitle" = "e tenha acesso a todas as funciolidades de filtros, customização e segurança";
+"subscriptionFeaturesHeader" = "Funcionalidades";
+"subscriptionFreeHeader" = "Grátis";
+"subscriptionPremiumHeader" = "Premium";
+"subscriptionRowSelectPlan" = "Selecione o plano";
+"subscriptionPlansHeader" = "Planos";
+"subscriptionPriceHeader" = "Por apenas";
+"subscriptionPriceObsevations" = "Este serviço contempla a disponibilização %@ do serviço Budget Premium com funcionalidades exclusivas. O pagamento %@ será debitado da sua conta no iTunes na confirmação de compra. A assinatura é renovada automaticamente a menos que você desligue a renovação automática com pelo menos 24 horas de antecedência do dia da cobrança. A assinatura pode ser gerenciada por você e a renovação automática pode ser desativada no próprio dispositivo, em Ajustes.";
+"subscriptionTermsDescription" = "Li e concordo com os termos e condições do serviço.";
+"subscriptionButton" = "Assinar Agora por %@ / %@";
+"subscriptionFeatureTitle1" = "Categorias Ilimitadas";
+"subscriptionFeatureTitle2" = "Orçamentos Ilimitadas";
+"subscriptionFeatureTitle3" = "Transações Ilimitadas";
+"subscriptionFeatureTitle4" = "Filtrar por Data";
+"subscriptionFeatureTitle5" = "Tags Ilimitadas";
+"subscriptionFeatureTitle6" = "Análise de Orçamentos";
+"subscriptionFeatureTitle7" = "Maiores Compras";
+"subscriptionFeatureTitle8" = "Total Restante";
+"subscriptionFeatureTitle9" = "Análise de Status";
+"subscriptionFeatureTitle10" = "Comparação de Tags";
+"subscriptionFeatureTitle11" = "Filtros Customizados";
+"subscriptionFeatureTitle12" = "Análise com Gráficos";
