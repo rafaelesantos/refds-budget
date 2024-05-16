@@ -1,5 +1,5 @@
 {
-  "identifier" : "09E0E9AB",
+  "identifier" : "1D555378",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -10,15 +10,12 @@
     "_applicationInternalID" : "6448043784",
     "_developerTeamID" : "Q7QLR2PH2X",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 737319889.227687,
+    "_lastSynchronizedDate" : 737567163.05519104,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
       {
-        "current" : {
-          "index" : 2,
-          "type" : "generic"
-        },
+        "current" : null,
         "enabled" : false,
         "name" : "Load Products"
       },

@@ -15,6 +15,8 @@
 		6C44A7182BC6075500C94C2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A7172BC6075500C94C2C /* Assets.xcassets */; };
 		6C44A71C2BC6075500C94C2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A71B2BC6075500C94C2C /* Preview Assets.xcassets */; };
 		6C44A7242BC607EA00C94C2C /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6C44A7232BC607EA00C94C2C /* RefdsBudgetKit */; };
+		6C587EDA2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */; };
+		6C587EDB2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */; };
 		6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6CE5131D2BE2F2A5005085CE /* SideNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */; };
 		6CE5131F2BE2F445005085CE /* TabNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131E2BE2F445005085CE /* TabNavigationView.swift */; };
@@ -27,7 +29,6 @@
 		6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */; };
 		6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */; };
 		6CE5135D2BE552B4005085CE /* SystemSmallTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */; };
-		6CFD9E242BF2A0C10028279F /* Subscription.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD9E232BF2A0BD0028279F /* Subscription.storekit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		6C44A7192BC6075500C94C2C /* RefdsBudget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RefdsBudget.entitlements; sourceTree = "<group>"; };
 		6C44A71B2BC6075500C94C2C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6C44A7252BC6091C00C94C2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = BudgetStoreConfig.storekit; sourceTree = "<group>"; };
 		6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideNavigationView.swift; sourceTree = "<group>"; };
 		6CE5131E2BE2F445005085CE /* TabNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavigationView.swift; sourceTree = "<group>"; };
 		6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RefdsBudgetWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +80,6 @@
 		6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefdsBudgetWidgetPresenter.swift; sourceTree = "<group>"; };
 		6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallExpenseProgress.swift; sourceTree = "<group>"; };
 		6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallTransactions.swift; sourceTree = "<group>"; };
-		6CFD9E232BF2A0BD0028279F /* Subscription.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Subscription.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +108,7 @@
 		6C44A7072BC6075100C94C2C = {
 			isa = PBXGroup;
 			children = (
+				6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */,
 				6C44A7122BC6075100C94C2C /* RefdsBudget */,
 				6CE5132A2BE3F490005085CE /* RefdsBudgetWidget */,
 				6CE513252BE3F490005085CE /* Frameworks */,
@@ -131,7 +133,6 @@
 				6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */,
 				6CE5131E2BE2F445005085CE /* TabNavigationView.swift */,
 				6C44A7152BC6075200C94C2C /* ContentView.swift */,
-				6CFD9E232BF2A0BD0028279F /* Subscription.storekit */,
 				6C44A7172BC6075500C94C2C /* Assets.xcassets */,
 				6C44A7192BC6075500C94C2C /* RefdsBudget.entitlements */,
 				6C44A71A2BC6075500C94C2C /* Preview Content */,
@@ -189,6 +190,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6C68D5AC2BF6582C00A3C2D1 /* PBXTargetDependency */,
 				6CE513362BE3F491005085CE /* PBXTargetDependency */,
 			);
 			name = RefdsBudget;
@@ -265,7 +267,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CFD9E242BF2A0C10028279F /* Subscription.storekit in Resources */,
+				6C587EDA2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */,
 				6C44A71C2BC6075500C94C2C /* Preview Assets.xcassets in Resources */,
 				6C44A7182BC6075500C94C2C /* Assets.xcassets in Resources */,
 			);
@@ -276,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CE513322BE3F491005085CE /* Assets.xcassets in Resources */,
+				6C587EDB2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +313,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6C68D5AC2BF6582C00A3C2D1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 6C68D5AB2BF6582C00A3C2D1 /* RefdsBudgetKit */;
+		};
 		6CE513362BE3F491005085CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -323,6 +330,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD = 64;
+				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -389,6 +398,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD = 64;
+				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -447,14 +458,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_BUILD = 62;
-				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudget/RefdsBudget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = "$(APP_BUILD)";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"RefdsBudget/Preview Content\"";
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
@@ -481,7 +490,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -497,14 +506,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_BUILD = 62;
-				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudget/RefdsBudget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = "$(APP_BUILD)";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"RefdsBudget/Preview Content\"";
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
@@ -531,7 +538,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -550,7 +557,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = "$(APP_BUILD)";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -570,7 +577,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -590,7 +597,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = "$(APP_BUILD)";
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Q7QLR2PH2X;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -610,7 +617,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -665,6 +672,11 @@
 /* Begin XCSwiftPackageProductDependency section */
 		6C44A7232BC607EA00C94C2C /* RefdsBudgetKit */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = RefdsBudgetKit;
+		};
+		6C68D5AB2BF6582C00A3C2D1 /* RefdsBudgetKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6C44A7222BC607EA00C94C2C /* XCLocalSwiftPackageReference "../RefdsBudgetKit" */;
 			productName = RefdsBudgetKit;
 		};
 		6CE5133C2BE3F94C005085CE /* RefdsBudgetKit */ = {
