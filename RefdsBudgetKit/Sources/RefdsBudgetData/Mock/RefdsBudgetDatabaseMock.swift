@@ -33,6 +33,7 @@ public final class RefdsBudgetDatabaseMock: RefdsBudgetDatabaseProtocol {
                     .attribute(name: "message", type: .stringAttributeType, isOptional: true),
                     .attribute(name: "category", type: .UUIDAttributeType, isOptional: true),
                     .attribute(name: "date", type: .dateAttributeType, isOptional: true),
+                    .attribute(name: "status", type: .stringAttributeType, isOptional: true, defaultValue: TransactionStatus.spend.rawValue)
                 ]
             ),
             .entity(
@@ -52,7 +53,10 @@ public final class RefdsBudgetDatabaseMock: RefdsBudgetDatabaseProtocol {
                 attributes: [
                     .attribute(name: "date", type: .dateAttributeType, isOptional: true),
                     .attribute(name: "theme", type: .stringAttributeType, isOptional: true),
+                    .attribute(name: "icon", type: .stringAttributeType, isOptional: true),
                     .attribute(name: "appearence", type: .doubleAttributeType, isOptional: true),
+                    .attribute(name: "hasAuthRequest", type: .booleanAttributeType, isOptional: true),
+                    .attribute(name: "hasPrivacyMode", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "notifications", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "reminderNotification", type: .booleanAttributeType, isOptional: true),
                     .attribute(name: "warningNotification", type: .booleanAttributeType, isOptional: true),

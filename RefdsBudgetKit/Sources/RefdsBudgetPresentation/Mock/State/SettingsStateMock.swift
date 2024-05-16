@@ -7,8 +7,8 @@ public struct SettingsStateMock: SettingsStateProtocol {
     public var isLoading: Bool = true
     public var isPro: Bool = false
     public var isAcceptedTerms: Bool = false
-    public var colorScheme: ColorScheme? = .allCases.randomElement()
-    public var tintColor: Color = .accentColor
+    public var colorScheme: ColorScheme? = .none
+    public var tintColor: Color = .green
     public var hasAuthRequest: Bool = true
     public var hasPrivacyMode: Bool = true
     public var icon: Asset = .default

@@ -7,12 +7,6 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
-    #if os(iOS)
-    private var horizontalSizeClass: UIUserInterfaceSizeClass {
-        UITraitCollection.current.horizontalSizeClass
-    }
-    #endif
-    
     public init() {}
     
     public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
@@ -44,63 +38,19 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
         guard let state = state else { return }
         switch action {
         case let .updateRoute(route):
-            #if os(iOS)
-            switch horizontalSizeClass {
-            case .regular:
-                switch state.itemNavigation {
-                case .premium:
-                    state.premiumRouter.popToRoot()
-                    state.premiumRouter.route(to: route)
-                case .categories:
-                    state.categoriesRouter.popToRoot()
-                    state.categoriesRouter.route(to: route)
-                case .home: 
-                    state.homeRouter.popToRoot()
-                    state.homeRouter.route(to: route)
-                case .transactions:
-                    state.transactionsRouter.popToRoot()
-                    state.transactionsRouter.route(to: route)
-                case .settings:
-                    state.settingsRouter.popToRoot()
-                    state.settingsRouter.route(to: route)
-                case nil: break
-                }
-                
-            default:
-                switch state.itemNavigation {
-                case .premium:
-                    state.premiumRouter.route(to: route)
-                case .categories:
-                    state.categoriesRouter.route(to: route)
-                case .home:
-                    state.homeRouter.route(to: route)
-                case .transactions:
-                    state.transactionsRouter.route(to: route)
-                case .settings:
-                    state.settingsRouter.route(to: route)
-                case nil: break
-                }
-            }
-            #else
             switch state.itemNavigation {
             case .premium:
-                state.premiumRouter.popToRoot()
                 state.premiumRouter.route(to: route)
             case .categories:
-                state.categoriesRouter.popToRoot()
                 state.categoriesRouter.route(to: route)
             case .home:
-                state.homeRouter.popToRoot()
                 state.homeRouter.route(to: route)
             case .transactions:
-                state.transactionsRouter.popToRoot()
                 state.transactionsRouter.route(to: route)
             case .settings:
-                state.settingsRouter.popToRoot()
                 state.settingsRouter.route(to: route)
             case nil: break
             }
-            #endif
         case .dismiss:
             switch state.itemNavigation {
             case .premium:

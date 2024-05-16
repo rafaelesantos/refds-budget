@@ -28,85 +28,67 @@ struct SideNavigationView: View {
                 }
             }
             .listStyle(.sidebar)
-        } content: {
+        } detail: {
             switch store.state.itemNavigation {
+            case .premium: premiumView
             case .categories: categoriesView
             case .home: homeView
             case .transactions: transactionsView
             case .settings: settingsView
             default: EmptyView()
             }
-            
-        } detail: {
-            switch store.state.itemNavigation {
-            case .categories: detailCategoriesView
-            case .home: detailTransactionsView
-            case .transactions: detailAddTransactionView
-            default: EmptyView()
-            }
         }
         .navigationSplitViewStyle(.balanced)
     }
     
+    private var premiumView: some View {
+        RefdsRoutingReduxView(
+            router: $store.state.premiumRouter,
+            state: bindingState,
+            action: store.dispatch(action:)
+        ) {
+            AnyView(
+                viewFactory.makeSubscriptionView(
+                    state: $store.state.settingsState,
+                    action: store.dispatch(action:)
+                )
+            )
+        }
+    }
+    
     private var categoriesView: some View {
-        AnyView(
-            viewFactory.makeCegoriesView(
-                state: $store.state.categoriesState,
-                action: store.dispatch(action:)
-            )
-        )
-        .navigationSplitViewColumnWidth(360)
-    }
-    
-    private var homeView: some View {
-        AnyView(
-            viewFactory.makeHomeView(
-                state: $store.state.homeState,
-                action: store.dispatch(action:)
-            )
-        )
-        .navigationSplitViewColumnWidth(360)
-    }
-    
-    private var transactionsView: some View {
-        AnyView(
-            viewFactory.makeTransactionsView(
-                state: $store.state.transactionsState,
-                action: store.dispatch(action:)
-            )
-        )
-        .navigationSplitViewColumnWidth(360)
-    }
-    
-    private var settingsView: some View {
-        AnyView(
-            viewFactory.makeSettingsView(
-                state: $store.state.settingsState,
-                action: store.dispatch(action:)
-            )
-        )
-        .navigationSplitViewColumnWidth(360)
-    }
-    
-    private var detailCategoriesView: some View {
         RefdsRoutingReduxView(
             router: $store.state.categoriesRouter,
             state: bindingState,
             action: store.dispatch(action:)
         ) {
             AnyView(
-                viewFactory.makeCategoryView(
-                    state: $store.state.categoryState,
+                viewFactory.makeCegoriesView(
+                    state: $store.state.categoriesState,
                     action: store.dispatch(action:)
                 )
             )
         }
-        .navigationSplitViewColumnWidth(min: 450, ideal: 450)
     }
     
-    private var detailTransactionsView: some View {
+    private var homeView: some View {
         RefdsRoutingReduxView(
             router: $store.state.homeRouter,
+            state: bindingState,
+            action: store.dispatch(action:)
+        ) {
+            AnyView(
+                viewFactory.makeHomeView(
+                    state: $store.state.homeState,
+                    action: store.dispatch(action:)
+                )
+            )
+        }
+    }
+    
+    private var transactionsView: some View {
+        RefdsRoutingReduxView(
+            router: $store.state.transactionsRouter,
             state: bindingState,
             action: store.dispatch(action:)
         ) {
@@ -117,23 +99,21 @@ struct SideNavigationView: View {
                 )
             )
         }
-        .navigationSplitViewColumnWidth(min: 450, ideal: 450)
     }
     
-    private var detailAddTransactionView: some View {
+    private var settingsView: some View {
         RefdsRoutingReduxView(
-            router: $store.state.transactionsRouter,
+            router: $store.state.settingsRouter,
             state: bindingState,
             action: store.dispatch(action:)
         ) {
             AnyView(
-                viewFactory.makeAddTransactionView(
-                    state: $store.state.addTransactionState,
+                viewFactory.makeSettingsView(
+                    state: $store.state.settingsState,
                     action: store.dispatch(action:)
                 )
             )
         }
-        .navigationSplitViewColumnWidth(min: 450, ideal: 450)
     }
     
     private var bindingSplitVisibility: Binding<NavigationSplitViewVisibility> {

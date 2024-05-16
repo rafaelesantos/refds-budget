@@ -15,7 +15,7 @@
 		6C44A7182BC6075500C94C2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A7172BC6075500C94C2C /* Assets.xcassets */; };
 		6C44A71C2BC6075500C94C2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C44A71B2BC6075500C94C2C /* Preview Assets.xcassets */; };
 		6C44A7242BC607EA00C94C2C /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6C44A7232BC607EA00C94C2C /* RefdsBudgetKit */; };
-		6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6CE5131D2BE2F2A5005085CE /* SideNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */; };
 		6CE5131F2BE2F445005085CE /* TabNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131E2BE2F445005085CE /* TabNavigationView.swift */; };
 		6CE513272BE3F490005085CE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE513262BE3F490005085CE /* WidgetKit.framework */; };
@@ -312,6 +312,7 @@
 /* Begin PBXTargetDependency section */
 		6CE513362BE3F491005085CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 6CE513232BE3F490005085CE /* RefdsBudgetWidget */;
 			targetProxy = 6CE513352BE3F491005085CE /* PBXContainerItemProxy */;
 		};
@@ -488,7 +489,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -538,7 +539,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

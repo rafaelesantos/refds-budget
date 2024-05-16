@@ -48,7 +48,7 @@ public struct SubscriptionView: View {
     private var headerView: some View {
         VStack {
             RefdsText(
-                isPro ? .localizable(by: .subscriptionWelcomePremium) : .localizable(by: .subscriptionBecomePremium),
+                "Gastos Atualizados",
                 style: .largeTitle,
                 weight: .black,
                 design: .rounded
@@ -56,27 +56,26 @@ public struct SubscriptionView: View {
             .padding(.top, 30)
             
             RefdsText(
-                .localizable(by: .subscriptionNavigationTitle),
+                "Budget App",
                 style: .largeTitle,
                 color: .accentColor,
                 weight: .black,
                 design: .rounded
             )
         }
-        .frame(height: 200)
+        .frame(height: 400)
         .frame(maxWidth: .infinity)
         .background {
             RefdsStarShower(
                 from: .top,
-                galaxyHeight: 200,
+                galaxyHeight: 400,
                 backgroundColor: Color.accentColor.opacity(0.1)
             )
             .opacity(0.8)
             .clipShape(.rect(cornerRadius: .cornerRadius))
         }
         .padding(.horizontal, -.padding(.extraLarge))
-        .ignoresSafeArea(.all, edges: [.top, .leading, .trailing])
-        .padding(.bottom, -60)
+        .padding()
     }
     
     private var contentView: some View {

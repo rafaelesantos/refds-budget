@@ -14,13 +14,9 @@ public class RefdsReduxStoreFactory {
     }
     
     public var production: RefdsReduxStore<ApplicationStateProtocol> {
-        let categoryRepository = RefdsContainer.resolve(type: CategoryUseCase.self)
-        var state: ApplicationStateProtocol = ApplicationState()
-        let id = categoryRepository.getAllCategories().first?.id ?? .init()
-        state.categoryState = CategoryState(id: id)
-        return .init(
+        .init(
             reducer: ApplicationReducer().reduce,
-            state: state,
+            state: ApplicationState(),
             middlewares: getMiddlewares()
         )
     }
