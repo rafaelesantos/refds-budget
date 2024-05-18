@@ -4,6 +4,8 @@ import RefdsBudgetData
 
 public struct TransactionsStateMock: TransactionsStateProtocol {
     public var date: Date = .current
+    public var page: Int = 1
+    public var canChangePage: Bool = false
     public var isFilterEnable: Bool = true
     public var isLoading: Bool = true
     public var searchText: String = ""

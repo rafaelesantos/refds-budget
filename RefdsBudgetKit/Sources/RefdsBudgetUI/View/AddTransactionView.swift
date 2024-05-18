@@ -172,7 +172,7 @@ public struct AddTransactionView: View {
                 VStack(spacing: .zero) {
                     Picker(selection: bindingCategory) {
                         ForEach(state.categories.map { $0.name }, id: \.self) {
-                            RefdsText($0)
+                            RefdsText($0.capitalized)
                                 .tag($0)
                         }
                     } label: {

@@ -21,9 +21,9 @@ public final class Deeplink {
         url: URL
     ) {
         guard let (route, item) = parse(url: url) else { return }
+        itemNavigation.wrappedValue = item.rawValue
+        guard let route = route else { return }
         withAnimation {
-            itemNavigation.wrappedValue = item.rawValue
-            guard let route = route else { return }
             switch item {
             case .premium:
                 state.wrappedValue.premiumRouter.route(to: route)

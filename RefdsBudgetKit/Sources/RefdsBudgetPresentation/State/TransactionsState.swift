@@ -5,6 +5,8 @@ import RefdsBudgetData
 
 public protocol TransactionsStateProtocol: RefdsReduxState {
     var date: Date { get set }
+    var page: Int { get set }
+    var canChangePage: Bool { get set }
     var isFilterEnable: Bool { get set }
     var isLoading: Bool { get set }
     var searchText: String { get set }
@@ -20,6 +22,8 @@ public protocol TransactionsStateProtocol: RefdsReduxState {
 
 public struct TransactionsState: TransactionsStateProtocol {
     public var date: Date
+    public var page: Int
+    public var canChangePage: Bool
     public var isFilterEnable: Bool
     public var isLoading: Bool
     public var searchText: String
@@ -34,6 +38,8 @@ public struct TransactionsState: TransactionsStateProtocol {
     
     public init(
         date: Date = .current,
+        page: Int = 1,
+        canChangePage: Bool = false,
         isFilterEnable: Bool = true,
         isLoading: Bool = true,
         searchText: String = "",
@@ -43,6 +49,8 @@ public struct TransactionsState: TransactionsStateProtocol {
         error: RefdsBudgetError? = nil
     ) {
         self.date = date
+        self.page = page
+        self.canChangePage = canChangePage
         self.isFilterEnable = isFilterEnable
         self.isLoading = isLoading
         self.searchText = searchText

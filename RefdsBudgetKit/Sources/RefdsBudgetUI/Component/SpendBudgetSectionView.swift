@@ -47,7 +47,7 @@ public struct SpendBudgetSectionView: View {
         HStack(spacing: .padding(.small)) {
             RefdsText(.localizable(by: .homeSpendBudgetCategory), style: .callout)
             Spacer()
-            RefdsText(category.name, style: .callout, color: .secondary)
+            RefdsText(category.name.capitalized, style: .callout, color: .secondary)
         }
     }
     

@@ -108,7 +108,7 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) async {
         var transactions: [StoreKit.Transaction] = []
-        var purchasedProductsID = state.purchasedProductsID
+        var purchasedProductsID = Set<String>()
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
             transactions += [transaction]
@@ -130,15 +130,6 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 transactions: transactions
             )
         )
-    }
-    
-    private func getTransactions() async -> [StoreKit.Transaction] {
-        var transactions: [StoreKit.Transaction] = []
-        for await result in Transaction.currentEntitlements {
-            guard case .verified(let transaction) = result else { continue }
-            transactions += [transaction]
-        }
-        return transactions.sorted(by: { $0.expirationDate ?? .current > $1.expirationDate ?? .current })
     }
     
     private func updatePro(

@@ -57,7 +57,7 @@
 
 "addCategoryInputName" = "Informe o nome";
 "addCategoryColorHeader" = "Cor";
-"addCategoryInputHex" = "Informe o hex";
+"addCategoryInputHex" = "Cor Customizada";
 "addCategoryIconsHeader" = "Ícones";
 "addCategorySelectedIcon" = "Selecionado";
 "addCategoryShowLessIcons" = "Exibir menos ícones";
@@ -73,10 +73,10 @@
 "categoriesBalance" = "Saldo";
 "categoriesEmptyCategoriesTitle" = "Crie uma categoria para suas despesas";
 "categoriesEmptyCategoriesDescription" = "Parece que você ainda não tem nenhuma categoria para suas despesas. Para manter suas finanças organizadas, recomendamos que você crie uma agora.";
-"categoriesEmptyCategoriesButton" = "Adicionar categoria";
+"categoriesEmptyCategoriesButton" = "Adicionar Categoria";
 "categoriesEmptyBudgetsTitle" = "Crie um budget para este mês";
 "categoriesEmptyBudgetsDescription" = "Parece que você ainda não criou um budget para suas despesas deste mês. Para garantir que você fique dentro do seu limite financeiro, sugerimos que crie um agora.";
-"categoriesEmptyBudgetsButton" = "Adicionar orçamento";
+"categoriesEmptyBudgetsButton" = "Adicionar Orçamento";
 "categoriesEditBudget" = "Editar Orçamento";
 "categoriesEditCategory" = "Editar Categoria";
 "categoriesRemoveBudget" = "Remover Orçamento";
@@ -139,7 +139,7 @@
 "transactionsCopyTransactions" = "Copiar";
 "transactionsNewTransactions" = "Adicionar Transação";
 "transactionsMoreMenuHeader" = "Opções";
-"transactionsAddTransaction" = "Adicionar transação";
+"transactionsAddTransaction" = "Adicionar Transação";
 "transactionsFilterByDate" = "Filtra por data";
 "transactionsCleanCategoriesFilter" = "Limpar";
 "transactionsCategoriesFilterHeader" = "Selecione uma ou mais categorias";
@@ -167,7 +167,7 @@
 "tagsInputHeader" = "Informações da tag";
 "tagsInputNamePlaceholder" = "Informe o nome da tag";
 "tagsSaveButton" = "Salvar tag";
-"tagsCollapsedHeader" = "Tags criadas";
+"tagsCollapsedHeader" = "Tags Criadas";
 "tagsChartSectionHeader" = "Gráfico Comparativo";
 "tagsMenuSelectHeader" = "Selecione uma ou mais tags";
 "tagsRemoveTag" = "Remover tag";

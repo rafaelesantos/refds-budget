@@ -8,14 +8,6 @@ public struct TagsView: View {
     @Binding private var state: TagsStateProtocol
     private let action: (TagAction) -> Void
     
-    private var bindingHexColor: Binding<String> {
-        Binding {
-            state.selectedTag.color.asHex()
-        } set: {
-            state.selectedTag.color = Color(hex: $0)
-        }
-    }
-    
     public init(
         state: Binding<TagsStateProtocol>,
         action: @escaping (TagAction) -> Void
@@ -30,11 +22,6 @@ public struct TagsView: View {
             sectionSaveButton
             sectionTags
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #elseif os(iOS)
-        .listStyle(.insetGrouped)
-        #endif
         .refreshable { action(.fetchData) }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
@@ -105,17 +92,10 @@ public struct TagsView: View {
     }
     
     private var rowHexColor: some View {
-        HStack {
+        ColorPicker(selection: $state.selectedTag.color) {
             RefdsText(
                 .localizable(by: .addCategoryInputHex),
                 style: .callout
-            )
-            Spacer()
-            RefdsTextField(
-                Color.green.asHex(),
-                text: bindingHexColor,
-                style: .callout,
-                alignment: .trailing
             )
         }
     }

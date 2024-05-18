@@ -47,11 +47,12 @@ public struct TransactionsView: View {
         .onChange(of: state.selectedCategories) { reloadData() }
         .onChange(of: state.selectedTags) { reloadData() }
         .onChange(of: state.selectedStatus) { reloadData() }
-        .toolbar {
-            ToolbarItemGroup {
-                moreButton
-            }
+        .onChange(of: state.page) {
+            state.transactions = []
+            reloadData()
         }
+        .toolbar { ToolbarItemGroup { moreButton } }
+        .toolbar { ToolbarItem(placement: .bottomBar) { paginationView } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
@@ -267,6 +268,17 @@ public struct TransactionsView: View {
             data: status.map { $0.description },
             selectedData: $state.selectedStatus
         )
+    }
+    
+    @ViewBuilder
+    private var paginationView: some View {
+        if !state.isFilterEnable {
+            RefdsPagination(
+                currentPage: $state.page,
+                color: .accentColor,
+                canChangeToNextPage: { state.canChangePage }
+            )
+        }
     }
 }
 

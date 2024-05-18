@@ -10,14 +10,6 @@ public struct AddCategoryView: View {
     
     @State private var iconPrefix = 15
     
-    private var bindingHexColor: Binding<String> {
-        Binding {
-            state.color.asHex()
-        } set: {
-            state.color = Color(hex: $0)
-        }
-    }
-    
     private var bindingName: Binding<String> {
         Binding {
             state.name
@@ -41,11 +33,6 @@ public struct AddCategoryView: View {
             sectionIconsView
             sectionSaveButtonView
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #elseif os(iOS)
-        .listStyle(.insetGrouped)
-        #endif
         .refdsDismissesKeyboad()
         .onAppear { action(.fetchCategory(state)) }
         .refdsToast(item: $state.error)
@@ -114,17 +101,10 @@ public struct AddCategoryView: View {
     }
     
     private var rowHexColor: some View {
-        HStack {
+        ColorPicker(selection: $state.color) {
             RefdsText(
                 .localizable(by: .addCategoryInputHex),
                 style: .callout
-            )
-            Spacer()
-            RefdsTextField(
-                Color.green.asHex(),
-                text: bindingHexColor,
-                style: .callout,
-                alignment: .trailing
             )
         }
     }
@@ -146,15 +126,19 @@ public struct AddCategoryView: View {
     private var rowSelectedIcon: some View {
         HStack {
             RefdsText(
-                .localizable(by: .addCategorySelectedIcon),
-                style: .callout
-            )
-            Spacer()
-            RefdsText(
                 state.icon.replacingOccurrences(of: ".", with: " ").capitalized,
                 style: .callout,
                 color: .secondary
             )
+            
+            Spacer(minLength: .zero)
+            
+            if let icon = RefdsIconSymbol(rawValue: state.icon) {
+                RefdsIconRow(
+                    icon,
+                    color: state.color
+                )
+            }
         }
     }
     

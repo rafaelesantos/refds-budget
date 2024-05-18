@@ -12,10 +12,12 @@ public final class TransactionsReducer: RefdsReduxReducerProtocol {
         switch action as? TransactionsAction {
         case .fetchData:
             state.isLoading = true
-        case let .updateData(transactions, categories, tags):
+        case let .updateData(transactions, categories, tags, page, canChangePage):
             state.transactions = transactions
             state.categories = categories
             state.tags = tags
+            state.page = page
+            state.canChangePage = canChangePage
             state.isLoading = false
         case let .updateBalance(balance):
             state.balance = balance

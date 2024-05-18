@@ -22,7 +22,7 @@ public struct BudgetRowView: View {
         HStack {
             VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
                 HStack {
-                    RefdsText(rowTitle, style: .callout)
+                    RefdsText(rowTitle.capitalized, style: .callout)
                     Spacer()
                     RefdsText(amount.currency(), style: .callout)
                         .contentTransition(.numericText())

@@ -22,15 +22,13 @@ public struct SubscriptionView: View {
     }
     
     public var body: some View {
-        VStack(spacing: .zero) {
-            headerView
-            contentView
-        }
-        .frame(maxWidth: .infinity)
-        .toolbar(.hidden, for: .navigationBar)
-        .onAppear { fetchData() }
-        .task { setupPrice() }
-        .refdsBackground(with: .secondaryBackground)
+        contentView
+            .frame(maxWidth: .infinity)
+        #if os(iOS)
+            .toolbar(.hidden, for: .navigationBar)
+        #endif
+            .onAppear { fetchData() }
+            .task { setupPrice() }
     }
     
     private func setupPrice() {
@@ -45,64 +43,61 @@ public struct SubscriptionView: View {
         action(.fetchData)
     }
     
-    private var headerView: some View {
-        VStack {
-            RefdsText(
-                isPro ? .localizable(by: .subscriptionWelcomePremium) : .localizable(by: .subscriptionBecomePremium),
-                style: .largeTitle,
-                weight: .black,
-                design: .rounded
-            )
-            .padding(.top, 30)
-            
-            RefdsText(
-                .localizable(by: .subscriptionNavigationTitle),
-                style: .largeTitle,
-                color: .accentColor,
-                weight: .black,
-                design: .rounded
-            )
-        }
-        .padding(.vertical, 60)
-        .frame(maxWidth: .infinity)
-        .background {
-            RefdsStarShower(
-                from: .top
-            )
-            .opacity(0.8)
-            .clipShape(.rect(cornerRadius: .cornerRadius))
-        }
-        .ignoresSafeArea()
-        .padding(.horizontal, -.padding(.extraLarge))
-        .padding(.bottom, -60)
-    }
-    
     private var contentView: some View {
         List {
-            sectionNote
+            sectionHeaderView
             sectionCurrentProduct
             sectionFeatures
             sectionPrice
             sectionPurchaseInfo
             footerView
         }
+        .scrollContentBackground(.hidden)
+        .background(
+            RefdsStarShower(
+                from: .top,
+                backgroundColor: .background(for: colorScheme)
+            )
+            .ignoresSafeArea()
+        )
     }
     
-    private var sectionNote: some View {
-        RefdsSection {
-            
-        } footer: {
-            VStack(spacing: .padding(.medium)) {
+    private var sectionHeaderView: some View {
+        RefdsSection {} footer: {
+            VStack {
+                RefdsText(
+                    isPro ? .localizable(by: .subscriptionWelcomePremium) : .localizable(by: .subscriptionBecomePremium),
+                    style: .largeTitle,
+                    weight: .black
+                )
+                .refdsBackground()
+                .padding(.top, 30)
+                
+                RefdsText(
+                    .localizable(by: .subscriptionNavigationTitle),
+                    style: .largeTitle,
+                    color: .accentColor,
+                    weight: .black
+                )
+                .refdsBackground()
+                
                 RefdsText(
                     isPro ? .localizable(by: .subscriptionSubtitlePro) : .localizable(by: .subscriptionSubtitle),
                     style: .footnote,
                     color: .secondary,
                     alignment: .center
                 )
-                .padding(.top, -20)
+                .refdsBackground()
+                .padding(.top, 10)
                 
                 Divider()
+                    .refdsBackground()
+                    .padding(.horizontal, .padding(.extraLarge))
+                    .padding(.top)
             }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, .padding(.extraLarge))
+            .padding(.top, -20)
         }
     }
     
@@ -121,19 +116,17 @@ public struct SubscriptionView: View {
                     
                     if !isPro {
                         RefdsIcon(
-                            feature.isFree ? .checkmarkSealFill : .xmarkSealFill,
-                            color: feature.isFree ? .green : .red
+                            feature.isFree ? .checkmarkRectangleFill : .xmarkRectangleFill,
+                            color: feature.isFree ? .green : .red,
+                            renderingMode: .hierarchical
                         )
                         .frame(width: 62)
-                        
-                        Divider()
-                            .frame(height: 15)
-                            .padding(.trailing, 5)
                     }
                     
                     RefdsIcon(
-                        feature.isPro ? .checkmarkSealFill : .xmarkSealFill,
-                        color: feature.isPro ? .green : .red
+                        feature.isPro ? .checkmarkRectangleFill : .xmarkRectangleFill,
+                        color: feature.isPro ? .green : .red,
+                        renderingMode: .hierarchical
                     )
                     .frame(width: 62)
                 }
@@ -145,6 +138,7 @@ public struct SubscriptionView: View {
                     style: .footnote,
                     color: .secondary
                 )
+                .refdsBackground()
                 
                 Spacer(minLength: .zero)
                 
@@ -154,11 +148,8 @@ public struct SubscriptionView: View {
                         style: .footnote,
                         color: .secondary
                     )
+                    .refdsBackground()
                     .frame(width: 62)
-                    
-                    Divider()
-                        .frame(height: 15)
-                        .padding(.trailing, 5)
                 }
                 
                 RefdsText(
@@ -166,6 +157,7 @@ public struct SubscriptionView: View {
                     style: .footnote,
                     color: .secondary
                 )
+                .refdsBackground()
                 .frame(width: 62)
             }
         }
@@ -185,19 +177,52 @@ public struct SubscriptionView: View {
     
     @ViewBuilder
     private var sectionPrice: some View {
-        if !isPro {
+        if !isPro, let product = state.selectedProduct {
             RefdsSection {
-                if state.selectedProduct != nil {
-                    Picker(selection: bindingProduct) {
-                        ForEach(state.products.indices, id: \.self) {
-                            let product = state.products[$0]
-                            RefdsText(product.displayName)
-                                .tag(product.id)
-                        }
-                    } label: {
-                        RefdsText(.localizable(by: .subscriptionRowSelectPlan))
+                Picker(selection: bindingProduct) {
+                    ForEach(state.products.indices, id: \.self) {
+                        let product = state.products[$0]
+                        RefdsText(product.displayName)
+                            .tag(product.id)
                     }
-                    .tint(.accentColor)
+                } label: {
+                    RefdsText(.localizable(by: .subscriptionRowSelectPlan))
+                }
+                .tint(.accentColor)
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        RefdsText(
+                            product.displayName.uppercased(),
+                            style: .footnote,
+                            color: .accentColor,
+                            weight: .bold
+                        )
+                        .transition(.scale)
+                        .padding(3)
+                        .refdsTag(color: .accentColor, cornerRadius: 6)
+                        
+                        RefdsText(product.description)
+                    }
+                    
+                    Spacer(minLength: .zero)
+                    
+                    VStack(alignment: .trailing) {
+                        RefdsText(
+                            .localizable(by: .subscriptionPriceHeader).uppercased(),
+                            style: .footnote,
+                            color: .secondary
+                        )
+                        
+                        RefdsText(
+                            product.displayPrice,
+                            style: .largeTitle,
+                            color: .accentColor,
+                            weight: .black,
+                            alignment: .center
+                        )
+                        .contentTransition(.numericText())
+                    }
                 }
             } header: {
                 RefdsText(
@@ -205,47 +230,7 @@ public struct SubscriptionView: View {
                     style: .footnote,
                     color: .secondary
                 )
-            } footer: {
-                VStack {
-                    if let product = state.selectedProduct {
-                        VStack {
-                            RefdsText(
-                                .localizable(by: .subscriptionPriceHeader).uppercased(),
-                                style: .footnote,
-                                color: .secondary
-                            )
-                            
-                            RefdsText(
-                                product.displayPrice,
-                                style: .system(size: 40),
-                                color: .accentColor,
-                                weight: .black,
-                                alignment: .center
-                            )
-                            .contentTransition(.numericText())
-                            
-                            RefdsText(
-                                product.description,
-                                alignment: .center
-                            )
-                            .frame(width: 200)
-                            .padding(.top, -20)
-                            
-                            RefdsText(
-                                product.displayName.uppercased(),
-                                style: .footnote,
-                                color: .accentColor,
-                                weight: .bold
-                            )
-                            .transition(.scale)
-                            .padding(3)
-                            .refdsTag(color: .accentColor, cornerRadius: 6)
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, .padding(.large))
-                .padding(.top, .padding(.extraLarge))
+                .refdsBackground()
             }
         }
     }
@@ -266,7 +251,7 @@ public struct SubscriptionView: View {
                     
                     RefdsText(
                         product.displayPrice,
-                        style: .title2,
+                        style: .largeTitle,
                         color: .accentColor,
                         weight: .black
                     )
@@ -305,6 +290,7 @@ public struct SubscriptionView: View {
                     style: .footnote,
                     color: .secondary
                 )
+                .refdsBackground()
             }
         }
     }
@@ -322,6 +308,7 @@ public struct SubscriptionView: View {
                     color: .secondary,
                     alignment: .center
                 )
+                .refdsBackground()
                 .padding(.horizontal, -20)
             }
         }
@@ -350,6 +337,7 @@ public struct SubscriptionView: View {
                                     color: .secondary
                                 )
                             }
+                            .refdsBackground()
                             
                             RefdsButton(
                                 .localizable(
@@ -361,6 +349,7 @@ public struct SubscriptionView: View {
                                 action(.purchase)
                             }
                             .contentTransition(.numericText())
+                            .refdsBackground()
                             
                             RefdsButton { action(.restore) } label: {
                                 RefdsText(
@@ -371,6 +360,7 @@ public struct SubscriptionView: View {
                                 )
                                 .refdsTag(color: .accentColor)
                             }
+                            .refdsBackground()
                             
                             RefdsButton { openURL(.budget(for: .privacyPolicy)) } label: {
                                 RefdsText(
@@ -379,11 +369,13 @@ public struct SubscriptionView: View {
                                     color: .accentColor
                                 )
                             }
+                            .refdsBackground()
                         }
                         .padding(.vertical, .padding(.large))
                         .padding(.horizontal, -20)
                     }
                 }
+                .refdsBackground()
             }
         }
     }
@@ -432,6 +424,7 @@ public struct SubscriptionView: View {
                         .padding(.horizontal, -20)
                     }
                 }
+                .refdsBackground()
             }
         }
     }

@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 import RefdsAuth
 import RefdsRedux
 import RefdsRouter
@@ -18,6 +19,7 @@ struct ContentView: View {
     @AppStorage("isWelcomePresented") private var isWelcomePresented = false
     
     private var viewFactory = ViewFactory()
+    private let timer = Timer.publish(every: 5, on: .current, in: .common).autoconnect()
     
     init() {
         RefdsContainer.register(type: ViewFactoryProtocol.self) { viewFactory }
@@ -46,7 +48,8 @@ struct ContentView: View {
                 .environment(\.isPro, store.state.settingsState.isPro)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
-                .onChange(of: store.state.settingsState.purchasedProductsID) { store.dispatch(action: SettingsAction.updatePro) }
+                .onChange(of: store.state.settingsState.isPro) { store.dispatch(action: SettingsAction.updatePro) }
+                .onReceive(timer) { _ in updatePurchasedProducts() }
                 .if(store.state.settingsState.hasAuthRequest) {
                     $0.refdsAuth(
                         isAuthenticated: $welcome.isAuthenticated,
@@ -84,5 +87,21 @@ struct ContentView: View {
         }
         welcome.viewData.footer = welcome.footer
         welcome.viewData.header = welcome.header
+    }
+    
+    private func observeTransactionUpdates() {
+        Task(priority: .background) {
+            for await _ in Transaction.updates {
+                updatePurchasedProducts()
+            }
+        }
+    }
+    
+    private func updatePurchasedProducts() {
+        Task(priority: .background) {
+            if store.state.settingsState.isPro {
+                store.dispatch(action: SettingsAction.fetchData)
+            }
+        }
     }
 }

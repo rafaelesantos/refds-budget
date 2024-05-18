@@ -128,7 +128,7 @@ public struct SystemLargeExpenseTracker: View {
                     
                     VStack {
                         HStack {
-                            RefdsText(category.name, style: .caption2, weight: .bold, lineLimit: 1)
+                            RefdsText(category.name.capitalized, style: .caption2, weight: .bold, lineLimit: 1)
                             Spacer(minLength: .zero)
                             RefdsText(category.percentage.percent(), style: .caption2, lineLimit: 1)
                         }

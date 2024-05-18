@@ -164,7 +164,6 @@ public struct SettingsView: View {
             Group {
                 rowBiometry
                 rowPrivacyMode
-                rowPrivacyPolicy
             }
             .budgetSubscription()
         } header: {
@@ -186,6 +185,7 @@ public struct SettingsView: View {
                     color: .orange
                 )
                 RefdsText(.localizable(by: .settingsPrivacyPolicy))
+                Spacer(minLength: .zero)
             }
         }
     }
@@ -218,6 +218,7 @@ public struct SettingsView: View {
         RefdsSection {
             rowTestFlight
             rowAppReview
+            rowPrivacyPolicy
             rowAppShare
         } header: {
             RefdsText(

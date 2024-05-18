@@ -57,7 +57,7 @@
 
 "addCategoryInputName" = "Enter the name";
 "addCategoryColorHeader" = "Color";
-"addCategoryInputHex" = "Enter the hex";
+"addCategoryInputHex" = "Custom color";
 "addCategoryIconsHeader" = "Icons";
 "addCategorySelectedIcon" = "Selected";
 "addCategoryShowLessIcons" = "Show fewer icons";
@@ -73,10 +73,10 @@
 "categoriesBalance" = "Balance";
 "categoriesEmptyCategoriesTitle" = "Create a category for your expenses";
 "categoriesEmptyCategoriesDescription" = "It seems you don't have any categories for your expenses yet. To keep your finances organized, we recommend creating one now.";
-"categoriesEmptyCategoriesButton" = "Add category";
+"categoriesEmptyCategoriesButton" = "Add Category";
 "categoriesEmptyBudgetsTitle" = "Create a budget for this month";
 "categoriesEmptyBudgetsDescription" = "It seems you haven't created a budget for your expenses this month yet. To ensure you stay within your financial limits, we suggest creating one now.";
-"categoriesEmptyBudgetsButton" = "Add budget";
+"categoriesEmptyBudgetsButton" = "Add Budget";
 "categoriesEditBudget" = "Edit Budget";
 "categoriesEditCategory" = "Edit Category";
 "categoriesRemoveBudget" = "Remove Budget";
@@ -139,7 +139,7 @@
 "transactionsCopyTransactions" = "Copy";
 "transactionsNewTransactions" = "Add Transaction";
 "transactionsMoreMenuHeader" = "Options";
-"transactionsAddTransaction" = "Add transaction";
+"transactionsAddTransaction" = "Add Transaction";
 "transactionsFilterByDate" = "Filter by date";
 "transactionsCleanCategoriesFilter" = "Clear";
 "transactionsCategoriesFilterHeader" = "Select one or more categories";

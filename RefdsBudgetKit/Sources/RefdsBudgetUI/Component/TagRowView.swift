@@ -19,7 +19,7 @@ public struct TagRowView: View {
         HStack(spacing: .padding(.medium)) {
             BubbleColorView(color: viewData.color, isSelected: false, size: 18)
             VStack(alignment: .leading) {
-                RefdsText(viewData.name, style: .callout)
+                RefdsText(viewData.name.capitalized, style: .callout)
                 
                 if let amount = viewData.amount {
                     RefdsText(

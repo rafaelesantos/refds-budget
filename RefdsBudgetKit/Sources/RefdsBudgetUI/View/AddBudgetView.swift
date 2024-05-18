@@ -139,7 +139,7 @@ public struct AddBudgetView: View {
         Picker(selection: bindingMonth) {
             let months = Calendar.current.monthSymbols
             ForEach(months, id: \.self) {
-                RefdsText($0)
+                RefdsText($0.capitalized)
                     .tag($0)
             }
         } label: {

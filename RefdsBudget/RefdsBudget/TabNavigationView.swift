@@ -16,24 +16,28 @@ struct TabNavigationView: View {
     private var bindingState: Binding<RefdsReduxState> {
         Binding { store.state } set: {
             guard let state = $0 as? ApplicationStateProtocol else { return }
-            store.state = state
+            withAnimation { store.state = state }
         }
     }
     
     private var bindingItemNavigation: Binding<Int> {
         Binding {
             store.state.itemNavigation?.rawValue ?? .zero
-        } set: {
-            if store.state.itemNavigation?.rawValue == $0, let item = ItemNavigation(rawValue: $0) {
-                switch item {
-                case .premium: store.state.premiumRouter.popToRoot()
-                case .categories: store.state.categoriesRouter.popToRoot()
-                case .home: store.state.homeRouter.popToRoot()
-                case .transactions: store.state.transactionsRouter.popToRoot()
-                case .settings: store.state.settingsRouter.popToRoot()
+        } set: { rawValue in
+            withAnimation {
+                if store.state.itemNavigation?.rawValue == rawValue,
+                   let item = ItemNavigation(rawValue: rawValue) {
+                    switch item {
+                    case .premium: store.state.premiumRouter.popToRoot()
+                    case .categories: store.state.categoriesRouter.popToRoot()
+                    case .home: store.state.homeRouter.popToRoot()
+                    case .transactions: store.state.transactionsRouter.popToRoot()
+                    case .settings: store.state.settingsRouter.popToRoot()
+                    }
                 }
+                
+                store.state.itemNavigation = ItemNavigation(rawValue: rawValue)
             }
-            store.state.itemNavigation = ItemNavigation(rawValue: $0)
         }
     }
     

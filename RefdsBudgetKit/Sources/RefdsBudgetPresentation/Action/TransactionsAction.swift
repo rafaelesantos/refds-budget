@@ -9,7 +9,9 @@ public enum TransactionsAction: RefdsReduxAction {
     case updateData(
         transactions: [[TransactionRowViewDataProtocol]],
         categories: [String],
-        tags: [String]
+        tags: [String],
+        page: Int,
+        canChangePage: Bool
     )
     case updateBalance(BalanceRowViewDataProtocol)
     case updateError(RefdsBudgetError)
