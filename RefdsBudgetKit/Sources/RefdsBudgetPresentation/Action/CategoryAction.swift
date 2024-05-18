@@ -13,7 +13,9 @@ public enum CategoryAction: RefdsReduxAction {
         icon: String,
         color: Color,
         budgets: [BudgetRowViewDataProtocol],
-        transactions: [[TransactionRowViewDataProtocol]]
+        transactions: [[TransactionRowViewDataProtocol]],
+        page: Int,
+        canChangePage: Bool
     )
     case updateBalance(BalanceRowViewDataProtocol)
     case updateError(RefdsBudgetError)

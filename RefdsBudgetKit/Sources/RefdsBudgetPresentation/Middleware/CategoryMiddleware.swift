@@ -36,6 +36,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             fetchData(
                 with: state.id,
                 and: state.searchText,
+                page: state.page,
                 from: date,
                 on: completion
             )
@@ -55,6 +56,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
     private func fetchData(
         with categoryId: UUID,
         and searchText: String,
+        page: Int,
         from date: Date?,
         on completion: @escaping (CategoryAction) -> Void
     ) {
@@ -106,13 +108,49 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             ($1.first?.date ?? Date())
         })
         
-        return completion(
+        if date == nil {
+            if let range: ClosedRange<Int> = .range(
+                page: page,
+                amount: 15,
+                count: groupedTransactions.indices.count
+            ) {
+                let filteredTransactions = Array(groupedTransactions[range])
+                let canChangePage = (page + 1) * filteredTransactions.count < groupedTransactions.count
+                return completion(
+                    .updateData(
+                        name: categoryEntity.name,
+                        icon: categoryEntity.icon,
+                        color: Color(hex: categoryEntity.color),
+                        budgets: budgets,
+                        transactions: filteredTransactions,
+                        page: page,
+                        canChangePage: canChangePage
+                    )
+                )
+            } else {
+                return completion(
+                    .updateData(
+                        name: categoryEntity.name,
+                        icon: categoryEntity.icon,
+                        color: Color(hex: categoryEntity.color),
+                        budgets: budgets,
+                        transactions: [],
+                        page: page,
+                        canChangePage: false
+                    )
+                )
+            }
+        }
+        
+        completion(
             .updateData(
                 name: categoryEntity.name,
                 icon: categoryEntity.icon,
                 color: Color(hex: categoryEntity.color),
                 budgets: budgets,
-                transactions: groupedTransactions
+                transactions: groupedTransactions,
+                page: 1,
+                canChangePage: false
             )
         )
     }
@@ -204,33 +242,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return completion(.updateError(.notFoundBudget))
         }
         
-        guard let category = categoryRepository.getCategory(by: budgetEntity.category) else {
-            return completion(.updateError(.notFoundCategory))
-        }
-        
-        let transactions = transactionRepository.getTransactions(
-            on: category.id,
-            from: budgetEntity.date.date,
-            format: .monthYear
-        )
-        
-        guard transactions.isEmpty else {
-            return completion(.updateError(.cantDeleteBudget))
-        }
-        
         do {
             try categoryRepository.removeBudget(id: budgetEntity.id)
-        } catch { completion(.updateError(.cantDeleteBudget)) }
-        
-        guard category.budgets.count > 1 else {
-            do {
-                try categoryRepository.removeCategory(id: category.id)
-            } catch { completion(.updateError(.cantDeleteCategory)) }
-            return
+            WidgetCenter.shared.reloadAllTimelines()
+            completion(.fetchData)
+        } catch { 
+            completion(.updateError(.cantDeleteBudget))
         }
-        
-        WidgetCenter.shared.reloadAllTimelines()
-        completion(.dismiss)
     }
     
     private func removeCategory(
@@ -275,12 +293,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         by ids: Set<UUID>,
         on completion: @escaping (CategoryAction) -> Void
     ) {
-        ids.forEach { id in
-            try? transactionRepository.removeTransaction(by: id)
+        do {
+            try transactionRepository.removeTransactions(by: Array(ids))
+            WidgetCenter.shared.reloadAllTimelines()
+            completion(.fetchData)
+        } catch {
+            completion(.updateError(.notFoundTransaction))
         }
-        
-        WidgetCenter.shared.reloadAllTimelines()
-        completion(.fetchData)
     }
     
     private func updateStatus(

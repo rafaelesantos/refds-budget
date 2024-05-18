@@ -172,33 +172,13 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return completion(.updateError(.notFoundBudget))
         }
         
-        guard let category = categoryRepository.getCategory(by: budgetEntity.category) else {
-            return completion(.updateError(.notFoundCategory))
-        }
-        
-        let transactions = transactionRepository.getTransactions(
-            on: category.id,
-            from: budgetEntity.date.date,
-            format: .monthYear
-        )
-        
-        guard transactions.isEmpty else {
-            return completion(.updateError(.cantDeleteBudget))
-        }
-        
         do {
             try categoryRepository.removeBudget(id: budgetEntity.id)
-        } catch { completion(.updateError(.cantDeleteBudget)) }
-        
-        guard category.budgets.count > 1 else {
-            do {
-                try categoryRepository.removeCategory(id: category.id)
-            } catch { completion(.updateError(.cantDeleteCategory)) }
-            return
+            WidgetCenter.shared.reloadAllTimelines()
+            completion(.fetchData)
+        } catch {
+            completion(.updateError(.cantDeleteBudget))
         }
-        
-        WidgetCenter.shared.reloadAllTimelines()
-        completion(.fetchData)
     }
     
     private func removeCategory(

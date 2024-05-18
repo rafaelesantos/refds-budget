@@ -10,6 +10,8 @@ public struct CategoryStateMock: CategoryStateProtocol {
     public var icon: String = RefdsIconSymbol.random.rawValue
     public var date: Date = .current
     public var isFilterEnable: Bool = true
+    public var page: Int = 1
+    public var canChangePage: Bool = false
     public var isLoading: Bool = true
     public var searchText: String = ""
     public var budgtes: [BudgetRowViewDataProtocol] = (1 ... 3).map { _ in BudgetRowViewDataMock() }

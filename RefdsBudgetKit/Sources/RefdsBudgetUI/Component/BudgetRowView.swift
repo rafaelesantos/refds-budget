@@ -41,7 +41,7 @@ public struct BudgetRowView: View {
                     #endif
                         .padding(.vertical, .padding(.extraSmall))
                     RefdsText(
-                        percentage.percent(),
+                        viewData.percentage.percent(),
                         style: .footnote,
                         color: .secondary
                     )

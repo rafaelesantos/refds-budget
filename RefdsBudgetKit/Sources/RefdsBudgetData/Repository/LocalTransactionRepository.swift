@@ -52,6 +52,16 @@ public final class LocalTransactionRepository: TransactionUseCase {
         try database.viewContext.save()
     }
     
+    public func removeTransactions(by ids: [UUID]) throws {
+        let transactions = getTransactions().filter { ids.contains($0.id) }
+        if !transactions.isEmpty {
+            transactions.forEach {
+                database.viewContext.delete($0)
+            }
+            try database.viewContext.save()
+        }
+    }
+    
     public func addTransaction(
         id: UUID,
         date: Date,

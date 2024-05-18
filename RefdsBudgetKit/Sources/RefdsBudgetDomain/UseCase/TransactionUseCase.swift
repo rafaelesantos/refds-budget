@@ -18,6 +18,7 @@ public protocol TransactionUseCase {
     ) -> [TransactionEntity]
     
     func removeTransaction(by id: UUID) throws
+    func removeTransactions(by ids: [UUID]) throws
     
     func addTransaction(
         id: UUID,

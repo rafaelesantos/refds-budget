@@ -11,6 +11,8 @@ public protocol CategoryStateProtocol: RefdsReduxState {
     var icon: String { get set }
     var date: Date { get set }
     var isFilterEnable: Bool { get set }
+    var page: Int { get set }
+    var canChangePage: Bool { get set }
     var isLoading: Bool { get set }
     var searchText: String { get set }
     var budgtes: [BudgetRowViewDataProtocol] { get set }
@@ -26,6 +28,8 @@ public struct CategoryState: CategoryStateProtocol {
     public var icon: String
     public var date: Date
     public var isFilterEnable: Bool
+    public var page: Int
+    public var canChangePage: Bool
     public var isLoading: Bool = true
     public var searchText: String = ""
     public var budgtes: [BudgetRowViewDataProtocol]
@@ -40,6 +44,8 @@ public struct CategoryState: CategoryStateProtocol {
         icon: String = RefdsIconSymbol.random.rawValue,
         date: Date = .current,
         isFilterEnable: Bool = true,
+        page: Int = 1,
+        canChangePage: Bool = false,
         budgtes: [BudgetRowViewDataProtocol] = [],
         transactions: [[TransactionRowViewDataProtocol]] = [],
         error: RefdsBudgetError? = nil
@@ -50,6 +56,8 @@ public struct CategoryState: CategoryStateProtocol {
         self.icon = icon
         self.date = date
         self.isFilterEnable = isFilterEnable
+        self.page = page
+        self.canChangePage = canChangePage
         self.budgtes = budgtes
         self.transactions = transactions
         self.error = error

@@ -42,7 +42,12 @@ public struct CategoryView: View {
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
+        .onChange(of: state.page) {
+            state.transactions = []
+            reloadData()
+        }
         .toolbar { ToolbarItemGroup { moreButton } }
+        .toolbar { ToolbarItem(placement: .bottomBar) { paginationView } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
@@ -116,7 +121,7 @@ public struct CategoryView: View {
                             )
                         }
                         .contextMenu {
-                            removeBudgetButton(at: index)
+                            removeBudgetButton(by: budget.id)
                         }
                 }
             }
@@ -144,10 +149,9 @@ public struct CategoryView: View {
     }
     
     @ViewBuilder
-    private func removeBudgetButton(at index: Int) -> some View {
-        let budget = state.budgtes[index]
+    private func removeBudgetButton(by id: UUID) -> some View {
         RefdsButton {
-            action(.removeBudget(state.date, budget.id))
+            action(.removeBudget(state.date, id))
         } label: {
             RefdsText(.localizable(by: .categoriesRemoveBudget))
         }
@@ -251,6 +255,17 @@ public struct CategoryView: View {
                 size: 18,
                 weight: .bold,
                 renderingMode: .hierarchical
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private var paginationView: some View {
+        if !state.isFilterEnable {
+            RefdsPagination(
+                currentPage: $state.page,
+                color: .accentColor,
+                canChangeToNextPage: { state.canChangePage }
             )
         }
     }

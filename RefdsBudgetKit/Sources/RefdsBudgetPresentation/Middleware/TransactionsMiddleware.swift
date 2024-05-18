@@ -218,11 +218,13 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         by ids: Set<UUID>,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
-        ids.forEach { id in
-            try? transactionRepository.removeTransaction(by: id)
+        do {
+            try transactionRepository.removeTransactions(by: Array(ids))
+            WidgetCenter.shared.reloadAllTimelines()
+            completion(.fetchData)
+        } catch {
+            completion(.updateError(.notFoundTransaction))
         }
-        WidgetCenter.shared.reloadAllTimelines()
-        completion(.fetchData)
     }
     
     private func updateStatus(

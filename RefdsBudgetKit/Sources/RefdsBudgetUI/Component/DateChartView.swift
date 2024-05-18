@@ -45,7 +45,7 @@ public struct DateChartView: View {
                 if position < 9 {
                     rankSealView(for: position)
                 }
-                RefdsText(chartSelection, style: .callout)
+                RefdsText(chartSelection.capitalized, style: .callout)
                 Spacer()
                 RefdsText(value.currency(), style: .callout, weight: .bold)
                     .contentTransition(.numericText())
