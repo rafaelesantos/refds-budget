@@ -14,6 +14,12 @@ public final class SettingsReducer: RefdsReduxReducerProtocol {
             state.isLoading = true
         case let .receiveData(newState):
             state = newState
+        case .updatePro:
+            state.products = []
+            state.features = []
+            state.transactions = []
+            state.purchasedProductsID = []
+            state.isLoading = true
         case let .receiveProducts(
             products,
             features,
