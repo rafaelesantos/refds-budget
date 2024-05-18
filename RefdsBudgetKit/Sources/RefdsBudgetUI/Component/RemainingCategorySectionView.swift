@@ -4,6 +4,8 @@ import RefdsShared
 import RefdsBudgetPresentation
 
 public struct RemainingCategorySectionView<Header: View>: View {
+    @Environment(\.isPro) private var isPro
+    
     private let header: () -> Header
     private let viewData: [CategoryRowViewDataProtocol]
     private let action: ((CategoryRowViewDataProtocol) -> Void)?
@@ -40,7 +42,7 @@ public struct RemainingCategorySectionView<Header: View>: View {
             }
         }
         
-        if isCollapsed {
+        if isCollapsed, isPro {
             RefdsSection {
                 remainingCategories
             }
