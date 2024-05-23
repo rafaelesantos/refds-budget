@@ -34,6 +34,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>Configuration</key>
+	<string>$(CONFIGURATION)</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

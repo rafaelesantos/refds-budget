@@ -17,7 +17,8 @@
 		6C44A7242BC607EA00C94C2C /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6C44A7232BC607EA00C94C2C /* RefdsBudgetKit */; };
 		6C587EDA2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */; };
 		6C587EDB2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */; };
-		6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6CA940302BFFC0A200E1BC30 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA9402F2BFFC0A200E1BC30 /* Environment.swift */; };
+		6CA940312BFFC45700E1BC30 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6CE5131D2BE2F2A5005085CE /* SideNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */; };
 		6CE5131F2BE2F445005085CE /* TabNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131E2BE2F445005085CE /* TabNavigationView.swift */; };
 		6CE513272BE3F490005085CE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE513262BE3F490005085CE /* WidgetKit.framework */; };
@@ -44,14 +45,14 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		6CE513382BE3F491005085CE /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6C73FB7E2BF3B0FC0042DF2F /* RefdsBudgetWidget.appex in Embed Foundation Extensions */,
+				6CA940312BFFC45700E1BC30 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -59,7 +60,7 @@
 		6C257DD92BF25DFC0018F556 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6C3523312BE9306C00077307 /* SystemMediumExpenseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMediumExpenseTracker.swift; sourceTree = "<group>"; };
 		6C3523332BE94EB400077307 /* SystemLargeExpenseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLargeExpenseTracker.swift; sourceTree = "<group>"; };
-		6C44A7102BC6075100C94C2C /* RefdsBudget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefdsBudget.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C44A7102BC6075100C94C2C /* Budget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Budget.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C44A7132BC6075200C94C2C /* RefdsBudgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefdsBudgetApp.swift; sourceTree = "<group>"; };
 		6C44A7152BC6075200C94C2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6C44A7172BC6075500C94C2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 		6C44A71B2BC6075500C94C2C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6C44A7252BC6091C00C94C2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = BudgetStoreConfig.storekit; sourceTree = "<group>"; };
+		6CA9402F2BFFC0A200E1BC30 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideNavigationView.swift; sourceTree = "<group>"; };
 		6CE5131E2BE2F445005085CE /* TabNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavigationView.swift; sourceTree = "<group>"; };
 		6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RefdsBudgetWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,7 +121,7 @@
 		6C44A7112BC6075100C94C2C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6C44A7102BC6075100C94C2C /* RefdsBudget.app */,
+				6C44A7102BC6075100C94C2C /* Budget.app */,
 				6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */,
 			);
 			name = Products;
@@ -133,6 +135,7 @@
 				6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */,
 				6CE5131E2BE2F445005085CE /* TabNavigationView.swift */,
 				6C44A7152BC6075200C94C2C /* ContentView.swift */,
+				6CA9402F2BFFC0A200E1BC30 /* Environment.swift */,
 				6C44A7172BC6075500C94C2C /* Assets.xcassets */,
 				6C44A7192BC6075500C94C2C /* RefdsBudget.entitlements */,
 				6C44A71A2BC6075500C94C2C /* Preview Content */,
@@ -198,7 +201,7 @@
 				6C44A7232BC607EA00C94C2C /* RefdsBudgetKit */,
 			);
 			productName = RefdsBudget;
-			productReference = 6C44A7102BC6075100C94C2C /* RefdsBudget.app */;
+			productReference = 6C44A7102BC6075100C94C2C /* Budget.app */;
 			productType = "com.apple.product-type.application";
 		};
 		6CE513232BE3F490005085CE /* RefdsBudgetWidget */ = {
@@ -293,6 +296,7 @@
 				6CE5131D2BE2F2A5005085CE /* SideNavigationView.swift in Sources */,
 				6C44A7162BC6075200C94C2C /* ContentView.swift in Sources */,
 				6C44A7142BC6075200C94C2C /* RefdsBudgetApp.swift in Sources */,
+				6CA940302BFFC0A200E1BC30 /* Environment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,86 +323,17 @@
 		};
 		6CE513362BE3F491005085CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			target = 6CE513232BE3F490005085CE /* RefdsBudgetWidget */;
 			targetProxy = 6CE513352BE3F491005085CE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		6C44A71D2BC6075500C94C2C /* Debug */ = {
+		6C44A71E2BC6075500C94C2C /* Release Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_BUILD = 67;
-				APP_VERSION = 2.0.0;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Debug;
-		};
-		6C44A71E2BC6075500C94C2C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_BUILD = 67;
+				APP_BUILD = 68;
 				APP_VERSION = 2.0.0;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -452,9 +387,9 @@
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
-			name = Release;
+			name = "Release Production";
 		};
-		6C44A7202BC6075500C94C2C /* Debug */ = {
+		6C44A7212BC6075500C94C2C /* Release Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -492,7 +427,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Budget;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -502,13 +437,73 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = "Release Production";
 		};
-		6C44A7212BC6075500C94C2C /* Release */ = {
+		6CA9402C2BFFBBDF00E1BC30 /* Release Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD = 68;
+				APP_VERSION = 2.0.0;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = "Release Development";
+		};
+		6CA9402D2BFFBBDF00E1BC30 /* Release Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = DevelopmentAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = RefdsBudget/RefdsBudget.entitlements;
@@ -541,8 +536,8 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = "$(APP_VERSION)";
-				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.development;
+				PRODUCT_NAME = "Budget Development";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -552,9 +547,49 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Release;
+			name = "Release Development";
 		};
-		6CE513392BE3F491005085CE /* Debug */ = {
+		6CA9402E2BFFBBDF00E1BC30 /* Release Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(APP_BUILD)";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = Q7QLR2PH2X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RefdsBudgetWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RefdsBudgetWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = "$(APP_VERSION)";
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget.development;
+				PRODUCT_NAME = "Budget Widget Development";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
+			};
+			name = "Release Development";
+		};
+		6CE5133A2BE3F491005085CE /* Release Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -592,47 +627,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "";
 			};
-			name = Debug;
-		};
-		6CE5133A2BE3F491005085CE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = RefdsBudgetWidget/RefdsBudgetWidget.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "$(APP_BUILD)";
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = Q7QLR2PH2X;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RefdsBudgetWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RefdsBudgetWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = "$(APP_VERSION)";
-				PRODUCT_BUNDLE_IDENTIFIER = br.com.rafaelescaleira.Budget.RefdsBudgetWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "";
-			};
-			name = Release;
+			name = "Release Production";
 		};
 /* End XCBuildConfiguration section */
 
@@ -640,29 +635,29 @@
 		6C44A70B2BC6075100C94C2C /* Build configuration list for PBXProject "RefdsBudget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6C44A71D2BC6075500C94C2C /* Debug */,
-				6C44A71E2BC6075500C94C2C /* Release */,
+				6C44A71E2BC6075500C94C2C /* Release Production */,
+				6CA9402C2BFFBBDF00E1BC30 /* Release Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release Production";
 		};
 		6C44A71F2BC6075500C94C2C /* Build configuration list for PBXNativeTarget "RefdsBudget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6C44A7202BC6075500C94C2C /* Debug */,
-				6C44A7212BC6075500C94C2C /* Release */,
+				6C44A7212BC6075500C94C2C /* Release Production */,
+				6CA9402D2BFFBBDF00E1BC30 /* Release Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release Production";
 		};
 		6CE5133B2BE3F491005085CE /* Build configuration list for PBXNativeTarget "RefdsBudgetWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6CE513392BE3F491005085CE /* Debug */,
-				6CE5133A2BE3F491005085CE /* Release */,
+				6CE5133A2BE3F491005085CE /* Release Production */,
+				6CA9402E2BFFBBDF00E1BC30 /* Release Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release Production";
 		};
 /* End XCConfigurationList section */
 

@@ -5,25 +5,22 @@ import RefdsBudgetDomain
 import RefdsBudgetData
 
 public class RefdsReduxStoreFactory {
-    public var mock: RefdsReduxStore<ApplicationStateProtocol> {
-        .init(
+    public static var development: RefdsReduxStore<ApplicationStateProtocol> {
+        registerMockDependencies()
+        return .init(
             reducer: ApplicationReducer().reduce,
             state: ApplicationStateMock(),
             middlewares: getMiddlewares()
         )
     }
     
-    public var production: RefdsReduxStore<ApplicationStateProtocol> {
-        .init(
+    public static var production: RefdsReduxStore<ApplicationStateProtocol> {
+        registerProductionDependencies()
+        return .init(
             reducer: ApplicationReducer().reduce,
             state: ApplicationState(),
             middlewares: getMiddlewares()
         )
-    }
-    
-    public init(mock: Bool = false) {
-        if mock { Self.registerMockDependencies() }
-        else { Self.registerProductionDependencies() }
     }
     
     private static func registerMockDependencies() {
@@ -53,7 +50,7 @@ public class RefdsReduxStoreFactory {
         RefdsContainer.register(type: SettingsAdapterProtocol.self) { SettingsAdapter() }
     }
     
-    private func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {
+    private static func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {
         [
             BalanceMiddleware<ApplicationStateProtocol>().middleware,
             AddBudgetMiddleware<ApplicationStateProtocol>().middleware,

@@ -7,7 +7,8 @@ public enum Asset: String, CaseIterable, Identifiable {
     case system = "SystemAppIcon"
     case lightSystem = "LightSystemAppIcon"
     case darkSystem = "DarkSystemAppIcon"
-    case lgbt = "LGBTAppIcon"
+    case lightCrown = "LightCrownAppIcon"
+    case darkCrown = "DarkCrownAppIcon"
     
     public var title: String {
         switch self {
@@ -17,7 +18,8 @@ public enum Asset: String, CaseIterable, Identifiable {
         case .system: return .localizable(by: .appIconSystem)
         case .lightSystem: return .localizable(by: .appIconLightSystem)
         case .darkSystem: return .localizable(by: .appIconDarkSystem)
-        case .lgbt: return .localizable(by: .appIconLgbt)
+        case .lightCrown: return .localizable(by: .appIconLightCrown)
+        case .darkCrown: return .localizable(by: .appIconDarkCrown)
         }
     }
     

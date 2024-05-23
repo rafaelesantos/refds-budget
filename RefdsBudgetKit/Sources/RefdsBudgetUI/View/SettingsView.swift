@@ -124,8 +124,8 @@ public struct SettingsView: View {
                                 icon.image
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 50)
-                                    .clipShape(.rect(cornerRadius: .cornerRadius))
+                                    .frame(width: 60)
+                                    .clipShape(.rect(cornerRadius: 13))
                                     .refdsCard(padding: .zero, hasShadow: true)
                                     .padding(.vertical, 15)
                                 
@@ -355,7 +355,7 @@ public struct SettingsView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory(mock: true).mock
+        @StateObject private var store = RefdsReduxStoreFactory.development
         
         var body: some View {
             NavigationStack {

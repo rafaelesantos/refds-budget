@@ -201,7 +201,8 @@
 "appIconSystem" = "System";
 "appIconLightSystem" = "Light System";
 "appIconDarkSystem" = "Dark System";
-"appIconLgbt" = "LGBT";
+"appIconLightCrown" = "Light Crown";
+"appIconDarkCrown" = "Dark Crown";
 
 // MARK: - Settings
 

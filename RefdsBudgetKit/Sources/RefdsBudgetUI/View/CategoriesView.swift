@@ -373,7 +373,7 @@ public struct CategoriesView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory(mock: true).mock
+        @StateObject private var store = RefdsReduxStoreFactory.development
         private var viewFactory = ViewFactory()
         
         init() {

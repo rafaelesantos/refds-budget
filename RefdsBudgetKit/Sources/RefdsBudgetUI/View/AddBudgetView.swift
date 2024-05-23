@@ -243,7 +243,7 @@ public struct AddBudgetView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory(mock: true).mock
+        @StateObject private var store = RefdsReduxStoreFactory.development
         
         var body: some View {
             AddBudgetView(state: $store.state.addBudgetState) {

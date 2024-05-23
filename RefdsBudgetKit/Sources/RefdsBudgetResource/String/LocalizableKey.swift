@@ -173,7 +173,8 @@ public enum LocalizableKey: String {
     case appIconSystem
     case appIconLightSystem
     case appIconDarkSystem
-    case appIconLgbt
+    case appIconLightCrown
+    case appIconDarkCrown
     // MARK: - Settings
     case settingsNavigationTitle
     case settingsSectionCustomization

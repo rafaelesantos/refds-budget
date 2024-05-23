@@ -13,7 +13,7 @@ import RefdsBudgetUI
 struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
-    @StateObject private var store = RefdsReduxStoreFactory().production
+    @StateObject private var store = EnvironmentConfiguration.store
     @StateObject private var welcome = WelcomeViewData()
     
     @AppStorage("isWelcomePresented") private var isWelcomePresented = false

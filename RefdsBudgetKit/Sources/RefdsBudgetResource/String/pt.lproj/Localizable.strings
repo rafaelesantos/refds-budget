@@ -196,12 +196,13 @@
 // MARK: - Application Icon
 
 "appIconDefault" = "Padrão";
-"appIconLight" = "Padrão claro";
-"appIconDark" = "Padrão escuro";
+"appIconLight" = "Padrão Claro";
+"appIconDark" = "Padrão Escuro";
 "appIconSystem" = "Sistema";
-"appIconLightSystem" = "Sistema claro";
-"appIconDarkSystem" = "Sistema escuro";
-"appIconLgbt" = "LGBT";
+"appIconLightSystem" = "Sistema Claro";
+"appIconDarkSystem" = "Sistema Escuro";
+"appIconLightCrown" = "Coroa Clara";
+"appIconDarkCrown" = "Coroa Escura";
 
 // MARK: - Settings
 
