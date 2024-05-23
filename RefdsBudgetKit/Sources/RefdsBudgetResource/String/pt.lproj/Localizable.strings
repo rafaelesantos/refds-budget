@@ -203,6 +203,7 @@
 "appIconDarkSystem" = "Sistema Escuro";
 "appIconLightCrown" = "Coroa Clara";
 "appIconDarkCrown" = "Coroa Escura";
+"appIconDevelopment" = "Desenvolvimento";
 
 // MARK: - Settings
 

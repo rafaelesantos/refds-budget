@@ -2,13 +2,14 @@ import SwiftUI
 
 public enum Asset: String, CaseIterable, Identifiable {
     case `default` = "AppIcon"
-    case light = "LightAppIcon"
-    case dark = "DarkAppIcon"
     case system = "SystemAppIcon"
-    case lightSystem = "LightSystemAppIcon"
-    case darkSystem = "DarkSystemAppIcon"
+    case development = "DevelopmentAppIcon"
     case lightCrown = "LightCrownAppIcon"
+    case light = "LightAppIcon"
+    case lightSystem = "LightSystemAppIcon"
     case darkCrown = "DarkCrownAppIcon"
+    case dark = "DarkAppIcon"
+    case darkSystem = "DarkSystemAppIcon"
     
     public var title: String {
         switch self {
@@ -20,6 +21,7 @@ public enum Asset: String, CaseIterable, Identifiable {
         case .darkSystem: return .localizable(by: .appIconDarkSystem)
         case .lightCrown: return .localizable(by: .appIconLightCrown)
         case .darkCrown: return .localizable(by: .appIconDarkCrown)
+        case .development: return .localizable(by: .appIconDevelopment)
         }
     }
     

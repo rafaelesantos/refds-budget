@@ -203,6 +203,7 @@
 "appIconDarkSystem" = "Dark System";
 "appIconLightCrown" = "Light Crown";
 "appIconDarkCrown" = "Dark Crown";
+"appIconDevelopment" = "Development";
 
 // MARK: - Settings
 
