@@ -127,6 +127,7 @@ public struct CategoriesView: View {
         if let balance = state.balance {
             RefdsSection {
                 BalanceRowView(viewData: balance)
+                rowAddCategory
                 rowAddBudget
             } header: {
                 RefdsText(
@@ -157,6 +158,24 @@ public struct CategoriesView: View {
                         style: .callout
                     )
                 }
+            }
+        }
+    }
+    
+    private var rowAddCategory: some View {
+        RefdsButton { action(.addCategory(nil)) } label: {
+            HStack {
+                RefdsText(
+                    .localizable(by: .categoriesEmptyCategoriesButton),
+                    style: .callout,
+                    color: .accentColor
+                )
+                Spacer()
+                RefdsIcon(
+                    .chevronRight,
+                    color: .secondary.opacity(0.5),
+                    style: .callout
+                )
             }
         }
     }

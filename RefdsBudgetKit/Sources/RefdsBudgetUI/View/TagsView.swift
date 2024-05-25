@@ -130,6 +130,7 @@ public struct TagsView: View {
     private var sectionSaveButton: some View {
         RefdsSection {} footer: {
             saveButton
+                .padding(.horizontal, -20)
         }
     }
     

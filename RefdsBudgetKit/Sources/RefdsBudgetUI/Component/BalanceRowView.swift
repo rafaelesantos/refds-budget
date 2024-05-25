@@ -41,6 +41,23 @@ public struct BalanceRowView: View {
                             color: .accentColor,
                             weight: .bold
                         )
+                        
+                        if isRemaining {
+                            Spacer(minLength: .zero)
+                            
+                            RefdsText(
+                                (1 - percentage).percent(),
+                                style: .footnote,
+                                color: percentage.riskColor,
+                                weight: .bold
+                            )
+                            .refdsRedacted(if: privacyMode)
+                            .contentTransition(.numericText())
+                            .refdsTag(
+                                color: percentage.riskColor,
+                                cornerRadius: 5
+                            )
+                        }
                     }
                 }
                 
@@ -90,20 +107,6 @@ public struct BalanceRowView: View {
                     scale: 0.08
                 )
                 .refdsRedacted(if: privacyMode)
-            } else {
-                RefdsText(
-                    (1 - percentage).percent(),
-                    style: .title2,
-                    color: percentage.riskColor,
-                    weight: .heavy
-                )
-                .refdsRedacted(if: privacyMode)
-                .contentTransition(.numericText())
-                .padding(5)
-                .refdsTag(
-                    color: percentage.riskColor,
-                    cornerRadius: .cornerRadius
-                )
             }
         }
         .frame(maxWidth: .infinity)

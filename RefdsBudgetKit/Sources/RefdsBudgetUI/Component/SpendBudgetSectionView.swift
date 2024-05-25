@@ -86,13 +86,12 @@ public struct SpendBudgetSectionView: View {
     
     private func comparePercentView(_ category: CategoryRowViewDataProtocol) -> some View {
         HStack {
-            RefdsText(.localizable(by: .homeSpendBudgetPercentageResult ), style: .callout)
+            RefdsText(.localizable(by: .homeSpendBudgetPercentageResult), style: .callout)
             Spacer()
-            RefdsIcon(
-                category.budget > 0 ? .arrowtriangleUpSquareFill : .arrowtriangleDownSquareFill,
+            BubbleColorView(
                 color: category.percentage.riskColor,
-                size: 20,
-                renderingMode: .hierarchical
+                isSelected: true,
+                size: 14
             )
             RefdsText(category.percentage.percent())
                 .refdsRedacted(if: privacyMode)

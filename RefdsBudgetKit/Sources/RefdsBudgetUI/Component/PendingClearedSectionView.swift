@@ -81,11 +81,12 @@ public struct PendingClearedSectionView: View {
                 RefdsText(
                     percent.percent(),
                     style: .footnote,
-                    color: .white.opacity(0.8),
+                    color: .white,
                     weight: .bold
                 )
                 .contentTransition(.numericText())
                 .refdsRedacted(if: privacyMode)
+                .refdsTag(color: .white)
                 
                 RefdsText(
                     (style == .localizable(by: .addTransactionStatusPending) ? viewData.pendingCount : viewData.clearedCount).asString,

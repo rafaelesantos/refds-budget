@@ -29,23 +29,18 @@ public struct RemainingCategoryRowView: View {
     private var content: some View {
         HStack(spacing: .padding(.medium)) {
             if let icon = RefdsIconSymbol(rawValue: viewData.icon) {
-                RefdsIcon(
-                    icon,
-                    color: viewData.color,
-                    size: .padding(.medium)
-                )
-                .frame(width: .padding(.medium), height: .padding(.medium))
-                .padding(10)
-                .background(viewData.color.opacity(0.2))
-                .clipShape(.rect(cornerRadius: .cornerRadius))
+                    RefdsIconRow(icon, color: viewData.color)
             }
+            
+            BubbleColorView(
+                color: viewData.percentage.riskColor,
+                isSelected: true,
+                size: 14
+            )
             
             VStack(spacing: .zero) {
                 HStack {
-                    HStack {
-                        statusIconView
-                        RefdsText(viewData.name.capitalized, style: .callout, weight: .bold, lineLimit: 1)
-                    }
+                    RefdsText(viewData.name.capitalized, style: .callout, weight: .bold, lineLimit: 1)
                     Spacer(minLength: .zero)
                     RefdsText(budget.currency(), style: .callout, lineLimit: 1)
                         .contentTransition(.numericText())
@@ -68,26 +63,8 @@ public struct RemainingCategoryRowView: View {
                     )
                     .refdsRedacted(if: privacyMode)
                 }
-                
-                ProgressView(
-                    value: viewData.percentage > 1 ? 1 : viewData.percentage,
-                    total: 1
-                )
-                .scaleEffect(x: 1, y: 1.5, anchor: .center)
-                .tint(viewData.percentage.riskColor)
-                .padding(.top, 10)
-                .padding(.bottom, 5)
             }
         }
-    }
-    
-    private var statusIconView: some View {
-        RefdsIcon(
-            budget > 0 ? .arrowtriangleUpSquareFill : .arrowtriangleDownSquareFill,
-            color: percentage.riskColor,
-            size: 15,
-            renderingMode: .hierarchical
-        )
     }
     
     private func updateStateValue() {

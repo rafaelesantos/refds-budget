@@ -216,9 +216,9 @@ public struct SubscriptionView: View {
                         
                         RefdsText(
                             product.displayPrice,
-                            style: .largeTitle,
+                            style: .title,
                             color: .accentColor,
-                            weight: .black,
+                            weight: .bold,
                             alignment: .center
                         )
                         .contentTransition(.numericText())
@@ -251,9 +251,9 @@ public struct SubscriptionView: View {
                     
                     RefdsText(
                         product.displayPrice,
-                        style: .largeTitle,
+                        style: .title,
                         color: .accentColor,
-                        weight: .black
+                        weight: .bold
                     )
                 }
                 
