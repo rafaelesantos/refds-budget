@@ -136,7 +136,8 @@
 "transactionsCopyHeader" = "Total of %d transactions for the period from %@ to %@\n\n";
 "transactionsCopyFooter" = "TOTAL: %@";
 "transactionsRemoveTransactions" = "Remove";
-"transactionsCopyTransactions" = "Copy";
+"transactionsShareText" = "Share Text";
+"transactionsShare" = "Share";
 "transactionsNewTransactions" = "Add Transaction";
 "transactionsMoreMenuHeader" = "Options";
 "transactionsAddTransaction" = "Add Transaction";
@@ -177,8 +178,7 @@
 
 // MARK: - Filter
 
-"filterDateMonth" = "Month";
-"filterDateYear" = "Year";
+"filterDate" = "Date";
 "filterCategory" = "Categories";
 "filterTags" = "Tags";
 
@@ -230,6 +230,10 @@
 "settingsPrivacyPolicy" = "Privacy Policy";
 "settingsRowFaceID" = "Require Face ID";
 "settingsRowPrivacyMode" = "Privacy Mode";
+"settingsFilename" = "Budget from %@";
+"settingsFileHeader" = "Files";
+"settingsFileExport" = "Export Data";
+"settingsFileImport" = "Import Data";
 
 //MARK: - Welcome
 
@@ -277,3 +281,14 @@
 "subscriptionFeatureTitle10" = "Tag Comparison";
 "subscriptionFeatureTitle11" = "Custom Filters";
 "subscriptionFeatureTitle12" = "Graphical Analysis";
+
+// MARK: - Import
+
+"importNavigationTitle" = "Import";
+"importTotalValue" = "Total Value";
+"importTransactionsAmount" = "Transactions Amount";
+"importPeriod" = "Period";
+"importWarning" = "I understand that data with matching identifiers will be replaced.";
+"importImportHeader" = "Import Data";
+"importShowLessCategories" = "Show Less Categories";
+"importShowMoreCategories" = "Show More Categories";

@@ -46,6 +46,8 @@ struct ContentView: View {
                 .environmentObject(store)
                 .environment(\.privacyMode, store.state.settingsState.hasPrivacyMode)
                 .environment(\.isPro, store.state.settingsState.isPro)
+                .environment(\.applicationState, $store.state)
+                .environment(\.itemNavigation, $store.state.itemNavigation)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
                 .onChange(of: store.state.settingsState.isPro) { store.dispatch(action: SettingsAction.updatePro) }

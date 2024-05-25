@@ -26,6 +26,13 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         switch action {
         case .fetchData: fetchData(with: state, on: completion)
         case .updateData: updateData(with: state, on: completion)
+        case let .share(budgets, categories, transactions):
+            share(
+                budgets: budgets,
+                categories: categories,
+                transactions: transactions,
+                on: completion
+            )
         default: break
         }
     }
@@ -71,5 +78,19 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         } catch {
             completion(.updateError(error: .cantSaveOnDatabase))
         }
+    }
+    
+    private func share(
+        budgets: Set<UUID>,
+        categories: Set<UUID>,
+        transactions: Set<UUID>,
+        on completion: @escaping (SettingsAction) -> Void
+    ) {
+        let url = FileFactory.shared.getFileURL(
+            budgetsId: budgets,
+            categoriesId: categories,
+            transactionsId: transactions
+        )
+        completion(.updateShare(url))
     }
 }

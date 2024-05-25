@@ -10,10 +10,10 @@ public enum ApplicationRoute: RefdsRoutableRedux {
     case addTransaction
     case manageTags
     case settings
+    case `import`
     
     public var navigationType: RefdsNavigationType {
         switch self {
-        case .settings: return .sheet
         default: return .push
         }
     }
@@ -24,9 +24,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
     
     private func bindingState(_ state: Binding<RefdsReduxState>) -> Binding<ApplicationStateProtocol>? {
         guard let wrappedValue = state.wrappedValue as? ApplicationStateProtocol else { return nil }
-        return Binding {
-            wrappedValue
-        } set: {
+        return Binding { wrappedValue } set: {
             state.wrappedValue = $0
         }
     }
@@ -45,6 +43,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
             case .addTransaction: AnyView(viewFactory.makeAddTransactionView(state: state.addTransactionState, action: action))
             case .manageTags: AnyView(viewFactory.makeTagView(state: state.tagsState, action: action))
             case .settings: AnyView(viewFactory.makeSettingsView(state: state.settingsState, action: action))
+            case .import: AnyView(viewFactory.makeImportView(state: state.importState, action: action))
             }
         }
     }

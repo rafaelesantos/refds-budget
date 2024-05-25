@@ -16,9 +16,13 @@ public enum TransactionsAction: RefdsReduxAction {
     case updateBalance(BalanceRowViewDataProtocol)
     case updateError(RefdsBudgetError)
     case updateStatus(UUID)
+    case updateShareText(String)
+    case updateShare(URL)
     
     case addTransaction(AddTransactionStateProtocol?)
     case removeTransaction(UUID)
-    case copyTransactions(Set<UUID>)
     case removeTransactions(Set<UUID>)
+    
+    case shareText(Set<UUID>)
+    case share(Set<UUID>)
 }

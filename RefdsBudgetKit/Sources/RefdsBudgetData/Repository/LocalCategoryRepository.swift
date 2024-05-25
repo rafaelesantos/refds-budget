@@ -93,7 +93,7 @@ public final class LocalCategoryRepository: CategoryUseCase {
             let category = CategoryEntity(context: database.viewContext)
             category.id = id
             category.name = name.capitalized
-            category.color = color.asHex()
+            category.color = color.asHex
             category.budgets = budgets
             category.icon = icon
             try database.viewContext.save()
@@ -101,7 +101,7 @@ public final class LocalCategoryRepository: CategoryUseCase {
         }
         category.id = id
         category.name = name.capitalized
-        category.color = color.asHex()
+        category.color = color.asHex
         category.budgets = budgets
         category.icon = icon
         try database.viewContext.save()

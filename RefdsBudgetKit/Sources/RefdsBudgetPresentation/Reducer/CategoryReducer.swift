@@ -12,6 +12,8 @@ public final class CategoryReducer: RefdsReduxReducerProtocol {
         switch action as? CategoryAction {
         case .fetchData:
             state.isLoading = !state.isFilterEnable
+        case .share, .shareText:
+            state.isLoading = true
         case let .updateData(name, icon, color, budgets, transactions, page, canChangePage):
             state.name = name
             state.icon = icon
@@ -25,6 +27,12 @@ public final class CategoryReducer: RefdsReduxReducerProtocol {
             state.balance = balance
         case let .updateError(error):
             state.error = error
+        case let .updateShareText(text):
+            state.shareText = text
+            state.isLoading = false
+        case let .updateShare(url):
+            state.share = url
+            state.isLoading = false
         default: break
         }
         

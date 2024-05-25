@@ -33,13 +33,13 @@ public final class LocalBubbleRepository: BubbleUseCase {
             let bubble = BubbleEntity(context: database.viewContext)
             bubble.id = id
             bubble.name = name
-            bubble.color = color.asHex()
+            bubble.color = color.asHex
             try database.viewContext.save()
             return
         }
         bubble.id = id
         bubble.name = name
-        bubble.color = color.asHex()
+        bubble.color = color.asHex
         try database.viewContext.save()
     }
 }

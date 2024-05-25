@@ -17,6 +17,8 @@ public struct CategoryStateMock: CategoryStateProtocol {
     public var budgtes: [BudgetRowViewDataProtocol] = (1 ... 3).map { _ in BudgetRowViewDataMock() }
     public var transactions: [[TransactionRowViewDataProtocol]] = [(1 ... 5).map { _ in TransactionRowViewDataMock() }]
     public var balance: BalanceRowViewDataProtocol? = BalanceRowViewDataMock()
+    public var shareText: String?
+    public var share: URL?
     public var error: RefdsBudgetError? = Bool.random() ? nil : .notFoundBudget
     
     public init() {}

@@ -117,7 +117,8 @@ public enum LocalizableKey: String {
     case transactionsCopyHeader
     case transactionsCopyFooter
     case transactionsRemoveTransactions
-    case transactionsCopyTransactions
+    case transactionsShareText
+    case transactionsShare
     case transactionsNewTransactions
     case transactionsMoreMultiMenuHeader
     case transactionsMoreMenuHeader
@@ -153,8 +154,7 @@ public enum LocalizableKey: String {
     case tagsCleanSelected
     case menuCleanSelections
     // MARK: - Filter
-    case filterDateMonth
-    case filterDateYear
+    case filterDate
     case filterCategory
     case filterTags
     // MARK: - Widget
@@ -200,6 +200,10 @@ public enum LocalizableKey: String {
     case settingsPrivacyPolicy
     case settingsRowFaceID
     case settingsRowPrivacyMode
+    case settingsFilename
+    case settingsFileHeader
+    case settingsFileExport
+    case settingsFileImport
     //MARK: - Welcome
     case welcomeCategoryTitle
     case welcomeCategoryDescription
@@ -243,4 +247,13 @@ public enum LocalizableKey: String {
     case subscriptionFeatureTitle10
     case subscriptionFeatureTitle11
     case subscriptionFeatureTitle12
+    // MARK: - Import
+    case importNavigationTitle
+    case importTotalValue
+    case importTransactionsAmount
+    case importPeriod
+    case importWarning
+    case importImportHeader
+    case importShowLessCategories
+    case importShowMoreCategories
 }

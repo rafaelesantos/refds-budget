@@ -16,6 +16,8 @@ public struct TransactionsStateMock: TransactionsStateProtocol {
     public var selectedTags: Set<String> = []
     public var selectedStatus: Set<String> = []
     public var balance: (BalanceRowViewDataProtocol)? = BalanceRowViewDataMock()
+    public var shareText: String?
+    public var share: URL?
     public var error: RefdsBudgetError? = nil
     
     public init() {}

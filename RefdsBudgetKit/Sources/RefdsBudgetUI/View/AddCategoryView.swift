@@ -157,7 +157,7 @@ public struct AddCategoryView: View {
                         renderingMode: .hierarchical
                     )
                     .frame(width: 38, height: 38)
-                    .background(icon == selectedIcon ? state.color.opacity(0.2) : nil)
+                    .background(icon == selectedIcon ? state.color.opacity(0.2) : Color.secondary.opacity(0.1))
                     .clipShape(.rect(cornerRadius: 8))
                     .padding(.padding(.extraSmall))
                     .animation(.default, value: state.icon)
@@ -205,7 +205,7 @@ public struct AddCategoryView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             AddCategoryView(state: $store.state.addCategoryState) {

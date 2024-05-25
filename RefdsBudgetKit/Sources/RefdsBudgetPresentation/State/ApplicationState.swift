@@ -20,6 +20,7 @@ public protocol ApplicationStateProtocol: RefdsReduxState {
     var tagsState: TagsStateProtocol { get set }
     var homeState: HomeStateProtocol { get set }
     var settingsState: SettingsStateProtocol { get set }
+    var importState: ImportStateProtocol? { get set }
 }
 
 public struct ApplicationState: ApplicationStateProtocol {
@@ -38,6 +39,7 @@ public struct ApplicationState: ApplicationStateProtocol {
     public var tagsState: TagsStateProtocol
     public var homeState: HomeStateProtocol
     public var settingsState: SettingsStateProtocol
+    public var importState: ImportStateProtocol?
     
     public init(
         itemNavigation: ItemNavigation? = .home,
@@ -71,5 +73,16 @@ public struct ApplicationState: ApplicationStateProtocol {
         self.tagsState = tagsState
         self.homeState = homeState
         self.settingsState = settingsState
+    }
+}
+
+private struct ApplicationStateEnvironmentKey: EnvironmentKey {
+    static var defaultValue: Binding<ApplicationStateProtocol>?
+}
+
+public extension EnvironmentValues {
+    var applicationState: Binding<ApplicationStateProtocol>? {
+        get { self[ApplicationStateEnvironmentKey.self] }
+        set { self[ApplicationStateEnvironmentKey.self] = newValue }
     }
 }

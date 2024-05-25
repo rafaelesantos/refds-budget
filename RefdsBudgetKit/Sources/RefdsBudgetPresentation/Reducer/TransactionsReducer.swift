@@ -10,7 +10,7 @@ public final class TransactionsReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? TransactionsAction {
-        case .fetchData:
+        case .fetchData, .shareText, .share:
             state.isLoading = true
         case let .updateData(transactions, categories, tags, page, canChangePage):
             state.transactions = transactions
@@ -23,6 +23,12 @@ public final class TransactionsReducer: RefdsReduxReducerProtocol {
             state.balance = balance
         case let .updateError(error):
             state.error = error
+        case let .updateShareText(text):
+            state.shareText = text
+            state.isLoading = false
+        case let .updateShare(url):
+            state.share = url
+            state.isLoading = false
         default:
             break
         }

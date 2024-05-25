@@ -16,7 +16,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         guard let settings = try? database.viewContext.fetch(request).last else {
             let settings = SettingsEntity(context: database.viewContext)
             settings.date = .current
-            settings.theme = Color.green.asHex()
+            settings.theme = Color.green.asHex
             settings.icon = Asset.default.rawValue
             settings.appearence = .zero
             settings.hasAuthRequest = false
@@ -52,7 +52,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
     ) throws {
         let settings = getSettings()
         settings.date = .current
-        settings.theme = theme?.asHex() ?? settings.theme
+        settings.theme = theme?.asHex ?? settings.theme
         settings.icon = icon.rawValue
         settings.appearence = appearence ?? settings.appearence
         settings.hasAuthRequest = hasAuthRequest

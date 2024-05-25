@@ -5,6 +5,8 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct SettingsView: View {
+    @Environment(\.applicationState) private var applicationState
+    @Environment(\.itemNavigation) private var itemNavigation
     @Environment(\.requestReview) private var requestReview
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.openURL) private var openURL
@@ -27,6 +29,7 @@ public struct SettingsView: View {
             if isPro { sectionCustomization }
             sectionIcons
             sectionSecurity
+            sectionFiles
             sectionMoreOptions
             sectionAbout
         }
@@ -37,7 +40,44 @@ public struct SettingsView: View {
         .onChange(of: state.icon) { updateData() }
         .onChange(of: state.hasAuthRequest) { updateData() }
         .onChange(of: state.hasPrivacyMode) { updateData() }
+        .fileImporter(
+            isPresented: $state.showDocumentPicker,
+            allowedContentTypes: [.item],
+            onCompletion: handlerDocument(for:)
+        )
         .refdsToast(item: $state.error)
+        .refdsShare(item: $state.share)
+    }
+    
+    private var bindingApplicationState: Binding<ApplicationStateProtocol> {
+        Binding {
+            applicationState?.wrappedValue ?? ApplicationState()
+        } set: {
+            applicationState?.wrappedValue = $0
+        }
+    }
+    
+    private var bindingItemNavigation: Binding<Int> {
+        Binding {
+            itemNavigation?.wrappedValue?.rawValue ?? ItemNavigation.home.rawValue
+        } set: {
+            if let item = ItemNavigation(rawValue: $0) {
+                itemNavigation?.wrappedValue = item
+            }
+        }
+    }
+    
+    private func handlerDocument(for result: Result<URL, Error>) {
+        switch result {
+        case let .success(url):
+            Deeplink.shared.trigger(
+                state: bindingApplicationState,
+                itemNavigation: bindingItemNavigation,
+                url: url
+            )
+        case .failure:
+            state.error = .notFoundBudget
+        }
     }
     
     private func reloadData() {
@@ -214,6 +254,58 @@ public struct SettingsView: View {
         }
     }
     
+    private var sectionFiles: some View {
+        RefdsSection {
+            Group {
+                rowExportData
+                rowImportData
+            }
+            .budgetSubscription()
+        } header: {
+            RefdsText(
+                .localizable(by: .settingsFileHeader),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
+    private var rowExportData: some View {
+        RefdsButton {
+            action(
+                .share(
+                    budgets: [],
+                    categories: [],
+                    transactions: []
+                )
+            )
+        } label: {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .docBadgeArrowUpFill,
+                    color: .red
+                )
+                RefdsText(.localizable(by: .settingsFileExport))
+                Spacer(minLength: .zero)
+            }
+        }
+    }
+    
+    private var rowImportData: some View {
+        RefdsButton {
+            withAnimation { state.showDocumentPicker.toggle() }
+        } label: {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .trayAndArrowDownFill,
+                    color: .mint
+                )
+                RefdsText(.localizable(by: .settingsFileImport))
+                Spacer(minLength: .zero)
+            }
+        }
+    }
+    
     private var sectionMoreOptions: some View {
         RefdsSection {
             rowTestFlight
@@ -355,7 +447,7 @@ public struct SettingsView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             NavigationStack {

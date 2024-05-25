@@ -18,6 +18,8 @@ public protocol CategoryStateProtocol: RefdsReduxState {
     var budgtes: [BudgetRowViewDataProtocol] { get set }
     var transactions: [[TransactionRowViewDataProtocol]] { get set }
     var balance: BalanceRowViewDataProtocol? { get set }
+    var shareText: String? { get set }
+    var share: URL? { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -35,6 +37,8 @@ public struct CategoryState: CategoryStateProtocol {
     public var budgtes: [BudgetRowViewDataProtocol]
     public var transactions: [[TransactionRowViewDataProtocol]]
     public var balance: BalanceRowViewDataProtocol?
+    public var shareText: String?
+    public var share: URL?
     public var error: RefdsBudgetError?
     
     public init(

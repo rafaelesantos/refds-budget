@@ -47,8 +47,9 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         case let .removeCategory(date, id): removeCategory(with: state, from: date, by: id, on: completion)
         case let .removeTransaction(id): removeTransaction(with: state, by: id, on: completion)
         case let .removeTransactions(ids): removeTransactions(with: state, by: ids, on: completion)
-        case let .copyTransactions(ids): copyTransactions(by: ids, on: completion)
         case let .updateStatus(id): updateStatus(for: id, on: completion)
+        case let .shareText(ids): shareText(for: ids, on: completion)
+        case let .share(ids): share(for: ids, on: completion)
         default: break
         }
     }
@@ -165,18 +166,16 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             categoryAdapter.adapt(entity: $0)
         }
         
-        guard let categoryEntity = categoryRepository.getCategory(by: categoryId) else {
-            return completion(.updateError(.notFoundCategory))
-        }
-        
-        let entity = categoryRepository.getBudget(by: budgetId)
-        let state = budgetAdapter.adapt(
-            entity: entity,
-            category: categoryAdapter.adapt(entity: categoryEntity),
-            categories: categories
-        )
-        
-        completion(.editBudget(state, date))
+        if let categoryEntity = categoryRepository.getCategory(by: categoryId) {
+            let entity = categoryRepository.getBudget(by: budgetId)
+            let state = budgetAdapter.adapt(
+                entity: entity,
+                category: categoryAdapter.adapt(entity: categoryEntity),
+                categories: categories
+            )
+            
+            completion(.editBudget(state, date))
+        } else { completion(.updateError(.notFoundCategory)) }
     }
     
     private func fetchCategoryForEdit(
@@ -328,38 +327,19 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
     }
     
-    private func copyTransactions(
-        by ids: Set<UUID>,
+    private func shareText(
+        for ids: Set<UUID>,
         on completion: @escaping (CategoryAction) -> Void
     ) {
-        var transactions = ""
-        var total: Double = .zero
-        var count: Int = .zero
-        var startDate: TimeInterval = Date().timestamp
-        var endDate: TimeInterval = .zero
+        let text = FileFactory.shared.getTransactionsText(for: ids)
+        completion(.updateShareText(text))
+    }
     
-        ids.forEach { id in
-            if let transaction = transactionRepository.getTransaction(by: id) {
-                let category = categoryRepository.getCategory(by: transaction.category)
-                total += transaction.amount
-                count += 1
-                if transaction.date < startDate { startDate = transaction.date }
-                if transaction.date > endDate { endDate = transaction.date }
-                
-                transactions += """
-                • \(transaction.amount.currency()) - \(transaction.date.asString(withDateFormat: .dayMonthYear))
-                \(category?.name ?? "") - \(transaction.message)\n\n
-                """
-            }
-        }
-        
-        transactions = .localizable(by: .transactionsCopyHeader, with: count, startDate.asString(), endDate.asString()) + transactions
-        transactions += .localizable(by: .transactionsCopyFooter, with: total.currency())
-        
-        #if os(macOS)
-        NSPasteboard.general.setString(transactions, forType: .string)
-        #elseif os(iOS)
-        UIPasteboard.general.string = transactions
-        #endif
+    private func share(
+        for ids: Set<UUID>,
+        on completion: @escaping (CategoryAction) -> Void
+    ) {
+        let url = FileFactory.shared.getFileURL(transactionsId: ids)
+        completion(.updateShare(url))
     }
 }

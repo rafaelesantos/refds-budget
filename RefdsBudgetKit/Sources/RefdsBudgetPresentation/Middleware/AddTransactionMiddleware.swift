@@ -14,20 +14,22 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
+        guard let state = (state as? ApplicationStateProtocol)?.addTransactionState else { return }
         switch action {
-        case let action as AddTransactionAction: self.handler(for: action, on: completion)
+        case let action as AddTransactionAction: self.handler(with: state, for: action, on: completion)
         default: break
         }
     }
     
     private func handler(
+        with state: AddTransactionStateProtocol,
         for addBudgetAction: AddTransactionAction,
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
         switch addBudgetAction {
         case let .fetchCategories(date): self.fetchCategories(from: date, on: completion)
-        case let .save(transaction): self.save(transaction: transaction, on: completion)
+        case .save: self.save(with: state, on: completion)
         default: break
         }
     }
@@ -59,26 +61,26 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
     }
     
     private func save(
-        transaction: AddTransactionStateProtocol,
+        with state: AddTransactionStateProtocol,
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
-        guard let category = transaction.category else {
+        guard let category = state.category else {
             return completion(.updateError(.notFoundCategory))
         }
         
         do {
             try transactionRepository.addTransaction(
-                id: transaction.id,
-                date: transaction.date,
-                message: transaction.description,
+                id: state.id,
+                date: state.date,
+                message: state.description,
                 category: category.categoryId,
-                amount: transaction.amount,
-                status: transaction.status
+                amount: state.amount,
+                status: state.status
             )
+            WidgetCenter.shared.reloadAllTimelines()
+            completion(.dismiss)
         } catch {
             return completion(.updateError(.existingTransaction))
         }
-        WidgetCenter.shared.reloadAllTimelines()
-        completion(.dismiss)
     }
 }

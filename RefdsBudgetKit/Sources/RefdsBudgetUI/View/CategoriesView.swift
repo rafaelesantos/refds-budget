@@ -200,26 +200,19 @@ public struct CategoriesView: View {
                     systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
                 )
             }
-            
-            if state.isFilterEnable {
-                DateRowView(date: $state.date, content: {})
-            }
-            
             selectTagRowView
             selectStatusRowView
         } label: {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
                 Spacer()
-                if state.isFilterEnable {
-                    RefdsText(
-                        state.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
-                        style: .callout,
-                        color: .secondary
-                    )
-                }
+                RefdsText(2.asString, style: .callout, color: .secondary)
                 RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
             }
+        }
+        
+        if state.isFilterEnable {
+            DateRowView(date: $state.date)
         }
         
         let words = Array(state.selectedTags) + Array(state.selectedStatus)
@@ -266,7 +259,7 @@ public struct CategoriesView: View {
         SelectMenuRowView(
             header: .addTransactionStatusSelect,
             icon: .listDashHeaderRectangle,
-            title: .addTransactionStatusSpend,
+            title: .addTransactionStatusHeader,
             data: status.map { $0.description },
             selectedData: $state.selectedStatus
         )
@@ -310,7 +303,7 @@ public struct CategoriesView: View {
     private var sectionLegend: some View {
         if !state.isEmptyBudgets {
             RefdsSection {
-                HStack(spacing: .padding(.medium)) {
+                VStack(alignment: .leading) {
                     let title: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendTitle):
                     state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendTitle) :
                     state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendTitle) :
@@ -373,7 +366,7 @@ public struct CategoriesView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         private var viewFactory = ViewFactory()
         
         init() {

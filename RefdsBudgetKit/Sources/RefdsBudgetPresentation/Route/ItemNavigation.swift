@@ -35,3 +35,14 @@ public enum ItemNavigation: Int, Identifiable, CaseIterable {
         }
     }
 }
+
+private struct ItemNavigationEnvironmentKey: EnvironmentKey {
+    static var defaultValue: Binding<ItemNavigation?>?
+}
+
+public extension EnvironmentValues {
+    var itemNavigation: Binding<ItemNavigation?>? {
+        get { self[ItemNavigationEnvironmentKey.self] }
+        set { self[ItemNavigationEnvironmentKey.self] = newValue }
+    }
+}

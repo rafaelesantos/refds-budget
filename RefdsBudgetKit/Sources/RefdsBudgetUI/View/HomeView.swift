@@ -76,10 +76,6 @@ public struct HomeView: View {
                 )
             }
             
-            if state.isFilterEnable {
-                DateRowView(date: $state.date, content: {})
-            }
-            
             selectCategoryRowView
             selectTagRowView
             selectStatusRowView
@@ -87,15 +83,13 @@ public struct HomeView: View {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
                 Spacer()
-                if state.isFilterEnable {
-                    RefdsText(
-                        state.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
-                        style: .callout,
-                        color: .secondary
-                    )
-                }
+                RefdsText(3.asString, style: .callout, color: .secondary)
                 RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
             }
+        }
+        
+        if state.isFilterEnable {
+            DateRowView(date: $state.date)
         }
         
         let words = Array(state.selectedStatus) + Array(state.selectedTags) + Array(state.selectedCategories)
@@ -156,7 +150,7 @@ public struct HomeView: View {
         SelectMenuRowView(
             header: .addTransactionStatusSelect,
             icon: .listDashHeaderRectangle,
-            title: .addTransactionStatusSpend,
+            title: .addTransactionStatusHeader,
             data: status.map { $0.description },
             selectedData: $state.selectedStatus
         )
@@ -244,7 +238,7 @@ public struct HomeView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             NavigationStack {

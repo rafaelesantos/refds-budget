@@ -6,10 +6,12 @@ import RefdsBudgetPresentation
 
 public struct CategoryView: View {
     @Environment(\.privacyMode) private var privacyMode
-    @Environment(\.editMode) private var editMode
     @Binding private var state: CategoryStateProtocol
+    
+    @State private var editMode: EditMode = .inactive
     @State private var multiSelection = Set<UUID>()
     @State private var privacyModeEditable = false
+    
     private let action: (CategoryAction) -> Void
     
     public init(
@@ -38,6 +40,7 @@ public struct CategoryView: View {
         .searchable(text: $state.searchText)
         .navigationTitle(state.name.capitalized)
         .onAppear { reloadData() }
+        .environment(\.editMode, $editMode)
         .environment(\.privacyMode, privacyModeEditable)
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
@@ -50,6 +53,8 @@ public struct CategoryView: View {
         .toolbar { ToolbarItem(placement: .bottomBar) { paginationView } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
+        .refdsShareText(item: $state.shareText)
+        .refdsShare(item: $state.share)
     }
     
     private func reloadData() {
@@ -72,6 +77,7 @@ public struct CategoryView: View {
         }
     }
     
+    @ViewBuilder
     private var sectionFilters: some View {
         Menu {
             RefdsButton {
@@ -82,23 +88,16 @@ public struct CategoryView: View {
                     systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
                 )
             }
-            
-            if state.isFilterEnable {
-                DateRowView(date: $state.date, content: {})
-            }
         } label: {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
                 Spacer()
-                if state.isFilterEnable {
-                    RefdsText(
-                        state.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
-                        style: .callout,
-                        color: .secondary
-                    )
-                }
                 RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
             }
+        }
+        
+        if state.isFilterEnable {
+            DateRowView(date: $state.date)
         }
     }
     
@@ -209,7 +208,7 @@ public struct CategoryView: View {
                 icon: editMode.isEditing ? .circle : .checkmarkCircle,
                 isProFeature: false
             ) {
-                editMode?.wrappedValue.toggle()
+                editMode.toggle()
             }
             
             if !multiSelection.isEmpty {
@@ -220,7 +219,7 @@ public struct CategoryView: View {
                 ) {
                     action(.removeTransactions(multiSelection))
                     if editMode.isEditing {
-                        editMode?.wrappedValue.toggle()
+                        editMode.toggle()
                     }
                 }
             }
@@ -230,13 +229,24 @@ public struct CategoryView: View {
             if !state.transactions.isEmpty {
                 let ids = multiSelection.isEmpty ? Set(state.transactions.flatMap { $0 }.map { $0.id }) : multiSelection
                 BudgetLabel(
-                    title: .transactionsCopyTransactions,
-                    icon: .docOnClipboard,
+                    title: .transactionsShare,
+                    icon: .iphoneSizes,
                     isProFeature: true
                 ) {
-                    action(.copyTransactions(ids))
+                    action(.share(ids))
                     if editMode.isEditing {
-                        editMode?.wrappedValue.toggle()
+                        editMode.toggle()
+                    }
+                }
+                
+                BudgetLabel(
+                    title: .transactionsShareText,
+                    icon: .ellipsisMessageFill,
+                    isProFeature: true
+                ) {
+                    action(.shareText(ids))
+                    if editMode.isEditing {
+                        editMode.toggle()
                     }
                 }
             }
@@ -273,7 +283,7 @@ public struct CategoryView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             NavigationStack {

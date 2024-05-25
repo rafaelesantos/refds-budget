@@ -10,7 +10,7 @@ public final class SettingsReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? SettingsAction {
-        case .fetchData:
+        case .fetchData, .share:
             state.isLoading = true
         case let .receiveData(newState):
             state = newState
@@ -35,6 +35,9 @@ public final class SettingsReducer: RefdsReduxReducerProtocol {
             break
         case let .updateError(error):
             state.error = error
+        case let .updateShare(url):
+            state.share = url
+            state.isLoading = false
         default: break
         }
         

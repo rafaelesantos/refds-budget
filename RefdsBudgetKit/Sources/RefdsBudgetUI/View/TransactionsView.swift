@@ -7,9 +7,9 @@ import RefdsBudgetPresentation
 
 public struct TransactionsView: View {
     @Environment(\.privacyMode) private var privacyMode
-    @Environment(\.editMode) private var editMode
     @Binding private var state: TransactionsStateProtocol
     
+    @State private var editMode: EditMode = .inactive
     @State private var multiSelection = Set<UUID>()
     @State private var privacyModeEditable = false
     
@@ -40,6 +40,7 @@ public struct TransactionsView: View {
         .navigationTitle(editMode.isEditing ? String.localizable(by: .transactionEditNavigationTitle, with: multiSelection.count) : String.localizable(by: .transactionNavigationTitle))
         .onAppear { reloadData() }
         .refreshable { reloadData() }
+        .environment(\.editMode, $editMode)
         .environment(\.privacyMode, privacyModeEditable)
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
@@ -55,6 +56,8 @@ public struct TransactionsView: View {
         .toolbar { ToolbarItem(placement: .bottomBar) { paginationView } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
+        .refdsShareText(item: $state.shareText)
+        .refdsShare(item: $state.share)
     }
     
     private func reloadData() {
@@ -121,7 +124,7 @@ public struct TransactionsView: View {
                 icon: editMode.isEditing ? .circle : .checkmarkCircle,
                 isProFeature: false
             ) {
-                editMode?.wrappedValue.toggle()
+                editMode.toggle()
             }
             
             if !multiSelection.isEmpty {
@@ -132,7 +135,7 @@ public struct TransactionsView: View {
                 ) {
                     action(.removeTransactions(multiSelection))
                     if editMode.isEditing {
-                        editMode?.wrappedValue.toggle()
+                        editMode.toggle()
                     }
                 }
             }
@@ -142,13 +145,24 @@ public struct TransactionsView: View {
             if !state.transactions.isEmpty {
                 let ids = multiSelection.isEmpty ? Set(state.transactions.flatMap { $0 }.map { $0.id }) : multiSelection
                 BudgetLabel(
-                    title: .transactionsCopyTransactions,
-                    icon: .docOnClipboard,
+                    title: .transactionsShare,
+                    icon: .iphoneSizes,
                     isProFeature: true
                 ) {
-                    action(.copyTransactions(ids))
+                    action(.share(ids))
                     if editMode.isEditing {
-                        editMode?.wrappedValue.toggle()
+                        editMode.toggle()
+                    }
+                }
+                
+                BudgetLabel(
+                    title: .transactionsShareText,
+                    icon: .ellipsisMessageFill,
+                    isProFeature: true
+                ) {
+                    action(.shareText(ids))
+                    if editMode.isEditing {
+                        editMode.toggle()
                     }
                 }
             }
@@ -183,10 +197,6 @@ public struct TransactionsView: View {
                 )
             }
             
-            if state.isFilterEnable {
-                DateRowView(date: $state.date, content: {})
-            }
-            
             selectCategoryRowView
             selectTagRowView
             selectStatusRowView
@@ -194,15 +204,13 @@ public struct TransactionsView: View {
             HStack {
                 RefdsText(.localizable(by: .categoriesFilter), style: .callout)
                 Spacer()
-                if state.isFilterEnable {
-                    RefdsText(
-                        state.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
-                        style: .callout,
-                        color: .secondary
-                    )
-                }
+                RefdsText(3.asString, style: .callout, color: .secondary)
                 RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
             }
+        }
+        
+        if state.isFilterEnable {
+            DateRowView(date: $state.date)
         }
         
         let words = Array(state.selectedStatus) + Array(state.selectedTags) + Array(state.selectedCategories)
@@ -264,7 +272,7 @@ public struct TransactionsView: View {
         SelectMenuRowView(
             header: .addTransactionStatusSelect,
             icon: .listDashHeaderRectangle,
-            title: .addTransactionStatusSpend,
+            title: .addTransactionStatusHeader,
             data: status.map { $0.description },
             selectedData: $state.selectedStatus
         )
@@ -284,7 +292,7 @@ public struct TransactionsView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             NavigationStack {

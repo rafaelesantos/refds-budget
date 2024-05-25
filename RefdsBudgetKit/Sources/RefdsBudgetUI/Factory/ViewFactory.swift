@@ -1,5 +1,6 @@
 import SwiftUI
 import RefdsRedux
+import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public class ViewFactory: ViewFactoryProtocol {
@@ -100,6 +101,16 @@ public class ViewFactory: ViewFactoryProtocol {
         action: @escaping (SettingsAction) -> Void
     ) -> any View {
         SubscriptionView(
+            state: state,
+            action: action
+        )
+    }
+    
+    public func makeImportView(
+        state: Binding<ImportStateProtocol?>,
+        action: @escaping (ImportAction) -> Void
+    ) -> any View {
+        ImportView(
             state: state,
             action: action
         )

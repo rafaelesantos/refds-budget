@@ -17,6 +17,7 @@ public struct ApplicationStateMock: ApplicationStateProtocol {
     public var tagsState: TagsStateProtocol = TagsStateMock()
     public var homeState: HomeStateProtocol = HomeStateMock()
     public var settingsState: SettingsStateProtocol = SettingsStateMock()
+    public var importState: ImportStateProtocol? = ImportStateMock()
     
     public init() {}
 }

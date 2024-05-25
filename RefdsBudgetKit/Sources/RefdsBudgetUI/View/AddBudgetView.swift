@@ -243,7 +243,7 @@ public struct AddBudgetView: View {
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             AddBudgetView(state: $store.state.addBudgetState) {

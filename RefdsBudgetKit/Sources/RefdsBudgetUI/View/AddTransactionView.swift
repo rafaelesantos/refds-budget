@@ -266,14 +266,14 @@ public struct AddTransactionView: View {
             .localizable(by: .addTransactionSaveButton),
             isDisable: !state.canSave
         ) {
-            action(.save(state))
+            action(.save)
         }
     }
 }
 
 #Preview {
     struct ContainerView: View {
-        @StateObject private var store = RefdsReduxStoreFactory.development
+        @StateObject private var store = StoreFactory.development
         
         var body: some View {
             AddTransactionView(state: $store.state.addTransactionState) {

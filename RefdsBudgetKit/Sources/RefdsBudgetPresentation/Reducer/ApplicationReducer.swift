@@ -18,6 +18,10 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         state.homeState = HomeReducer().reduce(state.homeState, action)
         state.settingsState = SettingsReducer().reduce(state.settingsState, action)
         
+        if let importState = state.importState {
+            state.importState = ImportReducer().reduce(importState, action)
+        }
+        
         switch action {
         case let action as CategoriesAction:
             state = self.handler(with: state, for: action)

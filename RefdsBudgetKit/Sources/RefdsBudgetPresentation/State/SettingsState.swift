@@ -19,6 +19,8 @@ public protocol SettingsStateProtocol: RefdsReduxState {
     var purchasedProductsID: Set<String> { get set }
     var features: [PremiumFeatureViewDataProtocol] { get set }
     var transactions: [StoreKit.Transaction] { get set }
+    var share: URL? { get set }
+    var showDocumentPicker: Bool { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -37,6 +39,8 @@ public struct SettingsState: SettingsStateProtocol {
     public var purchasedProductsID: Set<String>
     public var features: [PremiumFeatureViewDataProtocol]
     public var transactions: [StoreKit.Transaction]
+    public var share: URL?
+    public var showDocumentPicker: Bool = false
     public var error: RefdsBudgetError?
     
     public init(

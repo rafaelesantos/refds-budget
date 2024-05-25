@@ -20,6 +20,8 @@ public enum CategoryAction: RefdsReduxAction {
     case updateBalance(BalanceRowViewDataProtocol)
     case updateError(RefdsBudgetError)
     case updateStatus(UUID)
+    case updateShareText(String)
+    case updateShare(URL)
     
     case editBudget(AddBudgetStateProtocol, Date)
     case editCategory(AddCategoryStateProtocol)
@@ -28,8 +30,10 @@ public enum CategoryAction: RefdsReduxAction {
     case removeBudget(Date, UUID)
     case removeCategory(Date?, UUID)
     case removeTransaction(UUID)
-    
-    case copyTransactions(Set<UUID>)
     case removeTransactions(Set<UUID>)
+    
     case dismiss
+    
+    case shareText(Set<UUID>)
+    case share(Set<UUID>)
 }

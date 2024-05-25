@@ -11,7 +11,7 @@ public final class LocalSettingsRepositoryMock: SettingsUseCase {
     
     public func getSettings() -> SettingsEntity {
         let settings = SettingsEntityMock.value(for: database.viewContext)
-        settings.theme = Color.green.asHex()
+        settings.theme = Color.green.asHex
         settings.appearence = 0.0
         return settings
     }

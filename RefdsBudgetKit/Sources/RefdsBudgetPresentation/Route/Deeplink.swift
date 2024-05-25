@@ -20,24 +20,16 @@ public final class Deeplink {
         itemNavigation: Binding<Int>,
         url: URL
     ) {
-        guard let (route, item) = parse(url: url) else { return }
+        guard let (route, item) = parse(url: url) else {
+            if let model = FileFactory.shared.fetchData(from: url),
+               let item = ItemNavigation(rawValue: itemNavigation.wrappedValue) {
+                state.wrappedValue.importState = ImportState(url: url, model: model)
+                return navigate(to: .import, with: item, on: state)
+            } else { return }
+        }
         itemNavigation.wrappedValue = item.rawValue
         guard let route = route else { return }
-        withAnimation {
-            switch item {
-            case .premium:
-                state.wrappedValue.premiumRouter.route(to: route)
-            case .categories:
-                state.wrappedValue.categoriesRouter.route(to: route)
-            case .home:
-                state.wrappedValue.homeRouter.route(to: route)
-            case .transactions:
-                state.wrappedValue.addTransactionState = AddTransactionState()
-                state.wrappedValue.transactionsRouter.route(to: route)
-            case .settings:
-                state.wrappedValue.settingsRouter.route(to: route)
-            }
-        }
+        navigate(to: route, with: item, on: state)
     }
     
     private func parse(url: URL) -> (ApplicationRoute?, ItemNavigation)? {
@@ -56,6 +48,35 @@ public final class Deeplink {
     
     private func parse(path: String) -> Deeplink.Path? {
         Deeplink.Path(rawValue: path)
+    }
+    
+    private func navigate(
+        to route: ApplicationRoute,
+        with item: ItemNavigation,
+        on state: Binding<ApplicationStateProtocol>
+    ) {
+        withAnimation {
+            switch item {
+            case .premium:
+                state.wrappedValue.premiumRouter.route(to: route)
+            case .categories:
+                state.wrappedValue.categoriesRouter.route(to: route)
+            case .home:
+                state.wrappedValue.homeRouter.route(to: route)
+            case .transactions:
+                switch route {
+                case .addTransaction:
+                    state.wrappedValue.addTransactionState = AddTransactionState()
+                    state.wrappedValue.transactionsRouter.route(to: route)
+                case .import:
+                    state.wrappedValue.transactionsRouter.route(to: route)
+                default:
+                    break
+                }
+            case .settings:
+                state.wrappedValue.settingsRouter.route(to: route)
+            }
+        }
     }
 }
 

@@ -4,7 +4,7 @@ import RefdsInjection
 import RefdsBudgetDomain
 import RefdsBudgetData
 
-public class RefdsReduxStoreFactory {
+public class StoreFactory {
     public static var development: RefdsReduxStore<ApplicationStateProtocol> {
         registerMockDependencies()
         return .init(
@@ -63,7 +63,8 @@ public class RefdsReduxStoreFactory {
             HomeMiddleware<ApplicationStateProtocol>().middleware,
             RouteMiddleware<ApplicationStateProtocol>().middleware,
             SettingsMiddleware<ApplicationStateProtocol>().middleware,
-            StoreMiddleware<ApplicationStateProtocol>().middleware
+            StoreMiddleware<ApplicationStateProtocol>().middleware,
+            ImportMiddleware<ApplicationStateProtocol>().middleware
         ]
     }
 }

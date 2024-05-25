@@ -1,4 +1,5 @@
 import SwiftUI
+import RefdsBudgetDomain
 
 public protocol ViewFactoryProtocol {
     func makeAddBudgetView(
@@ -49,5 +50,10 @@ public protocol ViewFactoryProtocol {
     func makeSubscriptionView(
         state: Binding<SettingsStateProtocol>,
         action: @escaping (SettingsAction) -> Void
+    ) -> any View
+    
+    func makeImportView(
+        state: Binding<ImportStateProtocol?>,
+        action: @escaping (ImportAction) -> Void
     ) -> any View
 }

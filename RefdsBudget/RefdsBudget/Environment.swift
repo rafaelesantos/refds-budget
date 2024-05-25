@@ -15,8 +15,8 @@ enum EnvironmentConfiguration: String {
     static var store: RefdsReduxStore<any ApplicationStateProtocol> {
         let environment = current
         switch environment {
-        case .releaseDevelopment: return RefdsReduxStoreFactory.development
-        case .releaseProduction: return RefdsReduxStoreFactory.production
+        case .releaseDevelopment: return StoreFactory.development
+        case .releaseProduction: return StoreFactory.production
         }
     }
 }

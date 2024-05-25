@@ -33,7 +33,7 @@
       "location" : "https://github.com/rafaelesantos/refds-design-system.git",
       "state" : {
         "branch" : "main",
-        "revision" : "1df855bbbbfc252e1b274be5f6b8a39b64268969"
+        "revision" : "4483a730a6c71cfaaac3a99ded3c4723750bead5"
       }
     },
     {
@@ -69,7 +69,7 @@
       "location" : "https://github.com/rafaelesantos/refds-shared.git",
       "state" : {
         "branch" : "main",
-        "revision" : "bed407aeb37f84b08f1dc8d8b3422acfa0a216bf"
+        "revision" : "b007869633ffa22e3a92df87406d266231815a2b"
       }
     },
     {

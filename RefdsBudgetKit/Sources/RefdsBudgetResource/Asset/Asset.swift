@@ -32,7 +32,12 @@ public enum Asset: String, CaseIterable, Identifiable {
     public func changeIcon() {
         #if os(iOS)
         if UIApplication.shared.supportsAlternateIcons {
-            UIApplication.shared.setAlternateIconName(self == .default ? nil : self.rawValue) { _ in }
+            UIApplication.shared.setAlternateIconName(self == .default ? nil : rawValue) { error in
+                if let error = error {
+                    print("ERROR: Could not set custom icon \(rawValue). \(error)")
+                    print(error.localizedDescription)
+                }
+            }
         }
         #endif
     }

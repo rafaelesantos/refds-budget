@@ -20,5 +20,11 @@ public enum SettingsAction: RefdsReduxAction {
         productsID: Set<String>,
         transactions: [StoreKit.Transaction]
     )
+    case updateShare(URL)
     case updateError(error: RefdsBudgetError?)
+    case share(
+        budgets: Set<UUID>,
+        categories: Set<UUID>,
+        transactions: Set<UUID>
+    )
 }
