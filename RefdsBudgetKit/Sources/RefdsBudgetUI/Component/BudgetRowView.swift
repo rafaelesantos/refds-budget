@@ -19,10 +19,18 @@ public struct BudgetRowView: View {
     }
     
     public var body: some View {
-        HStack {
+        HStack(spacing: .zero) {
+            BubbleColorView(color: viewData.percentage.riskColor, isSelected: true, size: 18)
+                .padding(.trailing, .padding(.medium))
             VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
                 HStack {
                     RefdsText(rowTitle.capitalized, style: .callout)
+                    RefdsText(
+                        viewData.percentage.percent(),
+                        style: .callout,
+                        color: .secondary
+                    )
+                    .refdsRedacted(if: privacyMode)
                     Spacer()
                     RefdsText(amount.currency(), style: .callout)
                         .contentTransition(.numericText())
@@ -31,21 +39,6 @@ public struct BudgetRowView: View {
                 
                 if let description = viewData.description, !description.isEmpty {
                     RefdsText(description, style: .callout, color: .secondary)
-                }
-                
-                HStack(spacing: .padding(.medium)) {
-                    ProgressView(value: percentage, total: 1)
-                        .tint(percentage.riskColor)
-                    #if os(iOS)
-                        .scaleEffect(x: 1, y: 1.5, anchor: .center)
-                    #endif
-                        .padding(.vertical, .padding(.extraSmall))
-                    RefdsText(
-                        viewData.percentage.percent(),
-                        style: .footnote,
-                        color: .secondary
-                    )
-                    .refdsRedacted(if: privacyMode)
                 }
             }
             

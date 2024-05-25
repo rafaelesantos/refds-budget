@@ -22,11 +22,7 @@ public final class AddBudgetReducer: RefdsReduxReducerProtocol {
             state.description = description
         case let .updateError(error):
             state.error = error
-        case .dismiss,
-                .save,
-                .fetchCategories,
-                .fetchBudget,
-            nil:
+        default:
             break
         }
         

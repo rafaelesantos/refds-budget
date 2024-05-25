@@ -15,7 +15,6 @@ public struct AddBudgetView: View {
             if let year = state.month.asString(withDateFormat: .year).asInt,
                let date = ("\($0)/\(year)").asDate(withFormat: .fullMonthYear) {
                 state.month = date
-                action(.fetchBudget(date, state.category?.id ?? .init()))
             }
         }
     }
@@ -27,7 +26,6 @@ public struct AddBudgetView: View {
             let month = state.month.asString(withDateFormat: .month)
             if let date = ("\(month)/\($0)").asDate(withFormat: .fullMonthYear) {
                 state.month = date
-                action(.fetchBudget(date, state.category?.id ?? .init()))
             }
         }
     }
@@ -38,7 +36,7 @@ public struct AddBudgetView: View {
         } set: { name in
             if let category = state.categories.first(where: { $0.name.lowercased() == name.lowercased() }) {
                 state.category = category
-                action(.fetchBudget(state.month, category.id))
+                action(.fetchBudget)
             }
         }
     }
@@ -59,22 +57,16 @@ public struct AddBudgetView: View {
             sectionCategory
             sectionSaveButton
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #elseif os(iOS)
-        .listStyle(.insetGrouped)
-        #endif
-        .refreshable { action(.fetchCategories(state.month)) }
+        .onChange(of: state.month) { action(.fetchBudget) }
+        .onChange(of: state.category?.name ?? "") { action(.fetchBudget) }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
     
     private func fetchDataOnAppear() {
-        guard state.category == nil else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchCategories(state.month))
-        }
+        guard state.amount == .zero else { return }
+        action(.fetchCategories)
     }
     
     private var sectionAmount: some View {

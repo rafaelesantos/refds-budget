@@ -7,10 +7,11 @@ import RefdsBudgetPresentation
 public struct SpendBudgetSectionView: View {
     @Environment(\.privacyMode) private var privacyMode
     @State private var chartSelection: String = ""
-    private let viewData: [CategoryRowViewDataProtocol]
+    @State private var viewData: [CategoryRowViewDataProtocol] = []
+    private let categoryViewData: [CategoryRowViewDataProtocol]
     
     public init(viewData: [CategoryRowViewDataProtocol]) {
-        self.viewData = viewData
+        self.categoryViewData = viewData
     }
     
     public var body: some View {
@@ -40,6 +41,16 @@ public struct SpendBudgetSectionView: View {
     private func reload() {
         withAnimation {
             chartSelection = viewData.first?.name ?? ""
+        }
+        
+        guard viewData.isEmpty else { return }
+        viewData = categoryViewData
+        categoryViewData.indices.forEach { index in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) {
+                withAnimation(.easeInOut(duration: 0.8)) {
+                    viewData[index].isAnimate = true
+                }
+            }
         }
     }
     
@@ -103,8 +114,8 @@ public struct SpendBudgetSectionView: View {
         Chart {
             ForEach(viewData.indices, id: \.self) { index in
                 let data = viewData[index]
-                buildMark(x: data.name, y: data.budget, id: "budget")
-                buildMark(x: data.name, y: data.spend, id: "spend")
+                buildMark(x: data.name, y: data.budget, id: "budget", isAnimate: data.isAnimate)
+                buildMark(x: data.name, y: data.spend, id: "spend", isAnimate: data.isAnimate)
             }
         }
         .chartYAxis { AxisMarks(position: .trailing) }
@@ -135,10 +146,10 @@ public struct SpendBudgetSectionView: View {
         }
     }
     
-    func buildMark(x: String, y: Double, id: String) -> some ChartContent {
+    func buildMark(x: String, y: Double, id: String, isAnimate: Bool) -> some ChartContent {
         BarMark(
             x: .value("x", x),
-            y: .value("y", y),
+            y: .value("y", isAnimate ? y : .zero),
             width: 20,
             stacking: .standard
         )

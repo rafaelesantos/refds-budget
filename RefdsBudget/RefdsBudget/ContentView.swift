@@ -102,7 +102,7 @@ struct ContentView: View {
     private func updatePurchasedProducts() {
         Task(priority: .background) {
             if store.state.settingsState.isPro {
-                store.dispatch(action: SettingsAction.fetchData)
+                store.dispatch(action: SettingsAction.fetchStore)
             }
         }
     }

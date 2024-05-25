@@ -6,9 +6,13 @@ import RefdsBudgetPresentation
 
 public struct TagsSectionView: View {
     @Environment(\.privacyMode) private var privacyMode
-    @State private var selectedTag: TagRowViewDataProtocol?
-    private let tags: [TagRowViewDataProtocol]
+    @Environment(\.isPro) private var isPro
     
+    @State private var selectedTag: TagRowViewDataProtocol?
+    @State private var tags: [TagRowViewDataProtocol] = []
+    @State private var isCollapsed = false
+    
+    private let tagsViewData: [TagRowViewDataProtocol]
     private let action: () -> Void
     
     private var bindindAngleSelection: Binding<Double?> {
@@ -37,7 +41,7 @@ public struct TagsSectionView: View {
         tags: [TagRowViewDataProtocol],
         action: @escaping () -> Void
     ) {
-        self.tags = tags.filter {
+        self.tagsViewData = tags.filter {
             ($0.value ?? .zero) > .zero
         }.sorted(by: {
             ($0.value ?? .zero) > ($1.value ?? .zero)
@@ -47,27 +51,46 @@ public struct TagsSectionView: View {
     
     @ViewBuilder
     public var body: some View {
-        if tags.allSatisfy({ $0.value != nil && ($0.value ?? .zero) > .zero }), !tags.isEmpty {
-            RefdsSection {
-                Group {
-                    rowManageTagsView
+        RefdsSection {
+            Group {
+                rowManageTagsView
+                if tagsViewData.allSatisfy({ $0.value != nil && ($0.value ?? .zero) > .zero }),
+                   !tagsViewData.isEmpty {
                     VStack {
                         headerView
                         chartView
                     }
-                    .padding(.padding(.extraLarge))
+                    .frame(height: 320)
                     rowCollapsedView
                 }
-                .budgetSubscription()
-            } header: {
-                RefdsText(
-                    .localizable(by: .tagsChartSectionHeader),
-                    style: .footnote,
-                    color: .secondary
-                )
             }
-            .onChange(of: tags.count) { selectedTag = tags.first }
-            .onAppear { selectedTag = tags.first }
+            .budgetSubscription()
+        } header: {
+            RefdsText(
+                .localizable(by: .tagsChartSectionHeader),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+        .onChange(of: tags.count) { selectedTag = tagsViewData.first }
+        .onAppear { reloadData() }
+        
+        if isCollapsed, isPro {
+            RefdsSection {
+                rowTags
+            }
+        }
+    }
+    
+    private func reloadData() {
+        guard tags.isEmpty else { return }
+        tags = tagsViewData
+        tagsViewData.indices.forEach { index in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) {
+                withAnimation(.easeInOut(duration: 0.8)) {
+                    tags[index].isAnimate = true
+                }
+            }
         }
     }
     
@@ -75,10 +98,10 @@ public struct TagsSectionView: View {
     private var headerView: some View {
         if let selectedTag = selectedTag, let value = selectedTag.value {
             VStack {
-                RefdsText(value.currency(), style: .title, weight: .bold)
+                RefdsText(value.currency(), style: .title, weight: .bold, lineLimit: 1)
                     .contentTransition(.numericText())
                     .refdsRedacted(if: privacyMode)
-                RefdsText(selectedTag.name, style: .callout, color: .secondary)
+                RefdsText(selectedTag.name, style: .callout, color: .secondary, lineLimit: 1)
             }
         }
     }
@@ -86,7 +109,7 @@ public struct TagsSectionView: View {
     private var chartView: some View {
         Chart(tags, id: \.id) {
             SectorMark(
-                angle: .value("y", $0.value ?? .zero),
+                angle: .value("y", $0.isAnimate ? ($0.value ?? .zero) : .zero),
                 innerRadius: .ratio(selectedTag?.id == $0.id ? 0.4 : 0.5),
                 outerRadius: .ratio(selectedTag?.id == $0.id ? 1 : 0.9),
                 angularInset: 3
@@ -108,7 +131,8 @@ public struct TagsSectionView: View {
         RefdsButton {
             action()
         } label: {
-            HStack {
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(.tagFill)
                 RefdsText(
                     .localizable(by: .homeManageTags),
                     style: .callout
@@ -123,7 +147,9 @@ public struct TagsSectionView: View {
         RefdsCollapse(isCollapsed: false) {
             RefdsText(.localizable(by: .tagsCollapsedHeader), style: .callout)
         } content: {
-            rowTags
+            EmptyView()
+        } action: { isCollapsed in
+            self.isCollapsed = isCollapsed
         }
     }
     

@@ -5,11 +5,16 @@ import Charts
 public struct DateChartView: View {
     @Environment(\.privacyMode) private var privacyMode
     @State private var chartSelection: String = ""
-    private let data: [(x: Date, y: Double, percentage: Double?)]
+    @State private var data: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)] = []
+    
+    private let dateData: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)]
     private let format: String.DateFormat
     
-    init(data: [(x: Date, y: Double, percentage: Double?)], format: String.DateFormat = .custom("MMMM, yyyy")) {
-        self.data = data.reversed()
+    init(
+        data: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)],
+        format: String.DateFormat = .custom("MMMM, yyyy")
+    ) {
+        self.dateData = data.reversed()
         self.format = format
     }
     
@@ -28,10 +33,22 @@ public struct DateChartView: View {
                 color: .secondary
             )
         }
-        .onAppear {
-            withAnimation {
-                if let date = data.first?.x.asString(withDateFormat: format) {
-                    chartSelection = date
+        .onChange(of: data.first?.y ?? .zero) { reloadData() }
+        .onAppear { reloadData() }
+    }
+    
+    private func reloadData() {
+        withAnimation {
+            if let date = data.first?.x.asString(withDateFormat: format) {
+                chartSelection = date
+            }
+        }
+        guard data.isEmpty else { return }
+        data = dateData
+        dateData.indices.forEach { index in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
+                withAnimation(.easeInOut(duration: 0.8)) {
+                    data[index].isAnimate = true
                 }
             }
         }
@@ -76,7 +93,12 @@ public struct DateChartView: View {
         Chart {
             ForEach(data.indices, id: \.self) { index in
                 let data = data[index]
-                buildMark(x: data.x, y: data.y, percentage: data.percentage)
+                buildMark(
+                    x: data.x,
+                    y: data.y,
+                    percentage: data.percentage,
+                    isAnimate: data.isAnimate
+                )
             }
         }
         .chartYAxis { AxisMarks(position: .trailing) }
@@ -102,10 +124,15 @@ public struct DateChartView: View {
         }
     }
     
-    private func buildMark(x: Date, y: Double, percentage: Double?) -> some ChartContent {
+    private func buildMark(
+        x: Date,
+        y: Double,
+        percentage: Double?,
+        isAnimate: Bool
+    ) -> some ChartContent {
         BarMark(
             x: .value("x", x.asString(withDateFormat: .dayMonthYear)),
-            y: .value("y", y),
+            y: .value("y", isAnimate ? y : .zero),
             width: 20
         )
         .foregroundStyle(percentage?.riskColor ?? .accentColor)
@@ -113,8 +140,8 @@ public struct DateChartView: View {
 }
 
 #Preview {
-    let data: [(x: Date, y: Double, percentage: Double?)] = (1 ... 10).map { _ in
-        (x: .random, y: .random(in: 1 ... 10), percentage: nil)
+    let data: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)] = (1 ... 10).map { _ in
+        (x: .random, y: .random(in: 1 ... 10), percentage: nil, isAnimate: false)
     }.sorted(by: { $0.x < $1.x })
     return DateChartView(data: data).padding(.horizontal)
 }

@@ -7,7 +7,7 @@ public enum AddBudgetAction: RefdsReduxAction {
     case updateBudget(UUID, Double, String)
     case updateError(RefdsBudgetError)
     case save(AddBudgetStateProtocol)
-    case fetchBudget(Date, UUID)
-    case fetchCategories(Date)
+    case fetchBudget
+    case fetchCategories
     case dismiss
 }

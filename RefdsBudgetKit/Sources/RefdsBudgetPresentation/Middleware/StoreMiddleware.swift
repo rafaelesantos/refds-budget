@@ -28,7 +28,7 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (SettingsAction) -> Void
     ) {
         switch action {
-        case .fetchData: fetchData(with: state, on: completion)
+        case .fetchData, .fetchStore: fetchData(with: state, on: completion)
         case .restore: restore(with: state, on: completion)
         case .updatePro: updatePro(with: state, on: completion)
         case .purchase: purchase(
@@ -138,7 +138,7 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         let isPro = !state.purchasedProductsID.isEmpty
         let appearence: Int = isPro ? (state.colorScheme == .none ? .zero : state.colorScheme == .light ? 1 : 2) : .zero
-        let tintColor = isPro ? state.tintColor : .green
+        let tintColor = isPro ? state.tintColor : Color(hex: "#28CD41")
         let hasAuthRequest = isPro ? state.hasAuthRequest : false
         let hasPrivacyMode = isPro ? state.hasPrivacyMode : false
         try? settingsRepository.addSettings(

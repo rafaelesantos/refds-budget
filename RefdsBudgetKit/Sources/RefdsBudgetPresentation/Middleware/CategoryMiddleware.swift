@@ -173,7 +173,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 category: categoryAdapter.adapt(entity: categoryEntity),
                 categories: categories
             )
-            
+            print(state)
             completion(.editBudget(state, date))
         } else { completion(.updateError(.notFoundCategory)) }
     }

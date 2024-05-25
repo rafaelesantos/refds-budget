@@ -6,8 +6,6 @@ import RefdsBudgetPresentation
 
 public struct PendingClearedSectionView: View {
     @Environment(\.privacyMode) private var privacyMode
-    @State private var pending: Double = 0
-    @State private var cleared: Double = 0
     
     private let viewData: PendingClearedSectionViewDataProtocol
     
@@ -35,28 +33,16 @@ public struct PendingClearedSectionView: View {
                 color: .secondary
             )
         }
-        .onChange(of: viewData.pendingAmount) { setupData() }
-        .onChange(of: viewData.clearedAmount) { setupData() }
-        .onAppear { setupData() }
-    }
-    
-    private func setupData() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            withAnimation {
-                pending = viewData.pendingAmount
-                cleared = viewData.clearedAmount
-            }
-        }
     }
     
     private var rowProgressChartView: some View {
         Chart {
             buildMark(
-                amount: pending,
+                amount: viewData.pendingAmount,
                 style: .localizable(by: .addTransactionStatusPending)
             )
             buildMark(
-                amount: cleared,
+                amount: viewData.clearedAmount,
                 style: .localizable(by: .addTransactionStatusCleared)
             )
         }
@@ -64,13 +50,13 @@ public struct PendingClearedSectionView: View {
         .chartLegend(.hidden)
         .clipShape(.rect(cornerRadius: 8))
         .chartXAxis(.hidden)
-        .chartXScale(domain: 0 ... (pending + cleared))
+        .chartXScale(domain: 0 ... (viewData.pendingAmount + viewData.clearedAmount))
         .frame(height: 35)
         .padding(.vertical, .padding(.small))
     }
     
     private func buildMark(amount: Double, style: String) -> some ChartContent {
-        let total = pending + cleared
+        let total = viewData.pendingAmount + viewData.clearedAmount
         let percent = amount / (total == .zero ? 1 : total)
         return BarMark(
             x: .value("x", amount)
@@ -119,7 +105,7 @@ public struct PendingClearedSectionView: View {
                     )
                 }
                 
-                RefdsText(pending.currency(), style: .title3, weight: .bold)
+                RefdsText(viewData.pendingAmount.currency(), style: .title3, weight: .bold)
                     .contentTransition(.numericText())
                     .refdsRedacted(if: privacyMode)
             }
@@ -143,7 +129,7 @@ public struct PendingClearedSectionView: View {
                     )
                 }
                 
-                RefdsText(cleared.currency(), style: .title3, weight: .bold)
+                RefdsText(viewData.clearedAmount.currency(), style: .title3, weight: .bold)
                     .contentTransition(.numericText())
                     .refdsRedacted(if: privacyMode)
             }

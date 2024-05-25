@@ -33,11 +33,6 @@ public struct CategoriesView: View {
             sectionsCategory
             sectionLegend
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #elseif os(iOS)
-        .listStyle(.insetGrouped)
-        #endif
         .navigationTitle(String.localizable(by: .categoriesNavigationTitle))
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }

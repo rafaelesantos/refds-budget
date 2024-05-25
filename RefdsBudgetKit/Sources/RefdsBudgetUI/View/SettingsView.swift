@@ -12,6 +12,8 @@ public struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.isPro) private var isPro
     
+    @State private var tintColor: Color = .accentColor
+    
     @Binding private var state: SettingsStateProtocol
     private let action: (SettingsAction) -> Void
     
@@ -40,6 +42,7 @@ public struct SettingsView: View {
         .onChange(of: state.icon) { updateData() }
         .onChange(of: state.hasAuthRequest) { updateData() }
         .onChange(of: state.hasPrivacyMode) { updateData() }
+        .onChange(of: tintColor) { state.tintColor = tintColor }
         .fileImporter(
             isPresented: $state.showDocumentPicker,
             allowedContentTypes: [.item],
@@ -81,11 +84,14 @@ public struct SettingsView: View {
     }
     
     private func reloadData() {
+        tintColor = state.tintColor
         action(.fetchData)
     }
     
     private func updateData() {
-        action(.updateData)
+        Task(priority: .background) {
+            action(.updateData)
+        }
     }
     
     private var sectionCustomization: some View {
@@ -126,17 +132,16 @@ public struct SettingsView: View {
     private var rowTintColor: some View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(.paintpaletteFill)
-            
-            ColorPicker(selection: $state.tintColor) {
+    
+            ColorPicker(selection: $tintColor) {
                 HStack {
                     RefdsText(.localizable(by: .settingsRowTheme))
                     Spacer(minLength: .zero)
                     #if os(iOS)
                     RefdsText(
-                        UIColor(state.tintColor).accessibilityName.capitalized,
+                        UIColor(tintColor).accessibilityName.capitalized,
                         color: .secondary
                     )
-                    .padding(.trailing, .padding(.small))
                     #endif
                 }
             }

@@ -32,11 +32,6 @@ public struct CategoryView: View {
             sectionBudgetsChart
             sectionTransactions
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #elseif os(iOS)
-        .listStyle(.insetGrouped)
-        #endif
         .searchable(text: $state.searchText)
         .navigationTitle(state.name.capitalized)
         .onAppear { reloadData() }
@@ -136,11 +131,12 @@ public struct CategoryView: View {
     @ViewBuilder
     private var sectionBudgetsChart: some View {
         if state.budgtes.count > 1 {
-            let data: [(x: Date, y: Double, percentage: Double?)] = state.budgtes.map {
+            let data: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)] = state.budgtes.map {
                 (
                     x: $0.date,
                     y: $0.amount,
-                    percentage: $0.percentage
+                    percentage: $0.percentage,
+                    isAnimate: false
                 )
             }
             DateChartView(data: data)

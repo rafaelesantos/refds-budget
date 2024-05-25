@@ -13,20 +13,24 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
+        guard let state = (state as? ApplicationStateProtocol)?.addBudgetState else { return }
         switch action {
-        case let action as AddBudgetAction: self.handler(for: action, on: completion)
+        case let action as AddBudgetAction: self.handler(with: state, for: action, on: completion)
         default: break
         }
     }
     
     private func handler(
+        with state: AddBudgetStateProtocol,
         for action: AddBudgetAction,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
         switch action {
-        case let .fetchCategories(date): fetchCategories(from: date, on: completion)
-        case let .fetchBudget(date, id): fetchBudget(from: date, by: id, on: completion)
+        case let .fetchCategories: fetchCategories(from: state.month, on: completion)
+        case let .fetchBudget:
+            guard let category = state.category else { return }
+            fetchBudget(from: state.month, by: category.id, on: completion)
         case let .save(budget): save(budget, on: completion)
         default: break
         }

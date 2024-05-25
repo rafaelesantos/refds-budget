@@ -7,6 +7,7 @@ public enum SettingsAction: RefdsReduxAction {
     case purchase
     case restore
     case fetchData
+    case fetchStore
     case updateData
     case updatePro
     case receiveData(state: SettingsStateProtocol)

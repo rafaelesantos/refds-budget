@@ -12,6 +12,7 @@ public protocol CategoryRowViewDataProtocol {
     var percentage: Double { get }
     var transactionsAmount: Int { get }
     var spend: Double { get }
+    var isAnimate: Bool { get set }
 }
 
 public struct CategoryRowViewData: CategoryRowViewDataProtocol {
@@ -25,6 +26,7 @@ public struct CategoryRowViewData: CategoryRowViewDataProtocol {
     public var percentage: Double
     public var transactionsAmount: Int
     public var spend: Double
+    public var isAnimate: Bool = false
     
     public init(
         categoryId: UUID,

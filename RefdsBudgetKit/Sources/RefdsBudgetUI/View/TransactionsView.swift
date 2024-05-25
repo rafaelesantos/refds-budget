@@ -31,11 +31,6 @@ public struct TransactionsView: View {
             sectionFilters
             sectionTransactions
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #elseif os(iOS)
-        .listStyle(.insetGrouped)
-        #endif
         .searchable(text: $state.searchText)
         .navigationTitle(editMode.isEditing ? String.localizable(by: .transactionEditNavigationTitle, with: multiSelection.count) : String.localizable(by: .transactionNavigationTitle))
         .onAppear { reloadData() }
