@@ -6,11 +6,14 @@ import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct TransactionsView: View {
+    @Environment(\.applicationState) private var applicationState
+    @Environment(\.itemNavigation) private var itemNavigation
     @Environment(\.privacyMode) private var privacyMode
     @Binding private var state: TransactionsStateProtocol
     
     @State private var editMode: EditMode = .inactive
     @State private var multiSelection = Set<UUID>()
+    @State private var showDocumentPicker = false
     @State private var privacyModeEditable = false
     
     private let action: (TransactionsAction) -> Void
@@ -49,6 +52,11 @@ public struct TransactionsView: View {
         }
         .toolbar { ToolbarItemGroup { moreButton } }
         .toolbar { ToolbarItem(placement: .bottomBar) { paginationView } }
+        .fileImporter(
+            isPresented: $showDocumentPicker,
+            allowedContentTypes: [.item],
+            onCompletion: handlerDocument(for:)
+        )
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
         .refdsShareText(item: $state.shareText)
@@ -58,6 +66,37 @@ public struct TransactionsView: View {
     private func reloadData() {
         privacyModeEditable = privacyMode
         action(.fetchData)
+    }
+    
+    private var bindingApplicationState: Binding<ApplicationStateProtocol> {
+        Binding {
+            applicationState?.wrappedValue ?? ApplicationState()
+        } set: {
+            applicationState?.wrappedValue = $0
+        }
+    }
+    
+    private var bindingItemNavigation: Binding<Int> {
+        Binding {
+            itemNavigation?.wrappedValue?.rawValue ?? ItemNavigation.home.rawValue
+        } set: {
+            if let item = ItemNavigation(rawValue: $0) {
+                itemNavigation?.wrappedValue = item
+            }
+        }
+    }
+    
+    private func handlerDocument(for result: Result<URL, Error>) {
+        switch result {
+        case let .success(url):
+            Deeplink.shared.trigger(
+                state: bindingApplicationState,
+                itemNavigation: bindingItemNavigation,
+                url: url
+            )
+        case .failure:
+            state.error = .notFoundBudget
+        }
     }
     
     @ViewBuilder
@@ -120,6 +159,14 @@ public struct TransactionsView: View {
                 isProFeature: false
             ) {
                 editMode.toggle()
+            }
+            
+            BudgetLabel(
+                title: .importNavigationTitle,
+                icon: .trayAndArrowDownFill,
+                isProFeature: false
+            ) {
+                showDocumentPicker.toggle()
             }
             
             if !multiSelection.isEmpty {

@@ -72,7 +72,7 @@ public struct TagsSectionView: View {
                 color: .secondary
             )
         }
-        .onChange(of: tags.count) { selectedTag = tagsViewData.first }
+        .onChange(of: tagsViewData.count) { updateData() }
         .onAppear { reloadData() }
         
         if isCollapsed, isPro {
@@ -83,15 +83,24 @@ public struct TagsSectionView: View {
     }
     
     private func reloadData() {
+        withAnimation {
+            selectedTag = tagsViewData.first
+        }
+        
         guard tags.isEmpty else { return }
         tags = tagsViewData
         tagsViewData.indices.forEach { index in
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.1) {
                 withAnimation(.easeInOut(duration: 0.8)) {
                     tags[index].isAnimate = true
                 }
             }
         }
+    }
+    
+    private func updateData() {
+        tags = []
+        reloadData()
     }
     
     @ViewBuilder

@@ -19,7 +19,7 @@ public final class SettingsAdapter: SettingsAdapterProtocol {
     ) -> SettingsStateProtocol {
         let colorScheme: ColorScheme? = entity.appearence == .zero ? .none : entity.appearence == 1 ? .light : .dark
         let tintColor = Color(hex: entity.theme)
-        let icon = Asset(rawValue: entity.icon) ?? .default
+        let icon = Asset(rawValue: entity.icon) ?? .appIcon
         var state = currentState
         state.isLoading = false
         state.isPro = entity.isPro

@@ -11,7 +11,8 @@ public struct SettingsStateMock: SettingsStateProtocol {
     public var tintColor: Color = .green
     public var hasAuthRequest: Bool = true
     public var hasPrivacyMode: Bool = true
-    public var icon: Asset = .default
+    public var icon: Asset = .appIcon
+    public var isAnimatedIcon: Bool = .random()
     public var icons: [Asset] = Asset.allCases
     public var selectedProduct: Product?
     public var products: [Product] = []

@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import BackgroundTasks
 import RefdsAuth
 import RefdsRedux
 import RefdsRouter
@@ -11,6 +12,9 @@ import RefdsBudgetPresentation
 import RefdsBudgetUI
 
 struct ContentView: View {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @StateObject private var store = EnvironmentConfiguration.store
@@ -51,6 +55,7 @@ struct ContentView: View {
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
                 .onChange(of: store.state.settingsState.isPro) { store.dispatch(action: SettingsAction.updatePro) }
+                .onChange(of: scenePhase) { handlerScenePhase() }
                 .onReceive(timer) { _ in updatePurchasedProducts() }
                 .if(store.state.settingsState.hasAuthRequest) {
                     $0.refdsAuth(
@@ -104,6 +109,14 @@ struct ContentView: View {
             if store.state.settingsState.isPro {
                 store.dispatch(action: SettingsAction.fetchStore)
             }
+        }
+    }
+    
+    private func handlerScenePhase() {
+        guard store.state.settingsState.isAnimatedIcon else { return }
+        switch scenePhase {
+        case .active: break
+        default: appDelegate.setIconAnimator(task: nil)
         }
     }
 }

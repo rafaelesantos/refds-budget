@@ -34,24 +34,30 @@ public struct SpendBudgetSectionView: View {
                 color: .secondary
             )
         }
-        .onChange(of: viewData.first?.name ?? "") { reload() }
+        .onChange(of: categoryViewData.first?.name ?? "") { updateData() }
+        .onChange(of: categoryViewData.count) { updateData() }
         .onAppear { reload() }
     }
     
     private func reload() {
         withAnimation {
-            chartSelection = viewData.first?.name ?? ""
+            chartSelection = categoryViewData.first?.name ?? ""
         }
         
         guard viewData.isEmpty else { return }
         viewData = categoryViewData
         categoryViewData.indices.forEach { index in
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
                 withAnimation(.easeInOut(duration: 0.8)) {
                     viewData[index].isAnimate = true
                 }
             }
         }
+    }
+    
+    private func updateData() {
+        viewData = []
+        reload()
     }
     
     private func compareCategorySelected(_ category: CategoryRowViewDataProtocol) -> some View {
@@ -99,11 +105,7 @@ public struct SpendBudgetSectionView: View {
         HStack {
             RefdsText(.localizable(by: .homeSpendBudgetPercentageResult), style: .callout)
             Spacer()
-            BubbleColorView(
-                color: category.percentage.riskColor,
-                isSelected: true,
-                size: 14
-            )
+            RefdsScaleProgressView(riskColor: category.percentage.riskColor)
             RefdsText(category.percentage.percent())
                 .refdsRedacted(if: privacyMode)
                 .contentTransition(.numericText())

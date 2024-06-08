@@ -28,8 +28,9 @@ public struct CategoryView: View {
             sectionBalance
             LoadingRowView(isLoading: state.isLoading)
             sectionFilters
-            sectionBudgets
+            sectionDescription
             sectionBudgetsChart
+            sectionBudgets
             sectionTransactions
         }
         .searchable(text: $state.searchText)
@@ -69,6 +70,29 @@ public struct CategoryView: View {
             } header: {
                 RefdsText(.localizable(by: .categoriesBalance), style: .footnote, color: .secondary)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var sectionDescription: some View {
+        RefdsSection {
+            let description = state.budgtes.compactMap {
+                if let description = $0.description?.isEmpty == true ? nil : $0.description {
+                    let date = $0.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized
+                    return "\(date): \(description)"
+                }
+                return nil
+            }.joined(separator: "\n\n• ")
+            if !description.isEmpty {
+                RefdsText("• " + description, style: .callout, color: .secondary)
+                    .padding(.vertical, .padding(.extraSmall))
+            }
+        } header: {
+            RefdsText(
+                .localizable(by: .addBudgetDescriptionHeader),
+                style: .footnote,
+                color: .secondary
+            )
         }
     }
     
@@ -130,7 +154,7 @@ public struct CategoryView: View {
     
     @ViewBuilder
     private var sectionBudgetsChart: some View {
-        if state.budgtes.count > 1 {
+        RefdsSection {
             let data: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)] = state.budgtes.map {
                 (
                     x: $0.date,
@@ -139,7 +163,9 @@ public struct CategoryView: View {
                     isAnimate: false
                 )
             }
-            DateChartView(data: data)
+            RefdsCollapse(isCollapsed: false, title: .localizable(by: .categoriesBudgetChartHeader)) {
+                DateChartView(data: data, format: .custom("EEEE dd, MMMM yyyy"))
+            }
         }
     }
     

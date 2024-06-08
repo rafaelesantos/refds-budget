@@ -27,7 +27,7 @@ public enum ItemNavigation: Int, Identifiable, CaseIterable {
     
     public func icon(isPro: Bool) -> RefdsIconSymbol {
         switch self {
-        case .premium: return isPro ? .boltBadgeCheckmarkFill : .boltBadgeXmarkFill
+        case .premium: return .starFill
         case .categories: return .squareStack3dForwardDottedlineFill
         case .home: return .houseFill
         case .transactions: return .listBulletRectangleFill

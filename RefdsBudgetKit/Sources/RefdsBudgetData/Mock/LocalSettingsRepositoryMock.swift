@@ -19,6 +19,7 @@ public final class LocalSettingsRepositoryMock: SettingsUseCase {
     public func addSettings(
         theme: Color?,
         icon: Asset,
+        isAnimatedIcon: Bool?,
         appearence: Double?,
         hasAuthRequest: Bool,
         hasPrivacyMode: Bool,

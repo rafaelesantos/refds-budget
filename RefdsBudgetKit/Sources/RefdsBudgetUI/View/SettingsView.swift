@@ -1,10 +1,12 @@
 import SwiftUI
 import RefdsUI
+import RefdsInjection
 import RefdsRedux
 import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct SettingsView: View {
+    @RefdsInjection private var iconFactory: IconFactoryProtocol
     @Environment(\.applicationState) private var applicationState
     @Environment(\.itemNavigation) private var itemNavigation
     @Environment(\.requestReview) private var requestReview
@@ -42,6 +44,7 @@ public struct SettingsView: View {
         .onChange(of: state.icon) { updateData() }
         .onChange(of: state.hasAuthRequest) { updateData() }
         .onChange(of: state.hasPrivacyMode) { updateData() }
+        .onChange(of: state.isAnimatedIcon) { updateData() }
         .onChange(of: tintColor) { state.tintColor = tintColor }
         .fileImporter(
             isPresented: $state.showDocumentPicker,
@@ -109,10 +112,9 @@ public struct SettingsView: View {
     
     private var rowAppearence: some View {
         HStack(spacing: .padding(.medium)) {
-            let color: Color = colorScheme == .dark ? .purple : .yellow
             RefdsIconRow(
                 colorScheme == .dark ? .moonFill : .sunMaxFill,
-                color: color
+                color: .accentColor
             )
             
             Picker(selection: $state.colorScheme) {
@@ -160,9 +162,7 @@ public struct SettingsView: View {
                         RefdsButton {
                             withAnimation {
                                 state.icon = icon
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    icon.changeIcon()
-                                }
+                                iconFactory.setIcon(with: icon)
                             }
                         } label: {
                             VStack(spacing: .zero) {
@@ -185,7 +185,19 @@ public struct SettingsView: View {
             }
             .scrollIndicators(.never)
             .padding(.horizontal, -20)
+            .disabled(state.isAnimatedIcon)
             .budgetSubscription()
+            
+            HStack(spacing: .padding(.medium)) {
+                RefdsIconRow(
+                    .timelapse,
+                    color: .accentColor
+                )
+                
+                RefdsToggle(isOn: $state.isAnimatedIcon) {
+                    RefdsText(.localizable(by: .settingsRowAnimatedIcons))
+                }
+            }
         } header: {
             HStack {
                 RefdsText(
@@ -227,7 +239,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .handRaisedFill,
-                    color: .orange
+                    color: .accentColor
                 )
                 RefdsText(.localizable(by: .settingsPrivacyPolicy))
                 Spacer(minLength: .zero)
@@ -239,7 +251,7 @@ public struct SettingsView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(
                 .lockShieldFill,
-                color: .indigo
+                color: .accentColor
             )
             RefdsToggle(isOn: $state.hasAuthRequest) {
                 RefdsText(.localizable(by: .settingsRowFaceID))
@@ -251,7 +263,7 @@ public struct SettingsView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(
                 .eyeSlashFill,
-                color: .teal
+                color: .accentColor
             )
             RefdsToggle(isOn: $state.hasPrivacyMode) {
                 RefdsText(.localizable(by: .settingsRowPrivacyMode))
@@ -288,7 +300,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .docBadgeArrowUpFill,
-                    color: .red
+                    color: .accentColor
                 )
                 RefdsText(.localizable(by: .settingsFileExport))
                 Spacer(minLength: .zero)
@@ -303,7 +315,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .trayAndArrowDownFill,
-                    color: .mint
+                    color: .accentColor
                 )
                 RefdsText(.localizable(by: .settingsFileImport))
                 Spacer(minLength: .zero)
@@ -333,7 +345,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .hammerFill,
-                    color: .blue
+                    color: .accentColor
                 )
                 RefdsText(.localizable(by: .settingsRowTestFlight))
                 Spacer(minLength: .zero)
@@ -357,7 +369,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .starFill,
-                    color: .green
+                    color: .accentColor
                 )
                 RefdsText(.localizable(by: .settingsRowReview))
                 Spacer(minLength: .zero)
@@ -371,7 +383,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .squareAndArrowUp,
-                    color: .pink
+                    color: .accentColor
                 )
                 RefdsText(.localizable(by: .settingsRowShare))
             }

@@ -48,11 +48,11 @@ public struct AddTransactionView: View {
             sectionDate
             sectionSaveButtonView
         }
+        .navigationTitle(String.localizable(by: .addTransactionNavigationTitle))
         .refreshable { action(.fetchCategories(state.date)) }
+        .toolbar { ToolbarItem { saveButtonToolbar } }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
-        .refdsToast(item: $state.error)
-        .navigationTitle(String.localizable(by: .addTransactionNavigationTitle))
         .refdsToast(item: $state.error)
     }
     
@@ -262,6 +262,18 @@ public struct AddTransactionView: View {
             isDisable: !state.canSave
         ) {
             action(.save)
+        }
+    }
+    
+    private var saveButtonToolbar: some View {
+        RefdsButton(isDisable: !state.canSave) { action(.save) } label: {
+            RefdsIcon(
+                .checkmarkCircleFill,
+                color: .accentColor,
+                size: 18,
+                weight: .bold,
+                renderingMode: .hierarchical
+            )
         }
     }
 }

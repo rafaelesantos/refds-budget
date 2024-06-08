@@ -17,7 +17,8 @@ public final class LocalSettingsRepository: SettingsUseCase {
             let settings = SettingsEntity(context: database.viewContext)
             settings.date = .current
             settings.theme = "#28CD41"
-            settings.icon = Asset.default.rawValue
+            settings.icon = Asset.appIcon.rawValue
+            settings.isAnimatedIcon = false
             settings.appearence = .zero
             settings.hasAuthRequest = false
             settings.hasPrivacyMode = false
@@ -38,6 +39,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
     public func addSettings(
         theme: Color?,
         icon: Asset,
+        isAnimatedIcon: Bool?,
         appearence: Double?,
         hasAuthRequest: Bool,
         hasPrivacyMode: Bool,
@@ -54,6 +56,7 @@ public final class LocalSettingsRepository: SettingsUseCase {
         settings.date = .current
         settings.theme = theme?.asHex ?? settings.theme
         settings.icon = icon.rawValue
+        settings.isAnimatedIcon = isAnimatedIcon ?? settings.isAnimatedIcon
         settings.appearence = appearence ?? settings.appearence
         settings.hasAuthRequest = hasAuthRequest
         settings.hasPrivacyMode = hasPrivacyMode

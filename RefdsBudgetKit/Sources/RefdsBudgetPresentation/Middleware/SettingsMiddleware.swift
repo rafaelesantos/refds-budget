@@ -62,6 +62,7 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             try settingsRepository.addSettings(
                 theme: tintColor,
                 icon: state.icon,
+                isAnimatedIcon: state.isAnimatedIcon,
                 appearence: Double(appearence),
                 hasAuthRequest: hasAuthRequest,
                 hasPrivacyMode: hasPrivacyMode,

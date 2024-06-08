@@ -19,8 +19,13 @@ public final class FileFactory {
         var count: Int = .zero
         var startDate: TimeInterval = Date().timestamp
         var endDate: TimeInterval = .zero
+        
+        let ids = ids.map {
+            let date = transactionRepository.getTransaction(by: $0)?.date.date ?? .current
+            return ($0, date)
+        }.sorted(by: { $0.1.timeIntervalSince1970 < $1.1.timeIntervalSince1970 })
     
-        ids.forEach { id in
+        ids.forEach { id, _ in
             if let transaction = transactionRepository.getTransaction(by: id) {
                 let category = categoryRepository.getCategory(by: transaction.category)
                 total += transaction.amount

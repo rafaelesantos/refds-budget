@@ -13,6 +13,7 @@ public protocol SettingsStateProtocol: RefdsReduxState {
     var colorScheme: ColorScheme? { get set }
     var tintColor: Color { get set }
     var icon: Asset { get set }
+    var isAnimatedIcon: Bool { get set }
     var icons: [Asset] { get set }
     var selectedProduct: Product? { get set }
     var products: [Product] { get set }
@@ -33,6 +34,7 @@ public struct SettingsState: SettingsStateProtocol {
     public var hasAuthRequest: Bool
     public var hasPrivacyMode: Bool
     public var icon: Asset
+    public var isAnimatedIcon: Bool
     public var icons: [Asset]
     public var selectedProduct: Product?
     public var products: [Product]
@@ -51,7 +53,8 @@ public struct SettingsState: SettingsStateProtocol {
         tintColor: Color = .green,
         hasAuthRequest: Bool = false,
         hasPrivacyMode: Bool = false,
-        icon: Asset = .default,
+        icon: Asset = .appIcon,
+        isAnimatedIcon: Bool = false,
         icons: [Asset] = Asset.allCases,
         products: [Product] = [],
         purchasedProductsID: Set<String> = [],
@@ -67,6 +70,7 @@ public struct SettingsState: SettingsStateProtocol {
         self.hasAuthRequest = hasAuthRequest
         self.hasPrivacyMode = hasPrivacyMode
         self.icon = icon
+        self.isAnimatedIcon = isAnimatedIcon
         self.icons = icons
         self.products = products
         self.purchasedProductsID = purchasedProductsID

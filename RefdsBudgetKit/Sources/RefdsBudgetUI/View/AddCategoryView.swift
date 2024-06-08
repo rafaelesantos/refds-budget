@@ -35,6 +35,7 @@ public struct AddCategoryView: View {
         }
         .refdsDismissesKeyboad()
         .onAppear { action(.fetchCategory(state)) }
+        .toolbar { ToolbarItem { saveButtonToolbar } }
         .refdsToast(item: $state.error)
     }
     
@@ -199,6 +200,18 @@ public struct AddCategoryView: View {
             }
             .padding(.horizontal, -20)
             .padding(.bottom, 20)
+        }
+    }
+    
+    private var saveButtonToolbar: some View {
+        RefdsButton(isDisable: !state.canSave) { action(.save(state)) } label: {
+            RefdsIcon(
+                .checkmarkCircleFill,
+                color: .accentColor,
+                size: 18,
+                weight: .bold,
+                renderingMode: .hierarchical
+            )
         }
     }
 }

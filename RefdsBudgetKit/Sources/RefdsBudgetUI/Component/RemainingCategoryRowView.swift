@@ -32,11 +32,8 @@ public struct RemainingCategoryRowView: View {
                     RefdsIconRow(icon, color: viewData.color)
             }
             
-            BubbleColorView(
-                color: viewData.percentage.riskColor,
-                isSelected: true,
-                size: 14
-            )
+            RefdsScaleProgressView(riskColor: viewData.percentage.riskColor)
+                .padding(.vertical, 2)
             
             VStack(spacing: .zero) {
                 HStack {

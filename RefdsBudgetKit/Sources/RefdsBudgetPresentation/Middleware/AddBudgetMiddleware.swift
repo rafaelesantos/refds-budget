@@ -27,8 +27,8 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
         switch action {
-        case let .fetchCategories: fetchCategories(from: state.month, on: completion)
-        case let .fetchBudget:
+        case .fetchCategories: fetchCategories(from: state.month, on: completion)
+        case .fetchBudget:
             guard let category = state.category else { return }
             fetchBudget(from: state.month, by: category.id, on: completion)
         case let .save(budget): save(budget, on: completion)

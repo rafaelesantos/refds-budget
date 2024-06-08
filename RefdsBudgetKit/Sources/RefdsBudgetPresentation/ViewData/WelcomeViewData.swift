@@ -29,7 +29,7 @@ public final class WelcomeViewData: ObservableObject {
     
     public init() {
         let header = RefdsWelcomeHeaderViewData(
-            applicationIcon: Asset.default.image,
+            applicationIcon: Asset.appIcon.image,
             introduceTitle: .refdsLocalizable(by: .welcomeIntroduction),
             applicationTitle: .localizable(by: .settingsApplicationName),
             description: .localizable(by: .settingsApplicationDescription)

@@ -93,7 +93,8 @@
 "categoriesOrangeLegendDescription" = "Você está no vermelho! Quase atingindo o limite. Hora de reavaliar as despesas.";
 "categoriesRedLegendTitle" = "Orçamento Estourado";
 "categoriesRedLegendDescription" = "Você ultrapassou o limite! É hora de repensar seus hábitos de consumo.";
-"categoriesChartHeader" = "Gráfico";
+"categoriesBudgetChartHeader" = "Gráfico Orçamentário";
+"categoriesTransactionsChartHeader" = "Gráfico de Transações";
 
 // MARK: - Category
 
@@ -181,6 +182,7 @@
 "filterDate" = "Data";
 "filterCategory" = "Categorias";
 "filterTags" = "Tags";
+"filterCurrentMonth" = "Reset";
 
 // MARK: - Widget
 
@@ -195,15 +197,34 @@
 
 // MARK: - Application Icon
 
-"appIconDefault" = "Padrão";
-"appIconLight" = "Padrão Claro";
-"appIconDark" = "Padrão Escuro";
-"appIconSystem" = "Sistema";
-"appIconLightSystem" = "Sistema Claro";
-"appIconDarkSystem" = "Sistema Escuro";
-"appIconLightCrown" = "Coroa Clara";
-"appIconDarkCrown" = "Coroa Escura";
-"appIconDevelopment" = "Desenvolvimento";
+"appIconAppIcon" = "Ícone Principal";
+"appIconDarkMainCornerIcon" = "Ícone Escuro Principal de Canto";
+"appIconDarkMainIcon" = "Ícone Escuro Principal";
+"appIconDarkProCornerIcon" = "Ícone Escuro Pro de Canto";
+"appIconDarkProIcon" = "Ícone Escuro Pro";
+"appIconDarkSystemCornerIcon" = "Ícone Escuro de Sistema de Canto";
+"appIconDarkSystemIcon" = "Ícone Escuro de Sistema";
+"appIconDeveloperDarkMainIcon" = "Ícone Escuro Principal de Desenvolvedor";
+"appIconDeveloperDarkProIcon" = "Ícone Escuro Pro de Desenvolvedor";
+"appIconDeveloperDarkSystemIcon" = "Ícone Escuro de Sistema de Desenvolvedor";
+"appIconDeveloperLightMainIcon" = "Ícone Claro Principal de Desenvolvedor";
+"appIconDeveloperLightProIcon" = "Ícone Claro Pro de Desenvolvedor";
+"appIconDeveloperLightSystemIcon" = "Ícone Claro de Sistema de Desenvolvedor";
+"appIconDeveloperMainIcon" = "Ícone Principal de Desenvolvedor";
+"appIconDeveloperProIcon" = "Ícone Pro de Desenvolvedor";
+"appIconDeveloperSystemIcon" = "Ícone de Sistema de Desenvolvedor";
+"appIconLightMainCornerIcon" = "Ícone Claro Principal de Canto";
+"appIconLightMainIcon" = "Ícone Claro Principal";
+"appIconLightProCornerIcon" = "Ícone Claro Pro de Canto";
+"appIconLightProIcon" = "Ícone Claro Pro";
+"appIconLightSystemCornerIcon" = "Ícone Claro de Sistema de Canto";
+"appIconLightSystemIcon" = "Ícone Claro de Sistema";
+"appIconMainCornerIcon" = "Ícone Principal de Canto";
+"appIconProCornerIcon" = "Ícone Pro de Canto";
+"appIconProIcon" = "Ícone Pro";
+"appIconSystemCornerIcon" = "Ícone de Sistema de Canto";
+"appIconSystemIcon" = "Ícone de Sistema";
+
 
 // MARK: - Settings
 
@@ -215,6 +236,7 @@
 "settingsRowAppearenceSystem" = "Sistema";
 "settingsRowTheme" = "Tema";
 "settingsSectionIcons" = "Ícones";
+"settingsRowAnimatedIcons" = "Ícone Animado";
 "settingsSectionMoreOptions" = "Mais Opções";
 "settingsRowTestFlight" = "TestFlight";
 "settingsTagBeta" = "Beta";

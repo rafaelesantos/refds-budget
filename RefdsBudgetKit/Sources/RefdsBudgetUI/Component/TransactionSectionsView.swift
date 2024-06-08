@@ -40,10 +40,12 @@ public struct TransactionSectionsView: View {
         } else {
             ForEach(viewData.indices, id: \.self) { index in
                 let transactions = viewData[index]
-                if index == 1 {
+                
+                if index == 0 {
                     sectionChart
                         .budgetSubscription()
                 }
+                
                 RefdsSection {
                     ForEach(transactions.indices, id: \.self) { index in
                         let transaction = transactions[index]
@@ -169,7 +171,7 @@ public struct TransactionSectionsView: View {
     
     @ViewBuilder
     private var sectionChart: some View {
-        if viewData.count > 1 {
+        RefdsSection {
             let data: [(x: Date, y: Double, percentage: Double?, isAnimate: Bool)] = viewData.reversed().map {
                 let date = $0.first?.date ?? .current
                 let amount = $0.map { $0.amount }.reduce(.zero, +)
@@ -180,7 +182,9 @@ public struct TransactionSectionsView: View {
                     isAnimate: false
                 )
             }
-            DateChartView(data: data, format: .custom("EEEE dd, MMMM yyyy"))
+            RefdsCollapse(isCollapsed: false, title: .localizable(by: .categoriesTransactionsChartHeader)) {
+                DateChartView(data: data, format: .custom("EEEE dd, MMMM yyyy"))
+            }
         }
     }
 }

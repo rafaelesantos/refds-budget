@@ -6,6 +6,7 @@ public protocol SettingsUseCase {
     func addSettings(
         theme: Color?,
         icon: Asset,
+        isAnimatedIcon: Bool?,
         appearence: Double?,
         hasAuthRequest: Bool,
         hasPrivacyMode: Bool,

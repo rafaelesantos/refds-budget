@@ -84,7 +84,8 @@ public enum LocalizableKey: String {
     case categoriesOrangeLegendDescription
     case categoriesRedLegendTitle
     case categoriesRedLegendDescription
-    case categoriesChartHeader
+    case categoriesBudgetChartHeader
+    case categoriesTransactionsChartHeader
     // MARK: - Category
     case categoryBalanceTitle
     case categoryBalanceSubtitle
@@ -157,6 +158,7 @@ public enum LocalizableKey: String {
     case filterDate
     case filterCategory
     case filterTags
+    case filterCurrentMonth
     // MARK: - Widget
     case widgetAppName
     case widgetCurrentSpend
@@ -167,15 +169,33 @@ public enum LocalizableKey: String {
     case widgetTitleSystemSmallTransactions
     case widgetDescriptionSystemSmallTransactions
     // MARK: - Application Icon
-    case appIconDefault
-    case appIconLight
-    case appIconDark
-    case appIconSystem
-    case appIconLightSystem
-    case appIconDarkSystem
-    case appIconLightCrown
-    case appIconDarkCrown
-    case appIconDevelopment
+    case appIconAppIcon
+    case appIconDarkMainCornerIcon
+    case appIconDarkMainIcon
+    case appIconDarkProCornerIcon
+    case appIconDarkProIcon
+    case appIconDarkSystemCornerIcon
+    case appIconDarkSystemIcon
+    case appIconDeveloperDarkMainIcon
+    case appIconDeveloperDarkProIcon
+    case appIconDeveloperDarkSystemIcon
+    case appIconDeveloperLightMainIcon
+    case appIconDeveloperLightProIcon
+    case appIconDeveloperLightSystemIcon
+    case appIconDeveloperMainIcon
+    case appIconDeveloperProIcon
+    case appIconDeveloperSystemIcon
+    case appIconLightMainCornerIcon
+    case appIconLightMainIcon
+    case appIconLightProCornerIcon
+    case appIconLightProIcon
+    case appIconLightSystemCornerIcon
+    case appIconLightSystemIcon
+    case appIconMainCornerIcon
+    case appIconProCornerIcon
+    case appIconProIcon
+    case appIconSystemCornerIcon
+    case appIconSystemIcon
     // MARK: - Settings
     case settingsNavigationTitle
     case settingsSectionCustomization
@@ -185,6 +205,7 @@ public enum LocalizableKey: String {
     case settingsRowAppearenceSystem
     case settingsRowTheme
     case settingsSectionIcons
+    case settingsRowAnimatedIcons
     case settingsSectionMoreOptions
     case settingsRowTestFlight
     case settingsTagBeta

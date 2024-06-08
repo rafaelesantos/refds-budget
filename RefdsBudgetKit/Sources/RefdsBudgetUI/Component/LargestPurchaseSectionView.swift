@@ -84,6 +84,8 @@ public struct LargestPurchaseSectionView: View {
                 }
             }
             
+            Spacer(minLength: .zero)
+            
             RefdsText(
                 transaction.description,
                 style: .callout,

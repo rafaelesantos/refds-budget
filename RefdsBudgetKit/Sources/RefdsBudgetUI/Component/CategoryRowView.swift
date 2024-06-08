@@ -22,8 +22,6 @@ public struct CategoryRowView: View {
     public var body: some View {
         RefdsSection {
             rowCategory
-            rowTransactions
-            rowDescription
         }
         .onAppear { updateStateValue() }
         .onChange(of: viewData.budget) { updateStateValue() }
@@ -33,19 +31,32 @@ public struct CategoryRowView: View {
     private var rowCategory: some View {
         HStack(spacing: .padding(.medium)) {
             if let icon = RefdsIconSymbol(rawValue: viewData.icon) {
-                RefdsIcon(
-                    icon,
-                    color: viewData.color,
-                    size: .padding(.medium)
-                )
-                .frame(width: .padding(.medium), height: .padding(.medium))
-                .padding(10)
-                .background(viewData.color.opacity(0.2))
-                .clipShape(.rect(cornerRadius: .cornerRadius))
+                VStack {
+                    RefdsIcon(
+                        icon,
+                        color: viewData.color,
+                        size: .padding(.medium)
+                    )
+                    .frame(width: .padding(.medium), height: .padding(.medium))
+                    .padding(10)
+                    .background(viewData.color.opacity(0.2))
+                    .clipShape(.rect(cornerRadius: .cornerRadius))
+                    
+                    RefdsText(
+                        viewData.transactionsAmount.asString,
+                        style: .caption2,
+                        color: viewData.color,
+                        weight: .bold
+                    )
+                    .frame(width: 38)
+                    .padding(.vertical, 2)
+                    .background(viewData.color.opacity(0.2))
+                    .clipShape(.rect(cornerRadius: 6))
+                }
             }
             
             HStack(spacing: .zero) {
-                VStack(spacing: .padding(.extraSmall)) {
+                VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
                     HStack(spacing: .padding(.small)) {
                         RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
                         Spacer(minLength: .zero)
@@ -67,7 +78,12 @@ public struct CategoryRowView: View {
                         )
                         .refdsRedacted(if: privacyMode)
                     }
+                    
+                    if let description = viewData.description, !description.isEmpty {
+                        RefdsText(description, style: .callout, color: .secondary, lineLimit: 2)
+                    }
                 }
+                .frame(maxWidth: .infinity)
                 
                 Spacer(minLength: .padding(.extraSmall))
                 
@@ -94,13 +110,6 @@ public struct CategoryRowView: View {
             Spacer(minLength: .zero)
             RefdsText(viewData.spend.currency(), style: .callout, color: .secondary)
                 .refdsRedacted(if: privacyMode)
-        }
-    }
-    
-    @ViewBuilder
-    private var rowDescription: some View {
-        if let description = viewData.description, !description.isEmpty {
-            RefdsText(description, style: .callout, color: .secondary)
         }
     }
     

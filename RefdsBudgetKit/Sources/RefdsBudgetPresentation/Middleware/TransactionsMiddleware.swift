@@ -131,7 +131,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 count: groupedTransactions.indices.count
             ) {
                 let filteredTransactions = Array(groupedTransactions[range])
-                let canChangePage = (page + 1) * filteredTransactions.count < groupedTransactions.count
+                let canChangePage = page * filteredTransactions.count < groupedTransactions.count
                 return completion(.updateData(
                     transactions: filteredTransactions,
                     categories: categories.map { $0.name },

@@ -19,27 +19,20 @@ public struct DateChartView: View {
     }
     
     public var body: some View {
-        RefdsSection {
-            Group {
-                seletedBarView
-                chartView
-                    .padding(.top, -15)
-            }
-            .budgetSubscription()
-        } header: {
-            RefdsText(
-                .localizable(by: .categoriesChartHeader),
-                style: .footnote,
-                color: .secondary
-            )
+        Group {
+            seletedBarView
+            chartView
+                .padding(.top, -15)
         }
-        .onChange(of: data.first?.y ?? .zero) { reloadData() }
+        .budgetSubscription()
+        .onChange(of: dateData.first?.y ?? .zero) { updateData() }
+        .onChange(of: dateData.count) { updateData() }
         .onAppear { reloadData() }
     }
     
     private func reloadData() {
         withAnimation {
-            if let date = data.first?.x.asString(withDateFormat: format) {
+            if let date = dateData.first?.x.asString(withDateFormat: format) {
                 chartSelection = date
             }
         }
@@ -52,6 +45,11 @@ public struct DateChartView: View {
                 }
             }
         }
+    }
+    
+    private func updateData() {
+        data = []
+        reloadData()
     }
     
     @ViewBuilder
@@ -104,6 +102,7 @@ public struct DateChartView: View {
         .chartYAxis { AxisMarks(position: .trailing) }
         .chartScrollableAxes(.horizontal)
         .chartXVisibleDomain(length: 4)
+        .chartYVisibleDomain(length: dateData.max(by: { $0.y < $1.y })?.y ?? .zero)
         .frame(height: 200)
         .padding(.vertical)
         .padding(.top)

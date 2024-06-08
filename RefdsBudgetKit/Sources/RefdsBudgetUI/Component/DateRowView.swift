@@ -10,8 +10,26 @@ public struct DateRowView: View {
     }
     
     public var body: some View {
-        HStack {
+        HStack(spacing: .padding(.medium)) {
             RefdsText(.localizable(by: .filterDate), style: .callout)
+            
+            if date.asString(withDateFormat: .fullMonthYear) != Date.current.asString(withDateFormat: .fullMonthYear) {
+                RefdsButton {
+                    withAnimation {
+                        date = Date()
+                    }
+                } label: {
+                    RefdsText(
+                        .localizable(by: .filterCurrentMonth).uppercased(),
+                        style: .footnote,
+                        color: .accentColor,
+                        weight: .bold
+                    )
+                    .refdsTag(color: .accentColor)
+                }
+                .buttonStyle(.plain)
+            }
+            
             Spacer(minLength: .zero)
             RefdsText(
                 date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized,
