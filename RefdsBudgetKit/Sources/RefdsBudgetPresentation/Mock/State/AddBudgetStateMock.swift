@@ -8,6 +8,8 @@ public struct AddBudgetStateMock: AddBudgetStateProtocol {
     public var month: Date = .current
     public var category: AddCategoryStateProtocol? = nil
     public var categories: [AddCategoryStateProtocol] = []
+    public var isLoading: Bool = true
+    public var isAI: Bool = true
     public var error: RefdsBudgetError? = Bool.random() ? nil : .existingBudget
     
     public var canSave: Bool {

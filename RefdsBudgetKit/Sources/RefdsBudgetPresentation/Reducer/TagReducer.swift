@@ -10,15 +10,17 @@ public final class TagReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? TagAction {
+        case .fetchData:
+            state.isLoading = true
         case let .updateData(tags):
             state.tags = tags
             state.selectedTag = TagRowViewData()
+            state.isLoading = false
         case let .updateError(error):
             state.error = error
         case nil,
                 .save,
-                .removeTag,
-                .fetchData:
+                .removeTag:
             break
         }
         

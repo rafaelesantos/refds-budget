@@ -10,7 +10,6 @@ public struct RemainingCategorySectionView<Header: View>: View {
     private let viewData: [CategoryRowViewDataProtocol]
     private let action: ((CategoryRowViewDataProtocol) -> Void)?
     
-    @State private var isCollapsed = false
     @State private var budget: Double = .zero
     @State private var percentage: Double = .zero
     
@@ -30,7 +29,6 @@ public struct RemainingCategorySectionView<Header: View>: View {
             RefdsSection {
                 Group {
                     header()
-                    collapseRemainingCategories
                 }
                 .budgetSubscription()
             } header: {
@@ -42,20 +40,10 @@ public struct RemainingCategorySectionView<Header: View>: View {
             }
         }
         
-        if isCollapsed, isPro {
+        if isPro {
             RefdsSection {
                 remainingCategories
             }
-        }
-    }
-    
-    private var collapseRemainingCategories: some View {
-        RefdsCollapse(isCollapsed: false) {
-            RefdsText(.localizable(by: .categoriesNavigationTitle), style: .callout)
-        } content: {
-            EmptyView()
-        } action: { isCollapsed in
-            self.isCollapsed = isCollapsed
         }
     }
     

@@ -39,7 +39,7 @@ public final class TagMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 value: nil,
                 amount: nil
             )
-        }
+        }.sorted(by: { $0.name < $1.name })
         
         completion(.updateData(tags: tags))
     }

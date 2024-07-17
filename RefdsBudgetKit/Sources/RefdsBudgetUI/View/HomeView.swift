@@ -21,15 +21,15 @@ public struct HomeView: View {
     public var body: some View {
         List {
             SubscriptionRowView()
-            balanceSectionView
-            LoadingRowView(isLoading: state.isLoading)
-            sectionFilters
-            emptyBudgetView
-            spendBudgetSectionView
-            largestPurchaseSectionView
-            remainingSectionView
-            pendingClearedSectionView
-            tagsSectionView
+            sectionBalanceView
+            sectionFiltersView
+            sectionEmptyBudgetView
+            sectionSpendBudgetView
+            sectionLargestPurchaseView
+            sectionRemainingView
+            sectionPendingClearedView
+            sectionTagsView
+            sectionLegendView
         }
         .navigationTitle(String.localizable(by: .homeNavigationTitle))
         .toolbar { ToolbarItem { moreButton } }
@@ -50,7 +50,7 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
-    private var balanceSectionView: some View {
+    private var sectionBalanceView: some View {
         if let balance = state.balance {
             RefdsSection {
                 BalanceRowView(viewData: balance)
@@ -65,7 +65,7 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
-    private var sectionFilters: some View {
+    private var sectionFiltersView: some View {
         Menu {
             RefdsButton {
                 withAnimation { state.isFilterEnable.toggle() }
@@ -157,14 +157,14 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
-    private var spendBudgetSectionView: some View {
+    private var sectionSpendBudgetView: some View {
         if !state.remaining.isEmpty {
             SpendBudgetSectionView(viewData: state.remaining)
         }
     }
     
     @ViewBuilder
-    private var remainingSectionView: some View {
+    private var sectionRemainingView: some View {
         if let balance = state.remainingBalance {
             RemainingCategorySectionView(
                 header: { BalanceRowView(viewData: balance, isRemaining: true) },
@@ -174,7 +174,7 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
-    private var tagsSectionView: some View {
+    private var sectionTagsView: some View {
         if !state.tagsRow.isEmpty {
             TagsSectionView(tags: state.tagsRow) {
                 action(.manageTags)
@@ -183,21 +183,21 @@ public struct HomeView: View {
     }
     
     @ViewBuilder
-    private var pendingClearedSectionView: some View {
+    private var sectionPendingClearedView: some View {
         if let pendingCleared = state.pendingCleared {
             PendingClearedSectionView(viewData: pendingCleared)
         }
     }
     
     @ViewBuilder
-    private var largestPurchaseSectionView: some View {
+    private var sectionLargestPurchaseView: some View {
         if !state.largestPurchase.isEmpty {
             LargestPurchaseSectionView(transactions: state.largestPurchase)
         }
     }
     
     @ViewBuilder
-    private var emptyBudgetView: some View {
+    private var sectionEmptyBudgetView: some View {
         if state.remaining.isEmpty, state.largestPurchase.isEmpty {
             RefdsSection {
                 EmptyRowView(title: .emptyBudgetsTitle)
@@ -232,6 +232,57 @@ public struct HomeView: View {
                 weight: .bold,
                 renderingMode: .hierarchical
             )
+        }
+    }
+    
+    @ViewBuilder
+    private var sectionLegendView: some View {
+        if let budget = state.balance?.budget, budget > .zero {
+            RefdsSection {
+                VStack(alignment: .leading) {
+                    let title: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendTitle):
+                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendTitle) :
+                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendTitle) :
+                        .localizable(by: .categoriesRedLegendTitle)
+                    
+                    let description: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendDescription):
+                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendDescription) :
+                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendDescription) :
+                        .localizable(by: .categoriesRedLegendDescription)
+                    RefdsText(
+                        title.uppercased(),
+                        style: .footnote,
+                        color: state.selectedLegend,
+                        weight: .bold
+                    )
+                    .refdsTag(color: state.selectedLegend)
+                    RefdsText(description, style: .callout, color: .secondary)
+                }
+                
+                HStack {
+                    let colors: [Color] = [.green, .yellow, .orange, .red]
+                    ForEach(colors, id: \.self) { color in
+                        Spacer()
+                        RefdsButton {
+                            withAnimation { state.selectedLegend = color }
+                        } label: {
+                            BubbleColorView(
+                                color: color,
+                                isSelected: state.selectedLegend == color
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    Spacer()
+                }
+                .padding(.vertical, 4)
+            } header: {
+                RefdsText(
+                    .localizable(by: .categoriesLegend),
+                    style: .footnote,
+                    color: .secondary
+                )
+            }
         }
     }
 }

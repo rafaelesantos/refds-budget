@@ -13,9 +13,10 @@ public protocol AddTransactionStateProtocol: RefdsReduxState {
     var categories: [CategoryRowViewDataProtocol] { get set }
     var remaining: Double? { get set }
     var date: Date { get set }
-    var canSave: Bool { get }
     var isEmptyCategories: Bool { get set }
     var isEmptyBudgets: Bool { get }
+    var isLoading: Bool { get set }
+    var isAI: Bool { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -30,12 +31,8 @@ public struct AddTransactionState: AddTransactionStateProtocol {
     public var date: Date
     public var error: RefdsBudgetError?
     public var isEmptyCategories: Bool = false
-    
-    public var canSave: Bool {
-        amount > 0 &&
-        description.isEmpty == false &&
-        category != nil
-    }
+    public var isLoading: Bool
+    public var isAI: Bool
     
     public var isEmptyBudgets: Bool {
         categories.isEmpty
@@ -61,5 +58,7 @@ public struct AddTransactionState: AddTransactionStateProtocol {
         self.remaining = remaining
         self.date = date
         self.error = error
+        self.isLoading = category == nil
+        self.isAI = category == nil
     }
 }

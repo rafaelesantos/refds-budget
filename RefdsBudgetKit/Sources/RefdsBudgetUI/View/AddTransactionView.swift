@@ -8,12 +8,15 @@ public struct AddTransactionView: View {
     @Binding private var state: AddTransactionStateProtocol
     private let action: (AddTransactionAction) -> Void
     
+    @State private var amount: Double = .zero
+    @State private var description: String = ""
+    
     private var bindingCategory: Binding<String> {
         Binding {
             state.category?.name ?? .localizable(by: .addBudgetEmptyCategories)
         } set: { name in
             if let category = state.categories.first(where: { $0.name.lowercased() == name.lowercased() }) {
-                state.category = category
+                withAnimation { state.category = category }
             }
         }
     }
@@ -24,7 +27,7 @@ public struct AddTransactionView: View {
         } set: {
             let newDate = $0.asString(withDateFormat: .monthYear)
             let currentDate = state.date.asString(withDateFormat: .monthYear)
-            if newDate != currentDate { action(.fetchCategories($0)) }
+            if newDate != currentDate || state.isAI { action(.fetchCategories($0)) }
             state.date = $0
         }
     }
@@ -42,10 +45,7 @@ public struct AddTransactionView: View {
             sectionAmount
             sectionDescription
             sectionStatus
-            sectionEmptyCategories
-            sectionEmptyBudgets
             sectionCategory
-            sectionDate
             sectionSaveButtonView
         }
         .navigationTitle(String.localizable(by: .addTransactionNavigationTitle))
@@ -57,6 +57,8 @@ public struct AddTransactionView: View {
     }
     
     private func fetchDataOnAppear() {
+        description = description.isEmpty ? state.description : description
+        amount = amount == .zero ? state.amount : amount
         guard state.category == nil else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             action(.fetchCategories(state.date))
@@ -66,7 +68,7 @@ public struct AddTransactionView: View {
     private var sectionAmount: some View {
         RefdsSection {} footer: {
             RefdsCurrencyTextField(
-                value: $state.amount,
+                value: $amount,
                 style: .largeTitle,
                 weight: .bold
             )
@@ -78,14 +80,14 @@ public struct AddTransactionView: View {
             #if os(macOS)
             RefdsTextField(
                 .localizable(by: .addTransactionDescriptionPrompt),
-                text: $state.description,
+                text: $description,
                 axis: .vertical,
                 style: .callout
             )
             #else
             RefdsTextField(
                 .localizable(by: .addTransactionDescriptionPrompt),
-                text: $state.description,
+                text: $description,
                 axis: .vertical,
                 style: .callout,
                 textInputAutocapitalization: .sentences
@@ -112,6 +114,8 @@ public struct AddTransactionView: View {
                 RefdsText(.localizable(by: .addTransactionStatusSelect), style: .callout)
             }
             .tint(.secondary)
+            
+            rowDate
         } header: {
             RefdsText(
                 .localizable(by: .addTransactionStatusHeader),
@@ -121,24 +125,47 @@ public struct AddTransactionView: View {
         }
     }
     
-    @ViewBuilder
     private var sectionCategory: some View {
-        if !state.isEmptyCategories, !state.isEmptyBudgets {
-            RefdsSection {
-                rowCategories
-            } header: {
+        RefdsSection {
+            LoadingRowView(isLoading: state.isLoading)
+            
+            if !state.isLoading {
+                if !state.isEmptyCategories, !state.isEmptyBudgets {
+                    rowCategories
+                }
+                
+                if state.isEmptyCategories {
+                    RefdsText(.localizable(by: .categoriesEmptyCategoriesDescription), style: .callout)
+                    RefdsButton { action(.addCategory) } label: {
+                        RefdsText(.localizable(by: .categoriesEmptyCategoriesButton), style: .callout, color: .accentColor)
+                    }
+                }
+                
+                if !state.isEmptyCategories, state.isEmptyBudgets {
+                    RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
+                    RefdsButton { action(.addBudget(state.date)) } label: {
+                        RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
+                    }
+                }
+            }
+        } header: {
+            HStack {
                 RefdsText(
                     .localizable(by: .addBudgetCategoryHeader),
                     style: .footnote,
                     color: .secondary
                 )
+                
+                Spacer(minLength: .zero)
             }
+        } footer: {
+            AISuggestionLabel(isEnable: state.isAI)
         }
     }
     
     @ViewBuilder
     private var rowEmptyCategories: some View {
-        if state.categories.isEmpty {
+        if state.categories.isEmpty, !state.isLoading {
             RefdsText(
                 .localizable(by: .addBudgetEmptyCategories),
                 style: .callout,
@@ -162,6 +189,11 @@ public struct AddTransactionView: View {
                     .padding(10)
                     .background(category.color.opacity(0.2))
                     .clipShape(.rect(cornerRadius: .cornerRadius))
+                    
+                    let spend = category.spend + state.amount
+                    let percentage = spend / (category.budget == .zero ? 1 : category.budget)
+                    RefdsScaleProgressView(riskColor: percentage.riskColor)
+                        .padding(.vertical, 2)
                 }
                 
                 VStack(spacing: .zero) {
@@ -174,78 +206,30 @@ public struct AddTransactionView: View {
                         RefdsText(.localizable(by: .addBudgetSelectedCategory), style: .callout)
                     }
                     .tint(.secondary)
-                    rowPercentage
                 }
             }
         }
     }
     
-    @ViewBuilder
-    private var rowPercentage: some View {
-        if let category = state.category {
-            HStack(spacing: .padding(.medium)) {
-                let spend = category.spend + state.amount
-                let percentage = spend / (category.budget == .zero ? 1 : category.budget)
-                ProgressView(value: percentage > 1 ? 1 : percentage, total: 1)
-                    .tint(percentage.riskColor)
-                #if os(iOS)
-                    .scaleEffect(x: 1, y: 1.5, anchor: .center)
-                #endif
-                    .animation(.default, value: percentage)
-                RefdsText(percentage.percent(), style: .callout, color: .secondary)
+    private var rowDate: some View {
+        DatePicker(
+            selection: bindingDate,
+            displayedComponents: [.date, .hourAndMinute]
+        ) {
+            VStack(alignment: .leading) {
+                RefdsText(
+                    .localizable(by: .addBudgetDateHeader),
+                    style: .callout
+                )
+                RefdsText(
+                    state.date.asString(withDateFormat: .custom("EEEE")).capitalized,
+                    style: .callout,
+                    color: .secondary
+                )
             }
         }
-    }
-    
-    private var sectionDate: some View {
-        RefdsSection {
-            RefdsText(
-                state.date.asString(withDateFormat: .custom("EEEE dd,  MMMM yyyy - HH:mm")),
-                style: .callout,
-                color: .secondary
-            )
-            
-            #if os(macOS)
-            DatePicker(selection: bindingDate) { EmptyView() }
-            #else
-            DatePicker(selection: bindingDate) { EmptyView() }
-                .datePickerStyle(.graphical)
-            #endif
-        } header: {
-            RefdsText(
-                .localizable(by: .addBudgetDateHeader),
-                style: .footnote,
-                color: .secondary
-            )
-        }
-    }
-    
-    @ViewBuilder
-    private var sectionEmptyBudgets: some View {
-        if !state.isEmptyCategories, state.isEmptyBudgets {
-            RefdsSection {
-                RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
-                RefdsButton { action(.addBudget(state.date)) } label: {
-                    RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
-                }
-            } header: {
-                RefdsText(.localizable(by: .categoriesEmptyBudgetsTitle), style: .footnote, color: .secondary)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private var sectionEmptyCategories: some View {
-        if state.isEmptyCategories {
-            RefdsSection {
-                RefdsText(.localizable(by: .categoriesEmptyCategoriesDescription), style: .callout)
-                RefdsButton { action(.addCategory) } label: {
-                    RefdsText(.localizable(by: .categoriesEmptyCategoriesButton), style: .callout, color: .accentColor)
-                }
-            } header: {
-                RefdsText(.localizable(by: .categoriesEmptyCategoriesTitle), style: .footnote, color: .secondary)
-            }
-        }
+        .datePickerStyle(.compact)
+        .environment(\.locale, Locale(identifier: "us"))
     }
     
     private var sectionSaveButtonView: some View {
@@ -259,14 +243,16 @@ public struct AddTransactionView: View {
     private var saveButton: some View {
         RefdsButton(
             .localizable(by: .addTransactionSaveButton),
-            isDisable: !state.canSave
+            isDisable: !canSave
         ) {
-            action(.save)
+            action(.save(amount, description))
         }
     }
     
     private var saveButtonToolbar: some View {
-        RefdsButton(isDisable: !state.canSave) { action(.save) } label: {
+        RefdsButton(isDisable: !canSave) {
+            action(.save(amount, description))
+        } label: {
             RefdsIcon(
                 .checkmarkCircleFill,
                 color: .accentColor,
@@ -275,6 +261,12 @@ public struct AddTransactionView: View {
                 renderingMode: .hierarchical
             )
         }
+    }
+    
+    private var canSave: Bool {
+        amount > 0 &&
+        description.isEmpty == false &&
+        state.category != nil
     }
 }
 

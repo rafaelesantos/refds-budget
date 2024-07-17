@@ -11,6 +11,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
+    @RefdsInjection private var categoryIntelligence: CategoryIntelligenceProtocol
     
     public init() {}
     
@@ -24,12 +25,17 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
     
     private func handler(
         with state: AddTransactionStateProtocol,
-        for addBudgetAction: AddTransactionAction,
+        for addTransactionAction: AddTransactionAction,
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
-        switch addBudgetAction {
-        case let .fetchCategories(date): self.fetchCategories(from: date, on: completion)
-        case .save: self.save(with: state, on: completion)
+        switch addTransactionAction {
+        case let .fetchCategories(date): fetchCategories(from: date, on: completion)
+        case let .save(amount, description): save(
+            with: state,
+            amount: amount,
+            description: description,
+            on: completion
+        )
         default: break
         }
     }
@@ -57,11 +63,19 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
                 spend: spend
             )
         }
-        completion(.updateCategories(categories, allCategories.isEmpty))
+        
+        if let categoryId = categoryIntelligence.predict(date: date),
+           let category = categories.first(where: { $0.categoryId == categoryId }) {
+            completion(.updateCategories(category, categories, allCategories.isEmpty))
+        } else {
+            completion(.updateCategories(nil, categories, allCategories.isEmpty))
+        }
     }
     
     private func save(
         with state: AddTransactionStateProtocol,
+        amount: Double,
+        description: String,
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
         guard let category = state.category else {
@@ -72,15 +86,15 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             try transactionRepository.addTransaction(
                 id: state.id,
                 date: state.date,
-                message: state.description,
+                message: description,
                 category: category.categoryId,
-                amount: state.amount,
+                amount: amount,
                 status: state.status
             )
             WidgetCenter.shared.reloadAllTimelines()
             completion(.dismiss)
         } catch {
-            return completion(.updateError(.existingTransaction))
+            completion(.updateError(.existingTransaction))
         }
     }
 }

@@ -10,26 +10,33 @@ public struct TransactionSectionsView: View {
     @Environment(\.privacyMode) private var privacyMode
     
     private let viewData: [[TransactionRowViewDataProtocol]]
+    private let isLoading: Bool
     private let action: ((TransactionRowViewDataProtocol) -> Void)?
     private let remove: ((UUID) -> Void)?
     private let resolve: ((UUID) -> Void)?
     
     public init(
         viewData: [[TransactionRowViewDataProtocol]],
+        isLoading: Bool = false,
         action: ((TransactionRowViewDataProtocol) -> Void)? = nil,
         remove: ((UUID) -> Void)? = nil,
         resolve: ((UUID) -> Void)? = nil
     ) {
         self.viewData = viewData
+        self.isLoading = isLoading
         self.action = action
         self.remove = remove
         self.resolve = resolve
     }
     
+    @ViewBuilder
     public var body: some View {
         if viewData.isEmpty {
             RefdsSection {
-                EmptyRowView(title: .emptyTransactionsTitle)
+                LoadingRowView(isLoading: isLoading)
+                if !isLoading {
+                    EmptyRowView(title: .emptyTransactionsTitle)
+                }
             } header: {
                 RefdsText(
                     .localizable(by: .categoryTransactionsHeader),

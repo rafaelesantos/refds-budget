@@ -38,6 +38,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 tagsName: state.selectedTags,
                 status: state.selectedStatus,
                 page: state.page,
+                paginationDaysAmount: state.paginationDaysAmount,
                 from: date,
                 on: completion
             )
@@ -57,6 +58,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         tagsName: Set<String>,
         status: Set<String>,
         page: Int,
+        paginationDaysAmount: Int,
         from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
@@ -124,39 +126,29 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             ($1.first?.date ?? Date())
         })
         
-        if date == nil {
-            if let range: ClosedRange<Int> = .range(
+        if let range: ClosedRange<Int> = .range(
+            page: page,
+            amount: paginationDaysAmount,
+            count: groupedTransactions.indices.count
+        ) {
+            let filteredTransactions = Array(groupedTransactions[range])
+            let canChangePage = page * filteredTransactions.count < groupedTransactions.count
+            completion(.updateData(
+                transactions: filteredTransactions,
+                categories: categories.map { $0.name },
+                tags: tags,
                 page: page,
-                amount: 15,
-                count: groupedTransactions.indices.count
-            ) {
-                let filteredTransactions = Array(groupedTransactions[range])
-                let canChangePage = page * filteredTransactions.count < groupedTransactions.count
-                return completion(.updateData(
-                    transactions: filteredTransactions,
-                    categories: categories.map { $0.name },
-                    tags: tags,
-                    page: page,
-                    canChangePage: canChangePage
-                ))
-            } else {
-                return completion(.updateData(
-                    transactions: [],
-                    categories: categories.map { $0.name },
-                    tags: tags,
-                    page: page,
-                    canChangePage: false
-                ))
-            }
+                canChangePage: canChangePage
+            ))
+        } else {
+            completion(.updateData(
+                transactions: [],
+                categories: categories.map { $0.name },
+                tags: tags,
+                page: page,
+                canChangePage: false
+            ))
         }
-        
-        completion(.updateData(
-            transactions: groupedTransactions,
-            categories: categories.map { $0.name },
-            tags: tags,
-            page: 1,
-            canChangePage: false
-        ))
     }
     
     private func fetchTransactionForEdit(

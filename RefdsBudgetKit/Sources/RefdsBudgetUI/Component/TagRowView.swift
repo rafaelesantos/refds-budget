@@ -6,9 +6,11 @@ import RefdsBudgetPresentation
 public struct TagRowView: View {
     @Environment(\.privacyMode) private var privacyMode
     private let viewData: TagRowViewDataProtocol
+    private let isSelected: Bool
     
-    public init(viewData: TagRowViewDataProtocol) {
+    public init(viewData: TagRowViewDataProtocol, isSelected: Bool) {
         self.viewData = viewData
+        self.isSelected = isSelected
     }
     
     public var body: some View {
@@ -17,7 +19,7 @@ public struct TagRowView: View {
     
     private var content: some View {
         HStack(spacing: .padding(.medium)) {
-            BubbleColorView(color: viewData.color, isSelected: true, size: 18)
+            BubbleColorView(color: viewData.color, isSelected: isSelected)
             VStack(alignment: .leading) {
                 RefdsText(viewData.name.capitalized, style: .callout)
                 
@@ -42,6 +44,6 @@ public struct TagRowView: View {
 
 #Preview {
     List {
-        TagRowView(viewData: TagRowViewDataMock())
+        TagRowView(viewData: TagRowViewDataMock(), isSelected: .random())
     }
 }

@@ -10,6 +10,7 @@ import RefdsBudgetResource
 public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
+    @RefdsInjection private var budgetIntelligence: BudgetIntelligenceProtocol
     
     public init() {}
     
@@ -27,16 +28,21 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
         switch action {
-        case .fetchCategories: fetchCategories(from: state.month, on: completion)
+        case .fetchCategories: fetchCategories(
+            with: state,
+            from: state.month,
+            on: completion
+        )
         case .fetchBudget:
             guard let category = state.category else { return }
             fetchBudget(from: state.month, by: category.id, on: completion)
         case let .save(budget): save(budget, on: completion)
         default: break
-        }
+       }
     }
     
     private func fetchCategories(
+        with state: AddBudgetStateProtocol,
         from date: Date,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
@@ -49,7 +55,7 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
             categoryAdapter.adapt(entity: entity)
         }
         
-        guard let category = categories.first,
+        guard let category = state.category ?? categories.first,
               let budget = categoryRepository.getBudget(on: category.id, from: date) else {
             return completion(.updateCategories(categories, .init(), .zero, ""))
         }
@@ -62,11 +68,13 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         by id: UUID,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
+
         guard let budget = categoryRepository.getBudget(on: id, from: date) else {
-            return completion(.updateBudget(.init(), .zero, ""))
+            let predictValue = budgetIntelligence.predict(date: date, category: id) ?? .zero
+            return completion(.updateBudget(.init(), predictValue, "", predictValue != .zero))
         }
         
-        completion(.updateBudget(budget.id, budget.amount, budget.message ?? ""))
+        completion(.updateBudget(budget.id, budget.amount, budget.message ?? "", false))
     }
     
     private func save(

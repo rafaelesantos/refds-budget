@@ -14,8 +14,8 @@ public struct AddTransactionStateMock: AddTransactionStateProtocol {
     public var error: RefdsBudgetError? = Bool.random() ? nil : .existingTransaction
     public var isEmptyCategories: Bool = false
     public var isEmptyBudgets: Bool = false
-    
-    public var canSave: Bool { true }
+    public var isLoading: Bool = false
+    public var isAI: Bool = true
     
     public init() {}
 }

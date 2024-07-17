@@ -127,7 +127,6 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 spend: spend
             )
         }
-        
         completion(.updateCategories(categories.sorted(by: { $0.name < $1.name }), allEntities.isEmpty, tags))
     }
     

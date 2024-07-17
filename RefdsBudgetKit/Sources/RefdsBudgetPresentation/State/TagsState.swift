@@ -7,12 +7,14 @@ public protocol TagsStateProtocol: RefdsReduxState {
     var selectedTag: TagRowViewDataProtocol { get set }
     var tags: [TagRowViewDataProtocol] { get set }
     var error: RefdsBudgetError? { get set }
+    var isLoading: Bool { get set }
     var canSave: Bool { get }
 }
 
 public struct TagsState: TagsStateProtocol {
     public var selectedTag: TagRowViewDataProtocol
     public var tags: [TagRowViewDataProtocol]
+    public var isLoading: Bool = true
     public var error: RefdsBudgetError?
     
     public var canSave: Bool {

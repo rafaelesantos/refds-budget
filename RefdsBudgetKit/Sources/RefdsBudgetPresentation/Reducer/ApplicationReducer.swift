@@ -45,8 +45,12 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
     ) -> State {
         var state: State = state
         switch action {
-        case let .showCategory(categoryId):
-            state.categoryState = CategoryState(id: categoryId)
+        case let .showCategory(categoryId, date):
+            state.categoryState = CategoryState(
+                id: categoryId,
+                date: date ?? .current,
+                isFilterEnable: date != nil
+            )
         case let .addCategory(category):
             state.addCategoryState = category ?? AddCategoryState()
         case let .addBudget(budget, date):
@@ -85,6 +89,8 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
             state.addCategoryState = AddCategoryState()
         case let .addBudget(date):
             state.addBudgetState = AddBudgetState(month: date ?? .current)
+        case .dismiss:
+            state.addTransactionState = AddTransactionState(category: nil)
         default:
             break
         }

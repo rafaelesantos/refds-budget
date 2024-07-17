@@ -26,12 +26,12 @@ public struct CategoryView: View {
         List(selection: $multiSelection) {
             SubscriptionRowView()
             sectionBalance
-            LoadingRowView(isLoading: state.isLoading)
             sectionFilters
             sectionDescription
             sectionBudgetsChart
             sectionBudgets
             sectionTransactions
+            sectionPagination
         }
         .searchable(text: $state.searchText)
         .navigationTitle(state.name.capitalized)
@@ -41,6 +41,7 @@ public struct CategoryView: View {
         .onChange(of: state.isFilterEnable) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
+        .onChange(of: state.paginationDaysAmount) { reloadData() }
         .onChange(of: state.page) {
             state.transactions = []
             reloadData()
@@ -75,24 +76,24 @@ public struct CategoryView: View {
     
     @ViewBuilder
     private var sectionDescription: some View {
-        RefdsSection {
-            let description = state.budgtes.compactMap {
-                if let description = $0.description?.isEmpty == true ? nil : $0.description {
-                    let date = $0.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized
-                    return "\(date): \(description)"
-                }
-                return nil
-            }.joined(separator: "\n\n• ")
-            if !description.isEmpty {
+        let description = state.budgtes.compactMap {
+            if let description = $0.description?.isEmpty == true ? nil : $0.description {
+                let date = $0.date.asString(withDateFormat: .custom("MMMM, yyyy")).capitalized
+                return "\(date): \(description)"
+            }
+            return nil
+        }.joined(separator: "\n\n• ")
+        if !description.isEmpty {
+            RefdsSection {
                 RefdsText("• " + description, style: .callout, color: .secondary)
                     .padding(.vertical, .padding(.extraSmall))
+            } header: {
+                RefdsText(
+                    .localizable(by: .addBudgetDescriptionHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
             }
-        } header: {
-            RefdsText(
-                .localizable(by: .addBudgetDescriptionHeader),
-                style: .footnote,
-                color: .secondary
-            )
         }
     }
     
@@ -120,35 +121,38 @@ public struct CategoryView: View {
         }
     }
     
+    @ViewBuilder
     private var sectionBudgets: some View {
-        RefdsSection {
-            if state.budgtes.isEmpty {
-                EmptyRowView(title: .emptyBudgetsTitle)
-            } else {
-                let budgtes = Array(state.budgtes.reversed())
-                ForEach(budgtes.indices, id: \.self) { index in
-                    let budget = budgtes[index]
-                    BudgetRowView(viewData: budget)
-                        .onTapGesture {
-                            action(
-                                .fetchBudgetForEdit(
-                                    state.date,
-                                    state.id,
-                                    budget.id
+        if !state.isLoading {
+            RefdsSection {
+                if state.budgtes.isEmpty {
+                    EmptyRowView(title: .emptyBudgetsTitle)
+                } else {
+                    let budgtes = Array(state.budgtes.reversed())
+                    ForEach(budgtes.indices, id: \.self) { index in
+                        let budget = budgtes[index]
+                        BudgetRowView(viewData: budget)
+                            .onTapGesture {
+                                action(
+                                    .fetchBudgetForEdit(
+                                        state.date,
+                                        state.id,
+                                        budget.id
+                                    )
                                 )
-                            )
-                        }
-                        .contextMenu {
-                            removeBudgetButton(by: budget.id)
-                        }
+                            }
+                            .contextMenu {
+                                removeBudgetButton(by: budget.id)
+                            }
+                    }
                 }
+            } header: {
+                RefdsText(
+                    .localizable(by: .categoryBudgetsHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
             }
-        } header: {
-            RefdsText(
-                .localizable(by: .categoryBudgetsHeader),
-                style: .footnote,
-                color: .secondary
-            )
         }
     }
     
@@ -202,7 +206,7 @@ public struct CategoryView: View {
     }
     
     private var sectionTransactions: some View {
-        TransactionSectionsView(viewData: state.transactions) {
+        TransactionSectionsView(viewData: state.transactions, isLoading: state.isLoading) {
             action(.fetchTransactionForEdit($0.id))
         } remove: { id in
             action(.removeTransaction(id))
@@ -291,14 +295,55 @@ public struct CategoryView: View {
         }
     }
     
-    @ViewBuilder
-    private var paginationView: some View {
-        if !state.isFilterEnable {
-            RefdsPagination(
-                currentPage: $state.page,
-                color: .accentColor,
-                canChangeToNextPage: { state.canChangePage }
+    private var sectionPagination: some View {
+        RefdsSection {
+            Picker(selection: $state.paginationDaysAmount) {
+                let daysAmount = paginationDays
+                ForEach(daysAmount.indices, id: \.self) {
+                    let day = daysAmount[$0]
+                    RefdsText(getPaginationDay(for: day))
+                        .tag(day)
+                }
+            } label: {
+                RefdsText(
+                    .localizable(by: .transactionsPaginationDaysAmount),
+                    style: .callout
+                )
+            }
+            .tint(.secondary)
+        } header: {
+            RefdsText(
+                .localizable(by: .transactionsPaginationHeader),
+                style: .footnote,
+                color: .secondary
             )
+        }
+    }
+    
+    private var paginationView: some View {
+        RefdsPagination(
+            currentPage: $state.page,
+            color: .accentColor,
+            canChangeToNextPage: { state.canChangePage }
+        )
+    }
+    
+    private var paginationDays: [Int] {
+        var daysAmount = [1, 2, 5]
+        if let days = state.date.days {
+            daysAmount += [days / 2, days]
+        }
+        return daysAmount
+    }
+    
+    private func getPaginationDay(for day: Int) -> String {
+        guard let days = state.date.days else { return "" }
+        switch day {
+        case 1: return .localizable(by: .transactionsPaginationDay, with: day)
+        case 2, 5: return .localizable(by: .transactionsPaginationDays, with: day)
+        case days / 2: return .localizable(by: .transactionsPaginationHalfMonth)
+        case days: return .localizable(by: .transactionsPaginationAllDays)
+        default: return ""
         }
     }
 }

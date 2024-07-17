@@ -30,6 +30,7 @@ public class StoreFactory {
         RefdsContainer.register(type: SettingsUseCase.self) { LocalSettingsRepositoryMock() }
         RefdsContainer.register(type: BubbleUseCase.self) { LocalBubbleRepositoryMock() }
         registerAdapterDependencies()
+        registerAIDependencies()
     }
     
     private static func registerProductionDependencies() {
@@ -39,6 +40,7 @@ public class StoreFactory {
         RefdsContainer.register(type: SettingsUseCase.self) { LocalSettingsRepository() }
         RefdsContainer.register(type: BubbleUseCase.self) { LocalBubbleRepository() }
         registerAdapterDependencies()
+        registerAIDependencies()
     }
     
     private static func registerAdapterDependencies() {
@@ -48,6 +50,11 @@ public class StoreFactory {
         RefdsContainer.register(type: TransactionRowViewDataAdapterProtocol.self) { TransactionRowViewDataAdapter() }
         RefdsContainer.register(type: TagRowViewDataAdapterProtocol.self) { TagRowViewDataAdapter() }
         RefdsContainer.register(type: SettingsAdapterProtocol.self) { SettingsAdapter() }
+    }
+    
+    private static func registerAIDependencies() {
+        RefdsContainer.register(type: BudgetIntelligenceProtocol.self) { BudgetIntelligence() }
+        RefdsContainer.register(type: CategoryIntelligenceProtocol.self) { CategoryIntelligence() }
     }
     
     private static func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {

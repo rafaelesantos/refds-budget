@@ -26,12 +26,10 @@ public struct CategoriesView: View {
         List {
             SubscriptionRowView()
             sectionBalance
-            LoadingRowView(isLoading: state.isLoading)
             sectionFilters
             sectionEmptyCategories
             sectionEmptyBudgets
             sectionsCategory
-            sectionLegend
         }
         .navigationTitle(String.localizable(by: .categoriesNavigationTitle))
         .onChange(of: state.isFilterEnable) { reloadData() }
@@ -50,20 +48,31 @@ public struct CategoriesView: View {
         action(.fetchData)
     }
     
+    @ViewBuilder
     private var sectionsCategory: some View {
-        ForEach(state.categories.indices, id: \.self) { index in
-            let category = state.categories[index]
-            CategoryRowView(viewData: category)
-                .onTapGesture {
-                    action(.showCategory(category.categoryId))
+        if !state.categories.isEmpty {
+            RefdsSection {
+                ForEach(state.categories.indices, id: \.self) { index in
+                    let category = state.categories[index]
+                    CategoryRowView(viewData: category)
+                        .onTapGesture {
+                            action(.showCategory(category.categoryId, state.isFilterEnable ? state.date : nil))
+                        }
+                        .contextMenu {
+                            editBudgetButton(at: index)
+                            editCategoryButton(at: index)
+                            Divider()
+                            removeBudgetButton(at: index)
+                            removeCategoryButton(at: index)
+                        }
                 }
-                .contextMenu {
-                    editBudgetButton(at: index)
-                    editCategoryButton(at: index)
-                    Divider()
-                    removeBudgetButton(at: index)
-                    removeCategoryButton(at: index)
-                }
+            } header: {
+                RefdsText(
+                    .localizable(by: .categoryBudgetsHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
+            }
         }
     }
     
@@ -310,70 +319,6 @@ public struct CategoriesView: View {
                 weight: .bold,
                 renderingMode: .hierarchical
             )
-        }
-    }
-    
-    @ViewBuilder
-    private var sectionLegend: some View {
-        if !state.isEmptyBudgets {
-            RefdsSection {
-                VStack(alignment: .leading) {
-                    let title: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendTitle):
-                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendTitle) :
-                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendTitle) :
-                        .localizable(by: .categoriesRedLegendTitle)
-                    
-                    let description: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendDescription):
-                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendDescription) :
-                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendDescription) :
-                        .localizable(by: .categoriesRedLegendDescription)
-                    RefdsText(
-                        title.uppercased(),
-                        style: .footnote,
-                        color: state.selectedLegend,
-                        weight: .bold
-                    )
-                    .refdsTag(color: state.selectedLegend)
-                    RefdsText(description, style: .callout, color: .secondary)
-                }
-                
-                HStack {
-                    let colors: [Color] = [.green, .yellow, .orange, .red]
-                    ForEach(colors, id: \.self) { color in
-                        Spacer()
-                        RefdsButton {
-                            withAnimation { state.selectedLegend = color }
-                        } label: {
-                            bubbleView(
-                                color: color,
-                                isSelected: state.selectedLegend == color
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    Spacer()
-                }
-                .padding(.vertical, 4)
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesLegend),
-                    style: .footnote,
-                    color: .secondary
-                )
-            }
-        }
-    }
-    
-    private func bubbleView(color: Color, isSelected: Bool) -> some View {
-        ZStack {
-            Circle()
-                .fill(color)
-                .frame(width: 30, height: 30)
-            if isSelected {
-                Circle()
-                    .fill(Color.white.opacity(0.6))
-                    .frame(width: 15, height: 15)
-            }
         }
     }
 }

@@ -18,6 +18,7 @@ public struct TransactionsStateMock: TransactionsStateProtocol {
     public var balance: (BalanceRowViewDataProtocol)? = BalanceRowViewDataMock()
     public var shareText: String?
     public var share: URL?
+    public var paginationDaysAmount: Int = 2
     public var error: RefdsBudgetError? = nil
     
     public init() {}

@@ -9,7 +9,7 @@ public struct BubbleColorView: View {
     public init(
         color: Color,
         isSelected: Bool = false,
-        size: CGFloat = 30
+        size: CGFloat = 25
     ) {
         self.color = color
         self.isSelected = isSelected

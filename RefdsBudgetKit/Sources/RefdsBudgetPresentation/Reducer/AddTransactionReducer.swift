@@ -10,16 +10,20 @@ public final class AddTransactionReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? AddTransactionAction {
-        case let .updateCategories(categories, isEmptyCategories):
+        case .fetchCategories:
+            state.isLoading = true
+        case let .updateCategories(category, categories, isEmptyCategories):
             state.categories = categories
-            state.category = categories.first
+            state.category = category ?? categories.first
             state.isEmptyCategories = isEmptyCategories
-            if let category = categories.first {
+            if let category = state.category {
                 state.remaining = category.budget - (category.spend + state.amount)
             }
+            state.isLoading = false
         case let .updateError(error):
             state.error = error
-        case .dismiss, .save, .fetchCategories, .addCategory, .addBudget, nil:
+            state.isLoading = false
+        case .dismiss, .save, .addCategory, .addBudget, nil:
             break
         }
         

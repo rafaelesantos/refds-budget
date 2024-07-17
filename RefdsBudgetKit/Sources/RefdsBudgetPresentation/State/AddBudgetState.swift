@@ -11,6 +11,8 @@ public protocol AddBudgetStateProtocol: RefdsReduxState {
     var category: AddCategoryStateProtocol? { get set }
     var categories: [AddCategoryStateProtocol] { get set }
     var canSave: Bool { get }
+    var isLoading: Bool { get set }
+    var isAI: Bool { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -21,10 +23,14 @@ public struct AddBudgetState: AddBudgetStateProtocol {
     public var month: Date
     public var category: AddCategoryStateProtocol?
     public var categories: [AddCategoryStateProtocol]
+    public var isLoading: Bool
+    public var isAI: Bool = false
     public var error: RefdsBudgetError?
     
     public var canSave: Bool {
-        amount != .zero && category != nil
+        amount != .zero && 
+        category != nil &&
+        description.isEmpty == false
     }
     
     public init(
@@ -43,5 +49,6 @@ public struct AddBudgetState: AddBudgetStateProtocol {
         self.category = category
         self.categories = categories
         self.error = error
+        self.isLoading = category == nil || amount == .zero
     }
 }

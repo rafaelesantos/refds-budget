@@ -3,6 +3,7 @@ import RefdsUI
 import RefdsRedux
 import RefdsShared
 import RefdsBudgetDomain
+import RefdsBudgetData
 import RefdsBudgetPresentation
 
 public struct TransactionsView: View {
@@ -30,22 +31,21 @@ public struct TransactionsView: View {
         List(selection: $multiSelection) {
             SubscriptionRowView()
             sectionBalance
-            LoadingRowView(isLoading: state.isLoading)
             sectionFilters
             sectionTransactions
+            sectionPagination
         }
         .searchable(text: $state.searchText)
-        .navigationTitle(editMode.isEditing ? String.localizable(by: .transactionEditNavigationTitle, with: multiSelection.count) : String.localizable(by: .transactionNavigationTitle))
+        .navigationTitle(navigationTitle)
         .onAppear { reloadData() }
         .refreshable { reloadData() }
         .environment(\.editMode, $editMode)
         .environment(\.privacyMode, privacyModeEditable)
-        .onChange(of: state.isFilterEnable) { reloadData() }
+        .onChange(of: booleans) { reloadData() }
+        .onChange(of: state.paginationDaysAmount) { reloadData() }
         .onChange(of: state.date) { reloadData() }
         .onChange(of: state.searchText) { reloadData() }
-        .onChange(of: state.selectedCategories) { reloadData() }
-        .onChange(of: state.selectedTags) { reloadData() }
-        .onChange(of: state.selectedStatus) { reloadData() }
+        .onChange(of: setStrings) { reloadData() }
         .onChange(of: state.page) {
             state.transactions = []
             reloadData()
@@ -61,6 +61,25 @@ public struct TransactionsView: View {
         .refdsToast(item: $state.error)
         .refdsShareText(item: $state.shareText)
         .refdsShare(item: $state.share)
+    }
+    
+    private var booleans: [Bool] {
+        [
+            state.isFilterEnable
+        ]
+    }
+    
+    private var setStrings: [Set<String>] {
+        [
+            state.selectedCategories,
+            state.selectedTags,
+            state.selectedStatus
+        ]
+    }
+    
+    private var navigationTitle: String {
+        editMode.isEditing ? .localizable(by: .transactionEditNavigationTitle, with: multiSelection.count) :
+        .localizable(by: .transactionNavigationTitle)
     }
     
     private func reloadData() {
@@ -320,14 +339,56 @@ public struct TransactionsView: View {
         )
     }
     
+    private var sectionPagination: some View {
+        RefdsSection {
+            Picker(selection: $state.paginationDaysAmount) {
+                let daysAmount = paginationDays
+                ForEach(daysAmount.indices, id: \.self) {
+                    let day = daysAmount[$0]
+                    RefdsText(getPaginationDay(for: day))
+                        .tag(day)
+                }
+            } label: {
+                RefdsText(
+                    .localizable(by: .transactionsPaginationDaysAmount),
+                    style: .callout
+                )
+            }
+            .tint(.secondary)
+        } header: {
+            RefdsText(
+                .localizable(by: .transactionsPaginationHeader),
+                style: .footnote,
+                color: .secondary
+            )
+        }
+    }
+    
     @ViewBuilder
     private var paginationView: some View {
-        if !state.isFilterEnable {
-            RefdsPagination(
-                currentPage: $state.page,
-                color: .accentColor,
-                canChangeToNextPage: { state.canChangePage }
-            )
+        RefdsPagination(
+            currentPage: $state.page,
+            color: .accentColor,
+            canChangeToNextPage: { state.canChangePage }
+        )
+    }
+    
+    private var paginationDays: [Int] {
+        var daysAmount = [1, 2, 5]
+        if let days = state.date.days {
+            daysAmount += [days / 2, days]
+        }
+        return daysAmount
+    }
+    
+    private func getPaginationDay(for day: Int) -> String {
+        guard let days = state.date.days else { return "" }
+        switch day {
+        case 1: return .localizable(by: .transactionsPaginationDay, with: day)
+        case 2, 5: return .localizable(by: .transactionsPaginationDays, with: day)
+        case days / 2: return .localizable(by: .transactionsPaginationHalfMonth)
+        case days: return .localizable(by: .transactionsPaginationAllDays)
+        default: return ""
         }
     }
 }

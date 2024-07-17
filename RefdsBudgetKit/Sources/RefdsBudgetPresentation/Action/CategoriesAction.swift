@@ -17,5 +17,5 @@ public enum CategoriesAction: RefdsReduxAction {
     case removeBudget(Date, UUID)
     case removeCategory(Date?, UUID)
     
-    case showCategory(UUID)
+    case showCategory(UUID, Date?)
 }

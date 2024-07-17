@@ -110,13 +110,27 @@ public struct ImportView: View {
                     let icon = RefdsIconSymbol(rawValue: category.icon) {
                         HStack(spacing: .padding(.medium)) {
                             ZStack(alignment: .topTrailing) {
-                                RefdsIconRow(icon, color: Color(hex: category.color))
-                                RefdsText((budget.message?.components(separatedBy: " • ").count ?? .zero).asString, style: .system(size: 9), color: .accentColor, weight: .black)
-                                    .frame(width: 20, height: 20)
-                                    .background(Color.accentColor.opacity(0.2))
-                                    .clipShape(.circle)
-                                    .padding(.vertical, -5)
-                                    .padding(.horizontal, -8)
+                                RefdsIcon(
+                                    icon,
+                                    color: Color(hex: category.color),
+                                    size: .padding(.medium)
+                                )
+                                .frame(width: .padding(.medium), height: .padding(.medium))
+                                .padding(10)
+                                .background(Color(hex: category.color).opacity(0.2))
+                                .clipShape(.rect(cornerRadius: .cornerRadius))
+                                
+                                RefdsText(
+                                    (budget.message?.components(separatedBy: " • ").count ?? .zero).asString,
+                                    style: .system(size: 9),
+                                    color: .white,
+                                    weight: .bold
+                                )
+                                .frame(width: 20, height: 20)
+                                .background(Color.accentColor)
+                                .clipShape(.circle)
+                                .padding(.vertical, -5)
+                                .padding(.horizontal, -8)
                             }
                             
                             VStack(alignment: .leading, spacing: .padding(.extraSmall)) {

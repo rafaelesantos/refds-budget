@@ -37,6 +37,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 with: state.id,
                 and: state.searchText,
                 page: state.page,
+                paginationDaysAmount: state.paginationDaysAmount,
                 from: date,
                 on: completion
             )
@@ -58,6 +59,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         with categoryId: UUID,
         and searchText: String,
         page: Int,
+        paginationDaysAmount: Int,
         from date: Date?,
         on completion: @escaping (CategoryAction) -> Void
     ) {
@@ -109,51 +111,37 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             ($1.first?.date ?? Date())
         })
         
-        if date == nil {
-            if let range: ClosedRange<Int> = .range(
-                page: page,
-                amount: 15,
-                count: groupedTransactions.indices.count
-            ) {
-                let filteredTransactions = Array(groupedTransactions[range])
-                let canChangePage = (page + 1) * filteredTransactions.count < groupedTransactions.count
-                return completion(
-                    .updateData(
-                        name: categoryEntity.name,
-                        icon: categoryEntity.icon,
-                        color: Color(hex: categoryEntity.color),
-                        budgets: budgets,
-                        transactions: filteredTransactions,
-                        page: page,
-                        canChangePage: canChangePage
-                    )
+        if let range: ClosedRange<Int> = .range(
+            page: page,
+            amount: paginationDaysAmount,
+            count: groupedTransactions.indices.count
+        ) {
+            let filteredTransactions = Array(groupedTransactions[range])
+            let canChangePage = (page + 1) * filteredTransactions.count < groupedTransactions.count
+            return completion(
+                .updateData(
+                    name: categoryEntity.name,
+                    icon: categoryEntity.icon,
+                    color: Color(hex: categoryEntity.color),
+                    budgets: budgets,
+                    transactions: filteredTransactions,
+                    page: page,
+                    canChangePage: canChangePage
                 )
-            } else {
-                return completion(
-                    .updateData(
-                        name: categoryEntity.name,
-                        icon: categoryEntity.icon,
-                        color: Color(hex: categoryEntity.color),
-                        budgets: budgets,
-                        transactions: [],
-                        page: page,
-                        canChangePage: false
-                    )
-                )
-            }
-        }
-        
-        completion(
-            .updateData(
-                name: categoryEntity.name,
-                icon: categoryEntity.icon,
-                color: Color(hex: categoryEntity.color),
-                budgets: budgets,
-                transactions: groupedTransactions,
-                page: 1,
-                canChangePage: false
             )
-        )
+        } else {
+            return completion(
+                .updateData(
+                    name: categoryEntity.name,
+                    icon: categoryEntity.icon,
+                    color: Color(hex: categoryEntity.color),
+                    budgets: budgets,
+                    transactions: [],
+                    page: page,
+                    canChangePage: false
+                )
+            )
+        }
     }
     
     private func fetchBudgetForEdit(

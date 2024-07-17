@@ -20,12 +20,10 @@ public struct CategoryRowView: View {
     }
     
     public var body: some View {
-        RefdsSection {
-            rowCategory
-        }
-        .onAppear { updateStateValue() }
-        .onChange(of: viewData.budget) { updateStateValue() }
-        .onChange(of: viewData.percentage) { updateStateValue() }
+        rowCategory
+            .onAppear { updateStateValue() }
+            .onChange(of: viewData.budget) { updateStateValue() }
+            .onChange(of: viewData.percentage) { updateStateValue() }
     }
     
     private var rowCategory: some View {
@@ -41,17 +39,6 @@ public struct CategoryRowView: View {
                     .padding(10)
                     .background(viewData.color.opacity(0.2))
                     .clipShape(.rect(cornerRadius: .cornerRadius))
-                    
-                    RefdsText(
-                        viewData.transactionsAmount.asString,
-                        style: .caption2,
-                        color: viewData.color,
-                        weight: .bold
-                    )
-                    .frame(width: 38)
-                    .padding(.vertical, 2)
-                    .background(viewData.color.opacity(0.2))
-                    .clipShape(.rect(cornerRadius: 6))
                 }
             }
             
@@ -63,20 +50,6 @@ public struct CategoryRowView: View {
                         RefdsText(budget.currency(), style: .callout, lineLimit: 1)
                             .contentTransition(.numericText())
                             .refdsRedacted(if: privacyMode)
-                    }
-                    
-                    HStack(spacing: .padding(.small)) {
-                        ProgressView(value: percentage, total: 1)
-                            .tint(percentage.riskColor)
-                        #if os(iOS)
-                            .scaleEffect(x: 1, y: 1.5, anchor: .center)
-                        #endif
-                        RefdsText(
-                            viewData.percentage.percent(),
-                            style: .callout,
-                            color: .secondary
-                        )
-                        .refdsRedacted(if: privacyMode)
                     }
                     
                     if let description = viewData.description, !description.isEmpty {

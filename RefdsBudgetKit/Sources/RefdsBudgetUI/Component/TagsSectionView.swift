@@ -10,7 +10,6 @@ public struct TagsSectionView: View {
     
     @State private var selectedTag: TagRowViewDataProtocol?
     @State private var tags: [TagRowViewDataProtocol] = []
-    @State private var isCollapsed = false
     
     private let tagsViewData: [TagRowViewDataProtocol]
     private let action: () -> Void
@@ -61,7 +60,6 @@ public struct TagsSectionView: View {
                         chartView
                     }
                     .frame(height: 320)
-                    rowCollapsedView
                 }
             }
             .budgetSubscription()
@@ -75,7 +73,7 @@ public struct TagsSectionView: View {
         .onChange(of: tagsViewData.count) { updateData() }
         .onAppear { reloadData() }
         
-        if isCollapsed, isPro {
+        if isPro {
             RefdsSection {
                 rowTags
             }
@@ -152,16 +150,6 @@ public struct TagsSectionView: View {
         }
     }
     
-    private var rowCollapsedView: some View {
-        RefdsCollapse(isCollapsed: false) {
-            RefdsText(.localizable(by: .tagsCollapsedHeader), style: .callout)
-        } content: {
-            EmptyView()
-        } action: { isCollapsed in
-            self.isCollapsed = isCollapsed
-        }
-    }
-    
     @ViewBuilder
     private var rowTags: some View {
         if !tags.isEmpty {
@@ -171,7 +159,7 @@ public struct TagsSectionView: View {
                 RefdsButton {
                     withAnimation { selectedTag = tag }
                 } label: {
-                    TagRowView(viewData: tag)
+                    TagRowView(viewData: tag, isSelected: true)
                 }
             }
         }

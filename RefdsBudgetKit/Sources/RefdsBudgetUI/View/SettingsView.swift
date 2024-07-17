@@ -114,7 +114,7 @@ public struct SettingsView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(
                 colorScheme == .dark ? .moonFill : .sunMaxFill,
-                color: .accentColor
+                color: .indigo
             )
             
             Picker(selection: $state.colorScheme) {
@@ -133,7 +133,10 @@ public struct SettingsView: View {
     
     private var rowTintColor: some View {
         HStack(spacing: .padding(.medium)) {
-            RefdsIconRow(.paintpaletteFill)
+            RefdsIconRow(
+                .paintpaletteFill,
+                color: .blue
+            )
     
             ColorPicker(selection: $tintColor) {
                 HStack {
@@ -191,7 +194,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .timelapse,
-                    color: .accentColor
+                    color: .teal
                 )
                 
                 RefdsToggle(isOn: $state.isAnimatedIcon) {
@@ -239,7 +242,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .handRaisedFill,
-                    color: .accentColor
+                    color: .orange
                 )
                 RefdsText(.localizable(by: .settingsPrivacyPolicy))
                 Spacer(minLength: .zero)
@@ -251,7 +254,7 @@ public struct SettingsView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(
                 .lockShieldFill,
-                color: .accentColor
+                color: .mint
             )
             RefdsToggle(isOn: $state.hasAuthRequest) {
                 RefdsText(.localizable(by: .settingsRowFaceID))
@@ -263,7 +266,7 @@ public struct SettingsView: View {
         HStack(spacing: .padding(.medium)) {
             RefdsIconRow(
                 .eyeSlashFill,
-                color: .accentColor
+                color: .yellow
             )
             RefdsToggle(isOn: $state.hasPrivacyMode) {
                 RefdsText(.localizable(by: .settingsRowPrivacyMode))
@@ -300,7 +303,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .docBadgeArrowUpFill,
-                    color: .accentColor
+                    color: .orange
                 )
                 RefdsText(.localizable(by: .settingsFileExport))
                 Spacer(minLength: .zero)
@@ -315,7 +318,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .trayAndArrowDownFill,
-                    color: .accentColor
+                    color: .red
                 )
                 RefdsText(.localizable(by: .settingsFileImport))
                 Spacer(minLength: .zero)
@@ -345,7 +348,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .hammerFill,
-                    color: .accentColor
+                    color: .blue
                 )
                 RefdsText(.localizable(by: .settingsRowTestFlight))
                 Spacer(minLength: .zero)
@@ -369,7 +372,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .starFill,
-                    color: .accentColor
+                    color: .yellow
                 )
                 RefdsText(.localizable(by: .settingsRowReview))
                 Spacer(minLength: .zero)
@@ -383,7 +386,7 @@ public struct SettingsView: View {
             HStack(spacing: .padding(.medium)) {
                 RefdsIconRow(
                     .squareAndArrowUp,
-                    color: .accentColor
+                    color: .green
                 )
                 RefdsText(.localizable(by: .settingsRowShare))
             }

@@ -19,6 +19,7 @@ public protocol TransactionsStateProtocol: RefdsReduxState {
     var balance: BalanceRowViewDataProtocol? { get set }
     var shareText: String? { get set }
     var share: URL? { get set }
+    var paginationDaysAmount: Int { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -38,6 +39,7 @@ public struct TransactionsState: TransactionsStateProtocol {
     public var balance: BalanceRowViewDataProtocol?
     public var shareText: String?
     public var share: URL?
+    public var paginationDaysAmount: Int = 2
     public var error: RefdsBudgetError?
     
     public init(

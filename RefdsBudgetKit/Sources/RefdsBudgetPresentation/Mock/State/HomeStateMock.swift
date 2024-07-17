@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 import RefdsBudgetData
 
 public struct HomeStateMock: HomeStateProtocol {
@@ -10,7 +10,6 @@ public struct HomeStateMock: HomeStateProtocol {
     public var largestPurchase: [TransactionRowViewDataProtocol] = (1 ... 5).map { _ in TransactionRowViewDataMock() }
     public var pendingCleared: PendingClearedSectionViewDataProtocol? = PendingClearedSectionViewDataMock()
     
-    
     public var categories: [String] = (1 ... 5).map { _ in CategoryRowViewDataMock().name }
     public var selectedCategories: Set<String> = []
     public var tags: [String] = (1 ... 5).map { _ in TagRowViewDataMock().name }
@@ -19,6 +18,7 @@ public struct HomeStateMock: HomeStateProtocol {
     
     public var isFilterEnable: Bool = true
     public var date: Date = .current
+    public var selectedLegend: Color = .green
     public var error: RefdsBudgetError? = nil
     
     public init() {}

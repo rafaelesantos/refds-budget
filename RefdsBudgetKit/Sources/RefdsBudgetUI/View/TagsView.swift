@@ -18,8 +18,10 @@ public struct TagsView: View {
     
     public var body: some View {
         List {
+            sectionName
             sectionInput
             sectionSaveButton
+            LoadingRowView(isLoading: state.isLoading)
             sectionTags
         }
         .refreshable { action(.fetchData) }
@@ -37,36 +39,43 @@ public struct TagsView: View {
     
     private var sectionInput: some View {
         RefdsSection {
-            rowName
             rowColors
             rowHexColor
             cleanButton
-        } header: {
+        }
+    }
+    
+    private var sectionName: some View {
+        RefdsSection {} header: {
             RefdsText(
                 .localizable(by: .tagsInputHeader),
                 style: .footnote,
                 color: .secondary
             )
+        } footer: {
+            #if os(macOS)
+            RefdsTextField(
+                .localizable(by: .tagsInputNamePlaceholder),
+                text: $state.selectedTag.name,
+                axis: .vertical,
+                style: .largeTitle,
+                color: .primary,
+                weight: .bold,
+                alignment: .center
+            )
+            #else
+            RefdsTextField(
+                .localizable(by: .tagsInputNamePlaceholder),
+                text: $state.selectedTag.name,
+                axis: .vertical,
+                style: .largeTitle,
+                color: .primary,
+                weight: .bold,
+                alignment: .center,
+                textInputAutocapitalization: .words
+            )
+            #endif
         }
-    }
-    
-    private var rowName: some View {
-        #if os(macOS)
-        RefdsTextField(
-            .localizable(by: .tagsInputNamePlaceholder),
-            text: $state.selectedTag.name,
-            axis: .vertical,
-            style: .callout
-        )
-        #else
-        RefdsTextField(
-            .localizable(by: .tagsInputNamePlaceholder),
-            text: $state.selectedTag.name,
-            axis: .vertical,
-            style: .callout,
-            textInputAutocapitalization: .sentences
-        )
-        #endif
     }
     
     private var rowColors: some View {
@@ -107,7 +116,7 @@ public struct TagsView: View {
                 RefdsButton {
                     withAnimation { state.selectedTag = tag }
                 } label: {
-                    TagRowView(viewData: tag)
+                    TagRowView(viewData: tag, isSelected: state.selectedTag.id == tag.id)
                 }
                 .contextMenu {
                     contextRemoveButton(at: index)

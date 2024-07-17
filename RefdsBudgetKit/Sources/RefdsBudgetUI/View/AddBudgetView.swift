@@ -57,6 +57,7 @@ public struct AddBudgetView: View {
             sectionCategory
             sectionSaveButton
         }
+        .refreshable { action(.fetchBudget) }
         .onChange(of: state.month) { action(.fetchBudget) }
         .onChange(of: state.category?.name ?? "") { action(.fetchBudget) }
         .onAppear { fetchDataOnAppear() }
@@ -65,24 +66,21 @@ public struct AddBudgetView: View {
     }
     
     private func fetchDataOnAppear() {
-        guard state.amount == .zero else { return }
-        action(.fetchCategories)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+           action(.fetchCategories)
+        }
     }
     
     private var sectionAmount: some View {
         RefdsSection {} footer: {
-            VStack(spacing: .zero) {
-                RefdsText(
-                    state.month.asString(withDateFormat: .custom("MMMM, yyyy")).uppercased(),
-                    style: .caption,
-                    color: .accentColor,
-                    weight: .bold
-                )
+            VStack {
                 RefdsCurrencyTextField(
                     value: $state.amount,
                     style: .largeTitle,
                     weight: .bold
                 )
+                
+                AISuggestionLabel(isEnable: state.isAI)
             }
         }
     }
@@ -163,8 +161,11 @@ public struct AddBudgetView: View {
     
     private var sectionCategory: some View {
         RefdsSection {
-            rowEmptyCategories
-            rowCategories
+            LoadingRowView(isLoading: state.isLoading)
+            if !state.isLoading {
+                rowEmptyCategories
+                rowCategories
+            }
         } header: {
             RefdsText(
                 .localizable(by: .addBudgetCategoryHeader),

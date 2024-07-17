@@ -55,7 +55,21 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 var newState = state
                 newState.products = products
                 newState.features = features
-                await updatePurchasedProducts(with: newState, on: completion)
+                
+                let isEqualProducts = products.map { $0.id }.allSatisfy { id in
+                    state.products.contains(where: { $0.id == id })
+                }
+                
+                let isEqualFeatures = features.map { $0.title }.allSatisfy { title in
+                    state.features.contains(where: { $0.title == title })
+                }
+                
+                await updatePurchasedProducts(
+                    with: newState,
+                    isEqualProducts: isEqualProducts,
+                    isEqualFeatures: isEqualFeatures,
+                    on: completion
+                )
             } catch {
                 completion(.updateError(error: .notFoundProducts))
             }
@@ -105,6 +119,8 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     private func updatePurchasedProducts(
         with state: SettingsStateProtocol,
+        isEqualProducts: Bool = true,
+        isEqualFeatures: Bool = true,
         on completion: @escaping (SettingsAction) -> Void
     ) async {
         var transactions: [StoreKit.Transaction] = []
@@ -122,14 +138,25 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
             $0.expirationDate ?? .current >
             $1.expirationDate ?? .current
         })
-        completion(
-            .receiveProducts(
-                products: state.products,
-                features: state.features,
-                productsID: purchasedProductsID,
-                transactions: transactions
+        
+        let isEqualTransactions = transactions.map { $0.id }.allSatisfy { id in
+            state.transactions.contains(where: { $0.id == id })
+        }
+        
+        let isEqualPurchased = purchasedProductsID.allSatisfy { id in
+            state.purchasedProductsID.contains(id)
+        }
+        
+        if !isEqualPurchased || !isEqualTransactions || !isEqualProducts || !isEqualFeatures {
+            completion(
+                .receiveProducts(
+                    products: state.products,
+                    features: state.features,
+                    productsID: purchasedProductsID,
+                    transactions: transactions
+                )
             )
-        )
+        }
     }
     
     private func updatePro(

@@ -52,6 +52,7 @@
 "addBudgetEmptyCategories" = "Não há categorias para esse período";
 "addBudgetSelectedCategory" = "Selecione";
 "addBudgetCategoryHeader" = "Categoria";
+"addBudgetAISuggestion" = "Sugestão da IA";
 
 // MARK: - Add Category
 
@@ -67,8 +68,8 @@
 // MARK: - Categories
 
 "categoriesNavigationTitle" = "Categorias";
-"categoriesBalanceTitle" = "Transações totais";
-"categoriesBalanceSubtitle" = "Orçamento total";
+"categoriesBalanceTitle" = "Transações";
+"categoriesBalanceSubtitle" = "Orçamento";
 "categoriesPeriod" = "Perído";
 "categoriesBalance" = "Saldo";
 "categoriesEmptyCategoriesTitle" = "Crie uma categoria para suas despesas";
@@ -149,6 +150,12 @@
 "transactionsLargestPurchaseHeader" = "Maiores Compras";
 "transactionsOptionsSelect" = "Selecionar";
 "transactionsOptionsSelectDone" = "Pronto";
+"transactionsPaginationHeader" = "Paginação";
+"transactionsPaginationDaysAmount" = "Quantidade de dias";
+"transactionsPaginationDay" = "%d dia";
+"transactionsPaginationDays" = "%d dias";
+"transactionsPaginationHalfMonth" = "Metade do mês";
+"transactionsPaginationAllDays" = "Todos os dias do mês";
 
 // MARK: - Home
 
@@ -169,7 +176,6 @@
 "tagsInputHeader" = "Informações da tag";
 "tagsInputNamePlaceholder" = "Informe o nome da tag";
 "tagsSaveButton" = "Salvar tag";
-"tagsCollapsedHeader" = "Tags Criadas";
 "tagsChartSectionHeader" = "Gráfico Comparativo";
 "tagsMenuSelectHeader" = "Selecione uma ou mais tags";
 "tagsRemoveTag" = "Remover tag";

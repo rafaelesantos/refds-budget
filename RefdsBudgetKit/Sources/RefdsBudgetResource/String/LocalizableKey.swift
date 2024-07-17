@@ -47,6 +47,7 @@ public enum LocalizableKey: String {
     case addBudgetEmptyCategories
     case addBudgetSelectedCategory
     case addBudgetCategoryHeader
+    case addBudgetAISuggestion
     // MARK: - Add Category
     case addCategoryInputName
     case addCategoryColorHeader
@@ -131,6 +132,12 @@ public enum LocalizableKey: String {
     case transactionsLargestPurchaseHeader
     case transactionsOptionsSelect
     case transactionsOptionsSelectDone
+    case transactionsPaginationHeader
+    case transactionsPaginationDaysAmount
+    case transactionsPaginationDay
+    case transactionsPaginationDays
+    case transactionsPaginationHalfMonth
+    case transactionsPaginationAllDays
     // MARK: - Home
     case homeNavigationTitle
     case homeRemainingHeader
@@ -147,7 +154,6 @@ public enum LocalizableKey: String {
     case tagsInputHeader
     case tagsInputNamePlaceholder
     case tagsSaveButton
-    case tagsCollapsedHeader
     case tagsChartSectionHeader
     case tagsMenuSelectHeader
     case tagsRemoveTag

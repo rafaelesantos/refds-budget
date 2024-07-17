@@ -25,7 +25,7 @@ public struct BalanceRowView: View {
                 amountView
             }
             
-            Spacer(minLength: 5)
+            Spacer(minLength: 15)
             
             if !isRemaining {
                 RefdsCircularProgressView(
@@ -80,9 +80,7 @@ public struct BalanceRowView: View {
                         weight: .bold
                     )
                     .refdsRedacted(if: privacyMode)
-                }
-                
-                if isRemaining {
+                } else {
                     Spacer(minLength: .zero)
                     
                     RefdsText(
@@ -97,6 +95,7 @@ public struct BalanceRowView: View {
                         color: percentage.riskColor,
                         cornerRadius: 5
                     )
+                    .padding(.trailing, -15)
                 }
             }
         }
@@ -109,9 +108,11 @@ public struct BalanceRowView: View {
             style: .largeTitle,
             color: .primary,
             weight: .bold,
-            alignment: .center
+            alignment: .center,
+            lineLimit: 1
         )
         .contentTransition(.numericText())
+        .minimumScaleFactor(0.6)
         .refdsRedacted(if: privacyMode)
         
         if !isRemaining {
