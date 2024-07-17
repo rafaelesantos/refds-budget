@@ -17,7 +17,6 @@ public protocol HomeStateProtocol: RefdsReduxState {
     var selectedStatus: Set<String> { get set }
     var isFilterEnable: Bool { get set }
     var date: Date { get set }
-    var selectedLegend: Color { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -38,7 +37,6 @@ public struct HomeState: HomeStateProtocol {
     
     public var isFilterEnable: Bool = true
     public var date: Date = .current
-    public var selectedLegend: Color = .green
     public var error: RefdsBudgetError?
     
     public init() {}

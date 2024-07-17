@@ -8,7 +8,7 @@ import RefdsBudgetPresentation
 import AppIntents
 
 struct SystemMediumExpenseTrackerProvider: AppIntentTimelineProvider {
-    private let presenter = RefdsBudgetWidgetPresenter()
+    private let presenter = RefdsBudgetIntentPresenter.shared
     
     func placeholder(in context: Context) -> SystemMediumExpenseTrackerEntry {
         let viewData = WidgetTransactionsViewData(
@@ -64,7 +64,7 @@ struct SystemMediumExpenseTrackerAppIntent: WidgetConfigurationIntent {
     var status: String
     
     private struct TagsOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
         
         func defaultResult() async -> String? {
             .localizable(by: .transactionsCategorieAllSelected)
@@ -76,7 +76,7 @@ struct SystemMediumExpenseTrackerAppIntent: WidgetConfigurationIntent {
     }
     
     private struct StatusOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
         
         func defaultResult() async -> String? {
             .localizable(by: .transactionsCategorieAllSelected)

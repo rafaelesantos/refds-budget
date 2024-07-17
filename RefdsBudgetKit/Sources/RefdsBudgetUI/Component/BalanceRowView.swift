@@ -10,6 +10,7 @@ public struct BalanceRowView: View {
     
     @State private var expense: Double = 0
     @State private var percentage: Double = 0
+    @State private var isPresentedRiskLegend = false
     
     public init(viewData: BalanceRowViewDataProtocol, isRemaining: Bool = false) {
         self.viewData = viewData
@@ -28,14 +29,35 @@ public struct BalanceRowView: View {
             Spacer(minLength: 15)
             
             if !isRemaining {
-                RefdsCircularProgressView(
-                    percentage,
-                    size: 85,
-                    color: percentage.riskColor,
-                    scale: 0.095
-                )
-                .minimumScaleFactor(0.7)
-                .refdsRedacted(if: privacyMode)
+                RefdsButton {
+                    withAnimation {
+                        isPresentedRiskLegend.toggle()
+                    }
+                } label: {
+                    Gauge(
+                        value: percentage,
+                        in: 0 ... 1
+                    ) { EmptyView() } currentValueLabel: {
+                        RefdsText(
+                            percentage.percent(),
+                            weight: .bold,
+                            lineLimit: 1
+                        )
+                        .minimumScaleFactor(0.5)
+                        .scaleEffect(0.7)
+                        
+                    }
+                    .gaugeStyle(.accessoryCircular)
+                    .scaleEffect(1.4)
+                    .frame(width: 85, height: 85)
+                    .tint(percentage.riskColor)
+                    .refdsRedacted(if: privacyMode)
+                }
+                .popover(isPresented: $isPresentedRiskLegend) {
+                    RiskLegendView(color: percentage.riskColor)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                }
             }
         }
         .padding()

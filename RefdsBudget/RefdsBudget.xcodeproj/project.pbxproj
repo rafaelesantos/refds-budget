@@ -71,6 +71,7 @@
 		6C587EDB2BF661B70095AFA9 /* BudgetStoreConfig.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */; };
 		6CA940302BFFC0A200E1BC30 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA9402F2BFFC0A200E1BC30 /* Environment.swift */; };
 		6CA940312BFFC45700E1BC30 /* RefdsBudgetWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6CC8AC652C474FD0001F3703 /* RemainingLockScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC8AC642C474FD0001F3703 /* RemainingLockScreen.swift */; };
 		6CE5131D2BE2F2A5005085CE /* SideNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */; };
 		6CE5131F2BE2F445005085CE /* TabNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5131E2BE2F445005085CE /* TabNavigationView.swift */; };
 		6CE513272BE3F490005085CE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE513262BE3F490005085CE /* WidgetKit.framework */; };
@@ -79,7 +80,6 @@
 		6CE5132E2BE3F490005085CE /* SystemSmallExpenseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5132D2BE3F490005085CE /* SystemSmallExpenseTracker.swift */; };
 		6CE513322BE3F491005085CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CE513312BE3F491005085CE /* Assets.xcassets */; };
 		6CE5133D2BE3F94C005085CE /* RefdsBudgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6CE5133C2BE3F94C005085CE /* RefdsBudgetKit */; };
-		6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */; };
 		6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */; };
 		6CE5135D2BE552B4005085CE /* SystemSmallTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */; };
 /* End PBXBuildFile section */
@@ -95,6 +95,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6CC8AC772C476C17001F3703 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6CE513382BE3F491005085CE /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -176,6 +186,7 @@
 		6C44A7252BC6091C00C94C2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6C587ED92BF661B70095AFA9 /* BudgetStoreConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = BudgetStoreConfig.storekit; sourceTree = "<group>"; };
 		6CA9402F2BFFC0A200E1BC30 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		6CC8AC642C474FD0001F3703 /* RemainingLockScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemainingLockScreen.swift; sourceTree = "<group>"; };
 		6CE5131C2BE2F2A5005085CE /* SideNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideNavigationView.swift; sourceTree = "<group>"; };
 		6CE5131E2BE2F445005085CE /* TabNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavigationView.swift; sourceTree = "<group>"; };
 		6CE513242BE3F490005085CE /* RefdsBudgetWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RefdsBudgetWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,7 +197,6 @@
 		6CE513312BE3F491005085CE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6CE513332BE3F491005085CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CE513342BE3F491005085CE /* RefdsBudgetWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RefdsBudgetWidget.entitlements; sourceTree = "<group>"; };
-		6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefdsBudgetWidgetPresenter.swift; sourceTree = "<group>"; };
 		6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallExpenseProgress.swift; sourceTree = "<group>"; };
 		6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSmallTransactions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -351,12 +361,12 @@
 			isa = PBXGroup;
 			children = (
 				6CE5132B2BE3F490005085CE /* RefdsBudgetWidgetBundle.swift */,
+				6CC8AC642C474FD0001F3703 /* RemainingLockScreen.swift */,
 				6CE5132D2BE3F490005085CE /* SystemSmallExpenseTracker.swift */,
 				6CE5135A2BE52C80005085CE /* SystemSmallExpenseProgress.swift */,
 				6CE5135C2BE552B4005085CE /* SystemSmallTransactions.swift */,
 				6C3523312BE9306C00077307 /* SystemMediumExpenseTracker.swift */,
 				6C3523332BE94EB400077307 /* SystemLargeExpenseTracker.swift */,
-				6CE5133E2BE417F2005085CE /* RefdsBudgetWidgetPresenter.swift */,
 				6CE513312BE3F491005085CE /* Assets.xcassets */,
 				6CE513332BE3F491005085CE /* Info.plist */,
 				6CE513342BE3F491005085CE /* RefdsBudgetWidget.entitlements */,
@@ -375,6 +385,7 @@
 				6C44A70D2BC6075100C94C2C /* Frameworks */,
 				6C44A70E2BC6075100C94C2C /* Resources */,
 				6CE513382BE3F491005085CE /* Embed Foundation Extensions */,
+				6CC8AC772C476C17001F3703 /* Embed ExtensionKit Extensions */,
 			);
 			buildRules = (
 			);
@@ -417,7 +428,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1530;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					6C44A70F2BC6075100C94C2C = {
@@ -546,9 +557,9 @@
 				6C3523342BE94EB400077307 /* SystemLargeExpenseTracker.swift in Sources */,
 				6CE5135D2BE552B4005085CE /* SystemSmallTransactions.swift in Sources */,
 				6CE5135B2BE52C80005085CE /* SystemSmallExpenseProgress.swift in Sources */,
-				6CE5133F2BE41C81005085CE /* RefdsBudgetWidgetPresenter.swift in Sources */,
 				6CE5132C2BE3F490005085CE /* RefdsBudgetWidgetBundle.swift in Sources */,
 				6CE5132E2BE3F490005085CE /* SystemSmallExpenseTracker.swift in Sources */,
+				6CC8AC652C474FD0001F3703 /* RemainingLockScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

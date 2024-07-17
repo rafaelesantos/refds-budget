@@ -16,5 +16,6 @@ struct RefdsBudgetWidgetBundle: WidgetBundle {
         SystemSmallTransactions()
         SystemMediumExpenseTracker()
         SystemLargeExpenseTracker()
+        RemainingLockScreen()
     }
 }

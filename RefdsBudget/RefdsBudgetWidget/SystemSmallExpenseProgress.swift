@@ -8,7 +8,7 @@ import RefdsBudgetPresentation
 import AppIntents
 
 struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
-    private let presenter = RefdsBudgetWidgetPresenter()
+    private let presenter = RefdsBudgetIntentPresenter.shared
     
     func placeholder(in context: Context) -> SystemSmallExpenseProgressEntry {
         let viewData = WidgetExpenseTrackerViewData(
@@ -64,7 +64,7 @@ struct SystemSmallExpenseProgressAppIntent: WidgetConfigurationIntent {
     var status: String
     
     private struct CategoriesOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
         
         func defaultResult() async -> String? {
             .localizable(by: .transactionsCategorieAllSelected)
@@ -76,7 +76,7 @@ struct SystemSmallExpenseProgressAppIntent: WidgetConfigurationIntent {
     }
     
     private struct TagsOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
         
         func defaultResult() async -> String? {
             .localizable(by: .transactionsCategorieAllSelected)
@@ -88,7 +88,7 @@ struct SystemSmallExpenseProgressAppIntent: WidgetConfigurationIntent {
     }
     
     private struct StatusOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetWidgetPresenterProtocol = RefdsBudgetWidgetPresenter()
+        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
         
         func defaultResult() async -> String? {
             .localizable(by: .transactionsCategorieAllSelected)

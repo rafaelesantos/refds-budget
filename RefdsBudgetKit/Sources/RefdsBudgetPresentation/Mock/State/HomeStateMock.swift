@@ -18,7 +18,6 @@ public struct HomeStateMock: HomeStateProtocol {
     
     public var isFilterEnable: Bool = true
     public var date: Date = .current
-    public var selectedLegend: Color = .green
     public var error: RefdsBudgetError? = nil
     
     public init() {}

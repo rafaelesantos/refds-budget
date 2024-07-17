@@ -4,9 +4,8 @@ import RefdsShared
 import RefdsInjection
 import RefdsBudgetDomain
 import RefdsBudgetData
-import RefdsBudgetPresentation
 
-protocol RefdsBudgetWidgetPresenterProtocol {
+public protocol RefdsBudgetIntentPresenterProtocol {
     func getWidgetExpenseTrackerViewData(
         isFilterByDate: Bool,
         category: String,
@@ -23,19 +22,21 @@ protocol RefdsBudgetWidgetPresenterProtocol {
     func getTags() -> [String]
 }
 
-final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
+public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtocol {
+    public static let shared = RefdsBudgetIntentPresenter()
+    
     private let categoryRepository: CategoryUseCase
     private let transactionsRepository: TransactionUseCase
     private let tagRepository: BubbleUseCase
     
-    public init() {
+    private init() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
         categoryRepository = LocalCategoryRepository()
         transactionsRepository = LocalTransactionRepository()
         tagRepository = LocalBubbleRepository()
     }
     
-    func getWidgetExpenseTrackerViewData(
+    public func getWidgetExpenseTrackerViewData(
         isFilterByDate: Bool,
         category: String,
         tag: String,
@@ -94,7 +95,7 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
         )
     }
     
-    func getWidgetTransactionsViewData(
+    public func getWidgetTransactionsViewData(
         isFilterByDate: Bool,
         category: String,
         tag: String,
@@ -195,12 +196,12 @@ final class RefdsBudgetWidgetPresenter: RefdsBudgetWidgetPresenterProtocol {
         )
     }
     
-    func getCategories() -> [String] {
+    public func getCategories() -> [String] {
         categoryRepository.getAllCategories().map { $0.name } +
         [String.localizable(by: .transactionsCategorieAllSelected)]
     }
     
-    func getTags() -> [String] {
+    public func getTags() -> [String] {
         tagRepository.getBubbles().map { $0.name } +
         [String.localizable(by: .transactionsCategorieAllSelected)]
     }

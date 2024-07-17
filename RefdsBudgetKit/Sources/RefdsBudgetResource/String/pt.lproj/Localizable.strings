@@ -200,6 +200,8 @@
 "widgetDescriptionSystemSmallExpanseTracker" = "Acompanhe seus gastos e orçamento em tempo real.";
 "widgetTitleSystemSmallTransactions" = "Últimos Gastos";
 "widgetDescriptionSystemSmallTransactions" = "Visualize seus gastos mais recentes e acompanhe seu orçamento de forma rápida e fácil.";
+"widgetTitleRemainingLockScreen" = "Acompanhe seu orçamento restante";
+"widgetDescriptionRemainingLockScreen" = "Veja o saldo remanescente do seu planejamento financeiro, mantendo suas finanças sob controle.";
 
 // MARK: - Application Icon
 

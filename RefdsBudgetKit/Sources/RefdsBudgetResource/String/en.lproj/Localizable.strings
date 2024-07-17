@@ -200,6 +200,8 @@
 "widgetDescriptionSystemSmallExpanseTracker" = "Keep track of your spending and budget in real-time.";
 "widgetTitleSystemSmallTransactions" = "Recent Expenses";
 "widgetDescriptionSystemSmallTransactions" = "Visualize your most recent expenses and track your budget quickly and easily.";
+"widgetTitleRemainingLockScreen" = "Track your remaining budget";
+"widgetDescriptionRemainingLockScreen" = "See the remaining balance of your financial plan, keeping your finances under control.";
 
 // MARK: - Application Icon
 

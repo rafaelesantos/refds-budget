@@ -239,43 +239,7 @@ public struct HomeView: View {
     private var sectionLegendView: some View {
         if let budget = state.balance?.budget, budget > .zero {
             RefdsSection {
-                VStack(alignment: .leading) {
-                    let title: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendTitle):
-                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendTitle) :
-                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendTitle) :
-                        .localizable(by: .categoriesRedLegendTitle)
-                    
-                    let description: String = state.selectedLegend == .green ? .localizable(by: .categoriesGreenLegendDescription):
-                    state.selectedLegend == .yellow ? .localizable(by: .categoriesYellowLegendDescription) :
-                    state.selectedLegend == .orange ? .localizable(by: .categoriesOrangeLegendDescription) :
-                        .localizable(by: .categoriesRedLegendDescription)
-                    RefdsText(
-                        title.uppercased(),
-                        style: .footnote,
-                        color: state.selectedLegend,
-                        weight: .bold
-                    )
-                    .refdsTag(color: state.selectedLegend)
-                    RefdsText(description, style: .callout, color: .secondary)
-                }
-                
-                HStack {
-                    let colors: [Color] = [.green, .yellow, .orange, .red]
-                    ForEach(colors, id: \.self) { color in
-                        Spacer()
-                        RefdsButton {
-                            withAnimation { state.selectedLegend = color }
-                        } label: {
-                            BubbleColorView(
-                                color: color,
-                                isSelected: state.selectedLegend == color
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    Spacer()
-                }
-                .padding(.vertical, 4)
+                RiskLegendView()
             } header: {
                 RefdsText(
                     .localizable(by: .categoriesLegend),

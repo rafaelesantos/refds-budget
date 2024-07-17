@@ -14,7 +14,7 @@ public struct TagsSectionView: View {
     private let tagsViewData: [TagRowViewDataProtocol]
     private let action: () -> Void
     
-    private var bindindAngleSelection: Binding<Double?> {
+    private var bindingAngleSelection: Binding<Double?> {
         Binding {
             selectedTag?.value
         } set: { value in
@@ -130,7 +130,7 @@ public struct TagsSectionView: View {
             range: tags.map { $0.color }
         )
         .chartLegend(.hidden)
-        .chartAngleSelection(value: bindindAngleSelection)
+        .chartAngleSelection(value: bindingAngleSelection)
         .frame(height: 250)
     }
     
