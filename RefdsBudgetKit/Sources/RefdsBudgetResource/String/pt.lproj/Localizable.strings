@@ -130,6 +130,7 @@
 "addTransactionStatusSpend" = "Gasto";
 "addTransactionStatusPending" = "Pendente";
 "addTransactionStatusCleared" = "Resolvido";
+"addTransactionDescriptionCount" = "%d caracter(es)";
 
 // MARK: - Transactions
 

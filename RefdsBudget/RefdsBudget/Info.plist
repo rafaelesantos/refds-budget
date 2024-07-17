@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>refds.budget.update.icons</string>
@@ -526,6 +528,18 @@
 			</dict>
 		</dict>
 	</array>
+    <key>NSUbiquitousContainers</key>
+        <dict>
+            <key>iCloud.br.com.rafaelescaleira.Budget</key>
+            <dict>
+                <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+                <true/>
+                <key>NSUbiquitousContainerName</key>
+                <string>Budget</string>
+                <key>NSUbiquitousContainerSupportedFolderLevels</key>
+                <string>Any</string>
+            </dict>
+        </dict>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>

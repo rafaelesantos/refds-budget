@@ -10,13 +10,17 @@ public struct AddTransactionView: View {
     
     @State private var amount: Double = .zero
     @State private var description: String = ""
+    @State private var isAI: Bool = true
     
     private var bindingCategory: Binding<String> {
         Binding {
             state.category?.name ?? .localizable(by: .addBudgetEmptyCategories)
         } set: { name in
             if let category = state.categories.first(where: { $0.name.lowercased() == name.lowercased() }) {
-                withAnimation { state.category = category }
+                withAnimation { 
+                    state.category = category
+                    isAI = false
+                }
             }
         }
     }
@@ -27,7 +31,7 @@ public struct AddTransactionView: View {
         } set: {
             let newDate = $0.asString(withDateFormat: .monthYear)
             let currentDate = state.date.asString(withDateFormat: .monthYear)
-            if newDate != currentDate || state.isAI { action(.fetchCategories($0)) }
+            if newDate != currentDate { action(.fetchCategories($0, amount)) }
             state.date = $0
         }
     }
@@ -43,13 +47,13 @@ public struct AddTransactionView: View {
     public var body: some View {
         List {
             sectionAmount
-            sectionDescription
             sectionStatus
+            sectionDescription
             sectionCategory
             sectionSaveButtonView
         }
         .navigationTitle(String.localizable(by: .addTransactionNavigationTitle))
-        .refreshable { action(.fetchCategories(state.date)) }
+        .refreshable { action(.fetchCategories(state.date, amount)) }
         .toolbar { ToolbarItem { saveButtonToolbar } }
         .onAppear { fetchDataOnAppear() }
         .refdsDismissesKeyboad()
@@ -59,9 +63,10 @@ public struct AddTransactionView: View {
     private func fetchDataOnAppear() {
         description = description.isEmpty ? state.description : description
         amount = amount == .zero ? state.amount : amount
+        isAI = state.isAI
         guard state.category == nil else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchCategories(state.date))
+            action(.fetchCategories(state.date, amount))
         }
     }
     
@@ -99,6 +104,17 @@ public struct AddTransactionView: View {
                 style: .footnote,
                 color: .secondary
             )
+        } footer: {
+            HStack {
+                Spacer()
+                RefdsText(
+                    .localizable(by: .addTransactionDescriptionCount, with: description.count),
+                    style: .footnote,
+                    color: description.count < 40 ? .green : description.count < 80 ? .orange : .red,
+                    weight: .bold
+                )
+                .opacity(0.5)
+            }
         }
     }
     
@@ -132,6 +148,12 @@ public struct AddTransactionView: View {
             if !state.isLoading {
                 if !state.isEmptyCategories, !state.isEmptyBudgets {
                     rowCategories
+                    
+                    if isAI {
+                        AISuggestionButton {
+                            action(.fetchCategories(state.date, amount))
+                        }
+                    }
                 }
                 
                 if state.isEmptyCategories {
@@ -158,8 +180,6 @@ public struct AddTransactionView: View {
                 
                 Spacer(minLength: .zero)
             }
-        } footer: {
-            AISuggestionLabel(isEnable: state.isAI)
         }
     }
     

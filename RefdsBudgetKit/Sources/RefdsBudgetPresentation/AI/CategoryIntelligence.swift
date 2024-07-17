@@ -7,7 +7,7 @@ import RefdsInjection
 
 public protocol CategoryIntelligenceProtocol {
     func training()
-    func predict(date: Date) -> UUID?
+    func predict(date: Date, amount: Double) -> UUID?
 }
 
 final class CategoryIntelligence: CategoryIntelligenceProtocol {
@@ -35,25 +35,23 @@ final class CategoryIntelligence: CategoryIntelligenceProtocol {
         }
         
         for i in transactions.indices {
-            if i + 1 < transactions.count {
-                let transaction = transactions[i]
-                if let nextTransaction = transactions[safe: i + 1],
-                   let date = transactions[safe: i + 1]?.date,
-                   let day = date.asString(withDateFormat: .day).asInt,
-                   let hour = date.asString(withDateFormat: .custom("HH")).asInt,
-                   let minute = date.asString(withDateFormat: .custom("mm")).asInt,
-                   let category = categoriesDict[transaction.category.uuidString],
-                   let target = categoriesDict[nextTransaction.category.uuidString] {
-                    targetDict += [
-                        [
-                            "day": Double(day),
-                            "hour": Double(hour),
-                            "minute": Double(minute),
-                            "category": Double(category.1),
-                            "target": Double(target.1)
-                        ]
+            let transaction = transactions[i]
+               if let date = transactions[safe: i + 1]?.date,
+               let month = date.asString(withDateFormat: .custom("MM")).asInt,
+               let day = date.asString(withDateFormat: .day).asInt,
+               let hour = date.asString(withDateFormat: .custom("HH")).asInt,
+               let minute = date.asString(withDateFormat: .custom("mm")).asInt,
+               let target = categoriesDict[transaction.category.uuidString] {
+                targetDict += [
+                    [
+                        "month": Double(month),
+                        "day": Double(day),
+                        "hour": Double(hour),
+                        "minute": Double(minute),
+                        "amount": transaction.amount,
+                        "target": Double(target.1)
                     ]
-                }
+                ]
             }
         }
         
@@ -89,24 +87,20 @@ final class CategoryIntelligence: CategoryIntelligenceProtocol {
         self.model = model
     }
     
-    public func predict(date: Date) -> UUID? {
+    public func predict(date: Date, amount: Double) -> UUID? {
         training()
         var data: [String: Double] = [:]
-        let transactions = Array(transactionRepository.getTransactions().reversed())
-        let lastPosition = transactions.lastIndex(where: {
-            $0.date.asString(withDateFormat: .dayMonthYear) == date.asString(withDateFormat: .dayMonthYear)
-        }) ?? transactions.count - 1
         
-        if let transaction = transactions[safe: lastPosition - 1] ?? transactions.last,
+        if let month = date.asString(withDateFormat: .custom("MM")).asInt,
            let day = date.asString(withDateFormat: .day).asInt,
            let hour = date.asString(withDateFormat: .custom("HH")).asInt,
-           let minute = date.asString(withDateFormat: .custom("mm")).asInt,
-           let category = categoriesDict[transaction.category.uuidString] {
+           let minute = date.asString(withDateFormat: .custom("mm")).asInt {
             data = [
+                "month": Double(month),
                 "day": Double(day),
                 "hour": Double(hour),
                 "minute": Double(minute),
-                "category": Double(category.1)
+                "amount": amount
             ]
         } else { return nil }
         

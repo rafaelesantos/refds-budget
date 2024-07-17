@@ -113,6 +113,7 @@ public enum LocalizableKey: String {
     case addTransactionStatusSpend
     case addTransactionStatusPending
     case addTransactionStatusCleared
+    case addTransactionDescriptionCount
     // MARK: - Transactions
     case transactionNavigationTitle
     case transactionEditNavigationTitle

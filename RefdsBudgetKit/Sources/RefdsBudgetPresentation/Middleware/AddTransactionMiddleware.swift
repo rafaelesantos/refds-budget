@@ -29,7 +29,11 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
         switch addTransactionAction {
-        case let .fetchCategories(date): fetchCategories(from: date, on: completion)
+        case let .fetchCategories(date, amount): fetchCategories(
+            from: date,
+            amount: amount,
+            on: completion
+        )
         case let .save(amount, description): save(
             with: state,
             amount: amount,
@@ -42,6 +46,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
     
     private func fetchCategories(
         from date: Date,
+        amount: Double,
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
         let allCategories = categoryRepository.getAllCategories()
@@ -64,8 +69,9 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             )
         }
         
-        if let categoryId = categoryIntelligence.predict(date: date),
-           let category = categories.first(where: { $0.categoryId == categoryId }) {
+        if let categoryId = categoryIntelligence.predict(date: date, amount: amount),
+           let category = categories.first(where: { $0.categoryId == categoryId }),
+           amount > .zero {
             completion(.updateCategories(category, categories, allCategories.isEmpty))
         } else {
             completion(.updateCategories(nil, categories, allCategories.isEmpty))

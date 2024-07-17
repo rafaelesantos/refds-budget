@@ -10,10 +10,11 @@ class CategoryIntelligenceInput: MLFeatureProvider {
     }
     
     public var featureNames: Set<String> = [
+        "month",
         "day",
         "hour",
         "minute",
-        "category",
+        "amount",
         "target"
     ]
 

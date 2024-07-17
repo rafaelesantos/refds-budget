@@ -27,10 +27,20 @@ public struct FileModel: FileModelProtocol {
         let date = Date.current.asString(withDateFormat: .custom("EEEE dd, MMMM yyyy")).capitalized
         let filename: String = .localizable(by: .settingsFilename, with: date)
         guard let encoded = try? JSONEncoder().encode(self),
-              let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+              let documents = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents")
         else { return nil }
         
-        let path = documents.appendingPathComponent("/\(filename).budget")
+        if !FileManager.default.fileExists(atPath: documents.path, isDirectory: nil) {
+            do { 
+                try FileManager.default.createDirectory(
+                    at: documents,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+            } catch { print(error.localizedDescription) }
+        }
+        
+        let path = documents.appendingPathComponent("\(filename).budget")
         do {
             try encoded.write(to: path, options: .atomicWrite)
             return path
