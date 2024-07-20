@@ -8,10 +8,13 @@ import RefdsBudgetResource
 import WidgetKit
 
 public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var tagRepository: TagUseCase
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
-    @RefdsInjection private var categoryIntelligence: CategoryIntelligenceProtocol
+    @RefdsInjection private var tagRowViewDataAdapter: TagRowViewDataAdapterProtocol
+    @RefdsInjection private var intelligence: IntelligenceProtocol
     
     public init() {}
     
@@ -34,6 +37,10 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             amount: amount,
             on: completion
         )
+        case let .fetchTags(description): fetchTags(
+            for: description,
+            on: completion
+        )
         case let .save(amount, description): save(
             with: state,
             amount: amount,
@@ -50,8 +57,17 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
         on completion: @escaping (AddTransactionAction) -> Void
     ) {
         let allCategories = categoryRepository.getAllCategories()
+        var categoriesDict: [String: (CategoryModelProtocol, Int)] = [:]
+        
+        Dictionary(grouping: allCategories, by: { $0.id }).forEach { item in
+            if let value = item.value.first,
+               let position = allCategories.firstIndex(where: { $0.id == value.id }) {
+                categoriesDict[value.id.uuidString] = (value, position)
+            }
+        }
+        
         let categories: [CategoryRowViewDataProtocol] = categoryRepository.getCategories(from: date).compactMap {
-            guard let budget = categoryRepository.getBudget(on: $0.id, from: date) else { return nil }
+            guard let budget = budgetRepository.getBudget(on: $0.id, from: date) else { return nil }
             let transactions = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear).filter {
                 let status = TransactionStatus(rawValue: $0.status)
                 return status != .pending && status != .cleared
@@ -59,7 +75,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             let spend = transactions.map { $0.amount }.reduce(.zero, +)
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(
-                entity: $0,
+                model: $0,
                 budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budget.amount,
@@ -69,7 +85,12 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             )
         }
         
-        if let categoryId = categoryIntelligence.predict(date: date, amount: amount),
+        if let position = intelligence.predict(
+            for: .categoryFromTransaction(date: date, amount: amount),
+            with: .categoryFromTransaction,
+            on: .high
+        )?.rounded(),
+           let categoryId = categoriesDict.first(where: { $0.value.1 == Int(position) })?.value.0.id,
            let category = categories.first(where: { $0.categoryId == categoryId }),
            amount > .zero {
             completion(.updateCategories(category, categories, allCategories.isEmpty))
@@ -102,5 +123,26 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
         } catch {
             completion(.updateError(.existingTransaction))
         }
+    }
+    
+    private func fetchTags(
+        for description: String,
+        on completion: @escaping (AddTransactionAction) -> Void
+    ) {
+        let tagModels = tagRepository.getTags()
+        
+        guard !description.isEmpty else { return }
+        
+        let description = description.lowercased()
+        let tagAdapteds = tagModels.filter {
+            description.contains($0.name.lowercased())
+        }.map {
+            tagRowViewDataAdapter.adapt(
+                model: $0,
+                value: nil,
+                amount: nil
+            )
+        }
+        completion(.updateTags(tagAdapteds))
     }
 }

@@ -19,7 +19,8 @@ public struct TagRowView: View {
     
     private var content: some View {
         HStack(spacing: .padding(.medium)) {
-            BubbleColorView(color: viewData.color, isSelected: isSelected)
+            RefdsIconRow(viewData.icon, color: viewData.color)
+            
             VStack(alignment: .leading) {
                 RefdsText(viewData.name.capitalized, style: .callout)
                 

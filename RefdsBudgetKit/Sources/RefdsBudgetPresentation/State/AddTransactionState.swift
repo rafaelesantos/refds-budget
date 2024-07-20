@@ -11,6 +11,7 @@ public protocol AddTransactionStateProtocol: RefdsReduxState {
     var status: TransactionStatus { get set }
     var category: CategoryRowViewDataProtocol? { get set }
     var categories: [CategoryRowViewDataProtocol] { get set }
+    var tags: [TagRowViewDataProtocol] { get set }
     var remaining: Double? { get set }
     var date: Date { get set }
     var isEmptyCategories: Bool { get set }
@@ -27,6 +28,7 @@ public struct AddTransactionState: AddTransactionStateProtocol {
     public var status: TransactionStatus
     public var category: CategoryRowViewDataProtocol?
     public var categories: [CategoryRowViewDataProtocol]
+    public var tags: [TagRowViewDataProtocol]
     public var remaining: Double?
     public var date: Date
     public var error: RefdsBudgetError?
@@ -45,6 +47,7 @@ public struct AddTransactionState: AddTransactionStateProtocol {
         status: TransactionStatus = .spend,
         category: CategoryRowViewDataProtocol? = nil,
         categories: [CategoryRowViewDataProtocol] = [],
+        tags: [TagRowViewDataProtocol] = [],
         remaining: Double? = nil,
         date: Date = .current,
         error: RefdsBudgetError? = nil
@@ -55,6 +58,7 @@ public struct AddTransactionState: AddTransactionStateProtocol {
         self.status = status
         self.category = category
         self.categories = categories
+        self.tags = tags
         self.remaining = remaining
         self.date = date
         self.error = error

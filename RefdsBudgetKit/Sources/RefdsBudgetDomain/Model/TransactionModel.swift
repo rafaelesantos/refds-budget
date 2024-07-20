@@ -1,16 +1,19 @@
 import Foundation
+import CoreData
 import RefdsShared
 
-public protocol TransactionModelProtocol: RefdsModel {
+public protocol TransactionModelProtocol {
     var amount: Double { get set }
     var category: UUID { get set }
     var date: TimeInterval { get set }
     var id: UUID { get set }
     var message: String { get set }
     var status: String { get set }
+    
+    func getEntity(for context: NSManagedObjectContext) -> TransactionEntity
 }
 
-public struct TransactionModel: RefdsModel {
+public struct TransactionModel: TransactionModelProtocol, RefdsModel {
     public var amount: Double
     public var category: UUID
     public var date: TimeInterval
@@ -32,5 +35,23 @@ public struct TransactionModel: RefdsModel {
         self.id = id
         self.message = message
         self.status = status
+    }
+    
+    public init(entity: TransactionEntity) {
+        self.amount = entity.amount
+        self.category = entity.category
+        self.date = entity.date
+        self.id = entity.id
+        self.message = entity.message
+        self.status = entity.status
+    }
+    
+    public func getEntity(for context: NSManagedObjectContext) -> TransactionEntity {
+        let request = TransactionEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+        guard let entity = try? context.fetch(request).first else {
+            return TransactionEntity(model: self, for: context)
+        }
+        return entity
     }
 }

@@ -7,7 +7,8 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
-    @RefdsInjection private var tagRepository: BubbleUseCase
+    @RefdsInjection private var tagRepository: TagUseCase
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     
@@ -128,21 +129,21 @@ public final class BalanceMiddleware<State>: RefdsReduxMiddlewareProtocol {
         title: String = .localizable(by: .categoriesBalanceTitle),
         subititle: String = .localizable(by: .categoriesBalanceSubtitle)
     ) -> BalanceRowViewDataProtocol {
-        var transactions: [TransactionEntity] = []
-        var budgets: [BudgetEntity] = []
+        var transactions: [TransactionModelProtocol] = []
+        var budgets: [BudgetModelProtocol] = []
         
         if let date = date {
             transactions = transactionRepository.getTransactions(from: date, format: .monthYear).filter {
                 status.isEmpty ? $0.status != TransactionStatus.pending.rawValue &&
                 $0.status != TransactionStatus.cleared.rawValue : true
             }
-            budgets = categoryRepository.getBudgets(from: date)
+            budgets = budgetRepository.getBudgets(from: date)
         } else {
-            transactions = transactionRepository.getTransactions().filter {
+            transactions = transactionRepository.getAllTransactions().filter {
                 status.isEmpty ? $0.status != TransactionStatus.pending.rawValue &&
                     $0.status != TransactionStatus.cleared.rawValue : true
             }
-            budgets = categoryRepository.getAllBudgets()
+            budgets = budgetRepository.getAllBudgets()
         }
         
         if !categoryIds.isEmpty {

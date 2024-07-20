@@ -43,7 +43,7 @@ public final class SettingsMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         let settingsEntity = settingsRepository.getSettings()
         let settingsAdapted = settingsAdapter.adapt(
-            entity: settingsEntity,
+            model: settingsEntity,
             currentState: state
         )
         completion(.receiveData(state: settingsAdapted))

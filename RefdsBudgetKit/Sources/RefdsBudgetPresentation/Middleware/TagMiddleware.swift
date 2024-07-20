@@ -5,7 +5,7 @@ import RefdsInjection
 import RefdsBudgetDomain
 
 public final class TagMiddleware<State>: RefdsReduxMiddlewareProtocol {
-    @RefdsInjection private var tagRepository: BubbleUseCase
+    @RefdsInjection private var tagRepository: TagUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var tagRowViewDataAdapter: TagRowViewDataAdapterProtocol
     
@@ -33,9 +33,9 @@ public final class TagMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func fetchData(on completion: @escaping (TagAction) -> Void) {
-        let tags: [TagRowViewDataProtocol] = tagRepository.getBubbles().compactMap { tag in
+        let tags: [TagRowViewDataProtocol] = tagRepository.getTags().compactMap { tag in
             return tagRowViewDataAdapter.adapt(
-                entity: tag,
+                model: tag,
                 value: nil,
                 amount: nil
             )
@@ -48,12 +48,12 @@ public final class TagMiddleware<State>: RefdsReduxMiddlewareProtocol {
         with id: UUID,
         on completion: @escaping (TagAction) -> Void
     ) {
-        guard let tag = tagRepository.getBubble(by: id) else {
+        guard let tag = tagRepository.getTag(by: id) else {
             return completion(.updateError(.notFoundTag))
         }
         
         do {
-            try tagRepository.removeBubble(id: tag.id)
+            try tagRepository.removeTag(id: tag.id)
         } catch { return completion(.updateError(.cantDeleteTag)) }
         
         fetchData(on: completion)
@@ -63,16 +63,17 @@ public final class TagMiddleware<State>: RefdsReduxMiddlewareProtocol {
         tag: TagRowViewDataProtocol,
         on completion: @escaping (TagAction) -> Void
     ) {
-        if tagRepository.getBubble(by: tag.id) == nil,
-           tagRepository.getBubbles().contains(where: { $0.name.lowercased() == tag.name.lowercased() }) {
+        if tagRepository.getTag(by: tag.id) == nil,
+           tagRepository.getTags().contains(where: { $0.name.lowercased() == tag.name.lowercased() }) {
             return completion(.updateError(.existingTag))
         }
         
         do {
-            try tagRepository.addBubble(
+            try tagRepository.addTag(
                 id: tag.id,
                 name: tag.name,
-                color: tag.color
+                color: tag.color,
+                icon: tag.icon.rawValue
             )
         } catch { return completion(.updateError(.cantSaveOnDatabase)) }
         

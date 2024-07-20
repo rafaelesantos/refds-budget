@@ -8,6 +8,8 @@ public struct TagsView: View {
     @Binding private var state: TagsStateProtocol
     private let action: (TagAction) -> Void
     
+    @State private var isEditingMode = false
+    
     public init(
         state: Binding<TagsStateProtocol>,
         action: @escaping (TagAction) -> Void
@@ -18,17 +20,30 @@ public struct TagsView: View {
     
     public var body: some View {
         List {
-            sectionName
-            sectionInput
-            sectionSaveButton
+            if isEditingMode || (state.tags.isEmpty && !state.isLoading) {
+                sectionsInput
+            }
+            
             LoadingRowView(isLoading: state.isLoading)
             sectionTags
         }
         .refreshable { action(.fetchData) }
         .onAppear { fetchDataOnAppear() }
+        .toolbar { ToolbarItem { addButtonToolbar } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
         .navigationTitle(String.localizable(by: .tagsNavigationTitle))
+    }
+    
+    @ViewBuilder
+    private var sectionsInput: some View {
+        sectionName
+        ColorFormView(color: $state.selectedTag.color)
+        IconsFormView(icon: $state.selectedTag.icon, color: state.selectedTag.color)
+        sectionSaveButton
+        LoadingRowView(isLoading: state.isLoading)
+        rowHideInput
+        
     }
     
     private func fetchDataOnAppear() {
@@ -37,22 +52,27 @@ public struct TagsView: View {
         }
     }
     
-    private var sectionInput: some View {
-        RefdsSection {
-            rowColors
-            rowHexColor
-            cleanButton
+    private var rowHideInput: some View {
+        RefdsButton {
+            state.selectedTag = TagRowViewData()
+            withAnimation { isEditingMode.toggle() }
+        } label: {
+            HStack {
+                RefdsText(
+                    .localizable(by: .tagsCleanSelected),
+                    style: .callout,
+                    weight: .bold
+                )
+                
+                Spacer()
+                
+                RefdsIcon(.chevronUp, color: .placeholder)
+            }
         }
     }
     
     private var sectionName: some View {
-        RefdsSection {} header: {
-            RefdsText(
-                .localizable(by: .tagsInputHeader),
-                style: .footnote,
-                color: .secondary
-            )
-        } footer: {
+        RefdsSection {} footer: {
             #if os(macOS)
             RefdsTextField(
                 .localizable(by: .tagsInputNamePlaceholder),
@@ -78,45 +98,20 @@ public struct TagsView: View {
         }
     }
     
-    private var rowColors: some View {
-        HStack(spacing: .padding(.medium)) {
-            BubbleColorView(color: state.selectedTag.color, isSelected: true)
-            Divider().frame(height: 30)
-            ScrollView(.horizontal) {
-                HStack {
-                    let colors = Color.Default.allCases.sorted(by: { $0.id < $1.id })
-                    ForEach(colors, id: \.self) { color in
-                        RefdsButton {
-                            state.selectedTag.color = color.rawValue
-                        } label: {
-                            BubbleColorView(color: color.rawValue)
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-            }
-            .scrollIndicators(.never)
-            .padding(.horizontal, -20)
-        }
-    }
-    
-    private var rowHexColor: some View {
-        ColorPicker(selection: $state.selectedTag.color) {
-            RefdsText(
-                .localizable(by: .addCategoryInputHex),
-                style: .callout
-            )
-        }
-    }
-    
     private var sectionTags: some View {
         RefdsSection {
             ForEach(state.tags.indices, id: \.self) { index in
                 let tag = state.tags[index]
                 RefdsButton {
-                    withAnimation { state.selectedTag = tag }
+                    withAnimation { 
+                        isEditingMode = true
+                        state.selectedTag = tag
+                    }
                 } label: {
-                    TagRowView(viewData: tag, isSelected: state.selectedTag.id == tag.id)
+                    TagRowView(
+                        viewData: tag,
+                        isSelected: state.selectedTag.id == tag.id
+                    )
                 }
                 .contextMenu {
                     contextRemoveButton(at: index)
@@ -127,12 +122,6 @@ public struct TagsView: View {
                     swipeEditButton(at: index)
                 }
             }
-        } header: {
-            RefdsText(
-                .localizable(by: .tagsNavigationTitle),
-                style: .footnote,
-                color: .secondary
-            )
         }
     }
     
@@ -148,22 +137,24 @@ public struct TagsView: View {
             .localizable(by: .tagsSaveButton),
             isDisable: !state.canSave
         ) {
+            withAnimation { isEditingMode = false }
             action(.save)
         }
     }
     
     @ViewBuilder
-    private var cleanButton: some View {
-        if state.tags.contains(where: { $0.id == state.selectedTag.id }) {
+    private var addButtonToolbar: some View {
+        if !state.tags.isEmpty, !isEditingMode {
             RefdsButton {
-                withAnimation {
-                    state.selectedTag = TagRowViewData()
-                }
+                state.selectedTag = TagRowViewData()
+                withAnimation { isEditingMode.toggle() }
             } label: {
-                RefdsText(
-                    .localizable(by: .tagsCleanSelected),
-                    style: .callout,
-                    color: .red
+                RefdsIcon(
+                    isEditingMode ? .xmarkCircleFill : .plusCircleFill,
+                    color: .accentColor,
+                    size: 18,
+                    weight: .bold,
+                    renderingMode: .hierarchical
                 )
             }
         }
@@ -191,7 +182,10 @@ public struct TagsView: View {
     
     private func swipeEditButton(at index: Int) -> some View {
         RefdsButton {
-            state.selectedTag = state.tags[index]
+            withAnimation {
+                isEditingMode = true
+                state.selectedTag = state.tags[index]
+            }
         } label: {
             RefdsIcon(.squareAndPencil)
         }
@@ -200,7 +194,10 @@ public struct TagsView: View {
     
     private func contextEditButton(at index: Int) -> some View {
         RefdsButton {
-            state.selectedTag = state.tags[index]
+            withAnimation {
+                isEditingMode = true
+                state.selectedTag = state.tags[index]
+            }
         } label: {
             Label(
                 String.localizable(by: .tagsEditTag),

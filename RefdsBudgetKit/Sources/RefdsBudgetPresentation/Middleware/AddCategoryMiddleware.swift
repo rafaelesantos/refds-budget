@@ -8,6 +8,7 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
     
@@ -36,10 +37,10 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         with state: AddCategoryStateProtocol,
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
-        guard let entity = categoryRepository.getCategory(by: state.id) else {
+        guard let model = categoryRepository.getCategory(by: state.id) else {
             return completion(.updateCategroy(state))
         }
-        let adapted = categoryAdapter.adapt(entity: entity)
+        let adapted = categoryAdapter.adapt(model: model)
         completion(.updateCategroy(adapted))
     }
     
@@ -47,7 +48,7 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         _ category: AddCategoryStateProtocol,
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
-        let budgets = categoryRepository.getBudgets(on: category.id)
+        let budgets = budgetRepository.getBudgets(on: category.id)
         
         do {
             try categoryRepository.addCategory(
@@ -55,7 +56,7 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 name: category.name,
                 color: category.color,
                 budgets: budgets.map { $0.id },
-                icon: category.icon
+                icon: category.icon.rawValue
             )
         } catch { return completion(.updateError(.existingCategory))}
         WidgetCenter.shared.reloadAllTimelines()

@@ -3,17 +3,26 @@ import RefdsShared
 import RefdsBudgetDomain
 
 public protocol TagRowViewDataAdapterProtocol {
-    func adapt(entity: BubbleEntity, value: Double?, amount: Int?) -> TagRowViewDataProtocol
+    func adapt(
+        model: TagModelProtocol,
+        value: Double?,
+        amount: Int?
+    ) -> TagRowViewDataProtocol
 }
 
 public final class TagRowViewDataAdapter: TagRowViewDataAdapterProtocol {
     public init() {}
     
-    public func adapt(entity: BubbleEntity, value: Double?, amount: Int?) -> TagRowViewDataProtocol {
+    public func adapt(
+        model: TagModelProtocol,
+        value: Double?,
+        amount: Int?
+    ) -> TagRowViewDataProtocol {
         TagRowViewData(
-            id: entity.id,
-            name: entity.name,
-            color: Color(hex: entity.color),
+            id: model.id,
+            name: model.name,
+            color: Color(hex: model.color),
+            icon: model.icon,
             value: value,
             amount: amount
         )

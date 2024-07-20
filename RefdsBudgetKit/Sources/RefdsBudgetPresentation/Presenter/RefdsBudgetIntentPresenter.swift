@@ -25,15 +25,19 @@ public protocol RefdsBudgetIntentPresenterProtocol {
 public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtocol {
     public static let shared = RefdsBudgetIntentPresenter()
     
+    private let budgetRepository: BudgetUseCase
     private let categoryRepository: CategoryUseCase
     private let transactionsRepository: TransactionUseCase
-    private let tagRepository: BubbleUseCase
+    private let tagRepository: TagUseCase
     
     private init() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
-        categoryRepository = LocalCategoryRepository()
-        transactionsRepository = LocalTransactionRepository()
-        tagRepository = LocalBubbleRepository()
+        let budgetRepository = BudgetRepository()
+        RefdsContainer.register(type: BudgetUseCase.self) { budgetRepository }
+        self.budgetRepository = budgetRepository
+        categoryRepository = CategoryRepository()
+        transactionsRepository = TransactionRepository()
+        tagRepository = TagRepository()
     }
     
     public func getWidgetExpenseTrackerViewData(
@@ -42,8 +46,8 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
         tag: String,
         status: String
     ) -> WidgetExpenseTrackerViewDataProtocol {
-        var budgets: [BudgetEntity] = []
-        var transactions: [TransactionEntity] = []
+        var budgets: [BudgetModelProtocol] = []
+        var transactions: [TransactionModelProtocol] = []
         
         if isFilterByDate {
             transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear).filter {
@@ -54,16 +58,16 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
                     return status == TransactionStatus(rawValue: $0.status)?.description
                 }
             }
-            budgets = categoryRepository.getBudgets(from: .current)
+            budgets = budgetRepository.getBudgets(from: .current)
         } else {
-            transactions = transactionsRepository.getTransactions().filter {
+            transactions = transactionsRepository.getAllTransactions().filter {
                 if status == .localizable(by: .transactionsCategorieAllSelected) {
                     return true
                 } else {
                     return status == TransactionStatus(rawValue: $0.status)?.description
                 }
             }
-            budgets = categoryRepository.getAllBudgets()
+            budgets = budgetRepository.getAllBudgets()
         }
         
         if category != String.localizable(by: .transactionsCategorieAllSelected) {
@@ -101,9 +105,9 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
         tag: String,
         status: String
     ) -> WidgetTransactionsViewDataProtocol {
-        var budgets: [BudgetEntity] = []
-        var categories: [CategoryEntity] = []
-        var transactions: [TransactionEntity] = []
+        var budgets: [BudgetModelProtocol] = []
+        var categories: [CategoryModelProtocol] = []
+        var transactions: [TransactionModelProtocol] = []
         
         if isFilterByDate {
             transactions = transactionsRepository.getTransactions(from: .current, format: .monthYear).filter {
@@ -114,17 +118,17 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
                     return status == TransactionStatus(rawValue: $0.status)?.description
                 }
             }
-            budgets = categoryRepository.getBudgets(from: .current)
+            budgets = budgetRepository.getBudgets(from: .current)
             categories = categoryRepository.getCategories(from: .current)
         } else {
-            transactions = transactionsRepository.getTransactions().filter {
+            transactions = transactionsRepository.getAllTransactions().filter {
                 if status == .localizable(by: .transactionsCategorieAllSelected) {
                     return true
                 } else {
                     return status == TransactionStatus(rawValue: $0.status)?.description
                 }
             }
-            budgets = categoryRepository.getAllBudgets()
+            budgets = budgetRepository.getAllBudgets()
             categories = categoryRepository.getAllCategories()
         }
         
@@ -202,7 +206,7 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
     }
     
     public func getTags() -> [String] {
-        tagRepository.getBubbles().map { $0.name } +
+        tagRepository.getTags().map { $0.name } +
         [String.localizable(by: .transactionsCategorieAllSelected)]
     }
 }

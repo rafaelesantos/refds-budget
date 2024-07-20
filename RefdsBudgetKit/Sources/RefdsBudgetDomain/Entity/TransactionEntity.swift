@@ -5,7 +5,7 @@ import RefdsShared
 import RefdsBudgetResource
 
 @objc(TransactionEntity)
-public class TransactionEntity: NSManagedObject {
+public class TransactionEntity: NSManagedObject, TransactionModelProtocol {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<TransactionEntity> {
         return NSFetchRequest<TransactionEntity>(entityName: "TransactionEntity")
     }
@@ -16,6 +16,23 @@ public class TransactionEntity: NSManagedObject {
     @NSManaged public var id: UUID
     @NSManaged public var message: String
     @NSManaged public var status: String
+    
+    public convenience init(
+        model: TransactionModelProtocol,
+        for context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        amount = model.amount
+        category = model.category
+        date = model.date
+        id = model.id
+        message = model.message
+        status = model.status
+    }
+    
+    public func getEntity(for context: NSManagedObjectContext) -> TransactionEntity {
+        self
+    }
 }
 
 public enum TransactionStatus: String, Codable, CaseIterable {

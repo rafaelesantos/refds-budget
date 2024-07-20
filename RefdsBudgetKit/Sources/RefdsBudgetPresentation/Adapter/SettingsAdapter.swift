@@ -5,7 +5,7 @@ import RefdsBudgetResource
 
 public protocol SettingsAdapterProtocol {
     func adapt(
-        entity: SettingsEntity,
+        model: SettingsModelProtocol,
         currentState: SettingsStateProtocol
     ) -> SettingsStateProtocol
 }
@@ -14,19 +14,19 @@ public final class SettingsAdapter: SettingsAdapterProtocol {
     public init() {}
     
     public func adapt(
-        entity: SettingsEntity,
+        model: SettingsModelProtocol,
         currentState: SettingsStateProtocol
     ) -> SettingsStateProtocol {
-        let colorScheme: ColorScheme? = entity.appearence == .zero ? .none : entity.appearence == 1 ? .light : .dark
-        let tintColor = Color(hex: entity.theme)
-        let icon = Asset(rawValue: entity.icon) ?? .appIcon
+        let colorScheme: ColorScheme? = model.appearence == .zero ? .none : model.appearence == 1 ? .light : .dark
+        let tintColor = Color(hex: model.theme)
+        let icon = Asset(rawValue: model.icon) ?? .appIcon
         var state = currentState
         state.isLoading = false
-        state.isPro = entity.isPro
+        state.isPro = model.isPro
         state.colorScheme = colorScheme
         state.tintColor = tintColor
-        state.hasAuthRequest = entity.hasAuthRequest
-        state.hasPrivacyMode = entity.hasPrivacyMode
+        state.hasAuthRequest = model.hasAuthRequest
+        state.hasPrivacyMode = model.hasPrivacyMode
         state.icon = icon
         return state
     }

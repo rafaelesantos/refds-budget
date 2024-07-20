@@ -8,9 +8,10 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
-    @RefdsInjection private var budgetIntelligence: BudgetIntelligenceProtocol
+    @RefdsInjection private var intelligence: IntelligenceProtocol
     
     public init() {}
     
@@ -46,17 +47,17 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         from date: Date,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
-        let categoryEntities: [(CategoryEntity, Double)] = categoryRepository.getAllCategories().map {
-            let budget = categoryRepository.getBudget(on: $0.id, from: date)?.amount ?? .zero
+        let categoryEntities: [(CategoryModelProtocol, Double)] = categoryRepository.getAllCategories().map {
+            let budget = budgetRepository.getBudget(on: $0.id, from: date)?.amount ?? .zero
             return ($0, budget)
         }.sorted(by: { $0.1 < $1.1 })
         
         let categories = categoryEntities.map { $0.0 }.map { entity in
-            categoryAdapter.adapt(entity: entity)
+            categoryAdapter.adapt(model: entity)
         }
         
         guard let category = state.category ?? categories.first,
-              let budget = categoryRepository.getBudget(on: category.id, from: date) else {
+              let budget = budgetRepository.getBudget(on: category.id, from: date) else {
             return completion(.updateCategories(categories, .init(), .zero, ""))
         }
         
@@ -68,9 +69,8 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         by id: UUID,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
-
-        guard let budget = categoryRepository.getBudget(on: id, from: date) else {
-            let predictValue = budgetIntelligence.predict(date: date, category: id) ?? .zero
+        guard let budget = budgetRepository.getBudget(on: id, from: date) else {
+            let predictValue = intelligence.predict(for: .budgetFromTransactions(date: date, category: id), with: .budgetFromTransactions, on: .high) ?? .zero
             return completion(.updateBudget(.init(), predictValue, "", predictValue != .zero))
         }
         
@@ -86,7 +86,7 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         do {
-            try categoryRepository.addBudget(
+            try budgetRepository.addBudget(
                 id: budget.id,
                 amount: budget.amount,
                 date: budget.month,

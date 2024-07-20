@@ -286,4 +286,9 @@ public enum LocalizableKey: String {
     case importImportHeader
     case importShowLessCategories
     case importShowMoreCategories
+    // MARK: - Intelligence
+    case intelligenceTrainingGettingData
+    case intelligenceTrainingPreparingData
+    case intelligenceTrainingTrainingData
+    case intelligenceTrainingSavingData
 }

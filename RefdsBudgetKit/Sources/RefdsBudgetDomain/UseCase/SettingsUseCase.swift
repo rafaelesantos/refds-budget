@@ -2,7 +2,8 @@ import SwiftUI
 import RefdsBudgetResource
 
 public protocol SettingsUseCase {
-    func getSettings() -> SettingsEntity
+    func getSettings() -> SettingsModelProtocol
+    
     func addSettings(
         theme: Color?,
         icon: Asset,

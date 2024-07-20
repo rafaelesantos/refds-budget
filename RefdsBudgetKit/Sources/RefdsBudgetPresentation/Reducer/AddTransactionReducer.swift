@@ -20,10 +20,12 @@ public final class AddTransactionReducer: RefdsReduxReducerProtocol {
                 state.remaining = category.budget - (category.spend + state.amount)
             }
             state.isLoading = false
+        case let .updateTags(tags):
+            state.tags = tags
         case let .updateError(error):
             state.error = error
             state.isLoading = false
-        case .dismiss, .save, .addCategory, .addBudget, nil:
+        case .dismiss, .save, .addCategory, .fetchTags, .addBudget, nil:
             break
         }
         

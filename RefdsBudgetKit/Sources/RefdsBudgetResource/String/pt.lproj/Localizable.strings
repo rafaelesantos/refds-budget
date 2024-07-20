@@ -181,7 +181,7 @@
 "tagsMenuSelectHeader" = "Selecione uma ou mais tags";
 "tagsRemoveTag" = "Remover tag";
 "tagsEditTag" = "Editar tag";
-"tagsCleanSelected" = "Limpar";
+"tagsCleanSelected" = "Sair do modo de criação/edição";
 "menuCleanSelections" = "Limpar Seleção";
 
 // MARK: - Filter
@@ -323,3 +323,10 @@
 "importImportHeader" = "Importar Dados";
 "importShowLessCategories" = "Exibir Menos Categorias";
 "importShowMoreCategories" = "Exibir Mais Categorias";
+
+// MARK: - Intelligence
+
+"intelligenceTrainingGettingData" = "Obtendo os dados necessários";
+"intelligenceTrainingPreparingData" = "Preparando os dados para o modelo";
+"intelligenceTrainingTrainingData" = "Treinando o modelo regressor";
+"intelligenceTrainingSavingData" = "Salvando o modelo treinado";

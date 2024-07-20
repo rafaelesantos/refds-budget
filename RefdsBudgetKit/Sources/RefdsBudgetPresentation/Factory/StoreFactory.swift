@@ -25,20 +25,22 @@ public class StoreFactory {
     
     private static func registerMockDependencies() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabaseMock() }
-        RefdsContainer.register(type: CategoryUseCase.self) { LocalCategoryRepositoryMock() }
-        RefdsContainer.register(type: TransactionUseCase.self) { LocalTransactionRepositoryMock() }
-        RefdsContainer.register(type: SettingsUseCase.self) { LocalSettingsRepositoryMock() }
-        RefdsContainer.register(type: BubbleUseCase.self) { LocalBubbleRepositoryMock() }
+        RefdsContainer.register(type: BudgetUseCase.self) { BudgetRepositoryMock() }
+        RefdsContainer.register(type: CategoryUseCase.self) { CategoryRepositoryMock() }
+        RefdsContainer.register(type: TransactionUseCase.self) { TransactionRepositoryMock() }
+        RefdsContainer.register(type: SettingsUseCase.self) { SettingsRepositoryMock() }
+        RefdsContainer.register(type: TagUseCase.self) { TagRepositoryMock() }
         registerAdapterDependencies()
         registerAIDependencies()
     }
     
     private static func registerProductionDependencies() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
-        RefdsContainer.register(type: CategoryUseCase.self) { LocalCategoryRepository() }
-        RefdsContainer.register(type: TransactionUseCase.self) { LocalTransactionRepository() }
-        RefdsContainer.register(type: SettingsUseCase.self) { LocalSettingsRepository() }
-        RefdsContainer.register(type: BubbleUseCase.self) { LocalBubbleRepository() }
+        RefdsContainer.register(type: BudgetUseCase.self) { BudgetRepository() }
+        RefdsContainer.register(type: CategoryUseCase.self) { CategoryRepository() }
+        RefdsContainer.register(type: TransactionUseCase.self) { TransactionRepository() }
+        RefdsContainer.register(type: SettingsUseCase.self) { SettingsRepository() }
+        RefdsContainer.register(type: TagUseCase.self) { TagRepository() }
         registerAdapterDependencies()
         registerAIDependencies()
     }
@@ -53,8 +55,7 @@ public class StoreFactory {
     }
     
     private static func registerAIDependencies() {
-        RefdsContainer.register(type: BudgetIntelligenceProtocol.self) { BudgetIntelligence() }
-        RefdsContainer.register(type: CategoryIntelligenceProtocol.self) { CategoryIntelligence() }
+        RefdsContainer.register(type: IntelligenceProtocol.self) { Intelligence() }
     }
     
     private static func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {

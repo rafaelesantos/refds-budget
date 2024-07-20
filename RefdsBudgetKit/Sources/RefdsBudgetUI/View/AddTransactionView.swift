@@ -31,7 +31,7 @@ public struct AddTransactionView: View {
         } set: {
             let newDate = $0.asString(withDateFormat: .monthYear)
             let currentDate = state.date.asString(withDateFormat: .monthYear)
-            if newDate != currentDate { action(.fetchCategories($0, amount)) }
+            if newDate != currentDate || isAI { action(.fetchCategories($0, amount)) }
             state.date = $0
         }
     }
@@ -56,6 +56,7 @@ public struct AddTransactionView: View {
         .refreshable { action(.fetchCategories(state.date, amount)) }
         .toolbar { ToolbarItem { saveButtonToolbar } }
         .onAppear { fetchDataOnAppear() }
+        .onChange(of: description) { action(.fetchTags(description)) }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
@@ -77,27 +78,37 @@ public struct AddTransactionView: View {
                 style: .largeTitle,
                 weight: .bold
             )
+            .padding(.top)
         }
     }
     
     private var sectionDescription: some View {
         RefdsSection {
-            #if os(macOS)
-            RefdsTextField(
-                .localizable(by: .addTransactionDescriptionPrompt),
-                text: $description,
-                axis: .vertical,
-                style: .callout
-            )
-            #else
-            RefdsTextField(
-                .localizable(by: .addTransactionDescriptionPrompt),
-                text: $description,
-                axis: .vertical,
-                style: .callout,
-                textInputAutocapitalization: .sentences
-            )
-            #endif
+            ZStack(alignment: .bottomTrailing) {
+#if os(macOS)
+                RefdsTextField(
+                    .localizable(by: .addTransactionDescriptionPrompt),
+                    text: $description,
+                    axis: .vertical,
+                    style: .callout
+                )
+#else
+                RefdsTextField(
+                    .localizable(by: .addTransactionDescriptionPrompt),
+                    text: $description,
+                    axis: .vertical,
+                    style: .callout,
+                    textInputAutocapitalization: .sentences
+                )
+#endif
+                RefdsText(
+                    description.count.asString,
+                    style: .caption2,
+                    color: description.count < 40 ? .green : description.count < 80 ? .orange : .red,
+                    weight: .bold
+                )
+                .opacity(0.5)
+            }
         } header: {
             RefdsText(
                 .localizable(by: .addBudgetDescriptionHeader),
@@ -105,16 +116,17 @@ public struct AddTransactionView: View {
                 color: .secondary
             )
         } footer: {
-            HStack {
-                Spacer()
-                RefdsText(
-                    .localizable(by: .addTransactionDescriptionCount, with: description.count),
-                    style: .footnote,
-                    color: description.count < 40 ? .green : description.count < 80 ? .orange : .red,
-                    weight: .bold
-                )
-                .opacity(0.5)
+            ScrollView(.horizontal) {
+                HStack(spacing: .padding(.extraSmall)) {
+                    ForEach(state.tags, id: \.id) {
+                        tagItemView(for: $0)
+                    }
+                }
+                .padding(.horizontal, 40)
             }
+            .scrollIndicators(.never)
+            .padding(.horizontal, -40)
+            .padding(.top, 5)
         }
     }
     
@@ -148,12 +160,6 @@ public struct AddTransactionView: View {
             if !state.isLoading {
                 if !state.isEmptyCategories, !state.isEmptyBudgets {
                     rowCategories
-                    
-                    if isAI {
-                        AISuggestionButton {
-                            action(.fetchCategories(state.date, amount))
-                        }
-                    }
                 }
                 
                 if state.isEmptyCategories {
@@ -180,6 +186,8 @@ public struct AddTransactionView: View {
                 
                 Spacer(minLength: .zero)
             }
+        } footer: {
+            AISuggestionLabel(isEnable: isAI)
         }
     }
     
@@ -281,6 +289,27 @@ public struct AddTransactionView: View {
                 renderingMode: .hierarchical
             )
         }
+    }
+    
+    private func tagItemView(for tag: TagRowViewDataProtocol) -> some View {
+        HStack(spacing: 5) {
+            RefdsIcon(
+                tag.icon,
+                color: tag.color,
+                size: .padding(.small)
+            )
+            .frame(height: .padding(.small))
+            
+            RefdsText(
+                tag.name.capitalized,
+                style: .caption,
+                color: tag.color
+            )
+        }
+        .padding(.vertical, 3)
+        .padding(.horizontal, 5)
+        .background(tag.color.opacity(0.2))
+        .clipShape(.rect(cornerRadius: 4))
     }
     
     private var canSave: Bool {

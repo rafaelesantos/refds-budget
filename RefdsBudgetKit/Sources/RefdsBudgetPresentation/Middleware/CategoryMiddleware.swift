@@ -8,6 +8,7 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
@@ -67,14 +68,14 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
             return completion(.updateError(.notFoundCategory))
         }
         
-        var budgetsEntity: [BudgetEntity] = []
-        var transactionsEntity: [TransactionEntity] = []
+        var budgetsEntity: [BudgetModelProtocol] = []
+        var transactionsEntity: [TransactionModelProtocol] = []
         
-        if let date = date, let budgetEntity = categoryRepository.getBudget(on: categoryId, from: date) {
+        if let date = date, let budgetEntity = budgetRepository.getBudget(on: categoryId, from: date) {
             budgetsEntity += [budgetEntity]
             transactionsEntity = transactionRepository.getTransactions(on: categoryId, from: date, format: .monthYear)
         } else if date == nil {
-            budgetsEntity = categoryRepository.getBudgets(on: categoryId)
+            budgetsEntity = budgetRepository.getBudgets(on: categoryId)
             transactionsEntity = transactionRepository.getTransactions(on: categoryId)
         }
         
@@ -93,13 +94,13 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 status != .pending && status != .cleared
             }.map { $0.amount }.reduce(.zero, +)
             let percentage = transactionsAmount / (budget.amount == .zero ? 1 : budget.amount)
-            return budgetRowViewDataAdapter.adapt(budgetEntity: budget, percentage: percentage)
+            return budgetRowViewDataAdapter.adapt(model: budget, percentage: percentage)
         }
         
         let transactions = transactionsEntity.map {
             transactionRowViewDataAdapter.adapt(
-                transactionEntity: $0,
-                categoryEntity: categoryEntity
+                model: $0,
+                categoryModel: categoryEntity
             )
         }
         
@@ -151,17 +152,16 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (CategoryAction) -> Void
     ) {
         let categories = categoryRepository.getAllCategories().map {
-            categoryAdapter.adapt(entity: $0)
+            categoryAdapter.adapt(model: $0)
         }
         
         if let categoryEntity = categoryRepository.getCategory(by: categoryId) {
-            let entity = categoryRepository.getBudget(by: budgetId)
+            let entity = budgetRepository.getBudget(by: budgetId)
             let state = budgetAdapter.adapt(
-                entity: entity,
-                category: categoryAdapter.adapt(entity: categoryEntity),
+                model: entity,
+                category: categoryAdapter.adapt(model: categoryEntity),
                 categories: categories
             )
-            print(state)
             completion(.editBudget(state, date))
         } else { completion(.updateError(.notFoundCategory)) }
     }
@@ -173,7 +173,7 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         guard let category = categoryRepository.getCategory(by: id) else {
             return completion(.updateError(.notFoundCategory))
         }
-        completion(.editCategory(categoryAdapter.adapt(entity: category)))
+        completion(.editCategory(categoryAdapter.adapt(model: category)))
     }
     
     private func fetchTransactionForEdit(
@@ -185,12 +185,12 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         let categories: [CategoryRowViewDataProtocol] = categoryRepository.getCategories(from: transaction.date.date).compactMap {
-            guard let budget = categoryRepository.getBudget(on: $0.id, from: transaction.date.date) else { return nil }
+            guard let budget = budgetRepository.getBudget(on: $0.id, from: transaction.date.date) else { return nil }
             let transactions = transactionRepository.getTransactions(on: $0.id, from: transaction.date.date, format: .dayMonthYear).map { $0.amount }
             let spend = transactions.reduce(.zero, +)
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(
-                entity: $0,
+                model: $0,
                 budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budget.amount,
@@ -225,12 +225,12 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         by id: UUID,
         on completion: @escaping (CategoryAction) -> Void
     ) {
-        guard let budgetEntity = categoryRepository.getBudget(by: id) else {
+        guard let budgetEntity = budgetRepository.getBudget(by: id) else {
             return completion(.updateError(.notFoundBudget))
         }
         
         do {
-            try categoryRepository.removeBudget(id: budgetEntity.id)
+            try budgetRepository.removeBudget(id: budgetEntity.id)
             WidgetCenter.shared.reloadAllTimelines()
             completion(.fetchData)
         } catch { 

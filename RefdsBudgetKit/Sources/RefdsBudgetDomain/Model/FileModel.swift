@@ -1,22 +1,28 @@
 import Foundation
 import RefdsShared
 
-public protocol FileModelProtocol: RefdsModel {
-    var budgets: [BudgetModel] { get set }
-    var categories: [CategoryModel] { get set }
-    var transactions: [TransactionModel] { get set }
+public protocol FileModelProtocol {
+    var budgets: [BudgetModelProtocol] { get set }
+    var categories: [CategoryModelProtocol] { get set }
+    var transactions: [TransactionModelProtocol] { get set }
     var url: URL? { get }
 }
 
-public struct FileModel: FileModelProtocol {
-    public var budgets: [BudgetModel]
-    public var categories: [CategoryModel]
-    public var transactions: [TransactionModel]
+public struct FileModel: FileModelProtocol, RefdsModel {
+    public var budgets: [BudgetModelProtocol]
+    public var categories: [CategoryModelProtocol]
+    public var transactions: [TransactionModelProtocol]
+    
+    private enum CodingKeys: String, CodingKey {
+        case budgets
+        case categories
+        case transactions
+    }
     
     public init(
-        budgets: [BudgetModel],
-        categories: [CategoryModel],
-        transactions: [TransactionModel]
+        budgets: [BudgetModelProtocol],
+        categories: [CategoryModelProtocol],
+        transactions: [TransactionModelProtocol]
     ) {
         self.budgets = budgets
         self.categories = categories
@@ -31,7 +37,7 @@ public struct FileModel: FileModelProtocol {
         else { return nil }
         
         if !FileManager.default.fileExists(atPath: documents.path, isDirectory: nil) {
-            do { 
+            do {
                 try FileManager.default.createDirectory(
                     at: documents,
                     withIntermediateDirectories: true,
@@ -45,5 +51,19 @@ public struct FileModel: FileModelProtocol {
             try encoded.write(to: path, options: .atomicWrite)
             return path
         } catch { return nil }
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        budgets = try values.decode([BudgetModel].self, forKey: .budgets)
+        categories = try values.decode([CategoryModel].self, forKey: .categories)
+        transactions = try values.decode([TransactionModel].self, forKey: .transactions)
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(budgets.compactMap { $0 as? BudgetModel }, forKey: .budgets)
+        try container.encode(categories.compactMap { $0 as? CategoryModel }, forKey: .categories)
+        try container.encode(transactions.compactMap { $0 as? TransactionModel }, forKey: .transactions)
     }
 }

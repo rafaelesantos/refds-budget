@@ -4,9 +4,9 @@ import RefdsShared
 import RefdsBudgetDomain
 
 public protocol CategoryAdapterProtocol {
-    func adapt(entity: CategoryEntity) -> AddCategoryStateProtocol
+    func adapt(model: CategoryModelProtocol) -> AddCategoryStateProtocol
     func adapt(
-        entity: CategoryEntity,
+        model: CategoryModelProtocol,
         budgetId: UUID,
         budgetDescription: String?,
         budget: Double,
@@ -19,17 +19,17 @@ public protocol CategoryAdapterProtocol {
 public final class CategoryAdapter: CategoryAdapterProtocol {
     public init() {}
     
-    public func adapt(entity: CategoryEntity) -> AddCategoryStateProtocol {
+    public func adapt(model: CategoryModelProtocol) -> AddCategoryStateProtocol {
         AddCategoryState(
-            id: entity.id,
-            name: entity.name,
-            color: Color(hex: entity.color),
-            icon: entity.icon
+            id: model.id,
+            name: model.name,
+            color: Color(hex: model.color),
+            icon: model.icon
         )
     }
     
     public func adapt(
-        entity: CategoryEntity,
+        model: CategoryModelProtocol,
         budgetId: UUID,
         budgetDescription: String?,
         budget: Double,
@@ -38,12 +38,12 @@ public final class CategoryAdapter: CategoryAdapterProtocol {
         spend: Double
     ) -> CategoryRowViewDataProtocol {
         CategoryRowViewData(
-            categoryId: entity.id,
+            categoryId: model.id,
             budgetId: budgetId,
-            icon: entity.icon,
-            name: entity.name,
+            icon: model.icon,
+            name: model.name,
             description: budgetDescription,
-            color: Color(hex: entity.color),
+            color: Color(hex: model.color),
             budget: budget,
             percentage: percentage,
             transactionsAmount: transactionsAmount,

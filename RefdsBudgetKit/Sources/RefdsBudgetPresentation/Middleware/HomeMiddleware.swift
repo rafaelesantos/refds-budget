@@ -7,7 +7,8 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
-    @RefdsInjection private var tagRepository: BubbleUseCase
+    @RefdsInjection private var tagRepository: TagUseCase
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
@@ -39,20 +40,20 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
         state: HomeStateProtocol,
         on completion: @escaping (HomeAction) -> Void
     ) {
-        var budgetEntities: [BudgetEntity] = []
-        var categoryEntities: [CategoryEntity] = []
-        var transactionEntities: [TransactionEntity] = []
-        let tagEntities = tagRepository.getBubbles()
+        var budgetEntities: [BudgetModelProtocol] = []
+        var categoryEntities: [CategoryModelProtocol] = []
+        var transactionEntities: [TransactionModelProtocol] = []
+        let tagEntities = tagRepository.getTags()
         
         if state.isFilterEnable {
             let date = state.date
             transactionEntities = transactionRepository.getTransactions(from: date, format: .monthYear)
             categoryEntities = categoryRepository.getCategories(from: date)
-            budgetEntities = categoryRepository.getBudgets(from: date)
+            budgetEntities = budgetRepository.getBudgets(from: date)
         } else {
-            transactionEntities = transactionRepository.getTransactions()
+            transactionEntities = transactionRepository.getAllTransactions()
             categoryEntities = categoryRepository.getAllCategories()
-            budgetEntities = categoryRepository.getAllBudgets()
+            budgetEntities = budgetRepository.getAllBudgets()
         }
         
         if !state.selectedCategories.isEmpty {
@@ -118,9 +119,9 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func getRemaining(
-        for categoryEntities: [CategoryEntity],
-        on transactionEntities: [TransactionEntity],
-        with budgetEntities: [BudgetEntity],
+        for categoryEntities: [CategoryModelProtocol],
+        on transactionEntities: [TransactionModelProtocol],
+        with budgetEntities: [BudgetModelProtocol],
         status: Set<String>
     ) -> [CategoryRowViewDataProtocol] {
         categoryEntities.compactMap { entity in
@@ -140,7 +141,7 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
             let percentage = spend / (budgetAmount == .zero ? 1 : budgetAmount)
             
             return categoryAdapter.adapt(
-                entity: entity,
+                model: entity,
                 budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budgetAmount,
@@ -152,8 +153,8 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func getTagsRow(
-        for transactionEntities: [TransactionEntity],
-        with tagEntities: [BubbleEntity],
+        for transactionEntities: [TransactionModelProtocol],
+        with tagEntities: [TagModelProtocol],
         status: Set<String>
     ) -> [TagRowViewDataProtocol] {
         tagEntities.compactMap { tag in
@@ -172,7 +173,7 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 }
             }.map { $0.amount }
             return tagRowViewDataAdapter.adapt(
-                entity: tag,
+                model: tag,
                 value: value.reduce(.zero, +),
                 amount: value.count
             )
@@ -180,8 +181,8 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func getLargestPurchase(
-        on transactionEntities: [TransactionEntity],
-        with categoryEntities: [CategoryEntity],
+        on transactionEntities: [TransactionModelProtocol],
+        with categoryEntities: [CategoryModelProtocol],
         status: Set<String>
     ) -> [TransactionRowViewDataProtocol] {
         let transactionEntities = transactionEntities.filter {
@@ -195,14 +196,14 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
         return transactionEntities.compactMap { entity in
             guard let category = categoryEntities.first(where: { $0.id == entity.category }) else { return nil }
             return transactionRowViewDataAdapter.adapt(
-                transactionEntity: entity,
-                categoryEntity: category
+                model: entity,
+                categoryModel: category
             )
         }
     }
     
     private func getPendingCleared(
-        on transactionEntities: [TransactionEntity]
+        on transactionEntities: [TransactionModelProtocol]
     ) -> PendingClearedSectionViewDataProtocol {
         let pendings = transactionEntities.filter {
             let status = TransactionStatus(rawValue: $0.status)

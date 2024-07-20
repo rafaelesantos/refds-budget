@@ -35,7 +35,7 @@ public struct BalanceRowView: View {
                     }
                 } label: {
                     Gauge(
-                        value: percentage,
+                        value: percentage > 1 ? 1 : percentage,
                         in: 0 ... 1
                     ) { EmptyView() } currentValueLabel: {
                         RefdsText(

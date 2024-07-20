@@ -8,7 +8,8 @@ import RefdsBudgetResource
 import WidgetKit
 
 public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
-    @RefdsInjection private var tagRepository: BubbleUseCase
+    @RefdsInjection private var tagRepository: TagUseCase
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
@@ -62,15 +63,15 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
-        var transactions: [TransactionEntity] = []
-        var categories: [CategoryEntity] = []
-        let tags = tagRepository.getBubbles().map { $0.name }
+        var transactions: [TransactionModelProtocol] = []
+        var categories: [CategoryModelProtocol] = []
+        let tags = tagRepository.getTags().map { $0.name }
         
         if let date = date {
             transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
             categories = categoryRepository.getCategories(from: date)
         } else {
-            transactions = transactionRepository.getTransactions()
+            transactions = transactionRepository.getAllTransactions()
             categories = categoryRepository.getAllCategories()
         }
         
@@ -113,8 +114,8 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         let transactionsAdapted: [TransactionRowViewDataProtocol] = transactions.compactMap {
             guard let category = categoryRepository.getCategory(by: $0.category) else { return nil }
             return transactionRowViewDataAdapter.adapt(
-                transactionEntity: $0,
-                categoryEntity: category
+                model: $0,
+                categoryModel: category
             )
         }
         
@@ -160,12 +161,12 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         }
         
         let categories: [CategoryRowViewDataProtocol] = categoryRepository.getCategories(from: transaction.date.date).compactMap {
-            guard let budget = categoryRepository.getBudget(on: $0.id, from: transaction.date.date) else { return nil }
+            guard let budget = budgetRepository.getBudget(on: $0.id, from: transaction.date.date) else { return nil }
             let transactions = transactionRepository.getTransactions(on: $0.id, from: transaction.date.date, format: .dayMonthYear).map { $0.amount }
             let spend = transactions.reduce(.zero, +)
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(
-                entity: $0,
+                model: $0,
                 budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budget.amount,

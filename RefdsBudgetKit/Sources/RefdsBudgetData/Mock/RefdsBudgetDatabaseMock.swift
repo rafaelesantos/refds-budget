@@ -74,7 +74,8 @@ public final class RefdsBudgetDatabaseMock: RefdsBudgetDatabaseProtocol {
                 attributes: [
                     .attribute(name: "id", type: .UUIDAttributeType, isOptional: true),
                     .attribute(name: "color", type: .stringAttributeType, isOptional: true),
-                    .attribute(name: "name", type: .stringAttributeType, isOptional: true)
+                    .attribute(name: "name", type: .stringAttributeType, isOptional: true),
+                    .attribute(name: "icon", type: .stringAttributeType, isOptional: true)
                 ]
             ),
         ])

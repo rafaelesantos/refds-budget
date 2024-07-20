@@ -181,7 +181,7 @@
 "tagsMenuSelectHeader" = "Select one or more tags";
 "tagsRemoveTag" = "Remove tag";
 "tagsEditTag" = "Edit tag";
-"tagsCleanSelected" = "Clear";
+"tagsCleanSelected" = "Exit creation/edit mode";
 "menuCleanSelections" = "Clear Selection";
 
 // MARK: - Filter
@@ -322,3 +322,10 @@
 "importImportHeader" = "Import Data";
 "importShowLessCategories" = "Show Less Categories";
 "importShowMoreCategories" = "Show More Categories";
+
+// MARK: - Intelligence
+
+"intelligenceTrainingGettingData" = "Getting the necessary data";
+"intelligenceTrainingPreparingData" = "Preparing data for the model";
+"intelligenceTrainingTrainingData" = "Training the regression model";
+"intelligenceTrainingSavingData" = "Saving the trained model";

@@ -2,20 +2,12 @@ import Foundation
 import SwiftUI
 
 public protocol CategoryUseCase {
-    func getAllCategories() -> [CategoryEntity]
-    func getAllBudgets() -> [BudgetEntity]
+    func getAllCategories() -> [CategoryModelProtocol]
+    func getCategories(from date: Date) -> [CategoryModelProtocol]
     
-    func getCategories(from date: Date) -> [CategoryEntity]
-    func getCategory(by id: UUID) -> CategoryEntity?
-    
-    func getBudget(by id: UUID) -> BudgetEntity?
-    func getBudgets(by ids: [UUID]) -> [BudgetEntity]
-    func getBudgets(from date: Date) -> [BudgetEntity]
-    func getBudgets(on category: UUID) -> [BudgetEntity]
-    func getBudget(on category: UUID, from date: Date) -> BudgetEntity?
+    func getCategory(by id: UUID) -> CategoryModelProtocol?
     
     func removeCategory(id: UUID) throws
-    func removeBudget(id: UUID) throws
     
     func addCategory(
         id: UUID,
@@ -23,13 +15,5 @@ public protocol CategoryUseCase {
         color: Color,
         budgets: [UUID],
         icon: String
-    ) throws
-    
-    func addBudget(
-        id: UUID,
-        amount: Double,
-        date: Date,
-        message: String?,
-        category: UUID
     ) throws
 }

@@ -24,7 +24,7 @@
       "location" : "https://github.com/rafaelesantos/refds-design-patterns.git",
       "state" : {
         "branch" : "main",
-        "revision" : "8bf6469eeae4243e35bdb2bd95ec231a2c5b21e5"
+        "revision" : "4dda22e3461397bc5eff021d66dad5131d80c4fd"
       }
     },
     {
@@ -51,7 +51,7 @@
       "location" : "https://github.com/rafaelesantos/refds-network.git",
       "state" : {
         "branch" : "main",
-        "revision" : "b1581783a4709b39f13cad219cab36061ca3dd41"
+        "revision" : "a27d27b0667d5812324c3da381d96511b864cd7a"
       }
     },
     {
@@ -69,7 +69,7 @@
       "location" : "https://github.com/rafaelesantos/refds-shared.git",
       "state" : {
         "branch" : "main",
-        "revision" : "28c312ec6dbfdc701869597d1d11cb171f43e569"
+        "revision" : "0d470710da662310f03213252489f102111142d5"
       }
     },
     {

@@ -114,24 +114,34 @@ public struct TagsSectionView: View {
     }
     
     private var chartView: some View {
-        Chart(tags, id: \.id) {
-            SectorMark(
-                angle: .value("y", $0.isAnimate ? ($0.value ?? .zero) : .zero),
-                innerRadius: .ratio(selectedTag?.id == $0.id ? 0.4 : 0.5),
-                outerRadius: .ratio(selectedTag?.id == $0.id ? 1 : 0.9),
-                angularInset: 3
+        ZStack {
+            Chart(tags, id: \.id) {
+                SectorMark(
+                    angle: .value("y", $0.isAnimate ? ($0.value ?? .zero) : .zero),
+                    innerRadius: .ratio(selectedTag?.id == $0.id ? 0.4 : 0.5),
+                    outerRadius: .ratio(selectedTag?.id == $0.id ? 1 : 0.9),
+                    angularInset: 3
+                )
+                .cornerRadius(5)
+                .foregroundStyle(by: .value("x", $0.name))
+                .opacity(selectedTag?.id == $0.id ? 1 : 0.8)
+            }
+            .chartForegroundStyleScale(
+                domain: tags.map  { $0.name },
+                range: tags.map { $0.color }
             )
-            .cornerRadius(5)
-            .foregroundStyle(by: .value("x", $0.name))
-            .opacity(selectedTag?.id == $0.id ? 1 : 0.8)
+            .chartLegend(.hidden)
+            .chartAngleSelection(value: bindingAngleSelection)
+            .frame(height: 250)
+            
+            if let selectedTag = selectedTag {
+                RefdsIcon(
+                    selectedTag.icon,
+                    color: selectedTag.color,
+                    size: 30
+                )
+            }
         }
-        .chartForegroundStyleScale(
-            domain: tags.map  { $0.name },
-            range: tags.map { $0.color }
-        )
-        .chartLegend(.hidden)
-        .chartAngleSelection(value: bindingAngleSelection)
-        .frame(height: 250)
     }
     
     private var rowManageTagsView: some View {

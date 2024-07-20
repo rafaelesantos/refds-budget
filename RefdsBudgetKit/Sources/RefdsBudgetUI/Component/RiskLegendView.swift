@@ -86,7 +86,7 @@ public struct RiskLegendView: View {
                 outerRadius: .ratio(selectedLegend?.2 == $0.2 ? 1 : 0.9),
                 angularInset: 4
             )
-            .cornerRadius(3)
+            .cornerRadius(1)
             .foregroundStyle(by: .value("x", $0.2))
             .opacity(selectedLegend?.2 == $0.2 ? 1 : 0.8)
         }

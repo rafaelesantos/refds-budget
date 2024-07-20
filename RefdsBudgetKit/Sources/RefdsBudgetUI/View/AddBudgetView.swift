@@ -197,10 +197,9 @@ public struct AddBudgetView: View {
                 }
             } label: {
                 HStack(spacing: .padding(.medium)) {
-                    if let category = state.category,
-                       let icon = RefdsIconSymbol(rawValue: category.icon) {
+                    if let category = state.category {
                         RefdsIcon(
-                            icon,
+                            category.icon,
                             color: category.color,
                             size: .padding(.medium)
                         )

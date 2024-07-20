@@ -8,16 +8,6 @@ public struct AddCategoryView: View {
     @Binding private var state: AddCategoryStateProtocol
     private let action: (AddCategoryAction) -> Void
     
-    @State private var iconPrefix = 15
-    
-    private var bindingName: Binding<String> {
-        Binding {
-            state.name
-        } set: {
-            state.name = $0
-        }
-    }
-    
     public init(
         state: Binding<AddCategoryStateProtocol>,
         action: @escaping (AddCategoryAction) -> Void
@@ -29,8 +19,8 @@ public struct AddCategoryView: View {
     public var body: some View {
         List {
             sectionNameView
-            sectionColorsView
-            sectionIconsView
+            ColorFormView(color: $state.color)
+            IconsFormView(icon: $state.icon, color: state.color)
             sectionSaveButtonView
         }
         .refdsDismissesKeyboad()
@@ -44,7 +34,7 @@ public struct AddCategoryView: View {
             #if os(macOS)
             RefdsTextField(
                 .localizable(by: .addCategoryInputName),
-                text: bindingName,
+                text: $state.name,
                 axis: .vertical,
                 style: .largeTitle,
                 color: .primary,
@@ -54,7 +44,7 @@ public struct AddCategoryView: View {
             #else
             RefdsTextField(
                 .localizable(by: .addCategoryInputName),
-                text: bindingName,
+                text: $state.name,
                 axis: .vertical,
                 style: .largeTitle,
                 color: .primary,
@@ -66,129 +56,7 @@ public struct AddCategoryView: View {
         }
     }
     
-    private var sectionColorsView: some View {
-        RefdsSection {
-            rowColors
-            rowHexColor
-        } header: {
-            RefdsText(
-                .localizable(by: .addCategoryColorHeader),
-                style: .footnote,
-                color: .secondary
-            )
-        }
-    }
     
-    private var rowColors: some View {
-        HStack(spacing: .padding(.medium)) {
-            BubbleColorView(color: state.color, isSelected: true)
-            Divider().frame(height: 30)
-            ScrollView(.horizontal) {
-                HStack {
-                    let colors = Color.Default.allCases.sorted(by: { $0.id < $1.id })
-                    ForEach(colors, id: \.self) { color in
-                        RefdsButton {
-                            state.color = color.rawValue
-                        } label: {
-                            BubbleColorView(color: color.rawValue)
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-            }
-            .scrollIndicators(.never)
-            .padding(.horizontal, -20)
-        }
-    }
-    
-    private var rowHexColor: some View {
-        ColorPicker(selection: $state.color) {
-            RefdsText(
-                .localizable(by: .addCategoryInputHex),
-                style: .callout
-            )
-        }
-    }
-    
-    private var sectionIconsView: some View {
-        RefdsSection {
-            rowSelectedIcon
-            rowIcons
-            rowShowMoreIcons
-        } header: {
-            RefdsText(
-                .localizable(by: .addCategoryIconsHeader),
-                style: .footnote,
-                color: .secondary
-            )
-        }
-    }
-    
-    private var rowSelectedIcon: some View {
-        HStack {
-            RefdsText(
-                state.icon.replacingOccurrences(of: ".", with: " ").capitalized,
-                style: .callout,
-                color: .secondary
-            )
-            
-            Spacer(minLength: .zero)
-            
-            if let icon = RefdsIconSymbol(rawValue: state.icon) {
-                RefdsIconRow(
-                    icon,
-                    color: state.color
-                )
-            }
-        }
-    }
-    
-    private var rowIcons: some View {
-        LazyVGrid(columns: iconsLayoutColumns) {
-            let icons = RefdsIconSymbol.categoryIcons.prefix(iconPrefix)
-            let selectedIcon = RefdsIconSymbol(rawValue: state.icon)
-            ForEach(icons, id: \.self) { icon in
-                RefdsButton {
-                    state.icon = icon.rawValue
-                } label: {
-                    RefdsIcon(
-                        icon,
-                        color: icon == selectedIcon ? state.color : .primary,
-                        size: 18,
-                        renderingMode: .hierarchical
-                    )
-                    .frame(width: 38, height: 38)
-                    .background(icon == selectedIcon ? state.color.opacity(0.2) : Color.secondary.opacity(0.1))
-                    .clipShape(.rect(cornerRadius: 8))
-                    .padding(.padding(.extraSmall))
-                    .animation(.default, value: state.icon)
-                }
-                .buttonStyle(.plain)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private var rowShowMoreIcons: some View {
-        let max = RefdsIconSymbol.categoryIcons.count
-        let isMax = iconPrefix == max
-        RefdsButton {
-            withAnimation { 
-                iconPrefix = isMax ? 15 : max
-            }
-        } label: {
-            HStack(spacing: .padding(.medium)) {
-                RefdsText(isMax ? .localizable(by: .addCategoryShowLessIcons) : .localizable(by: .addCategoryShowMoreIcons), style: .callout)
-                Spacer(minLength: .zero)
-                RefdsText((isMax ? 15 : max).asString, style: .callout, color: .secondary)
-                RefdsIcon(isMax ? .chevronUp : .chevronDown, color: .placeholder)
-            }
-        }
-    }
-    
-    private var iconsLayoutColumns: [GridItem] {
-        [.init(.adaptive(minimum: 50, maximum: 100))]
-    }
     
     private var sectionSaveButtonView: some View {
         RefdsSection {} footer: {

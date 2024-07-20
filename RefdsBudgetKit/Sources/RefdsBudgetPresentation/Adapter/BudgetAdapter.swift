@@ -5,7 +5,7 @@ import RefdsBudgetDomain
 
 public protocol BudgetAdapterProtocol {
     func adapt(
-        entity: BudgetEntity?,
+        model: BudgetModelProtocol?,
         category: AddCategoryStateProtocol?,
         categories: [AddCategoryStateProtocol]
     ) -> AddBudgetStateProtocol
@@ -15,15 +15,15 @@ public final class BudgetAdapter: BudgetAdapterProtocol {
     public init() {}
     
     public func adapt(
-        entity: BudgetEntity?,
+        model: BudgetModelProtocol?,
         category: AddCategoryStateProtocol?,
         categories: [AddCategoryStateProtocol]
     ) -> AddBudgetStateProtocol {
         AddBudgetState(
-            id: entity?.id ?? .init(),
-            amount: entity?.amount ?? .zero,
-            description: entity?.message ?? "",
-            month: entity?.date.date ?? .current,
+            id: model?.id ?? .init(),
+            amount: model?.amount ?? .zero,
+            description: model?.message ?? "",
+            month: model?.date.date ?? .current,
             category: category,
             categories: categories,
             error: nil

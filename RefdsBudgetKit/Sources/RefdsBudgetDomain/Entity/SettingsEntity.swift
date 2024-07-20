@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 @objc(SettingsEntity)
-public class SettingsEntity: NSManagedObject {
+public class SettingsEntity: NSManagedObject, SettingsModelProtocol {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<SettingsEntity> {
         return NSFetchRequest<SettingsEntity>(entityName: "SettingsEntity")
     }
@@ -22,4 +22,30 @@ public class SettingsEntity: NSManagedObject {
     @NSManaged public var currentBreakingNotificationAppears: [UUID]
     @NSManaged public var liveActivity: UUID
     @NSManaged public var isPro: Bool
+    
+    public convenience init(
+        model: SettingsModelProtocol,
+        for context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        date = model.date
+        theme = model.theme
+        icon = model.icon
+        isAnimatedIcon = model.isAnimatedIcon
+        appearence = model.appearence
+        hasAuthRequest = model.hasAuthRequest
+        hasPrivacyMode = model.hasPrivacyMode
+        notifications = model.notifications
+        reminderNotification = model.reminderNotification
+        warningNotification = model.warningNotification
+        breakingNotification = model.breakingNotification
+        currentWarningNotificationAppears = model.currentWarningNotificationAppears
+        currentBreakingNotificationAppears = model.currentBreakingNotificationAppears
+        liveActivity = model.liveActivity
+        isPro = model.isPro
+    }
+    
+    public func getEntity(for context: NSManagedObjectContext) -> SettingsEntity {
+        self
+    }
 }

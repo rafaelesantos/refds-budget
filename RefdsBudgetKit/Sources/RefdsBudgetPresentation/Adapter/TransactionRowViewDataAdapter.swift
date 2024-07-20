@@ -5,8 +5,8 @@ import RefdsBudgetDomain
 
 public protocol TransactionRowViewDataAdapterProtocol {
     func adapt(
-        transactionEntity: TransactionEntity,
-        categoryEntity: CategoryEntity
+        model: TransactionModelProtocol,
+        categoryModel: CategoryModelProtocol
     ) -> TransactionRowViewDataProtocol
 }
 
@@ -14,17 +14,17 @@ public final class TransactionRowViewDataAdapter: TransactionRowViewDataAdapterP
     public init () {}
     
     public func adapt(
-        transactionEntity: TransactionEntity,
-        categoryEntity: CategoryEntity
+        model: TransactionModelProtocol,
+        categoryModel: CategoryModelProtocol
     ) -> TransactionRowViewDataProtocol {
         TransactionRowViewData(
-            id: transactionEntity.id,
-            icon: categoryEntity.icon,
-            color: Color(hex: categoryEntity.color),
-            amount: transactionEntity.amount,
-            description: transactionEntity.message,
-            date: transactionEntity.date.date,
-            status: TransactionStatus(rawValue: transactionEntity.status) ?? .spend
+            id: model.id,
+            icon: categoryModel.icon,
+            color: Color(hex: categoryModel.color),
+            amount: model.amount,
+            description: model.message,
+            date: model.date.date,
+            status: TransactionStatus(rawValue: model.status) ?? .spend
         )
     }
 }

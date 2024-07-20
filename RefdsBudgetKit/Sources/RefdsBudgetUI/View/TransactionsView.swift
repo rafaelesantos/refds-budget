@@ -47,7 +47,9 @@ public struct TransactionsView: View {
         .onChange(of: state.searchText) { reloadData() }
         .onChange(of: setStrings) { reloadData() }
         .onChange(of: state.page) {
-            state.transactions = []
+            if let lastOne = state.transactions.last?.last {
+                state.transactions = [[lastOne]]
+            }
             reloadData()
         }
         .toolbar { ToolbarItemGroup { moreButton } }
@@ -131,7 +133,10 @@ public struct TransactionsView: View {
     }
     
     private var sectionTransactions: some View {
-        TransactionSectionsView(viewData: state.transactions) {
+        TransactionSectionsView(
+            viewData: state.transactions,
+            isLoading: state.isLoading
+        ) {
             action(.fetchTransactionForEdit($0.id))
         } remove: { id in
             action(.removeTransaction(id))

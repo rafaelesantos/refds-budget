@@ -1,4 +1,5 @@
 import Foundation
+import WidgetKit
 import RefdsInjection
 import RefdsBudgetDomain
 import RefdsBudgetData
@@ -6,6 +7,7 @@ import RefdsBudgetResource
 
 public final class FileFactory {
     @RefdsInjection private var database: RefdsBudgetDatabaseProtocol
+    @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var transactionRepository: TransactionUseCase
     
@@ -78,53 +80,41 @@ public final class FileFactory {
         return file
     }
     
-    public func importData(from file: FileModel, on url: URL) throws {
+    public func importData(from file: FileModelProtocol, on url: URL) throws {
         var categories: [CategoryEntity] = []
-        file.categories.forEach {
-            let category = categoryRepository.getCategory(by: $0.id) ?? CategoryEntity(context: database.viewContext)
-            category.id = $0.id
-            category.name = $0.name.capitalized
-            category.color = $0.color
-            category.budgets = $0.budgets
-            category.icon = $0.icon
-            categories += [category]
-        }
-        
         var budgets: [BudgetEntity] = []
-        file.budgets.forEach {
-            let budget = categoryRepository.getBudget(by: $0.id) ?? BudgetEntity(context: database.viewContext)
-            budget.id = $0.id
-            budget.amount = $0.amount
-            budget.date = $0.date
-            budget.message = $0.message
-            budget.category = $0.category
-            budgets += [budget]
-        }
-        
         var transactions: [TransactionEntity] = []
-        file.transactions.forEach {
-            let transaction = transactionRepository.getTransaction(by: $0.id) ?? TransactionEntity(context: database.viewContext)
-            transaction.id = $0.id
-            transaction.date = $0.date
-            transaction.message = $0.message
-            transaction.category = $0.category
-            transaction.amount = $0.amount
-            transaction.status = $0.status
-            transactions += [transaction]
-        }
         
-        try database.viewContext.save()
-
+        try database.viewContext.performAndWait {
+            file.categories.forEach {
+                categories += [$0.getEntity(for: self.database.viewContext)]
+            }
+            
+            file.budgets.forEach {
+                budgets += [$0.getEntity(for: self.database.viewContext)]
+            }
+            
+            file.transactions.forEach {
+                transactions += [$0.getEntity(for: self.database.viewContext)]
+            }
+            
+            try self.database.viewContext.save()
+            WidgetCenter.shared.reloadAllTimelines()
+        }
     }
     
-    private func getBudgets(for ids: Set<UUID>, categoriesId: Set<UUID>, dates: [String]) -> [BudgetModel] {
-        let budgetsEntity = categoryRepository.getAllBudgets().filter {
+    private func getBudgets(
+        for ids: Set<UUID>,
+        categoriesId: Set<UUID>,
+        dates: [String]
+    ) -> [BudgetModel] {
+        let models = budgetRepository.getAllBudgets().filter {
             (ids.isEmpty ? true : ids.contains($0.id)) &&
             (categoriesId.isEmpty ? true : categoriesId.contains($0.category)) &&
             (dates.isEmpty ? true : dates.contains($0.date.asString(withDateFormat: .monthYear)))
         }
         
-        return budgetsEntity.map {
+        return models.map {
             BudgetModel(
                 amount: $0.amount,
                 category: $0.category,
@@ -136,11 +126,11 @@ public final class FileFactory {
     }
     
     private func getCategories(for ids: Set<UUID>) -> [CategoryModel] {
-        let categoriesEntity = categoryRepository.getAllCategories().filter {
+        let models = categoryRepository.getAllCategories().filter {
             ids.isEmpty ? true : ids.contains($0.id)
         }
         
-        return categoriesEntity.map {
+        return models.map {
             CategoryModel(
                 budgets: $0.budgets,
                 color: $0.color,
@@ -152,11 +142,11 @@ public final class FileFactory {
     }
     
     private func getTransactions(for ids: Set<UUID>) -> [TransactionModel] {
-        let transactionsEntity = transactionRepository.getTransactions().filter {
+        let models = transactionRepository.getAllTransactions().filter {
             ids.isEmpty ? true : ids.contains($0.id)
         }
         
-        return transactionsEntity.map {
+        return models.map {
             TransactionModel(
                 amount: $0.amount,
                 category: $0.category,
