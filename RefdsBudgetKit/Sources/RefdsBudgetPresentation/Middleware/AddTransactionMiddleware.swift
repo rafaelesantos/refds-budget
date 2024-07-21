@@ -93,9 +93,9 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
            let categoryId = categoriesDict.first(where: { $0.value.1 == Int(position) })?.value.0.id,
            let category = categories.first(where: { $0.categoryId == categoryId }),
            amount > .zero {
-            completion(.updateCategories(category, categories, allCategories.isEmpty))
+            completion(.updateCategories(category, categories))
         } else {
-            completion(.updateCategories(nil, categories, allCategories.isEmpty))
+            completion(.updateCategories(nil, categories))
         }
     }
     

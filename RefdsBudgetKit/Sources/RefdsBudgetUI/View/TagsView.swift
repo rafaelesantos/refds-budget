@@ -122,6 +122,12 @@ public struct TagsView: View {
                     swipeEditButton(at: index)
                 }
             }
+        } header: {
+            RefdsText(
+                .localizable(by: .tagsHeader, with: state.tags.count),
+                style: .footnote,
+                color: .secondary
+            )
         }
     }
     

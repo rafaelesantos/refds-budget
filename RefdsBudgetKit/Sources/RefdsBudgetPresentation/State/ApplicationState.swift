@@ -21,6 +21,7 @@ public protocol ApplicationStateProtocol: RefdsReduxState {
     var homeState: HomeStateProtocol { get set }
     var settingsState: SettingsStateProtocol { get set }
     var importState: ImportStateProtocol? { get set }
+    var budgetSelectionState: BudgetSelectionStateProtocol { get set }
 }
 
 public struct ApplicationState: ApplicationStateProtocol {
@@ -40,6 +41,7 @@ public struct ApplicationState: ApplicationStateProtocol {
     public var homeState: HomeStateProtocol
     public var settingsState: SettingsStateProtocol
     public var importState: ImportStateProtocol?
+    public var budgetSelectionState: BudgetSelectionStateProtocol
     
     public init(
         itemNavigation: ItemNavigation? = .home,
@@ -56,7 +58,8 @@ public struct ApplicationState: ApplicationStateProtocol {
         transactionsState: TransactionsStateProtocol = TransactionsState(),
         tagsState: TagsStateProtocol = TagsState(),
         homeState: HomeStateProtocol = HomeState(),
-        settingsState: SettingsStateProtocol = SettingsState()
+        settingsState: SettingsStateProtocol = SettingsState(),
+        budgetSelectionState: BudgetSelectionStateProtocol = BudgetSelectionState()
     ) {
         self.itemNavigation = itemNavigation
         self.premiumRouter = premiumRouter
@@ -73,6 +76,7 @@ public struct ApplicationState: ApplicationStateProtocol {
         self.tagsState = tagsState
         self.homeState = homeState
         self.settingsState = settingsState
+        self.budgetSelectionState = budgetSelectionState
     }
 }
 

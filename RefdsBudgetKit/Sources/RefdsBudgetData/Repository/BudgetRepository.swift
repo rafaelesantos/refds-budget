@@ -6,6 +6,7 @@ import RefdsBudgetDomain
 
 public final class BudgetRepository: BudgetUseCase {
     @RefdsInjection private var database: RefdsBudgetDatabaseProtocol
+    @RefdsInjection private var transactionRepository: TransactionUseCase
     
     public init() {}
     
@@ -50,6 +51,9 @@ public final class BudgetRepository: BudgetUseCase {
     public func removeBudget(id: UUID) throws {
         try database.viewContext.performAndWait {
             guard let model = getBudget(by: id) else { throw RefdsBudgetError.notFoundBudget }
+            transactionRepository.getTransactions(from: model.date.date, format: .monthYear).map {
+                $0.getEntity(for: self.database.viewContext)
+            }.forEach { self.database.viewContext.delete($0) }
             let entity = model.getEntity(for: database.viewContext)
             database.viewContext.delete(entity)
             try database.viewContext.save()

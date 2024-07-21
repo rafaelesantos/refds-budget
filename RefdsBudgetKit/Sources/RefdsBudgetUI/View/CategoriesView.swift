@@ -54,17 +54,19 @@ public struct CategoriesView: View {
             RefdsSection {
                 ForEach(state.categories.indices, id: \.self) { index in
                     let category = state.categories[index]
-                    CategoryRowView(viewData: category)
-                        .onTapGesture {
-                            action(.showCategory(category.categoryId, state.isFilterEnable ? state.date : nil))
-                        }
-                        .contextMenu {
-                            editBudgetButton(at: index)
-                            editCategoryButton(at: index)
-                            Divider()
-                            removeBudgetButton(at: index)
-                            removeCategoryButton(at: index)
-                        }
+                    RefdsButton {
+                        action(.showCategory(category.categoryId, state.isFilterEnable ? state.date : nil))
+                    } label: {
+                        CategoryRowView(viewData: category)
+                    }
+                    .contextMenu {
+                        editCategoryButton(at: index)
+                        removeCategoryButton(at: index)
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        swipeRemoveButton(at: index)
+                        swipeEditButton(at: index)
+                    }
                 }
             } header: {
                 RefdsText(
@@ -77,42 +79,15 @@ public struct CategoriesView: View {
     }
     
     @ViewBuilder
-    private func editBudgetButton(at index: Int) -> some View {
-        if state.isFilterEnable {
-            let category = state.categories[index]
-            RefdsButton {
-                action(
-                    .fetchBudgetForEdit(
-                        state.date,
-                        category.categoryId,
-                        category.budgetId
-                    )
-                )
-            } label: {
-                RefdsText(.localizable(by: .categoriesEditBudget))
-            }
-        }
-    }
-    
-    @ViewBuilder
     private func editCategoryButton(at index: Int) -> some View {
         let category = state.categories[index]
         RefdsButton {
             action(.fetchCategoryForEdit(category.categoryId))
         } label: {
-            RefdsText(.localizable(by: .categoriesEditCategory))
-        }
-    }
-    
-    @ViewBuilder
-    private func removeBudgetButton(at index: Int) -> some View {
-        if state.isFilterEnable {
-            let category = state.categories[index]
-            RefdsButton {
-                action(.removeBudget(state.date, category.budgetId))
-            } label: {
-                RefdsText(.localizable(by: .categoriesRemoveBudget))
-            }
+            Label(
+                String.localizable(by: .categoriesEditCategory),
+                systemImage: RefdsIconSymbol.squareAndPencil.rawValue
+            )
         }
     }
     
@@ -122,8 +97,33 @@ public struct CategoriesView: View {
         RefdsButton {
             action(.removeCategory(state.isFilterEnable ? state.date : nil, category.categoryId))
         } label: {
-            RefdsText(.localizable(by: .categoriesRemoveCategory))
+            Label(
+                String.localizable(by: .categoriesRemoveCategory),
+                systemImage: RefdsIconSymbol.trashFill.rawValue
+            )
         }
+    }
+    
+    @ViewBuilder
+    private func swipeRemoveButton(at index: Int) -> some View {
+        let category = state.categories[index]
+        RefdsButton {
+            action(.removeCategory(state.isFilterEnable ? state.date : nil, category.categoryId))
+        } label: {
+            RefdsIcon(.trashFill)
+        }
+        .tint(.red)
+    }
+    
+    @ViewBuilder
+    private func swipeEditButton(at index: Int) -> some View {
+        let category = state.categories[index]
+        RefdsButton {
+            action(.fetchCategoryForEdit(category.categoryId))
+        } label: {
+            RefdsIcon(.squareAndPencil)
+        }
+        .tint(.orange)
     }
     
     @ViewBuilder
@@ -148,7 +148,7 @@ public struct CategoriesView: View {
     @ViewBuilder
     private var rowAddBudget: some View {
         if !state.isEmptyCategories, !state.isEmptyBudgets {
-            RefdsButton { action(.addBudget(nil, state.date)) } label: {
+            RefdsButton { action(.addBudget) } label: {
                 HStack {
                     RefdsText(
                         .localizable(by: .categoriesEmptyBudgetsButton),
@@ -189,7 +189,7 @@ public struct CategoriesView: View {
         if !state.isEmptyCategories, state.isEmptyBudgets {
             RefdsSection {
                 RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
-                RefdsButton { action(.addBudget(nil, state.date)) } label: {
+                RefdsButton { action(.addBudget) } label: {
                     RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
                 }
             } header: {

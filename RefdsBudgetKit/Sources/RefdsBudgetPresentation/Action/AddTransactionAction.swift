@@ -3,7 +3,7 @@ import RefdsRedux
 import RefdsBudgetData
 
 public enum AddTransactionAction: RefdsReduxAction {
-    case updateCategories(CategoryRowViewDataProtocol?, [CategoryRowViewDataProtocol], Bool)
+    case updateCategories(CategoryRowViewDataProtocol?, [CategoryRowViewDataProtocol])
     case updateTags([TagRowViewDataProtocol])
     case updateError(RefdsBudgetError)
     case fetchCategories(Date, Double)

@@ -56,4 +56,9 @@ public protocol ViewFactoryProtocol {
         state: Binding<ImportStateProtocol?>,
         action: @escaping (ImportAction) -> Void
     ) -> any View
+    
+    func makeBudgetSelectionView(
+        state: Binding<BudgetSelectionStateProtocol>,
+        action: @escaping (BudgetSelectionAction) -> Void
+    ) -> any View
 }

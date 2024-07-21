@@ -179,10 +179,13 @@ public struct AddBudgetView: View {
     private var rowEmptyCategories: some View {
         if state.categories.isEmpty {
             RefdsText(
-                .localizable(by: .addBudgetEmptyCategories),
+                .localizable(by: .categoriesEmptyCategoriesDescription),
                 style: .callout,
                 color: .secondary
             )
+            RefdsButton { action(.addCategory) } label: {
+                RefdsText(.localizable(by: .categoriesEmptyCategoriesButton), style: .callout, color: .accentColor)
+            }
         }
     }
     

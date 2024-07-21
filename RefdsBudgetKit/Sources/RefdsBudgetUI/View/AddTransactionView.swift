@@ -107,7 +107,8 @@ public struct AddTransactionView: View {
                     color: description.count < 40 ? .green : description.count < 80 ? .orange : .red,
                     weight: .bold
                 )
-                .opacity(0.5)
+                .padding(.bottom, -5)
+                .padding(.trailing, -10)
             }
         } header: {
             RefdsText(
@@ -158,18 +159,11 @@ public struct AddTransactionView: View {
             LoadingRowView(isLoading: state.isLoading)
             
             if !state.isLoading {
-                if !state.isEmptyCategories, !state.isEmptyBudgets {
+                if !state.isEmptyBudgets {
                     rowCategories
                 }
                 
-                if state.isEmptyCategories {
-                    RefdsText(.localizable(by: .categoriesEmptyCategoriesDescription), style: .callout)
-                    RefdsButton { action(.addCategory) } label: {
-                        RefdsText(.localizable(by: .categoriesEmptyCategoriesButton), style: .callout, color: .accentColor)
-                    }
-                }
-                
-                if !state.isEmptyCategories, state.isEmptyBudgets {
+                if state.isEmptyBudgets {
                     RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
                     RefdsButton { action(.addBudget(state.date)) } label: {
                         RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
@@ -301,8 +295,8 @@ public struct AddTransactionView: View {
             .frame(height: .padding(.small))
             
             RefdsText(
-                tag.name.capitalized,
-                style: .caption,
+                tag.name.uppercased(),
+                style: .footnote,
                 color: tag.color
             )
         }

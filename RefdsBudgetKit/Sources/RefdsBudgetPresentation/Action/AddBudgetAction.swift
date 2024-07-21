@@ -10,4 +10,5 @@ public enum AddBudgetAction: RefdsReduxAction {
     case fetchBudget
     case fetchCategories
     case dismiss
+    case addCategory
 }

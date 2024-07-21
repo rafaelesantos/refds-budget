@@ -115,4 +115,14 @@ public class ViewFactory: ViewFactoryProtocol {
             action: action
         )
     }
+    
+    public func makeBudgetSelectionView(
+        state: Binding<BudgetSelectionStateProtocol>,
+        action: @escaping (BudgetSelectionAction) -> Void
+    ) -> any View {
+        BudgetSelectionView(
+            state: state,
+            action: action
+        )
+    }
 }

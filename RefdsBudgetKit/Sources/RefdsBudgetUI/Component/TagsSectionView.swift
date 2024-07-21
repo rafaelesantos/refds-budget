@@ -70,7 +70,9 @@ public struct TagsSectionView: View {
                 color: .secondary
             )
         }
-        .onChange(of: tagsViewData.count) { updateData() }
+        .onChange(of: tagsViewData.map { $0.name }) { updateData() }
+        .onChange(of: tagsViewData.map { $0.color }) { updateData() }
+        .onChange(of: tagsViewData.map { $0.id }) { updateData() }
         .onAppear { reloadData() }
         
         if isPro {

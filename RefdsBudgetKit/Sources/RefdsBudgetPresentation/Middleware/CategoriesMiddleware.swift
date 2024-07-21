@@ -39,9 +39,7 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 status: state.selectedStatus,
                 on: completion
             )
-        case let .fetchBudgetForEdit(date, categoryId, budgetId): fetchBudgetForEdit(from: date, categoryId: categoryId, budgetId: budgetId, on: completion)
         case let .fetchCategoryForEdit(categoryId): fetchCategoryForEdit(with: categoryId, on: completion)
-        case let .removeBudget(date, id): removeBudget(with: state, from: date, by: id, on: completion)
         case let .removeCategory(date, id): removeCategory(with: state, from: date, by: id, on: completion)
         default: break
         }
@@ -137,28 +135,6 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         )
     }
     
-    private func fetchBudgetForEdit(
-        from date: Date,
-        categoryId: UUID,
-        budgetId: UUID,
-        on completion: @escaping (CategoriesAction) -> Void
-    ) {
-        let categories = categoryRepository.getAllCategories().map {
-            categoryAdapter.adapt(model: $0)
-        }
-        
-        if let categoryEntity = categoryRepository.getCategory(by: categoryId) {
-            let entity = budgetRepository.getBudget(by: budgetId)
-            let state = budgetAdapter.adapt(
-                model: entity,
-                category: categoryAdapter.adapt(model: categoryEntity),
-                categories: categories
-            )
-            
-            completion(.addBudget(state, date))
-        } else { completion(.updateError(.notFoundCategory)) }
-    }
-    
     private func fetchCategoryForEdit(
         with id: UUID,
         on completion: @escaping (CategoriesAction) -> Void
@@ -166,25 +142,6 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         if let category = categoryRepository.getCategory(by: id) {
             completion(.addCategory(categoryAdapter.adapt(model: category)))
         } else { completion(.updateError(.notFoundCategory)) }
-    }
-    
-    private func removeBudget(
-        with state: CategoriesStateProtocol,
-        from date: Date,
-        by id: UUID,
-        on completion: @escaping (CategoriesAction) -> Void
-    ) {
-        guard let budgetEntity = budgetRepository.getBudget(by: id) else {
-            return completion(.updateError(.notFoundBudget))
-        }
-        
-        do {
-            try budgetRepository.removeBudget(id: budgetEntity.id)
-            WidgetCenter.shared.reloadAllTimelines()
-            completion(.fetchData)
-        } catch {
-            completion(.updateError(.cantDeleteBudget))
-        }
     }
     
     private func removeCategory(

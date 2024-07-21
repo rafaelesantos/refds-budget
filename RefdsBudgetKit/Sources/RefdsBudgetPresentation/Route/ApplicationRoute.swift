@@ -11,6 +11,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
     case manageTags
     case settings
     case `import`
+    case budgetSelection
     
     public var navigationType: RefdsNavigationType {
         switch self {
@@ -44,6 +45,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
             case .manageTags: AnyView(viewFactory.makeTagView(state: state.tagsState, action: action))
             case .settings: AnyView(viewFactory.makeSettingsView(state: state.settingsState, action: action))
             case .import: AnyView(viewFactory.makeImportView(state: state.importState, action: action))
+            case .budgetSelection: AnyView(viewFactory.makeBudgetSelectionView(state: state.budgetSelectionState, action: action))
             }
         }
     }

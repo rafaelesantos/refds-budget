@@ -84,7 +84,7 @@ struct ContentView: View {
     private func setupIntelligence() {
         let intelligence = RefdsContainer.resolve(type: IntelligenceProtocol.self)
         DispatchQueue.global(qos: .utility).async {
-            intelligence.training(on: { print($0, $1, $2) })
+            intelligence.training(for: .high, on: { print($0, $1, $2) })
         }
     }
     

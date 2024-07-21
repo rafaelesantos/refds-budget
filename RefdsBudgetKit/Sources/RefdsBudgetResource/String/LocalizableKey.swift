@@ -160,6 +160,7 @@ public enum LocalizableKey: String {
     case tagsRemoveTag
     case tagsEditTag
     case tagsCleanSelected
+    case tagsHeader
     case menuCleanSelections
     // MARK: - Filter
     case filterDate
@@ -291,4 +292,10 @@ public enum LocalizableKey: String {
     case intelligenceTrainingPreparingData
     case intelligenceTrainingTrainingData
     case intelligenceTrainingSavingData
+    // MARK: - Comparison Row
+    case comparisonRowHeader
+    case comparisonRowDescription
+    case comparisonRowButton
+    // MARK: - Comparison
+    case comparisonBudgetSelection
 }

@@ -14,7 +14,6 @@ public protocol AddTransactionStateProtocol: RefdsReduxState {
     var tags: [TagRowViewDataProtocol] { get set }
     var remaining: Double? { get set }
     var date: Date { get set }
-    var isEmptyCategories: Bool { get set }
     var isEmptyBudgets: Bool { get }
     var isLoading: Bool { get set }
     var isAI: Bool { get set }
@@ -32,7 +31,6 @@ public struct AddTransactionState: AddTransactionStateProtocol {
     public var remaining: Double?
     public var date: Date
     public var error: RefdsBudgetError?
-    public var isEmptyCategories: Bool = false
     public var isLoading: Bool
     public var isAI: Bool
     

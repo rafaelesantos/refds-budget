@@ -25,9 +25,9 @@ public class StoreFactory {
     
     private static func registerMockDependencies() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabaseMock() }
+        RefdsContainer.register(type: TransactionUseCase.self) { TransactionRepositoryMock() }
         RefdsContainer.register(type: BudgetUseCase.self) { BudgetRepositoryMock() }
         RefdsContainer.register(type: CategoryUseCase.self) { CategoryRepositoryMock() }
-        RefdsContainer.register(type: TransactionUseCase.self) { TransactionRepositoryMock() }
         RefdsContainer.register(type: SettingsUseCase.self) { SettingsRepositoryMock() }
         RefdsContainer.register(type: TagUseCase.self) { TagRepositoryMock() }
         registerAdapterDependencies()
@@ -36,9 +36,9 @@ public class StoreFactory {
     
     private static func registerProductionDependencies() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
+        RefdsContainer.register(type: TransactionUseCase.self) { TransactionRepository() }
         RefdsContainer.register(type: BudgetUseCase.self) { BudgetRepository() }
         RefdsContainer.register(type: CategoryUseCase.self) { CategoryRepository() }
-        RefdsContainer.register(type: TransactionUseCase.self) { TransactionRepository() }
         RefdsContainer.register(type: SettingsUseCase.self) { SettingsRepository() }
         RefdsContainer.register(type: TagUseCase.self) { TagRepository() }
         registerAdapterDependencies()
@@ -68,6 +68,7 @@ public class StoreFactory {
             AddTransactionMiddleware<ApplicationStateProtocol>().middleware,
             TransactionsMiddleware<ApplicationStateProtocol>().middleware,
             TagMiddleware<ApplicationStateProtocol>().middleware,
+            BudgetSelectionMiddleware<ApplicationStateProtocol>().middleware,
             HomeMiddleware<ApplicationStateProtocol>().middleware,
             RouteMiddleware<ApplicationStateProtocol>().middleware,
             SettingsMiddleware<ApplicationStateProtocol>().middleware,

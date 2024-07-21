@@ -182,6 +182,7 @@
 "tagsRemoveTag" = "Remove tag";
 "tagsEditTag" = "Edit tag";
 "tagsCleanSelected" = "Exit creation/edit mode";
+"tagsHeader" = "%d existing tags";
 "menuCleanSelections" = "Clear Selection";
 
 // MARK: - Filter
@@ -329,3 +330,14 @@
 "intelligenceTrainingPreparingData" = "Preparing data for the model";
 "intelligenceTrainingTrainingData" = "Training the regression model";
 "intelligenceTrainingSavingData" = "Saving the trained model";
+
+// MARK: - Comparison Row
+
+"comparisonRowHeader" = "Budget Comparison";
+"comparisonRowDescription" = "See how your budgets have evolved! Compare months, spot patterns, and find savings opportunities.";
+"comparisonRowButton" = "Compare Budgets";
+
+// MARK: - Comparison
+
+"comparisonBudgetSelection" = "Budget Selection";
+

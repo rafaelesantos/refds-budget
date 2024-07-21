@@ -182,6 +182,7 @@
 "tagsRemoveTag" = "Remover tag";
 "tagsEditTag" = "Editar tag";
 "tagsCleanSelected" = "Sair do modo de criação/edição";
+"tagsHeader" = "%d tags existentes";
 "menuCleanSelections" = "Limpar Seleção";
 
 // MARK: - Filter
@@ -330,3 +331,13 @@
 "intelligenceTrainingPreparingData" = "Preparando os dados para o modelo";
 "intelligenceTrainingTrainingData" = "Treinando o modelo regressor";
 "intelligenceTrainingSavingData" = "Salvando o modelo treinado";
+
+// MARK: - Comparison Row
+
+"comparisonRowHeader" = "Comparativo de Orçamentos";
+"comparisonRowDescription" = "Veja como seus orçamentos evoluíram! Compare meses, identifique padrões e descubra onde você pode economizar.";
+"comparisonRowButton" = "Comparar Orçamentos";
+
+// MARK: - Comparison
+
+"comparisonBudgetSelection" = "Seleção de Orçamentos";

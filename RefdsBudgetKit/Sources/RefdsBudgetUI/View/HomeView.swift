@@ -6,8 +6,9 @@ import RefdsBudgetPresentation
 
 public struct HomeView: View {
     @Environment(\.privacyMode) private var privacyMode
-    @Binding private var state: HomeStateProtocol
     @State private var privacyModeEditable = false
+    
+    @Binding private var state: HomeStateProtocol
     private let action: (HomeAction) -> Void
     
     public init(
@@ -25,6 +26,7 @@ public struct HomeView: View {
             sectionFiltersView
             sectionEmptyBudgetView
             sectionSpendBudgetView
+            BudgetComparisonRowView() { action(.showBudgetComparison) }
             sectionLargestPurchaseView
             sectionRemainingView
             sectionPendingClearedView
@@ -184,7 +186,8 @@ public struct HomeView: View {
     
     @ViewBuilder
     private var sectionPendingClearedView: some View {
-        if let pendingCleared = state.pendingCleared {
+        if let pendingCleared = state.pendingCleared,
+           pendingCleared.pendingCount > 0 || pendingCleared.clearedCount > 0 {
             PendingClearedSectionView(viewData: pendingCleared)
         }
     }
@@ -200,13 +203,7 @@ public struct HomeView: View {
     private var sectionEmptyBudgetView: some View {
         if state.remaining.isEmpty, state.largestPurchase.isEmpty {
             RefdsSection {
-                EmptyRowView(title: .emptyBudgetsTitle)
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoryBudgetsHeader),
-                    style: .footnote,
-                    color: .secondary
-                )
+                EmptyRowView(title: .emptyTransactionsTitle)
             }
         }
     }

@@ -149,7 +149,7 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 transactionsAmount: transactionEntities.count,
                 spend: spend
             )
-        }
+        }.filter { $0.transactionsAmount > 0 }
     }
     
     private func getTagsRow(

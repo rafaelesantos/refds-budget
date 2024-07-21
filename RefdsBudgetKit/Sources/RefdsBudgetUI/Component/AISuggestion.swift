@@ -14,7 +14,7 @@ public struct AISuggestionLabel: View {
         if isEnable {
             HStack(spacing: 5) {
                 RefdsIcon(
-                    .boltFill,
+                    .cpuFill,
                     color: .accentColor,
                     style: .footnote,
                     weight: .bold

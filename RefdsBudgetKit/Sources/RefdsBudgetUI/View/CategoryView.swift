@@ -144,6 +144,9 @@ public struct CategoryView: View {
                             .contextMenu {
                                 removeBudgetButton(by: budget.id)
                             }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                swipeRemoveButton(by: budget.id)
+                            }
                     }
                 }
             } header: {
@@ -173,13 +176,21 @@ public struct CategoryView: View {
         }
     }
     
-    @ViewBuilder
     private func removeBudgetButton(by id: UUID) -> some View {
         RefdsButton {
             action(.removeBudget(state.date, id))
         } label: {
             RefdsText(.localizable(by: .categoriesRemoveBudget))
         }
+    }
+    
+    private func swipeRemoveButton(by id: UUID) -> some View {
+        RefdsButton {
+            action(.removeBudget(state.date, id))
+        } label: {
+            RefdsIcon(.trashFill)
+        }
+        .tint(.red)
     }
     
     private var removeCategoryButton: some View {

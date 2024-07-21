@@ -17,12 +17,15 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         state.tagsState = TagReducer().reduce(state.tagsState, action)
         state.homeState = HomeReducer().reduce(state.homeState, action)
         state.settingsState = SettingsReducer().reduce(state.settingsState, action)
+        state.budgetSelectionState = BudgetSelectionReducer().reduce(state.budgetSelectionState, action)
         
         if let importState = state.importState {
             state.importState = ImportReducer().reduce(importState, action)
         }
         
         switch action {
+        case let action as AddBudgetAction:
+            state = self.handler(with: state, for: action)
         case let action as CategoriesAction:
             state = self.handler(with: state, for: action)
         case let action as CategoryAction:
@@ -33,9 +36,26 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
             state = self.handler(with: state, for: action)
         case let action as HomeAction:
             state = self.handler(with: state, for: action)
+        case let action as BudgetSelectionAction:
+            state = self.handler(with: state, for: action)
         default: break
         }
         
+        return state
+    }
+    
+    private func handler(
+        with state: State,
+        for action: AddBudgetAction
+    ) -> State {
+        var state: State = state
+        switch action {
+        
+        case .addCategory:
+            state.addCategoryState = AddCategoryState()
+        default:
+            break
+        }
         return state
     }
     
@@ -53,8 +73,8 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
             )
         case let .addCategory(category):
             state.addCategoryState = category ?? AddCategoryState()
-        case let .addBudget(budget, date):
-            state.addBudgetState = budget ?? AddBudgetState(month: date ?? .current)
+        case .addBudget:
+            state.addBudgetState = AddBudgetState(month: state.categoriesState.date)
         default:
             break
         }
@@ -121,6 +141,22 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
             state.tagsState = TagsState()
         case .showSettings:
             state.settingsState = SettingsState()
+        case .showBudgetComparison:
+            state.budgetSelectionState = BudgetSelectionState()
+        default:
+            break
+        }
+        return state
+    }
+    
+    private func handler(
+        with state: State,
+        for action: BudgetSelectionAction
+    ) -> State {
+        var state: State = state
+        switch action {
+        case .addBudget:
+            state.addBudgetState = AddBudgetState()
         default:
             break
         }
