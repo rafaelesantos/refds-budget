@@ -56,9 +56,7 @@ public struct CategoryView: View {
     
     private func reloadData() {
         privacyModeEditable = privacyMode
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchData)
-        }
+        action(.fetchData)
     }
     
     @ViewBuilder

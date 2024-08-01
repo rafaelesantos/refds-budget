@@ -10,6 +10,7 @@ import RefdsBudgetResource
 public final class BudgetSelectionMiddleware<State>: RefdsReduxMiddlewareProtocol {
     @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
+    @RefdsInjection private var transactionRepository: TransactionUseCase
     @RefdsInjection private var budgetAdapter: BudgetRowViewDataAdapterProtocol
     
     public init() {}
@@ -36,10 +37,18 @@ public final class BudgetSelectionMiddleware<State>: RefdsReduxMiddlewareProtoco
     private func fetchData(on completion: @escaping (BudgetSelectionAction) -> Void) {
         let budgetModels = budgetRepository.getAllBudgets()
         let categoryModels = categoryRepository.getAllCategories()
+        let transactionModels = transactionRepository.getAllTransactions().filter {
+            TransactionStatus(rawValue: $0.status) != .cleared
+        }
         
         let categoriesGroup = Dictionary(
             grouping: categoryModels,
             by: { $0.id.uuidString }
+        )
+        
+        let transactionsGroup = Dictionary(
+            grouping: transactionModels,
+            by: { $0.date.asString(withDateFormat: .monthYear) }
         )
         
         let budgetsGroup = Dictionary(
@@ -50,7 +59,11 @@ public final class BudgetSelectionMiddleware<State>: RefdsReduxMiddlewareProtoco
                 grouping: item.value,
                 by: { $0.date.asString(withDateFormat: .month) }
             ).compactMap { item in
-                adaptedJoinBudget(item.value, for: categoriesGroup)
+                adaptedJoinBudget(
+                    budgets: item.value,
+                    transactions: transactionsGroup,
+                    for: categoriesGroup
+                )
             }
             
             return groupByMonth.sorted(by: {
@@ -62,21 +75,24 @@ public final class BudgetSelectionMiddleware<State>: RefdsReduxMiddlewareProtoco
     }
     
     private func adaptedJoinBudget(
-        _ budgets: [BudgetModelProtocol],
+        budgets: [BudgetModelProtocol],
+        transactions: [String: [TransactionModelProtocol]],
         for categoriesGroup: [String: [CategoryModelProtocol]]
     ) -> BudgetRowViewDataProtocol? {
         let description = budgets.compactMap {
             categoriesGroup[$0.category.uuidString]?.first?.name
         }.joined(separator: ", ").capitalizedSentence
         let amount = budgets.map { $0.amount }.reduce(.zero, +)
-        
         if let budget = budgets.first {
+            let spend = transactions[budget.date.asString(withDateFormat: .monthYear)]?.map { $0.amount }.reduce(.zero, +) ?? .zero
+            let percentage = spend / (amount == .zero ? 1 : amount)
             return BudgetRowViewData(
                 id: budget.id,
                 date: budget.date.date,
                 description: description.isEmpty ? nil : description,
                 amount: amount,
-                percentage: .zero
+                spend:  spend,
+                percentage: percentage
             )
         }
         

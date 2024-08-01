@@ -125,4 +125,14 @@ public class ViewFactory: ViewFactoryProtocol {
             action: action
         )
     }
+    
+    public func makeBudgetComparisonView(
+        state: Binding<BudgetComparisonStateProtocol>,
+        action: @escaping (BudgetComparisonAction) -> Void
+    ) -> any View {
+        BudgetComparisonView(
+            state: state,
+            action: action
+        )
+    }
 }

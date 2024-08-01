@@ -63,8 +63,9 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         if !state.selectedTags.isEmpty {
             transactionEntities = transactionEntities.filter { transaction in
+                var contains = true
                 for tagName in state.selectedTags {
-                    if transaction.message
+                    if !transaction.message
                         .folding(options: .diacriticInsensitive, locale: .current)
                         .lowercased()
                         .contains(
@@ -72,10 +73,10 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
                                 .folding(options: .diacriticInsensitive, locale: .current)
                                 .lowercased()
                         ) {
-                        return true
+                        contains = false
                     }
                 }
-                return false
+                return contains
             }
         }
         

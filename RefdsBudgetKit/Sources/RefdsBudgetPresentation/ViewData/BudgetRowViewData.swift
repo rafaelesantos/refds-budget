@@ -6,6 +6,7 @@ public protocol BudgetRowViewDataProtocol {
     var date: Date { get }
     var description: String? { get }
     var amount: Double { get }
+    var spend: Double { get }
     var percentage: Double { get }
 }
 
@@ -14,6 +15,7 @@ public struct BudgetRowViewData: BudgetRowViewDataProtocol {
     public var date: Date
     public var description: String?
     public var amount: Double
+    public var spend: Double
     public var percentage: Double
     
     init(
@@ -21,12 +23,14 @@ public struct BudgetRowViewData: BudgetRowViewDataProtocol {
         date: Date,
         description: String? = nil,
         amount: Double,
+        spend: Double,
         percentage: Double
     ) {
         self.id = id
         self.date = date
         self.description = description
         self.amount = amount
+        self.spend = spend
         self.percentage = percentage
     }
 }

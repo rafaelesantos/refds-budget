@@ -116,7 +116,9 @@ public struct DateChartView: View {
                             guard let plotFrame = proxy.plotFrame else { return }
                             let position = location.x - geometry[plotFrame].origin.x
                             guard let date: String = proxy.value(atX: position) else { return }
-                            withAnimation { chartSelection = date.asDate(withFormat: .dayMonthYear)?.asString(withDateFormat: format) ?? "" }
+                            withAnimation {
+                                chartSelection = date.asDate(withFormat: .dayMonthYear)?.asString(withDateFormat: format) ?? ""
+                            }
                         }
                 }
             }

@@ -94,7 +94,11 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 status != .pending && status != .cleared
             }.map { $0.amount }.reduce(.zero, +)
             let percentage = transactionsAmount / (budget.amount == .zero ? 1 : budget.amount)
-            return budgetRowViewDataAdapter.adapt(model: budget, percentage: percentage)
+            return budgetRowViewDataAdapter.adapt(
+                model: budget,
+                spend: transactionsAmount,
+                percentage: percentage
+            )
         }
         
         let transactions = transactionsEntity.map {
@@ -186,7 +190,9 @@ public final class CategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         let categories: [CategoryRowViewDataProtocol] = categoryRepository.getCategories(from: transaction.date.date).compactMap {
             guard let budget = budgetRepository.getBudget(on: $0.id, from: transaction.date.date) else { return nil }
-            let transactions = transactionRepository.getTransactions(on: $0.id, from: transaction.date.date, format: .dayMonthYear).map { $0.amount }
+            let transactions = transactionRepository.getTransactions(on: $0.id, from: transaction.date.date, format: .dayMonthYear).filter {
+                TransactionStatus(rawValue: $0.status) != .cleared
+            }.map { $0.amount }
             let spend = transactions.reduce(.zero, +)
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(

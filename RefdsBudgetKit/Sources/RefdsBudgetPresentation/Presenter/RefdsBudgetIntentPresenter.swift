@@ -32,11 +32,16 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
     
     private init() {
         RefdsContainer.register(type: RefdsBudgetDatabaseProtocol.self) { RefdsBudgetDatabase() }
+        
+        let transactionsRepository = TransactionRepository()
+        RefdsContainer.register(type: TransactionUseCase.self) { transactionsRepository }
+        
         let budgetRepository = BudgetRepository()
         RefdsContainer.register(type: BudgetUseCase.self) { budgetRepository }
+        
         self.budgetRepository = budgetRepository
-        categoryRepository = CategoryRepository()
-        transactionsRepository = TransactionRepository()
+        self.transactionsRepository = transactionsRepository
+        self.categoryRepository = CategoryRepository()
         tagRepository = TagRepository()
     }
     

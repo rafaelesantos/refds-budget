@@ -89,8 +89,9 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
             
             if !tagsName.isEmpty {
                 transactionsEntity = transactionsEntity.filter { transaction in
+                    var contains = true
                     for tagName in tagsName {
-                        if transaction.message
+                        if !transaction.message
                             .folding(options: .diacriticInsensitive, locale: .current)
                             .lowercased()
                             .contains(
@@ -98,10 +99,10 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
                                     .folding(options: .diacriticInsensitive, locale: .current)
                                     .lowercased()
                             ) {
-                            return true
+                            contains = false
                         }
                     }
-                    return false
+                    return contains
                 }
             }
             

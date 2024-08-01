@@ -86,6 +86,12 @@ struct RemainingAccessoryCircularLockScreenView: View {
             )
             .gaugeStyle(.accessoryCircular)
         }
+        .widgetURL(
+            Deeplink.url(
+                host: .openTransactions,
+                path: .addTransaction
+            )
+        )
     }
 }
 
@@ -94,30 +100,32 @@ struct RemainingAccessoryRectangularLockScreenView: View {
     
     var body: some View {
         ViewThatFits {
-            VStack(alignment: .leading) {
-                HStack(spacing: .zero) {
-                    VStack(alignment: .leading) {
-                        Text(String.localizable(by: .widgetRemaining))
-                                .font(.callout)
-                        Text(viewData.remaining.currency())
-                            .bold()
-                            .minimumScaleFactor(0.5)
-                    }
-                    
-                    Spacer(minLength: 5)
-                    
-                    Text((1 - viewData.percent).percent())
-                        .font(.caption2)
-                        .bold()
-                        .padding(.vertical, 5)
-                        .refdsTag(cornerRadius: 6)
+            VStack(alignment: .leading, spacing: .zero) {
+                HStack(spacing: 10) {
+                    Text(viewData.date.asString(withDateFormat: .custom("MMMM, yyyy")).uppercased())
+                        .font(.footnote)
+                    RefdsScaleProgressView(.lockScreen, riskColor: viewData.percent.riskColor, size: 20)
                 }
-                
-                Gauge(value: viewData.percent, in: 0...1) { EmptyView() }
-                    .gaugeStyle(.accessoryLinear)
-                    .padding(.top, -5)
+                Spacer(minLength: .zero)
+                Text(viewData.remaining.currency())
+                    .font(.system(size: 25))
+                    .bold()
+                    .minimumScaleFactor(0.5)
+                Spacer(minLength: .zero)
+                HStack(spacing: 10) {
+                    Gauge(value: viewData.percent, in: 0...1) { EmptyView() }
+                        .gaugeStyle(.accessoryLinear)
+                    Text((1 - viewData.percent).percent())
+                        .font(.footnote)
+                }
             }
         }
+        .widgetURL(
+            Deeplink.url(
+                host: .openTransactions,
+                path: .addTransaction
+            )
+        )
     }
 }
 

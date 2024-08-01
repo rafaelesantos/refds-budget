@@ -69,6 +69,7 @@ public class StoreFactory {
             TransactionsMiddleware<ApplicationStateProtocol>().middleware,
             TagMiddleware<ApplicationStateProtocol>().middleware,
             BudgetSelectionMiddleware<ApplicationStateProtocol>().middleware,
+            BudgetComparisonMiddleware<ApplicationStateProtocol>().middleware,
             HomeMiddleware<ApplicationStateProtocol>().middleware,
             RouteMiddleware<ApplicationStateProtocol>().middleware,
             SettingsMiddleware<ApplicationStateProtocol>().middleware,

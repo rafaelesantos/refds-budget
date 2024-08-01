@@ -17,15 +17,10 @@ public struct BudgetComparisonRowView: View {
                     alignment: .center
                 )
                 
-                HStack {
+                HStack(spacing: .padding(.small)) {
                     Spacer()
                     IconsIllustrationView()
-                    RefdsIcon(
-                        .xmarkCircleFill,
-                        color: .placeholder,
-                        size: 25,
-                        renderingMode: .hierarchical
-                    )
+                    RefdsIcon(.xmark, color: .secondary)
                     IconsIllustrationView()
                     Spacer()
                 }

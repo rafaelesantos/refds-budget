@@ -77,7 +77,7 @@ public struct SpendBudgetSectionView: View {
                     BubbleColorView(color: .accentColor, isSelected: true, size: 14)
                     RefdsText(.localizable(by: .homeSpendBudgetBudgetTitle), style: .callout, color: .secondary)
                 }
-                RefdsText(category.budget.currency(), style: .title3, weight: .bold)
+                RefdsText(category.budget.currency(), style: .title3, weight: .bold, lineLimit: 1)
                     .contentTransition(.numericText())
                     .refdsRedacted(if: privacyMode)
             }
@@ -91,7 +91,7 @@ public struct SpendBudgetSectionView: View {
                     RefdsText(.localizable(by: .homeSpendBudgetSpendTitle), style: .callout, color: .secondary)
                     BubbleColorView(color: .teal, isSelected: true, size: 14)
                 }
-                RefdsText(category.spend.currency(), style: .title3, weight: .bold)
+                RefdsText(category.spend.currency(), style: .title3, weight: .bold, lineLimit: 1)
                     .contentTransition(.numericText())
                     .refdsRedacted(if: privacyMode)
             }

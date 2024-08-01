@@ -23,12 +23,10 @@ public struct TagsView: View {
             if isEditingMode || (state.tags.isEmpty && !state.isLoading) {
                 sectionsInput
             }
-            
-            LoadingRowView(isLoading: state.isLoading)
             sectionTags
         }
         .refreshable { action(.fetchData) }
-        .onAppear { fetchDataOnAppear() }
+        .onAppear { action(.fetchData) }
         .toolbar { ToolbarItem { addButtonToolbar } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
@@ -46,15 +44,8 @@ public struct TagsView: View {
         
     }
     
-    private func fetchDataOnAppear() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchData)
-        }
-    }
-    
     private var rowHideInput: some View {
         RefdsButton {
-            state.selectedTag = TagRowViewData()
             withAnimation { isEditingMode.toggle() }
         } label: {
             HStack {
@@ -98,36 +89,37 @@ public struct TagsView: View {
         }
     }
     
+    @ViewBuilder
     private var sectionTags: some View {
-        RefdsSection {
-            ForEach(state.tags.indices, id: \.self) { index in
-                let tag = state.tags[index]
-                RefdsButton {
-                    withAnimation { 
-                        isEditingMode = true
+        if !state.tags.isEmpty, !isEditingMode {
+            RefdsSection {
+                ForEach(state.tags.indices, id: \.self) { index in
+                    let tag = state.tags[index]
+                    RefdsButton {
                         state.selectedTag = tag
+                        withAnimation { isEditingMode = true }
+                    } label: {
+                        TagRowView(
+                            viewData: tag,
+                            isSelected: state.selectedTag.id == tag.id
+                        )
                     }
-                } label: {
-                    TagRowView(
-                        viewData: tag,
-                        isSelected: state.selectedTag.id == tag.id
-                    )
+                    .contextMenu {
+                        contextRemoveButton(at: index)
+                        contextEditButton(at: index)
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        swipeRemoveButton(at: index)
+                        swipeEditButton(at: index)
+                    }
                 }
-                .contextMenu {
-                    contextRemoveButton(at: index)
-                    contextEditButton(at: index)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    swipeRemoveButton(at: index)
-                    swipeEditButton(at: index)
-                }
+            } header: {
+                RefdsText(
+                    .localizable(by: .tagsHeader, with: state.tags.count),
+                    style: .footnote,
+                    color: .secondary
+                )
             }
-        } header: {
-            RefdsText(
-                .localizable(by: .tagsHeader, with: state.tags.count),
-                style: .footnote,
-                color: .secondary
-            )
         }
     }
     
@@ -188,10 +180,8 @@ public struct TagsView: View {
     
     private func swipeEditButton(at index: Int) -> some View {
         RefdsButton {
-            withAnimation {
-                isEditingMode = true
-                state.selectedTag = state.tags[index]
-            }
+            state.selectedTag = state.tags[index]
+            withAnimation { isEditingMode = true }
         } label: {
             RefdsIcon(.squareAndPencil)
         }
@@ -200,10 +190,8 @@ public struct TagsView: View {
     
     private func contextEditButton(at index: Int) -> some View {
         RefdsButton {
-            withAnimation {
-                isEditingMode = true
-                state.selectedTag = state.tags[index]
-            }
+            state.selectedTag = state.tags[index]
+            withAnimation { isEditingMode = true }
         } label: {
             Label(
                 String.localizable(by: .tagsEditTag),

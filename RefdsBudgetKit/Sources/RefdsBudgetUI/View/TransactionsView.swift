@@ -29,7 +29,6 @@ public struct TransactionsView: View {
     
     public var body: some View {
         List(selection: $multiSelection) {
-            SubscriptionRowView()
             sectionBalance
             sectionFilters
             sectionTransactions

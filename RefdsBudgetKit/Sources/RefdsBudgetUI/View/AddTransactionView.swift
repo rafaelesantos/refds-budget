@@ -12,12 +12,12 @@ public struct AddTransactionView: View {
     @State private var description: String = ""
     @State private var isAI: Bool = true
     
-    private var bindingCategory: Binding<String> {
+    private var bindingCategory: Binding<String?> {
         Binding {
             state.category?.name ?? .localizable(by: .addBudgetEmptyCategories)
         } set: { name in
-            if let category = state.categories.first(where: { $0.name.lowercased() == name.lowercased() }) {
-                withAnimation { 
+            if let category = state.categories.first(where: { $0.name.lowercased() == name?.lowercased() ?? "" }) {
+                withAnimation {
                     state.category = category
                     isAI = false
                 }
@@ -66,9 +66,7 @@ public struct AddTransactionView: View {
         amount = amount == .zero ? state.amount : amount
         isAI = state.isAI
         guard state.category == nil else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            action(.fetchCategories(state.date, amount))
-        }
+        action(.fetchCategories(state.date, amount))
     }
     
     private var sectionAmount: some View {
@@ -84,7 +82,6 @@ public struct AddTransactionView: View {
     
     private var sectionDescription: some View {
         RefdsSection {
-            ZStack(alignment: .bottomTrailing) {
 #if os(macOS)
                 RefdsTextField(
                     .localizable(by: .addTransactionDescriptionPrompt),
@@ -101,21 +98,22 @@ public struct AddTransactionView: View {
                     textInputAutocapitalization: .sentences
                 )
 #endif
+        } header: {
+            HStack {
+                RefdsText(
+                    .localizable(by: .addBudgetDescriptionHeader),
+                    style: .footnote,
+                    color: .secondary
+                )
+                
+                Spacer()
+                
                 RefdsText(
                     description.count.asString,
-                    style: .caption2,
-                    color: description.count < 40 ? .green : description.count < 80 ? .orange : .red,
-                    weight: .bold
+                    style: .footnote,
+                    color: .secondary
                 )
-                .padding(.bottom, -5)
-                .padding(.trailing, -10)
             }
-        } header: {
-            RefdsText(
-                .localizable(by: .addBudgetDescriptionHeader),
-                style: .footnote,
-                color: .secondary
-            )
         } footer: {
             ScrollView(.horizontal) {
                 HStack(spacing: .padding(.extraSmall)) {
@@ -140,9 +138,14 @@ public struct AddTransactionView: View {
                         .tag(status)
                 }
             } label: {
-                RefdsText(.localizable(by: .addTransactionStatusSelect), style: .callout)
+                HStack(spacing: 15) {
+                    if let icon = state.status.icon {
+                        RefdsIconRow(icon, color: state.status.color)
+                    }
+                    RefdsText(.localizable(by: .addTransactionStatusSelect), style: .callout)
+                }
             }
-            .tint(.secondary)
+            .tint(state.status.color)
             
             rowDate
         } header: {
@@ -157,10 +160,18 @@ public struct AddTransactionView: View {
     private var sectionCategory: some View {
         RefdsSection {
             LoadingRowView(isLoading: state.isLoading)
-            
             if !state.isLoading {
-                if !state.isEmptyBudgets {
-                    rowCategories
+                if !state.isEmptyBudgets, !state.categories.isEmpty {
+                    RefdsStories(
+                        selection: bindingCategory,
+                        stories: state.categories.map {
+                            RefdsStoriesViewData(
+                                name: $0.name,
+                                color: $0.color,
+                                icon: RefdsIconSymbol(rawValue: $0.icon) ?? .dollarsign
+                            )
+                        }
+                    )
                 }
                 
                 if state.isEmptyBudgets {
@@ -179,6 +190,12 @@ public struct AddTransactionView: View {
                 )
                 
                 Spacer(minLength: .zero)
+                
+                if let category = state.category {
+                    let spend = category.spend + state.amount
+                    let percentage = spend / (category.budget == .zero ? 1 : category.budget)
+                    RefdsScaleProgressView(.circle, riskColor: percentage.riskColor, size: 25)
+                }
             }
         } footer: {
             AISuggestionLabel(isEnable: isAI)

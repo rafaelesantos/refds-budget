@@ -21,10 +21,8 @@ public struct HomeView: View {
     
     public var body: some View {
         List {
-            SubscriptionRowView()
             sectionBalanceView
             sectionFiltersView
-            sectionEmptyBudgetView
             sectionSpendBudgetView
             BudgetComparisonRowView() { action(.showBudgetComparison) }
             sectionLargestPurchaseView
@@ -198,16 +196,7 @@ public struct HomeView: View {
             LargestPurchaseSectionView(transactions: state.largestPurchase)
         }
     }
-    
-    @ViewBuilder
-    private var sectionEmptyBudgetView: some View {
-        if state.remaining.isEmpty, state.largestPurchase.isEmpty {
-            RefdsSection {
-                EmptyRowView(title: .emptyTransactionsTitle)
-            }
-        }
-    }
-    
+
     private var moreButton: some View {
         Menu {
             RefdsText(.localizable(by: .transactionsMoreMenuHeader))

@@ -117,7 +117,7 @@ struct SystemSmallTransactionsView: View {
             .widgetURL(
                 Deeplink.url(
                     host: .openTransactions,
-                    path: .addTransaction
+                    path: .none
                 )
             )
     }

@@ -175,7 +175,7 @@
 
 "tagsNavigationTitle" = "Tags";
 "tagsInputHeader" = "Informações da tag";
-"tagsInputNamePlaceholder" = "Informe o nome da tag";
+"tagsInputNamePlaceholder" = "Informe o nome";
 "tagsSaveButton" = "Salvar tag";
 "tagsChartSectionHeader" = "Gráfico Comparativo";
 "tagsMenuSelectHeader" = "Selecione uma ou mais tags";

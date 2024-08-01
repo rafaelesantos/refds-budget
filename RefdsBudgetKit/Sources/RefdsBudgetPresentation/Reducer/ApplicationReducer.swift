@@ -18,6 +18,7 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         state.homeState = HomeReducer().reduce(state.homeState, action)
         state.settingsState = SettingsReducer().reduce(state.settingsState, action)
         state.budgetSelectionState = BudgetSelectionReducer().reduce(state.budgetSelectionState, action)
+        state.budgetComparisonState = BudgetComparisonReducer().reduce(state.budgetComparisonState, action)
         
         if let importState = state.importState {
             state.importState = ImportReducer().reduce(importState, action)

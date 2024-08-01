@@ -29,7 +29,6 @@ public struct SettingsView: View {
     
     public var body: some View {
         List {
-            SubscriptionRowView()
             if isPro { sectionCustomization }
             sectionIcons
             sectionSecurity

@@ -1,4 +1,5 @@
 import Foundation
+import RefdsBudgetResource
 
 public protocol WidgetExpenseTrackerViewDataProtocol {
     var isFilterByDate: Bool { get set }
@@ -30,13 +31,13 @@ public struct WidgetExpenseTrackerViewData: WidgetExpenseTrackerViewDataProtocol
     }
     
     public init(
-        isFilterByDate: Bool,
-        category: String,
-        tag: String,
-        status: String,
-        date: Date,
-        spend: Double,
-        budget: Double
+        isFilterByDate: Bool = true,
+        category: String = .localizable(by: .transactionsCategorieAllSelected),
+        tag: String = .localizable(by: .transactionsCategorieAllSelected),
+        status: String = .localizable(by: .transactionsCategorieAllSelected),
+        date: Date = .now,
+        spend: Double = .zero,
+        budget: Double = .zero
     ) {
         self.isFilterByDate = isFilterByDate
         self.category = category

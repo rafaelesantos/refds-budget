@@ -31,6 +31,8 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
             self.handler(for: action, on: completion)
         case let action as BudgetSelectionAction:
             self.handler(for: action, on: completion)
+        case let action as BudgetComparisonAction:
+            self.handler(for: action, on: completion)
         default: break
         }
     }
@@ -167,8 +169,18 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (ApplicationAction) -> Void
     ) {
         switch action {
-        case .showComparison: completion(.updateRoute(.budgetSelection))
+        case .showComparison: completion(.updateRoute(.budgetComparison))
         case .addBudget: completion(.updateRoute(.addBudget))
+        default: break
+        }
+    }
+    
+    private func handler(
+        for action: BudgetComparisonAction,
+        on completion: @escaping (ApplicationAction) -> Void
+    ) {
+        switch action {
+        case .dismiss: completion(.dismiss)
         default: break
         }
     }

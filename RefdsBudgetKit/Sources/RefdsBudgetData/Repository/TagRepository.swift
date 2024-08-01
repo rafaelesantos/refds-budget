@@ -11,6 +11,7 @@ public final class TagRepository: TagUseCase {
     
     public func getTags() -> [TagModelProtocol] {
         let request = BubbleEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         guard let entities = try? database.viewContext.fetch(request) else { return [] }
         return entities.map { TagModel(entity: $0) }
     }

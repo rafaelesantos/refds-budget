@@ -57,13 +57,11 @@ struct ContentView: View {
                 .onChange(of: store.state.settingsState.isPro) { store.dispatch(action: SettingsAction.updatePro) }
                 .onChange(of: scenePhase) { handlerScenePhase() }
                 .onReceive(timer) { _ in updatePurchasedProducts() }
-                .if(store.state.settingsState.hasAuthRequest) {
-                    $0.refdsAuth(
-                        isAuthenticated: $welcome.isAuthenticated,
-                        applicationIcon: store.state.settingsState.icon.image
-                    )
-                    .accentColor(store.state.settingsState.tintColor)
-                }
+                .refdsAuth(
+                    isAuthenticated: bindingIsAuthenticated,
+                    applicationIcon: store.state.settingsState.icon.image
+                )
+                .accentColor(store.state.settingsState.tintColor)
         }
     }
     
@@ -72,6 +70,15 @@ struct ContentView: View {
         switch horizontalSizeClass {
         case .compact: TabNavigationView()
         default: SideNavigationView()
+        }
+    }
+    
+    private var bindingIsAuthenticated: Binding<Bool> {
+        Binding {
+            guard store.state.settingsState.hasAuthRequest else { return true }
+            return welcome.isAuthenticated
+        } set: {
+            welcome.isAuthenticated = $0
         }
     }
     
@@ -124,7 +131,9 @@ struct ContentView: View {
         guard store.state.settingsState.isAnimatedIcon else { return }
         switch scenePhase {
         case .active: break
-        default: appDelegate.setIconAnimator(task: nil)
+        default: 
+            welcome.isAuthenticated = false
+            appDelegate.setIconAnimator(task: nil)
         }
     }
 }

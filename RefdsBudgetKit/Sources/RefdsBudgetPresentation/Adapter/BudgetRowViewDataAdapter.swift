@@ -6,6 +6,7 @@ import RefdsBudgetDomain
 public protocol BudgetRowViewDataAdapterProtocol {
     func adapt(
         model: BudgetModelProtocol,
+        spend: Double,
         percentage: Double
     ) -> BudgetRowViewDataProtocol
 }
@@ -15,6 +16,7 @@ public final class BudgetRowViewDataAdapter: BudgetRowViewDataAdapterProtocol {
     
     public func adapt(
         model: BudgetModelProtocol,
+        spend: Double,
         percentage: Double
     ) -> BudgetRowViewDataProtocol {
         BudgetRowViewData(
@@ -22,6 +24,7 @@ public final class BudgetRowViewDataAdapter: BudgetRowViewDataAdapterProtocol {
             date: model.date.date,
             description: model.message,
             amount: model.amount,
+            spend: spend,
             percentage: percentage
         )
     }

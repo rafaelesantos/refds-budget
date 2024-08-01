@@ -5,6 +5,8 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct BudgetSelectionView: View {
+    @Environment(\.privacyMode) private var privacyMode
+    
     @Binding private var state: BudgetSelectionStateProtocol
     private let action: (BudgetSelectionAction) -> Void
     
@@ -73,7 +75,12 @@ public struct BudgetSelectionView: View {
                 }
             }
             Spacer()
-            RefdsText(budget.amount.currency())
+            
+            VStack(alignment: .center, spacing: .padding(.extraSmall)) {
+                RefdsText(budget.amount.currency(), style: .callout, weight: .bold)
+                    .refdsRedacted(if: privacyMode)
+                RefdsScaleProgressView(.circle, riskColor: budget.percentage.riskColor, size: 25)
+            }
         }
     }
 }

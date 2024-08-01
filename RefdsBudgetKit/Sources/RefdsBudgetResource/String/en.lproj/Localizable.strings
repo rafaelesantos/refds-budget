@@ -175,7 +175,7 @@
 
 "tagsNavigationTitle" = "Tags";
 "tagsInputHeader" = "Tag Information";
-"tagsInputNamePlaceholder" = "Enter the tag name";
+"tagsInputNamePlaceholder" = "Enter the name";
 "tagsSaveButton" = "Save tag";
 "tagsChartSectionHeader" = "Comparative Chart";
 "tagsMenuSelectHeader" = "Select one or more tags";

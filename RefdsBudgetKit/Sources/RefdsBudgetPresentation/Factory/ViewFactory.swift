@@ -61,4 +61,9 @@ public protocol ViewFactoryProtocol {
         state: Binding<BudgetSelectionStateProtocol>,
         action: @escaping (BudgetSelectionAction) -> Void
     ) -> any View
+    
+    func makeBudgetComparisonView(
+        state: Binding<BudgetComparisonStateProtocol>,
+        action: @escaping (BudgetComparisonAction) -> Void
+    ) -> any View
 }

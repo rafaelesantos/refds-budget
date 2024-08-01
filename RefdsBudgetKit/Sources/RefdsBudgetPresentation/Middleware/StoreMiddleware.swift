@@ -56,18 +56,11 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 newState.products = products
                 newState.features = features
                 
-                let isEqualProducts = products.map { $0.id }.allSatisfy { id in
-                    state.products.contains(where: { $0.id == id })
-                }
-                
-                let isEqualFeatures = features.map { $0.title }.allSatisfy { title in
-                    state.features.contains(where: { $0.title == title })
-                }
+                let isEmptyProducts = state.products.isEmpty
                 
                 await updatePurchasedProducts(
                     with: newState,
-                    isEqualProducts: isEqualProducts,
-                    isEqualFeatures: isEqualFeatures,
+                    isEmptyProducts: isEmptyProducts,
                     on: completion
                 )
             } catch {
@@ -119,12 +112,12 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     private func updatePurchasedProducts(
         with state: SettingsStateProtocol,
-        isEqualProducts: Bool = true,
-        isEqualFeatures: Bool = true,
+        isEmptyProducts: Bool = false,
         on completion: @escaping (SettingsAction) -> Void
     ) async {
         var transactions: [StoreKit.Transaction] = []
         var purchasedProductsID = Set<String>()
+        
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
             transactions += [transaction]
@@ -134,20 +127,15 @@ public final class StoreMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 purchasedProductsID.remove(transaction.productID)
             }
         }
+        
         transactions.sort(by: {
             $0.expirationDate ?? .current >
             $1.expirationDate ?? .current
         })
         
-        let isEqualTransactions = transactions.map { $0.id }.allSatisfy { id in
-            state.transactions.contains(where: { $0.id == id })
-        }
-        
-        let isEqualPurchased = purchasedProductsID.allSatisfy { id in
-            state.purchasedProductsID.contains(id)
-        }
-        
-        if !isEqualPurchased || !isEqualTransactions || !isEqualProducts || !isEqualFeatures {
+        if state.purchasedProductsID != purchasedProductsID ||
+            state.transactions != transactions ||
+            isEmptyProducts {
             completion(
                 .receiveProducts(
                     products: state.products,

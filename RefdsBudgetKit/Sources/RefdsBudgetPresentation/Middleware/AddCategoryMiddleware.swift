@@ -49,7 +49,13 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
         let budgets = budgetRepository.getBudgets(on: category.id)
-        
+        let categories = categoryRepository.getAllCategories()
+        guard !categories.contains(where: {
+                  $0.name.folding(options: .diacriticInsensitive, locale: .current).lowercased() ==
+                  category.name.folding(options: .diacriticInsensitive, locale: .current).lowercased()
+              }) else {
+            return completion(.updateError(.existingCategory))
+        }
         do {
             try categoryRepository.addCategory(
                 id: category.id,

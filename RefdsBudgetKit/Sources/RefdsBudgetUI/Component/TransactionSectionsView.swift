@@ -82,6 +82,23 @@ public struct TransactionSectionsView: View {
                             RefdsText(date.asString(withDateFormat: .custom("EEEE")), style: .footnote, color: .secondary)
                         }
                     }
+                } footer: {
+                    if !transactions.isEmpty {
+                        HStack {
+                            let total = transactions.filter { $0.status != .cleared }.map { $0.amount }.reduce(.zero, +)
+                            RefdsText(
+                                .localizable(by: .homeRemainingCategoryTransactions, with: transactions.count).uppercased(),
+                                style: .footnote,
+                                color: .secondary
+                            )
+                            Spacer()
+                            RefdsText(
+                                total.currency().uppercased(),
+                                style: .footnote,
+                                color: .secondary
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -121,6 +138,7 @@ public struct TransactionSectionsView: View {
                         Spacer(minLength: .zero)
                         RefdsText(transaction.date.asString(withDateFormat: .custom("HH:mm")), style: .callout, color: .secondary, weight: .light)
                     }
+                    
                     
                     RefdsText(transaction.description, style: .callout, color: .secondary)
                 }
