@@ -61,6 +61,7 @@ public struct AddBudgetView: View {
         .onChange(of: state.month) { action(.fetchBudget) }
         .onChange(of: state.category?.name ?? "") { action(.fetchBudget) }
         .onAppear { fetchDataOnAppear() }
+        .toolbar { ToolbarItem { saveButtonToolbar } }
         .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
@@ -223,6 +224,18 @@ public struct AddBudgetView: View {
             saveButton
                 .padding(.horizontal, -20)
                 .padding(.bottom, 20)
+        }
+    }
+    
+    private var saveButtonToolbar: some View {
+        RefdsButton(isDisable: !state.canSave) { action(.save(state)) } label: {
+            RefdsIcon(
+                .checkmarkCircleFill,
+                color: .accentColor,
+                size: 18,
+                weight: .bold,
+                renderingMode: .hierarchical
+            )
         }
     }
     

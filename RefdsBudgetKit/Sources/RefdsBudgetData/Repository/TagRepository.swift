@@ -10,17 +10,21 @@ public final class TagRepository: TagUseCase {
     public init() {}
     
     public func getTags() -> [TagModelProtocol] {
-        let request = BubbleEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        guard let entities = try? database.viewContext.fetch(request) else { return [] }
-        return entities.map { TagModel(entity: $0) }
+        database.viewContext.performAndWait {
+            let request = BubbleEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            guard let entities = try? database.viewContext.fetch(request) else { return [] }
+            return entities.map { TagModel(entity: $0) }
+        }
     }
     
     public func getTag(by id: UUID) -> TagModelProtocol? {
-        let request = BubbleEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? database.viewContext.fetch(request).first else { return nil }
-        return TagModel(entity: entity)
+        database.viewContext.performAndWait {
+            let request = BubbleEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? database.viewContext.fetch(request).first else { return nil }
+            return TagModel(entity: entity)
+        }
     }
     
     public func removeTag(id: UUID) throws {

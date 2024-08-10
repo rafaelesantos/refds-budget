@@ -10,28 +10,34 @@ public final class TransactionRepository: TransactionUseCase {
     public init() {}
     
     public func getAllTransactions() -> [TransactionModelProtocol] {
-        let request = TransactionEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-        guard let entities = try? database.viewContext.fetch(request) else { return [] }
-        return entities.map { TransactionModel(entity: $0) }
+        database.viewContext.performAndWait {
+            let request = TransactionEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            guard let entities = try? database.viewContext.fetch(request) else { return [] }
+            return entities.map { TransactionModel(entity: $0) }
+        }
     }
     
     public func getTransactions(on category: UUID) -> [TransactionModelProtocol] {
-        let request = TransactionEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "category = %@", category as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-        guard let entities = try? database.viewContext.fetch(request) else { return [] }
-        return entities.map { TransactionModel(entity: $0) }
+        database.viewContext.performAndWait {
+            let request = TransactionEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "category = %@", category as CVarArg)
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            guard let entities = try? database.viewContext.fetch(request) else { return [] }
+            return entities.map { TransactionModel(entity: $0) }
+        }
     }
     
     public func getTransactions(
         from date: Date,
         format: String.DateFormat
     ) -> [TransactionModelProtocol] {
-        getAllTransactions().filter { transaction in
-            let transactionDate = transaction.date.asString(withDateFormat: format)
-            let currentDate = date.asString(withDateFormat: format)
-            return transactionDate == currentDate
+        database.viewContext.performAndWait {
+            return getAllTransactions().filter { transaction in
+                let transactionDate = transaction.date.asString(withDateFormat: format)
+                let currentDate = date.asString(withDateFormat: format)
+                return transactionDate == currentDate
+            }
         }
     }
     
@@ -40,18 +46,22 @@ public final class TransactionRepository: TransactionUseCase {
         from date: Date,
         format: String.DateFormat
     ) -> [TransactionModelProtocol] {
-        getTransactions(on: category).filter { transaction in
-            let transactionDate = transaction.date.asString(withDateFormat: format)
-            let currentDate = date.asString(withDateFormat: format)
-            return transactionDate == currentDate
+        database.viewContext.performAndWait {
+            return getTransactions(on: category).filter { transaction in
+                let transactionDate = transaction.date.asString(withDateFormat: format)
+                let currentDate = date.asString(withDateFormat: format)
+                return transactionDate == currentDate
+            }
         }
     }
     
     public func getTransaction(by id: UUID) -> TransactionModelProtocol? {
-        let request = TransactionEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? database.viewContext.fetch(request).first else { return nil }
-        return TransactionModel(entity: entity)
+        database.viewContext.performAndWait {
+            let request = TransactionEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? database.viewContext.fetch(request).first else { return nil }
+            return TransactionModel(entity: entity)
+        }
     }
     
     public func removeTransaction(by id: UUID) throws {

@@ -74,7 +74,7 @@ public struct SpendBudgetSectionView: View {
             
             VStack(alignment: .leading, spacing: .zero) {
                 HStack(spacing: .padding(.small)) {
-                    BubbleColorView(color: .accentColor, isSelected: true, size: 14)
+                    BubbleColorView(color: .accentColor.opacity(0.6), isSelected: true, size: 14)
                     RefdsText(.localizable(by: .homeSpendBudgetBudgetTitle), style: .callout, color: .secondary)
                 }
                 RefdsText(category.budget.currency(), style: .title3, weight: .bold, lineLimit: 1)
@@ -89,7 +89,7 @@ public struct SpendBudgetSectionView: View {
             VStack(alignment: .trailing, spacing: .zero) {
                 HStack(spacing: .padding(.small)) {
                     RefdsText(.localizable(by: .homeSpendBudgetSpendTitle), style: .callout, color: .secondary)
-                    BubbleColorView(color: .teal, isSelected: true, size: 14)
+                    BubbleColorView(color: .accentColor, isSelected: true, size: 14)
                 }
                 RefdsText(category.spend.currency(), style: .title3, weight: .bold, lineLimit: 1)
                     .contentTransition(.numericText())
@@ -123,13 +123,13 @@ public struct SpendBudgetSectionView: View {
         .chartYAxis { AxisMarks(position: .trailing) }
         .chartLegend(.hidden)
         .chartScrollableAxes(.horizontal)
-        .chartXVisibleDomain(length: 3)
+        .chartXVisibleDomain(length: 3.5)
         .frame(height: 120)
         .padding(.vertical)
         .padding(.top)
         .chartForegroundStyleScale([
-            "budget": Color.accentColor,
-            "spend": Color.teal
+            "budget": Color.accentColor.opacity(0.6),
+            "spend": Color.accentColor
         ])
         .chartOverlay { proxy in
             GeometryReader { geometry in

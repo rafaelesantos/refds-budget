@@ -8,6 +8,7 @@ public protocol BudgetRowViewDataProtocol {
     var amount: Double { get }
     var spend: Double { get }
     var percentage: Double { get }
+    var isSelected: Bool { get set }
 }
 
 public struct BudgetRowViewData: BudgetRowViewDataProtocol {
@@ -17,6 +18,7 @@ public struct BudgetRowViewData: BudgetRowViewDataProtocol {
     public var amount: Double
     public var spend: Double
     public var percentage: Double
+    public var isSelected: Bool = false
     
     init(
         id: UUID,

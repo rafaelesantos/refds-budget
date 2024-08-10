@@ -7,6 +7,7 @@ import RefdsBudgetPresentation
 public struct BudgetSelectionView: View {
     @Environment(\.privacyMode) private var privacyMode
     
+    @State private var editMode: EditMode = .active
     @Binding private var state: BudgetSelectionStateProtocol
     private let action: (BudgetSelectionAction) -> Void
     
@@ -24,11 +25,17 @@ public struct BudgetSelectionView: View {
             sectionBudgets
         }
         .navigationTitle(String.localizable(by: .comparisonBudgetSelection))
-        .environment(\.editMode, .constant(.active))
-        .onAppear { action(.fetchData) }
+        .environment(\.editMode, $editMode)
+        .onAppear { 
+            withAnimation { editMode = .active }
+            action(.fetchData)
+        }
         .onChange(of: state.budgetsSelected) {
-            if state.budgetsSelected.count >= 2 {
+            if state.budgetsSelected.count == 2 {
                 action(.showComparison)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    editMode = .inactive
+                }
             }
         }
     }

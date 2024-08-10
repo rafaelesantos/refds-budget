@@ -163,8 +163,7 @@ public final class BudgetComparisonMiddleware<State>: RefdsReduxMiddlewareProtoc
         tags: [TagModelProtocol],
         transactions: [TransactionModelProtocol]
     ) -> [BudgetComparisonChartViewDataProtocol] {
-        
-        return tags.compactMap { tag in
+        tags.compactMap { tag in
             let base = transactions.filter {
                 $0.message
                     .folding(options: .diacriticInsensitive, locale: .current)
@@ -188,6 +187,8 @@ public final class BudgetComparisonMiddleware<State>: RefdsReduxMiddlewareProtoc
                     ) &&
                 $0.date.asString(withDateFormat: .monthYear) == compareBudget.date.asString(withDateFormat: .monthYear)
             }.map { $0.amount }.reduce(.zero, +)
+            
+            guard compare > .zero || base > .zero else { return nil }
             
             return BudgetComparisonChartViewData(
                 icon: RefdsIconSymbol(rawValue: tag.icon),

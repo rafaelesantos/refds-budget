@@ -11,13 +11,16 @@ public struct ChartComparisonView: View {
     
     private let viewData: [BudgetComparisonChartViewDataProtocol]
     @Binding private var selection: BudgetComparisonChartViewDataProtocol?
+    private let hasDomain: Bool
     
     public init(
         viewData: [BudgetComparisonChartViewDataProtocol],
-        selection: Binding<BudgetComparisonChartViewDataProtocol?>
+        selection: Binding<BudgetComparisonChartViewDataProtocol?>,
+        hasDomain: Bool = true
     ) {
         self.viewData = viewData
         self._selection = selection
+        self.hasDomain = hasDomain
     }
     
     public var body: some View {
@@ -60,8 +63,11 @@ public struct ChartComparisonView: View {
             }
         }
         .chartYAxis { AxisMarks(position: .trailing) }
+        .chartYScale(range: .plotDimension(padding: 10))
         .chartLegend(.hidden)
-        .frame(height: 150)
+        .chartScrollableAxes(.horizontal)
+        .chartXVisibleDomain(length: 5.5)
+        .frame(height: 160)
         .padding(.vertical)
         .padding(.top)
         .chartForegroundStyleScale([

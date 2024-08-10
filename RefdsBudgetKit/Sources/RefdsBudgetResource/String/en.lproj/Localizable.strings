@@ -340,4 +340,10 @@
 // MARK: - Comparison
 
 "comparisonBudgetSelection" = "Budget Selection";
-
+"comparisonBudgetVS" = "vs";
+"comparisonBudgetVariation" = "Variation";
+"comparisonBudgetPerformance" = "Performance";
+"comparisonBudgetPerformanceDescription" = "The savings percentage for %@ was %@ while for %@ it was %@.";
+"comparisonBudgetCategoryPerformance" = "Performance by Categories";
+"comparisonBudgetTagComparison" = "Tag Comparison";
+"comparisonBudgetBackButton" = "Redo Comparison";

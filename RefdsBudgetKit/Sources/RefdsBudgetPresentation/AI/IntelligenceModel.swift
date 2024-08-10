@@ -8,12 +8,14 @@ import TabularData
 public enum IntelligenceModel: String, CaseIterable {
     case budgetFromBudgets
     case budgetFromTransactions
-    case categoryFromTransaction
+    case categoryFromTransactions
+    case transactionsFromTags
     
     func getData(
-        budgetEntities: [BudgetModel],
-        categoryEntities: [CategoryModel],
-        transactionEntities: [TransactionModel],
+        tagEntities: [TagModelProtocol],
+        budgetEntities: [BudgetModelProtocol],
+        categoryEntities: [CategoryModelProtocol],
+        transactionEntities: [TransactionModelProtocol],
         on step: @escaping (String) -> Void
     ) -> Data? {
         switch self {
@@ -22,13 +24,18 @@ public enum IntelligenceModel: String, CaseIterable {
             budgetEntities: budgetEntities,
             on: step
         )
-        case .budgetFromTransactions: return BudgetFromTransactionData(
+        case .budgetFromTransactions: return BudgetFromTransactionsData(
             categoryEntities: categoryEntities,
             transactionEntities: transactionEntities,
             on: step
         )
-        case .categoryFromTransaction: return CategoryFromTransactionData(
+        case .categoryFromTransactions: return CategoryFromTransactionData(
             categoryEntities: categoryEntities,
+            transactionEntities: transactionEntities,
+            on: step
+        )
+        case .transactionsFromTags: return TransactionsFromTagsData(
+            tagEntities: tagEntities,
             transactionEntities: transactionEntities,
             on: step
         )

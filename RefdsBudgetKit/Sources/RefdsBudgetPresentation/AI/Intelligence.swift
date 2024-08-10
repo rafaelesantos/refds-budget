@@ -36,12 +36,10 @@ public protocol IntelligenceProtocol {
 }
 
 final class Intelligence: IntelligenceProtocol {
-    @RefdsInjection private var categoryRepository: CategoryUseCase
-    @RefdsInjection private var transactionRepository: TransactionUseCase
-    
-    private var budgetEntities: [BudgetModel] = []
-    private var categoryEntities: [CategoryModel] = []
-    private var transactionEntities: [TransactionModel] = []
+    private var tagEntities: [TagModelProtocol] = []
+    private var budgetEntities: [BudgetModelProtocol] = []
+    private var categoryEntities: [CategoryModelProtocol] = []
+    private var transactionEntities: [TransactionModelProtocol] = []
     
     private let group = DispatchGroup()
     private let queue = DispatchQueue(
@@ -70,11 +68,12 @@ final class Intelligence: IntelligenceProtocol {
            !transactionEntities.isEmpty { return }
         
         execute(
-            items: [{
-                self.budgetEntities = IntelligenceInput.budgetEntities
-                self.categoryEntities = IntelligenceInput.categoryEntities
-                self.transactionEntities = IntelligenceInput.transactionEntities
-            }]
+            items: [
+                { self.tagEntities = IntelligenceInput.tagEntities },
+                { self.budgetEntities = IntelligenceInput.budgetEntities },
+                { self.categoryEntities = IntelligenceInput.categoryEntities },
+                { self.transactionEntities = IntelligenceInput.transactionEntities }
+            ]
         )
     }
     
@@ -84,9 +83,10 @@ final class Intelligence: IntelligenceProtocol {
         on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void
     ) {
         guard let jsonData = model.getData(
-            budgetEntities: self.budgetEntities,
-            categoryEntities: self.categoryEntities,
-            transactionEntities: self.transactionEntities,
+            tagEntities: tagEntities,
+            budgetEntities: budgetEntities,
+            categoryEntities: categoryEntities,
+            transactionEntities: transactionEntities,
             on: { step($0, model, level) }
         ),
               let data = try? DataFrame(jsonData: jsonData)

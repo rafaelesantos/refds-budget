@@ -2,7 +2,7 @@ import Foundation
 import RefdsBudgetDomain
 
 public extension IntelligenceInput {
-    static func categoryFromTransaction(
+    static func categoryFromTransactions(
         date: Date,
         amount: Double
     ) -> IntelligenceInput? {
@@ -26,11 +26,11 @@ public extension IntelligenceInput {
 }
 
 func CategoryFromTransactionData(
-    categoryEntities: [CategoryModel],
-    transactionEntities: [TransactionModel],
+    categoryEntities: [CategoryModelProtocol],
+    transactionEntities: [TransactionModelProtocol],
     on step: @escaping (String) -> Void
 ) -> Data? {
-    var categoriesDict: [String: (CategoryModel, Int)] = [:]
+    var categoriesDict: [String: (CategoryModelProtocol, Int)] = [:]
     var targetDict: [[String: Double]] = []
     
     step(.localizable(by: .intelligenceTrainingGettingData))
@@ -44,10 +44,9 @@ func CategoryFromTransactionData(
     
     step(.localizable(by: .intelligenceTrainingPreparingData))
     
-    for i in transactionEntities.indices {
-        let transaction = transactionEntities[i]
-           if let date = transactionEntities[safe: i + 1]?.date,
-           let month = date.asString(withDateFormat: .custom("MM")).asInt,
+    for transaction in transactionEntities {
+        let date = transaction.date
+           if let month = date.asString(withDateFormat: .custom("MM")).asInt,
            let day = date.asString(withDateFormat: .day).asInt,
            let hour = date.asString(withDateFormat: .custom("HH")).asInt,
            let minute = date.asString(withDateFormat: .custom("mm")).asInt,

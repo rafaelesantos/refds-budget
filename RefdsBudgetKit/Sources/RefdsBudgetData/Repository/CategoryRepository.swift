@@ -11,10 +11,12 @@ public final class CategoryRepository: CategoryUseCase {
     public init() {}
     
     public func getAllCategories() -> [CategoryModelProtocol] {
-        let request = CategoryEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        guard let entities = try? database.viewContext.fetch(request) else { return [] }
-        return entities.map { CategoryModel(entity: $0) }
+        database.viewContext.performAndWait {
+            let request = CategoryEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            guard let entities = try? database.viewContext.fetch(request) else { return [] }
+            return entities.map { CategoryModel(entity: $0) }
+        }
         
 //        try? database.viewContext.performAndWait {
 //            if let entities = try? self.database.viewContext.fetch(CategoryEntity.fetchRequest()) {
@@ -42,16 +44,20 @@ public final class CategoryRepository: CategoryUseCase {
     }
     
     public func getCategories(from date: Date) -> [CategoryModelProtocol] {
-        return getAllCategories().filter {
-            budgetRepository.getBudget(on: $0.id, from: date) != nil
+        database.viewContext.performAndWait {
+            return getAllCategories().filter {
+                budgetRepository.getBudget(on: $0.id, from: date) != nil
+            }
         }
     }
     
     public func getCategory(by id: UUID) -> CategoryModelProtocol? {
-        let request = CategoryEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? database.viewContext.fetch(request).first else { return nil }
-        return CategoryModel(entity: entity)
+        database.viewContext.performAndWait {
+            let request = CategoryEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? database.viewContext.fetch(request).first else { return nil }
+            return CategoryModel(entity: entity)
+        }
     }
     
     public func removeCategory(id: UUID) throws {

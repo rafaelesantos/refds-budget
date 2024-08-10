@@ -29,7 +29,6 @@ public struct HomeView: View {
             sectionRemainingView
             sectionPendingClearedView
             sectionTagsView
-            sectionLegendView
         }
         .navigationTitle(String.localizable(by: .homeNavigationTitle))
         .toolbar { ToolbarItem { moreButton } }
@@ -218,21 +217,6 @@ public struct HomeView: View {
                 weight: .bold,
                 renderingMode: .hierarchical
             )
-        }
-    }
-    
-    @ViewBuilder
-    private var sectionLegendView: some View {
-        if let budget = state.balance?.budget, budget > .zero {
-            RefdsSection {
-                RiskLegendView()
-            } header: {
-                RefdsText(
-                    .localizable(by: .categoriesLegend),
-                    style: .footnote,
-                    color: .secondary
-                )
-            }
         }
     }
 }

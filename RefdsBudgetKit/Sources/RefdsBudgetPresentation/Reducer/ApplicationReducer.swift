@@ -158,6 +158,8 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         switch action {
         case .addBudget:
             state.addBudgetState = AddBudgetState()
+        case .showComparison:
+            state.budgetComparisonState = BudgetComparisonState()
         default:
             break
         }

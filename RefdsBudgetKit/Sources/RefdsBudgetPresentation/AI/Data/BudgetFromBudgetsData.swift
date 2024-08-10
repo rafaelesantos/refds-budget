@@ -6,7 +6,7 @@ public extension IntelligenceInput {
         date: Date,
         category: UUID
     ) -> IntelligenceInput? {
-        var categoriesDict: [String: (CategoryModel, Int)] = [:]
+        var categoriesDict: [String: (CategoryModelProtocol, Int)] = [:]
         
         let categoryEntities = categoryEntities
         let year = date.asString(withDateFormat: .year)
@@ -35,11 +35,11 @@ public extension IntelligenceInput {
 }
 
 func BudgetFromBudgetsData(
-    categoryEntities: [CategoryModel],
-    budgetEntities: [BudgetModel],
+    categoryEntities: [CategoryModelProtocol],
+    budgetEntities: [BudgetModelProtocol],
     on step: @escaping (String) -> Void
 ) -> Data? {
-    var categoriesDict: [String: (CategoryModel, Int)] = [:]
+    var categoriesDict: [String: (CategoryModelProtocol, Int)] = [:]
     var budgetsDict: [String: Double] = [:]
     var targetDict: [[String: Double]] = []
     

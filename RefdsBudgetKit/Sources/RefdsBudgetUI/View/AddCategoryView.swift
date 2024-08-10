@@ -24,7 +24,6 @@ public struct AddCategoryView: View {
             sectionSaveButtonView
         }
         .refdsDismissesKeyboad()
-        .onAppear { action(.fetchCategory(state)) }
         .toolbar { ToolbarItem { saveButtonToolbar } }
         .refdsToast(item: $state.error)
     }

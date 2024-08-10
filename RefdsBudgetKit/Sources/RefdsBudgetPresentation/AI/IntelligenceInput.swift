@@ -5,6 +5,7 @@ import RefdsBudgetDomain
 import RefdsInjection
 
 public final class IntelligenceInput: MLFeatureProvider {
+    @RefdsInjection static private var tagRepository: TagUseCase
     @RefdsInjection static private var budgetRepository: BudgetUseCase
     @RefdsInjection static private var categoryRepository: CategoryUseCase
     @RefdsInjection static private var transactionRepository: TransactionUseCase
@@ -25,40 +26,19 @@ public final class IntelligenceInput: MLFeatureProvider {
         return MLFeatureValue(double: value)
     }
     
-    static var budgetEntities: [BudgetModel] {
-        budgetRepository.getAllBudgets().map {
-            BudgetModel(
-                amount: $0.amount,
-                category: $0.category,
-                date: $0.date,
-                id: $0.id,
-                message: $0.message
-            )
-        }
+    static var tagEntities: [TagModelProtocol] {
+        tagRepository.getTags()
     }
     
-    static var categoryEntities: [CategoryModel] {
-        categoryRepository.getAllCategories().map {
-            CategoryModel(
-                budgets: $0.budgets,
-                color: $0.color,
-                id: $0.id,
-                name: $0.name,
-                icon: $0.icon
-            )
-        }
+    static var budgetEntities: [BudgetModelProtocol] {
+        budgetRepository.getAllBudgets()
     }
     
-    static var transactionEntities: [TransactionModel] {
-        transactionRepository.getAllTransactions().map {
-            TransactionModel(
-                amount: $0.amount,
-                category: $0.category,
-                date: $0.date,
-                id: $0.id,
-                message: $0.message,
-                status: $0.status
-            )
-        }
+    static var categoryEntities: [CategoryModelProtocol] {
+        categoryRepository.getAllCategories()
+    }
+    
+    static var transactionEntities: [TransactionModelProtocol] {
+        transactionRepository.getAllTransactions()
     }
 }

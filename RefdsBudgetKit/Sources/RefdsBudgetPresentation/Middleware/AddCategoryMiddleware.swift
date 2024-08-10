@@ -26,22 +26,10 @@ public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
         switch action {
-        case let .fetchCategory(state): fetchCategory(with: state, on: completion)
         case let .save(category): save(category, on: completion)
         default:
             break
         }
-    }
-    
-    private func fetchCategory(
-        with state: AddCategoryStateProtocol,
-        on completion: @escaping (AddCategoryAction) -> Void
-    ) {
-        guard let model = categoryRepository.getCategory(by: state.id) else {
-            return completion(.updateCategroy(state))
-        }
-        let adapted = categoryAdapter.adapt(model: model)
-        completion(.updateCategroy(adapted))
     }
     
     private func save(

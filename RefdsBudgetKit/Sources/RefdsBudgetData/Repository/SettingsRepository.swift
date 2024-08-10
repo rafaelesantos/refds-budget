@@ -11,30 +11,32 @@ public final class SettingsRepository: SettingsUseCase {
     public init() {}
     
     public func getSettings() -> SettingsModelProtocol {
-        let request = SettingsEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        guard let entity = try? database.viewContext.fetch(request).last else {
-            let entity = SettingsEntity(context: database.viewContext)
-            entity.date = .current
-            entity.theme = "#28CD41"
-            entity.icon = Asset.appIcon.rawValue
-            entity.isAnimatedIcon = false
-            entity.appearence = .zero
-            entity.hasAuthRequest = false
-            entity.hasPrivacyMode = false
-            entity.notifications = false
-            entity.reminderNotification = false
-            entity.warningNotification = false
-            entity.breakingNotification = false
-            entity.currentWarningNotificationAppears = [.init()]
-            entity.currentBreakingNotificationAppears = [.init()]
-            entity.liveActivity = .init()
-            entity.isPro = false
-            try? database.viewContext.save()
-            
+        database.viewContext.performAndWait {
+            let request = SettingsEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            guard let entity = try? database.viewContext.fetch(request).last else {
+                let entity = SettingsEntity(context: database.viewContext)
+                entity.date = .current
+                entity.theme = "#28CD41"
+                entity.icon = Asset.appIcon.rawValue
+                entity.isAnimatedIcon = false
+                entity.appearence = .zero
+                entity.hasAuthRequest = false
+                entity.hasPrivacyMode = false
+                entity.notifications = false
+                entity.reminderNotification = false
+                entity.warningNotification = false
+                entity.breakingNotification = false
+                entity.currentWarningNotificationAppears = [.init()]
+                entity.currentBreakingNotificationAppears = [.init()]
+                entity.liveActivity = .init()
+                entity.isPro = false
+                try? database.viewContext.save()
+                
+                return SettingsModel(entity: entity)
+            }
             return SettingsModel(entity: entity)
         }
-        return SettingsModel(entity: entity)
     }
     
     public func addSettings(

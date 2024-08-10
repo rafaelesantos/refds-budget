@@ -341,3 +341,10 @@
 // MARK: - Comparison
 
 "comparisonBudgetSelection" = "Seleção de Orçamentos";
+"comparisonBudgetVS" = "vs";
+"comparisonBudgetVariation" = "Variação";
+"comparisonBudgetPerformance" = "Desempenho";
+"comparisonBudgetPerformanceDescription" = "O percentual de economia para %@ foi de %@ enquanto para %@ foi de %@.";
+"comparisonBudgetCategoryPerformance" = "Desempenho por categorias";
+"comparisonBudgetTagComparison" = "Comparação de tags";
+"comparisonBudgetBackButton" = "Refazer Comparação";

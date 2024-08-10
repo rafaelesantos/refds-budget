@@ -298,4 +298,11 @@ public enum LocalizableKey: String {
     case comparisonRowButton
     // MARK: - Comparison
     case comparisonBudgetSelection
+    case comparisonBudgetVS
+    case comparisonBudgetVariation
+    case comparisonBudgetPerformance
+    case comparisonBudgetPerformanceDescription
+    case comparisonBudgetCategoryPerformance
+    case comparisonBudgetTagComparison
+    case comparisonBudgetBackButton
 }

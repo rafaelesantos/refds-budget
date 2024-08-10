@@ -88,7 +88,11 @@ public struct BudgetComparisonView: View {
                     .frame(maxWidth: .infinity)
                     
                     HStack { Divider().frame(height: 100) }
-                    RefdsText("vs".uppercased(), color: .secondary, weight: .bold)
+                    RefdsText(
+                        .localizable(by: .comparisonBudgetVS).uppercased(),
+                        color: .secondary,
+                        weight: .bold
+                    )
                         .padding(3)
                         .padding(.horizontal, 3)
                         .background()
@@ -107,13 +111,13 @@ public struct BudgetComparisonView: View {
             let variation = compareVariation - baseVariation
             RefdsSection {
                 rowComparisonVariation(
-                    title: "Variação",
+                    title: .localizable(by: .comparisonBudgetVariation),
                     variation: variation
                 )
                 rowComparisonValues
             } header: {
                 RefdsText(
-                    "Desempenho",
+                    .localizable(by: .comparisonBudgetPerformance),
                     style: .footnote,
                     color: .secondary
                 )
@@ -155,7 +159,7 @@ public struct BudgetComparisonView: View {
             )
             
             RefdsText(
-                "O percentual de economia para \(baseDate) foi de \(baseVariation.percent()) enquanto para \(compareDate) foi de \(compareVariation.percent())",
+                .localizable(by: .comparisonBudgetPerformanceDescription, with: baseDate, baseVariation.percent(), compareDate, compareVariation.percent()),
                 style: .callout,
                 color: .secondary
             )
@@ -188,7 +192,7 @@ public struct BudgetComparisonView: View {
                 .frame(maxWidth: .infinity)
             } header: {
                 RefdsText(
-                    "Desempenho por categorias",
+                    .localizable(by: .comparisonBudgetCategoryPerformance),
                     style: .footnote,
                     color: .secondary
                 )
@@ -215,14 +219,15 @@ public struct BudgetComparisonView: View {
                     rowChartSelectionComparison(for: state.selectedTag)
                     ChartComparisonView(
                         viewData: state.tagsChart,
-                        selection: $state.selectedTag
+                        selection: $state.selectedTag,
+                        hasDomain: false
                     )
                     .padding(.top, -10)
                 }
                 .frame(maxWidth: .infinity)
             } header: {
                 RefdsText(
-                    "Comparando tags",
+                    .localizable(by: .comparisonBudgetTagComparison),
                     style: .footnote,
                     color: .secondary
                 )
@@ -277,7 +282,7 @@ public struct BudgetComparisonView: View {
             let compareVariation = 1 - (selection.compare / (selection.budgetCompare == .zero ? 1 : selection.budgetCompare))
             let variation = compareVariation - baseVariation
             rowComparisonVariation(
-                title: "Variação",
+                title: .localizable(by: .comparisonBudgetVariation),
                 variation: variation
             )
         }
@@ -347,7 +352,7 @@ public struct BudgetComparisonView: View {
     
     private var sectionRedoComparisonButton: some View {
         RefdsSection {} footer: {
-            RefdsButton("Refazer Comparação") {
+            RefdsButton(.localizable(by: .comparisonBudgetBackButton)) {
                 action(.dismiss)
             }
         }

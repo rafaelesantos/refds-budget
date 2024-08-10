@@ -81,11 +81,11 @@ public final class FileFactory {
     }
     
     public func importData(from file: FileModelProtocol, on url: URL) throws {
-        var categories: [CategoryEntity] = []
-        var budgets: [BudgetEntity] = []
-        var transactions: [TransactionEntity] = []
-        
         try database.viewContext.performAndWait {
+            var categories: [CategoryEntity] = []
+            var budgets: [BudgetEntity] = []
+            var transactions: [TransactionEntity] = []
+            
             file.categories.forEach {
                 categories += [$0.getEntity(for: self.database.viewContext)]
             }
@@ -107,54 +107,23 @@ public final class FileFactory {
         for ids: Set<UUID>,
         categoriesId: Set<UUID>,
         dates: [String]
-    ) -> [BudgetModel] {
-        let models = budgetRepository.getAllBudgets().filter {
+    ) -> [BudgetModelProtocol] {
+        budgetRepository.getAllBudgets().filter {
             (ids.isEmpty ? true : ids.contains($0.id)) &&
             (categoriesId.isEmpty ? true : categoriesId.contains($0.category)) &&
             (dates.isEmpty ? true : dates.contains($0.date.asString(withDateFormat: .monthYear)))
         }
-        
-        return models.map {
-            BudgetModel(
-                amount: $0.amount,
-                category: $0.category,
-                date: $0.date,
-                id: $0.id,
-                message: $0.message
-            )
+    }
+    
+    private func getCategories(for ids: Set<UUID>) -> [CategoryModelProtocol] {
+        categoryRepository.getAllCategories().filter {
+            ids.isEmpty ? true : ids.contains($0.id)
         }
     }
     
-    private func getCategories(for ids: Set<UUID>) -> [CategoryModel] {
-        let models = categoryRepository.getAllCategories().filter {
+    private func getTransactions(for ids: Set<UUID>) -> [TransactionModelProtocol] {
+        transactionRepository.getAllTransactions().filter {
             ids.isEmpty ? true : ids.contains($0.id)
-        }
-        
-        return models.map {
-            CategoryModel(
-                budgets: $0.budgets,
-                color: $0.color,
-                id: $0.id,
-                name: $0.name,
-                icon: $0.icon
-            )
-        }
-    }
-    
-    private func getTransactions(for ids: Set<UUID>) -> [TransactionModel] {
-        let models = transactionRepository.getAllTransactions().filter {
-            ids.isEmpty ? true : ids.contains($0.id)
-        }
-        
-        return models.map {
-            TransactionModel(
-                amount: $0.amount,
-                category: $0.category,
-                date: $0.date,
-                id: $0.id,
-                message: $0.message,
-                status: $0.status
-            )
         }
     }
 }

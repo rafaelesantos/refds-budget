@@ -11,41 +11,51 @@ public final class BudgetRepository: BudgetUseCase {
     public init() {}
     
     public func getAllBudgets() -> [BudgetModelProtocol] {
-        let request = BudgetEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        guard let entities = try? database.viewContext.fetch(request) else { return [] }
-        return entities.map { BudgetModel(entity: $0) }
+        database.viewContext.performAndWait {
+            let request = BudgetEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            guard let entities = try? database.viewContext.fetch(request) else { return [] }
+            return entities.map { BudgetModel(entity: $0) }
+        }
     }
     
     public func getBudgets(on category: UUID) -> [BudgetModelProtocol] {
-        let request = BudgetEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "category = %@", category as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        guard let entities = try? database.viewContext.fetch(request) else { return [] }
-        return entities.map { BudgetModel(entity: $0) }
+        database.viewContext.performAndWait {
+            let request = BudgetEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "category = %@", category as CVarArg)
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            guard let entities = try? database.viewContext.fetch(request) else { return [] }
+            return entities.map { BudgetModel(entity: $0) }
+        }
     }
     
     public func getBudgets(from date: Date) -> [BudgetModelProtocol] {
-        return getAllBudgets().filter { budget in
-            let budgetDate = budget.date.asString(withDateFormat: .monthYear)
-            let currentDate = date.asString(withDateFormat: .monthYear)
-            return budgetDate == currentDate
+        database.viewContext.performAndWait {
+            return getAllBudgets().filter { budget in
+                let budgetDate = budget.date.asString(withDateFormat: .monthYear)
+                let currentDate = date.asString(withDateFormat: .monthYear)
+                return budgetDate == currentDate
+            }
         }
     }
     
     public func getBudget(by id: UUID) -> BudgetModelProtocol? {
-        let request = BudgetEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? database.viewContext.fetch(request).first else { return nil }
-        return BudgetModel(entity: entity)
+        database.viewContext.performAndWait {
+            let request = BudgetEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? database.viewContext.fetch(request).first else { return nil }
+            return BudgetModel(entity: entity)
+        }
     }
     
     public func getBudget(on category: UUID, from date: Date) -> BudgetModelProtocol? {
-        return getBudgets(on: category).filter { budget in
-            let budgetDate = budget.date.asString(withDateFormat: .monthYear)
-            let currentDate = date.asString(withDateFormat: .monthYear)
-            return budgetDate == currentDate
-        }.first
+        database.viewContext.performAndWait {
+            return getBudgets(on: category).filter { budget in
+                let budgetDate = budget.date.asString(withDateFormat: .monthYear)
+                let currentDate = date.asString(withDateFormat: .monthYear)
+                return budgetDate == currentDate
+            }.first
+        }
     }
     
     public func removeBudget(id: UUID) throws {

@@ -142,13 +142,18 @@ public struct TagsView: View {
     
     @ViewBuilder
     private var addButtonToolbar: some View {
-        if !state.tags.isEmpty, !isEditingMode {
-            RefdsButton {
-                state.selectedTag = TagRowViewData()
-                withAnimation { isEditingMode.toggle() }
+        if !state.tags.isEmpty || isEditingMode {
+            RefdsButton(isDisable: isEditingMode ? !state.canSave : false) {
+                if isEditingMode {
+                    withAnimation { isEditingMode = false }
+                    action(.save)
+                } else {
+                    state.selectedTag = TagRowViewData()
+                    withAnimation { isEditingMode.toggle() }
+                }
             } label: {
                 RefdsIcon(
-                    isEditingMode ? .xmarkCircleFill : .plusCircleFill,
+                    isEditingMode ? .checkmarkCircleFill : .plusCircleFill,
                     color: .accentColor,
                     size: 18,
                     weight: .bold,

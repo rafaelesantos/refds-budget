@@ -86,8 +86,8 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
         }
         
         if let position = intelligence.predict(
-            for: .categoryFromTransaction(date: date, amount: amount),
-            with: .categoryFromTransaction,
+            for: .categoryFromTransactions(date: date, amount: amount),
+            with: .categoryFromTransactions,
             on: .high
         )?.rounded(),
            let categoryId = categoriesDict.first(where: { $0.value.1 == Int(position) })?.value.0.id,

@@ -14,7 +14,7 @@ public final class AddCategoryReducer: RefdsReduxReducerProtocol {
             state = category
         case let .updateError(error):
             state.error = error
-        case .fetchCategory, .dismiss, .save, nil:
+        case .dismiss, .save, nil:
             break
         }
         
