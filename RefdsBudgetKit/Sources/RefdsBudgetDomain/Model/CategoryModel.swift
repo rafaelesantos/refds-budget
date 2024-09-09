@@ -42,11 +42,12 @@ public struct CategoryModel: CategoryModelProtocol, RefdsModel {
     }
     
     public func getEntity(for context: NSManagedObjectContext) -> CategoryEntity {
-        let request = CategoryEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? context.fetch(request).first else { 
-            return CategoryEntity(model: self, for: context)
+        context.performAndWait {
+            let request = CategoryEntity.fetchRequest()
+            guard let entity = try? context.fetch(request).first(where: {
+                $0.name.lowercased() == name.lowercased()
+            }) else { return CategoryEntity(model: self, for: context) }
+            return entity
         }
-        return entity
     }
 }

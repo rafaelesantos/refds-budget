@@ -8,6 +8,7 @@ public struct BudgetRowView: View {
     
     @State private var percentage: Double = 0
     @State private var amount: Double = 0
+    @State private var spend: Double = 0
     
     public init(viewData: BudgetRowViewDataProtocol) {
         self.viewData = viewData
@@ -23,25 +24,42 @@ public struct BudgetRowView: View {
             VStack {
                 RefdsScaleProgressView(
                     riskColor: viewData.percentage.riskColor,
-                    size: 20
+                    size: 15
                 )
-                .padding(.top, 5)
-                RefdsText(
-                    viewData.percentage.percent(),
-                    style: .footnote,
-                    color: .secondary
-                )
-                .refdsRedacted(if: privacyMode)
             }
             .padding(.trailing, .padding(.medium))
             
-            VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
+            VStack(alignment: .leading) {
                 HStack {
-                    RefdsText(rowTitle.capitalized, style: .callout)
+                    RefdsText(
+                        rowTitle.capitalized,
+                        style: .callout,
+                        weight: .semibold
+                    )
                     Spacer()
-                    RefdsText(amount.currency(), style: .callout)
-                        .contentTransition(.numericText())
-                        .refdsRedacted(if: privacyMode)
+                    RefdsText(
+                        amount.currency(),
+                        style: .callout
+                    )
+                    .contentTransition(.numericText())
+                    .refdsRedacted(if: privacyMode)
+                }
+                
+                HStack {
+                    RefdsText(
+                        viewData.percentage.percent(),
+                        style: .footnote,
+                        color: .secondary
+                    )
+                    .refdsRedacted(if: privacyMode)
+                    Spacer()
+                    RefdsText(
+                        spend.currency(),
+                        style: .callout,
+                        color: .secondary
+                    )
+                    .contentTransition(.numericText())
+                    .refdsRedacted(if: privacyMode)
                 }
             }
             
@@ -52,6 +70,7 @@ public struct BudgetRowView: View {
         .onAppear { updateStateValue() }
         .onChange(of: viewData.percentage) { updateStateValue() }
         .onChange(of: viewData.amount) { updateStateValue() }
+        .onChange(of: viewData.spend) { updateStateValue() }
     }
     
     private func updateStateValue() {
@@ -59,6 +78,7 @@ public struct BudgetRowView: View {
             withAnimation {
                 percentage = viewData.percentage > 1 ? 1 : viewData.percentage
                 amount = viewData.amount
+                spend = viewData.spend
             }
         }
     }

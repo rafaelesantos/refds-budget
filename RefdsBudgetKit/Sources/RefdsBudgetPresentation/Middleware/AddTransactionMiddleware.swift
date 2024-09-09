@@ -76,7 +76,6 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(
                 model: $0,
-                budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budget.amount,
                 percentage: percentage,
@@ -91,7 +90,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
             on: .high
         )?.rounded(),
            let categoryId = categoriesDict.first(where: { $0.value.1 == Int(position) })?.value.0.id,
-           let category = categories.first(where: { $0.categoryId == categoryId }),
+           let category = categories.first(where: { $0.id == categoryId }),
            amount > .zero {
             completion(.updateCategories(category, categories))
         } else {
@@ -114,7 +113,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
                 id: state.id,
                 date: state.date,
                 message: description,
-                category: category.categoryId,
+                category: category.id,
                 amount: amount,
                 status: state.status
             )

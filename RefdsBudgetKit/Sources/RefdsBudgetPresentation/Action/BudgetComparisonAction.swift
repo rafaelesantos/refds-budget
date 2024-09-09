@@ -10,5 +10,4 @@ public enum BudgetComparisonAction: RefdsReduxAction {
         [BudgetComparisonChartViewDataProtocol],
         [BudgetComparisonChartViewDataProtocol]
     )
-    case dismiss
 }

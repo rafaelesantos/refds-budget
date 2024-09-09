@@ -21,15 +21,23 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios release
 ```
 
-Push a new release build to the App Store
+🚀 Prepare and deploy a polished app release, ready to shine in the App Store!
 
-### ios beta
+### ios build
 
 ```sh
-[bundle exec] fastlane ios beta
+[bundle exec] fastlane ios build
 ```
 
-Push a new beta build to the Test Flight
+🔧 Builds your app with precision, creating a flawless version ready for testing or release!
+
+### ios tests
+
+```sh
+[bundle exec] fastlane ios tests
+```
+
+🧪 Runs all tests to ensure your app is flawless, stable, and ready for deployment!
 
 ----
 

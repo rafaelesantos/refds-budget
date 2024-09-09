@@ -100,9 +100,10 @@ struct SystemLargeExpenseTrackerView: View {
     var body: some View {
         RefdsBudgetUI.SystemLargeExpenseTracker(viewData: entry.viewData)
             .widgetURL(
-                Deeplink.url(
-                    host: .openHome,
-                    path: .none
+                ApplicationRouter.deeplinkURL(
+                    scene: .home,
+                    view: .none,
+                    viewStates: []
                 )
             )
     }

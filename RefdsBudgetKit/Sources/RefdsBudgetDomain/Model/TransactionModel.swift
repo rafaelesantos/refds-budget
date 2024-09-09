@@ -47,11 +47,13 @@ public struct TransactionModel: TransactionModelProtocol, RefdsModel {
     }
     
     public func getEntity(for context: NSManagedObjectContext) -> TransactionEntity {
-        let request = TransactionEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? context.fetch(request).first else {
-            return TransactionEntity(model: self, for: context)
+        context.performAndWait {
+            let request = TransactionEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? context.fetch(request).first else {
+                return TransactionEntity(model: self, for: context)
+            }
+            return entity
         }
-        return entity
     }
 }

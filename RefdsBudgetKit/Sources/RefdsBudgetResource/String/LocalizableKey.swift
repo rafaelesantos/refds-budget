@@ -305,4 +305,6 @@ public enum LocalizableKey: String {
     case comparisonBudgetCategoryPerformance
     case comparisonBudgetTagComparison
     case comparisonBudgetBackButton
+    // MARK: - Artificial Intelligence
+    case aiTitle
 }

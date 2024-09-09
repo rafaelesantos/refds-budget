@@ -1,6 +1,5 @@
-import Foundation
 import SwiftUI
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public struct TagsStateMock: TagsStateProtocol {
     public var selectedTag: TagRowViewDataProtocol = TagRowViewDataMock()

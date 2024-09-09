@@ -9,6 +9,7 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct CategoriesView: View {
+    @Environment(\.navigate) private var navigate
     @Environment(\.privacyMode) private var privacyMode
     @Binding private var state: CategoriesStateProtocol
     @State private var privacyModeEditable = false
@@ -32,10 +33,9 @@ public struct CategoriesView: View {
             sectionsCategory
         }
         .navigationTitle(String.localizable(by: .categoriesNavigationTitle))
-        .onChange(of: state.isFilterEnable) { reloadData() }
-        .onChange(of: state.date) { reloadData() }
-        .onChange(of: state.selectedTags) { reloadData() }
-        .onChange(of: state.selectedStatus) { reloadData() }
+        .onChange(of: state.filter.isDateFilter) { reloadData() }
+        .onChange(of: state.filter.date) { reloadData() }
+        .onChange(of: state.filter.selectedItems) { reloadData() }
         .toolbar { ToolbarItem { moreButton } }
         .environment(\.privacyMode, privacyModeEditable)
         .refreshable { reloadData() }
@@ -55,7 +55,11 @@ public struct CategoriesView: View {
                 ForEach(state.categories.indices, id: \.self) { index in
                     let category = state.categories[index]
                     RefdsButton {
-                        action(.showCategory(category.categoryId, state.isFilterEnable ? state.date : nil))
+                        navigate?.to(
+                            scene: .current,
+                            view: .category,
+                            viewStates: [.id(category.id)]
+                        )
                     } label: {
                         CategoryRowView(viewData: category)
                     }
@@ -82,7 +86,11 @@ public struct CategoriesView: View {
     private func editCategoryButton(at index: Int) -> some View {
         let category = state.categories[index]
         RefdsButton {
-            action(.fetchCategoryForEdit(category.categoryId))
+            navigate?.to(
+                scene: .current,
+                view: .addCategory,
+                viewStates: [.id(category.id)]
+            )
         } label: {
             Label(
                 String.localizable(by: .categoriesEditCategory),
@@ -95,7 +103,7 @@ public struct CategoriesView: View {
     private func removeCategoryButton(at index: Int) -> some View {
         let category = state.categories[index]
         RefdsButton {
-            action(.removeCategory(state.isFilterEnable ? state.date : nil, category.categoryId))
+            action(.removeCategory(category.id))
         } label: {
             Label(
                 String.localizable(by: .categoriesRemoveCategory),
@@ -108,7 +116,7 @@ public struct CategoriesView: View {
     private func swipeRemoveButton(at index: Int) -> some View {
         let category = state.categories[index]
         RefdsButton {
-            action(.removeCategory(state.isFilterEnable ? state.date : nil, category.categoryId))
+            action(.removeCategory(category.id))
         } label: {
             RefdsIcon(.trashFill)
         }
@@ -119,7 +127,11 @@ public struct CategoriesView: View {
     private func swipeEditButton(at index: Int) -> some View {
         let category = state.categories[index]
         RefdsButton {
-            action(.fetchCategoryForEdit(category.categoryId))
+            navigate?.to(
+                scene: .current,
+                view: .addCategory,
+                viewStates: [.id(category.id)]
+            )
         } label: {
             RefdsIcon(.squareAndPencil)
         }
@@ -148,7 +160,13 @@ public struct CategoriesView: View {
     @ViewBuilder
     private var rowAddBudget: some View {
         if !state.isEmptyCategories, !state.isEmptyBudgets {
-            RefdsButton { action(.addBudget) } label: {
+            RefdsButton {
+                navigate?.to(
+                    scene: .current,
+                    view: .addBudget,
+                    viewStates: []
+                )
+            } label: {
                 HStack {
                     RefdsText(
                         .localizable(by: .categoriesEmptyBudgetsButton),
@@ -167,7 +185,13 @@ public struct CategoriesView: View {
     }
     
     private var rowAddCategory: some View {
-        RefdsButton { action(.addCategory(nil)) } label: {
+        RefdsButton {
+            navigate?.to(
+                scene: .current,
+                view: .addCategory,
+                viewStates: []
+            )
+        } label: {
             HStack {
                 RefdsText(
                     .localizable(by: .categoriesEmptyCategoriesButton),
@@ -188,12 +212,29 @@ public struct CategoriesView: View {
     private var sectionEmptyBudgets: some View {
         if !state.isEmptyCategories, state.isEmptyBudgets {
             RefdsSection {
-                RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
-                RefdsButton { action(.addBudget) } label: {
-                    RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
+                RefdsText(
+                    .localizable(by: .categoriesEmptyBudgetsDescription),
+                    style: .callout
+                )
+                RefdsButton { 
+                    navigate?.to(
+                        scene: .current,
+                        view: .addBudget,
+                        viewStates: []
+                    )
+                } label: {
+                    RefdsText(
+                        .localizable(by: .categoriesEmptyBudgetsButton),
+                        style: .callout,
+                        color: .accentColor
+                    )
                 }
             } header: {
-                RefdsText(.localizable(by: .categoriesEmptyBudgetsTitle), style: .footnote, color: .secondary)
+                RefdsText(
+                    .localizable(by: .categoriesEmptyBudgetsTitle),
+                    style: .footnote,
+                    color: .secondary
+                )
             }
         }
     }
@@ -202,90 +243,36 @@ public struct CategoriesView: View {
     private var sectionEmptyCategories: some View {
         if state.isEmptyCategories {
             RefdsSection {
-                RefdsText(.localizable(by: .categoriesEmptyCategoriesDescription), style: .callout)
-                RefdsButton { action(.addCategory(nil)) } label: {
-                    RefdsText(.localizable(by: .categoriesEmptyCategoriesButton), style: .callout, color: .accentColor)
+                RefdsText(
+                    .localizable(by: .categoriesEmptyCategoriesDescription),
+                    style: .callout
+                )
+                RefdsButton { 
+                    navigate?.to(
+                        scene: .current,
+                        view: .addCategory,
+                        viewStates: []
+                    )
+                } label: {
+                    RefdsText(
+                        .localizable(by: .categoriesEmptyCategoriesButton),
+                        style: .callout,
+                        color: .accentColor
+                    )
                 }
             } header: {
-                RefdsText(.localizable(by: .categoriesEmptyCategoriesTitle), style: .footnote, color: .secondary)
+                RefdsText(
+                    .localizable(by: .categoriesEmptyCategoriesTitle),
+                    style: .footnote,
+                    color: .secondary
+                )
             }
         }
     }
     
     @ViewBuilder
     private var sectionFilters: some View {
-        Menu {
-            RefdsButton {
-                withAnimation { state.isFilterEnable.toggle() }
-            } label: {
-                Label(
-                    String.localizable(by: .transactionsFilterByDate),
-                    systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
-                )
-            }
-            selectTagRowView
-            selectStatusRowView
-        } label: {
-            HStack {
-                RefdsText(.localizable(by: .categoriesFilter), style: .callout)
-                Spacer()
-                RefdsText(2.asString, style: .callout, color: .secondary)
-                RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
-            }
-        }
-        
-        if state.isFilterEnable {
-            DateRowView(date: $state.date)
-        }
-        
-        let words = Array(state.selectedTags) + Array(state.selectedStatus)
-        let sentence = words.joined(separator: " • ").uppercased()
-        
-        if !sentence.isEmpty {
-            HStack(spacing: .padding(.medium)) {
-                RefdsText(sentence, style: .footnote, color: .secondary)
-                Spacer(minLength: .zero)
-                RefdsButton {
-                    withAnimation {
-                        state.selectedTags = []
-                        state.selectedStatus = []
-                    }
-                } label: {
-                    RefdsIcon(
-                        .xmarkCircleFill,
-                        color: .secondary.opacity(0.8),
-                        size: 18,
-                        weight: .bold,
-                        renderingMode: .hierarchical
-                    )
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private var selectTagRowView: some View {
-        if !state.tags.isEmpty {
-            SelectMenuRowView(
-                header: .tagsMenuSelectHeader,
-                icon: .tagFill,
-                title: .tagsNavigationTitle,
-                data: state.tags,
-                selectedData: $state.selectedTags
-            )
-        }
-    }
-    
-    @ViewBuilder
-    private var selectStatusRowView: some View{
-        let status: [TransactionStatus] = [.pending, .cleared]
-        SelectMenuRowView(
-            header: .addTransactionStatusSelect,
-            icon: .listDashHeaderRectangle,
-            title: .addTransactionStatusHeader,
-            data: status.map { $0.description },
-            selectedData: $state.selectedStatus
-        )
+        FilterView(viewData: $state.filter)
     }
     
     private var moreButton: some View {
@@ -299,7 +286,11 @@ public struct CategoriesView: View {
                 icon: .plus,
                 isProFeature: false
             ) {
-                action(.addCategory(nil))
+                navigate?.to(
+                    scene: .current,
+                    view: .addCategory,
+                    viewStates: []
+                )
             }
             
             Divider()

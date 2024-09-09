@@ -25,78 +25,13 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         }
         
         switch action {
-        case let action as AddBudgetAction:
-            state = self.handler(with: state, for: action)
-        case let action as CategoriesAction:
-            state = self.handler(with: state, for: action)
-        case let action as CategoryAction:
-            state = self.handler(with: state, for: action)
         case let action as AddTransactionAction:
             state = self.handler(with: state, for: action)
         case let action as TransactionsAction:
             state = self.handler(with: state, for: action)
-        case let action as HomeAction:
-            state = self.handler(with: state, for: action)
-        case let action as BudgetSelectionAction:
-            state = self.handler(with: state, for: action)
         default: break
         }
         
-        return state
-    }
-    
-    private func handler(
-        with state: State,
-        for action: AddBudgetAction
-    ) -> State {
-        var state: State = state
-        switch action {
-        
-        case .addCategory:
-            state.addCategoryState = AddCategoryState()
-        default:
-            break
-        }
-        return state
-    }
-    
-    private func handler(
-        with state: State,
-        for action: CategoriesAction
-    ) -> State {
-        var state: State = state
-        switch action {
-        case let .showCategory(categoryId, date):
-            state.categoryState = CategoryState(
-                id: categoryId,
-                date: date ?? .current,
-                isFilterEnable: date != nil
-            )
-        case let .addCategory(category):
-            state.addCategoryState = category ?? AddCategoryState()
-        case .addBudget:
-            state.addBudgetState = AddBudgetState(month: state.categoriesState.date)
-        default:
-            break
-        }
-        return state
-    }
-    
-    private func handler(
-        with state: State,
-        for action: CategoryAction
-    ) -> State {
-        var state: State = state
-        switch action {
-        case let .editCategory(category):
-            state.addCategoryState = category
-        case let .editBudget(budget, _):
-            state.addBudgetState = budget
-        case let .addTransaction(transaction):
-            state.addTransactionState = transaction ?? AddTransactionState()
-        default:
-            break
-        }
         return state
     }
     
@@ -109,7 +44,7 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         case .addCategory:
             state.addCategoryState = AddCategoryState()
         case let .addBudget(date):
-            state.addBudgetState = AddBudgetState(month: date ?? .current)
+            state.addBudgetState = AddBudgetState(date: date ?? .current)
         case .dismiss:
             state.addTransactionState = AddTransactionState(category: nil)
         default:
@@ -126,40 +61,6 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         switch action {
         case let .addTransaction(transaction):
             state.addTransactionState = transaction ?? AddTransactionState()
-        default:
-            break
-        }
-        return state
-    }
-    
-    private func handler(
-        with state: State,
-        for action: HomeAction
-    ) -> State {
-        var state: State = state
-        switch action {
-        case .manageTags:
-            state.tagsState = TagsState()
-        case .showSettings:
-            state.settingsState = SettingsState()
-        case .showBudgetComparison:
-            state.budgetSelectionState = BudgetSelectionState()
-        default:
-            break
-        }
-        return state
-    }
-    
-    private func handler(
-        with state: State,
-        for action: BudgetSelectionAction
-    ) -> State {
-        var state: State = state
-        switch action {
-        case .addBudget:
-            state.addBudgetState = AddBudgetState()
-        case .showComparison:
-            state.budgetComparisonState = BudgetComparisonState()
         default:
             break
         }

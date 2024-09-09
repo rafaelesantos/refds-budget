@@ -165,8 +165,7 @@ public final class RefdsBudgetIntentPresenter: RefdsBudgetIntentPresenterProtoco
             let spend = transactions.map { $0.amount }.reduce(.zero, +)
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return CategoryRowViewData(
-                categoryId: entity.id,
-                budgetId: budget.id,
+                id: entity.id,
                 icon: entity.icon,
                 name: entity.name,
                 description: budget.message,

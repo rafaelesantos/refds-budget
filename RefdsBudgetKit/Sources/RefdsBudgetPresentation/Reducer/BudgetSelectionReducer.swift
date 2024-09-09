@@ -14,7 +14,8 @@ public final class BudgetSelectionReducer: RefdsReduxReducerProtocol {
             state.budgetsSelected = []
         case let .updateCategories(budgets):
             state.budgets = budgets
-        case .none, .showComparison, .addBudget: break
+        case .none:
+            break
         }
         
         return state

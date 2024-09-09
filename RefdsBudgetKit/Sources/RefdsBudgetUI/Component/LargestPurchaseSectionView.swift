@@ -53,16 +53,7 @@ public struct LargestPurchaseSectionView: View {
             HStack(alignment: .top) {
                 if let icon = RefdsIconSymbol(rawValue: transaction.icon) {
                     VStack(spacing: .zero) {
-                        RefdsIcon(
-                            icon,
-                            color: transaction.color,
-                            size: 15
-                        )
-                        .frame(width: 25, height: 25)
-                        .padding(10)
-                        .background(transaction.color.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: .cornerRadius))
-                        
+                        RefdsIconRow(icon, color: transaction.color, size: 45)
                         rankSealView(for: index)
                             .padding(.top, -12)
                     }
@@ -78,10 +69,11 @@ public struct LargestPurchaseSectionView: View {
                     RefdsText(
                         transaction.date.asString(withDateFormat: .custom("EEEE dd, MMMM yyyy")).uppercased(),
                         style: .caption,
-                        color: .secondary,
-                        weight: .bold
+                        color: .primary
                     )
                 }
+                
+                Spacer(minLength: .zero)
             }
             
             Spacer(minLength: .zero)

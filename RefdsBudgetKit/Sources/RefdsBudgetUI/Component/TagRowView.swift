@@ -36,9 +36,11 @@ public struct TagRowView: View {
             
             Spacer(minLength: .zero)
             if let value = viewData.value {
-                RefdsText(value.currency(), style: .callout)
+                RefdsText(value.currency(), style: .callout, weight: .semibold)
                     .refdsRedacted(if: privacyMode)
             }
+            
+            RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
         }
     }
 }

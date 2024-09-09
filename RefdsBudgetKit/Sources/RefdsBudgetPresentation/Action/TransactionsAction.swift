@@ -1,5 +1,6 @@
 import Foundation
 import RefdsRedux
+import RefdsBudgetDomain
 import RefdsBudgetData
 
 public enum TransactionsAction: RefdsReduxAction {
@@ -8,14 +9,14 @@ public enum TransactionsAction: RefdsReduxAction {
     
     case updateData(
         transactions: [[TransactionRowViewDataProtocol]],
-        categories: [String],
-        tags: [String],
         page: Int,
         canChangePage: Bool
     )
+    
     case updateBalance(BalanceRowViewDataProtocol)
-    case updateError(RefdsBudgetError)
+    case updateFilterItems([FilterItem])
     case updateStatus(UUID)
+    case updateError(RefdsBudgetError)
     case updateShareText(String)
     case updateShare(URL)
     

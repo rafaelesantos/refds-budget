@@ -37,9 +37,9 @@ public struct RemainingCategoryRowView: View {
             
             VStack(spacing: .zero) {
                 HStack {
-                    RefdsText(viewData.name.capitalized, style: .callout, weight: .bold, lineLimit: 1)
+                    RefdsText(viewData.name.capitalized, style: .callout, lineLimit: 1)
                     Spacer(minLength: .zero)
-                    RefdsText(budget.currency(), style: .callout, lineLimit: 1)
+                    RefdsText(budget.currency(), style: .callout, weight: .semibold, lineLimit: 1)
                         .contentTransition(.numericText())
                         .refdsRedacted(if: privacyMode)
                 }
@@ -61,6 +61,8 @@ public struct RemainingCategoryRowView: View {
                     .refdsRedacted(if: privacyMode)
                 }
             }
+            
+            RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
         }
     }
     

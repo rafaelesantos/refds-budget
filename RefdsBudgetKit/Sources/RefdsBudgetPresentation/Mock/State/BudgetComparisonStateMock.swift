@@ -1,10 +1,12 @@
-import Foundation
 import SwiftUI
 import RefdsRedux
 import RefdsShared
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public struct BudgetComparisonStateMock: BudgetComparisonStateProtocol {
+    public var hasAI: Bool = .random()
+    public var baseBudgetDate: String?
+    public var compareBudgetDate: String?
     public var baseBudget: BudgetRowViewDataProtocol? = BudgetRowViewDataMock()
     public var compareBudget: BudgetRowViewDataProtocol? = BudgetRowViewDataMock()
     public var selectedCategory: BudgetComparisonChartViewDataProtocol?

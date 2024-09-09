@@ -41,93 +41,130 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (HomeAction) -> Void
     ) {
         var budgetEntities: [BudgetModelProtocol] = []
-        var categoryEntities: [CategoryModelProtocol] = []
-        var transactionEntities: [TransactionModelProtocol] = []
-        let tagEntities = tagRepository.getTags()
+        var categories: [CategoryModelProtocol] = []
+        var transactions: [TransactionModelProtocol] = []
+        let tags = tagRepository.getTags()
         
-        if state.isFilterEnable {
-            let date = state.date
-            transactionEntities = transactionRepository.getTransactions(from: date, format: .monthYear)
-            categoryEntities = categoryRepository.getCategories(from: date)
+        if state.filter.isDateFilter {
+            let date = state.filter.date
+            transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
+            categories = categoryRepository.getCategories(from: date)
             budgetEntities = budgetRepository.getBudgets(from: date)
         } else {
-            transactionEntities = transactionRepository.getAllTransactions()
-            categoryEntities = categoryRepository.getAllCategories()
+            transactions = transactionRepository.getAllTransactions()
+            categories = categoryRepository.getAllCategories()
             budgetEntities = budgetRepository.getAllBudgets()
         }
         
-        if !state.selectedCategories.isEmpty {
-            let categoriesId = categoryRepository.getAllCategories().filter { state.selectedCategories.contains($0.name) }.map { $0.id }
-            transactionEntities = transactionEntities.filter { categoriesId.contains($0.category) }
-        }
-        
-        if !state.selectedTags.isEmpty {
-            transactionEntities = transactionEntities.filter { transaction in
-                var contains = true
-                for tagName in state.selectedTags {
-                    if !transaction.message
-                        .folding(options: .diacriticInsensitive, locale: .current)
-                        .lowercased()
-                        .contains(
-                            tagName
-                                .folding(options: .diacriticInsensitive, locale: .current)
-                                .lowercased()
-                        ) {
-                        contains = false
+        if !state.filter.selectedItems.isEmpty {
+            let status = TransactionStatus.allCases.filter { state.filter.selectedItems.contains($0.description) }.map { $0.rawValue }
+            if !status.isEmpty {
+                transactions = transactions.filter { status.contains($0.status) }
+            }
+            
+            let categoriesId = categoryRepository.getAllCategories().filter { state.filter.selectedItems.contains($0.name) }.map { $0.id }
+            if !categoriesId.isEmpty {
+                transactions = transactions.filter { categoriesId.contains($0.category) }
+            }
+            
+            let tags = tagRepository.getTags().filter { state.filter.selectedItems.contains($0.name) }
+            if !tags.isEmpty {
+                transactions = transactions.filter { transaction in
+                    var contains = true
+                    for tag in tags {
+                        if !transaction.message
+                            .folding(options: .diacriticInsensitive, locale: .current)
+                            .lowercased()
+                            .contains(
+                                tag.name
+                                    .folding(options: .diacriticInsensitive, locale: .current)
+                                    .lowercased()
+                            ) {
+                            contains = false
+                        }
                     }
+                    return contains
                 }
-                return contains
             }
         }
         
-        if !state.selectedStatus.isEmpty {
-            transactionEntities = transactionEntities.filter {
-                state.selectedStatus.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
+        if !state.filter.searchText.isEmpty {
+            transactions = transactions.filter {
+                $0.amount.asString.lowercased().contains(state.filter.searchText.lowercased()) ||
+                $0.message.lowercased().contains(state.filter.searchText.lowercased())
             }
         }
+        
+        let pendingCleared = getPendingCleared(on: transactions)
+        
+        completion(
+            .updateData(
+                remaining: [],
+                tags: [],
+                largestPurchase: [],
+                pendingCleared: pendingCleared
+            )
+        )
+        
+        let status = TransactionStatus.allCases.map { $0.description }
+        let selectedStatus = state.filter.selectedItems.filter { status.contains($0) }
         
         let remaining = getRemaining(
-            for: categoryEntities,
-            on: transactionEntities,
+            for: categories,
+            on: transactions,
             with: budgetEntities,
-            status: state.selectedStatus
+            status: selectedStatus
         ).sorted(by: { $0.spend > $1.spend })
-        
-        let tags = getTagsRow(
-            for: transactionEntities,
-            with: tagEntities,
-            status: state.selectedStatus
-        )
-        
-        let largestPurchase = getLargestPurchase(
-            on: transactionEntities,
-            with: categoryEntities,
-            status: state.selectedStatus
-        )
-        
-        let pendingCleared = getPendingCleared(on: transactionEntities)
         
         completion(
             .updateData(
                 remaining: remaining,
-                tags: tags,
+                tags: [],
+                largestPurchase: [],
+                pendingCleared: pendingCleared
+            )
+        )
+        
+        let tagRows = getTagsRow(
+            for: transactions,
+            with: tags,
+            status: selectedStatus
+        )
+        
+        completion(
+            .updateData(
+                remaining: remaining,
+                tags: tagRows,
+                largestPurchase: [],
+                pendingCleared: pendingCleared
+            )
+        )
+        
+        let largestPurchase = getLargestPurchase(
+            on: transactions,
+            with: categories,
+            status: selectedStatus
+        )
+        
+        completion(
+            .updateData(
+                remaining: remaining,
+                tags: tagRows,
                 largestPurchase: largestPurchase,
-                pendingCleared: pendingCleared,
-                tagsMenu: tagEntities.map { $0.name },
-                categoriesMenu: categoryEntities.map { $0.name }
+                pendingCleared: pendingCleared
             )
         )
     }
     
     private func getRemaining(
-        for categoryEntities: [CategoryModelProtocol],
-        on transactionEntities: [TransactionModelProtocol],
+        for categories: [CategoryModelProtocol],
+        on transactions: [TransactionModelProtocol],
         with budgetEntities: [BudgetModelProtocol],
         status: Set<String>
     ) -> [CategoryRowViewDataProtocol] {
-        categoryEntities.compactMap { entity in
+        categories.compactMap { entity in
             let budgetEntities = budgetEntities.filter { $0.category == entity.id }
-            let transactionEntities = transactionEntities.filter { $0.category == entity.id }.filter {
+            let transactions = transactions.filter { $0.category == entity.id }.filter {
                 if status.isEmpty {
                     return $0.status != TransactionStatus.pending.rawValue &&
                     $0.status != TransactionStatus.cleared.rawValue
@@ -138,29 +175,28 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
             
             guard let budget = budgetEntities.last else { return nil }
             let budgetAmount = budgetEntities.map { $0.amount }.reduce(.zero, +)
-            let spend = transactionEntities.map { $0.amount }.reduce(.zero, +)
+            let spend = transactions.map { $0.amount }.reduce(.zero, +)
             let percentage = spend / (budgetAmount == .zero ? 1 : budgetAmount)
             
             return categoryAdapter.adapt(
                 model: entity,
-                budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budgetAmount,
                 percentage: percentage,
-                transactionsAmount: transactionEntities.count,
+                transactionsAmount: transactions.count,
                 spend: spend
             )
         }.filter { $0.transactionsAmount > 0 }
     }
     
     private func getTagsRow(
-        for transactionEntities: [TransactionModelProtocol],
-        with tagEntities: [TagModelProtocol],
+        for transactions: [TransactionModelProtocol],
+        with tags: [TagModelProtocol],
         status: Set<String>
     ) -> [TagRowViewDataProtocol] {
-        tagEntities.compactMap { tag in
+        tags.compactMap { tag in
             guard let tagName = tag.name.applyingTransform(.stripDiacritics, reverse: false) else { return nil }
-            let value = transactionEntities.filter {
+            let value = transactions.filter {
                 $0.message
                     .applyingTransform(.stripDiacritics, reverse: false)?
                     .lowercased()
@@ -182,11 +218,11 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func getLargestPurchase(
-        on transactionEntities: [TransactionModelProtocol],
-        with categoryEntities: [CategoryModelProtocol],
+        on transactions: [TransactionModelProtocol],
+        with categories: [CategoryModelProtocol],
         status: Set<String>
     ) -> [TransactionRowViewDataProtocol] {
-        let transactionEntities = transactionEntities.filter {
+        let transactions = transactions.filter {
             if status.isEmpty {
                 return $0.status != TransactionStatus.pending.rawValue &&
                 $0.status != TransactionStatus.cleared.rawValue
@@ -194,8 +230,8 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 return true
             }
         }.sorted(by: { $0.amount > $1.amount }).prefix(5)
-        return transactionEntities.compactMap { entity in
-            guard let category = categoryEntities.first(where: { $0.id == entity.category }) else { return nil }
+        return transactions.compactMap { entity in
+            guard let category = categories.first(where: { $0.id == entity.category }) else { return nil }
             return transactionRowViewDataAdapter.adapt(
                 model: entity,
                 categoryModel: category
@@ -204,14 +240,14 @@ public final class HomeMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func getPendingCleared(
-        on transactionEntities: [TransactionModelProtocol]
+        on transactions: [TransactionModelProtocol]
     ) -> PendingClearedSectionViewDataProtocol {
-        let pendings = transactionEntities.filter {
+        let pendings = transactions.filter {
             let status = TransactionStatus(rawValue: $0.status)
             return status == .pending
         }.map { $0.amount }
         
-        let cleareds = transactionEntities.filter {
+        let cleareds = transactions.filter {
             let status = TransactionStatus(rawValue: $0.status)
             return status == .cleared
         }.map { $0.amount }

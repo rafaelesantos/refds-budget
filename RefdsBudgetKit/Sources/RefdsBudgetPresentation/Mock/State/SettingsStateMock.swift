@@ -1,6 +1,6 @@
 import SwiftUI
 import StoreKit
-import RefdsBudgetData
+import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public struct SettingsStateMock: SettingsStateProtocol {

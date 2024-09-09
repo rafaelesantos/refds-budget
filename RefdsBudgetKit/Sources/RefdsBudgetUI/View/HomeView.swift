@@ -1,13 +1,15 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsGamification
 import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct HomeView: View {
     @Environment(\.privacyMode) private var privacyMode
-    @State private var privacyModeEditable = false
+    @Environment(\.navigate) private var navigate
     
+    @State private var privacyModeEditable = false
     @Binding private var state: HomeStateProtocol
     private let action: (HomeAction) -> Void
     
@@ -24,7 +26,7 @@ public struct HomeView: View {
             sectionBalanceView
             sectionFiltersView
             sectionSpendBudgetView
-            BudgetComparisonRowView() { action(.showBudgetComparison) }
+            sectionComparisonBudgetView
             sectionLargestPurchaseView
             sectionRemainingView
             sectionPendingClearedView
@@ -34,11 +36,11 @@ public struct HomeView: View {
         .toolbar { ToolbarItem { moreButton } }
         .onAppear { reloadData() }
         .refreshable { reloadData() }
-        .onChange(of: state.isFilterEnable) { reloadData() }
-        .onChange(of: state.date) { reloadData() }
-        .onChange(of: state.selectedTags) { reloadData() }
-        .onChange(of: state.selectedCategories) { reloadData() }
-        .onChange(of: state.selectedStatus) { reloadData() }
+        .onChange(of: state.filter.isDateFilter) { reloadData() }
+        .onChange(of: state.filter.date) { reloadData() }
+        .onChange(of: state.filter.selectedItems) { reloadData() }
+        .onChange(of: state.selectedTag?.name) { showTransaction(for: state.selectedTag?.name) }
+        .onChange(of: state.selectedRemaining?.name) { showTransaction(for: state.selectedRemaining?.name) }
         .environment(\.privacyMode, privacyModeEditable)
         .refdsToast(item: $state.error)
     }
@@ -46,6 +48,29 @@ public struct HomeView: View {
     private func reloadData() {
         privacyModeEditable = privacyMode
         action(.fetchData)
+    }
+    
+    private func showTransaction(for item: String?) {
+        guard let item = item else { return }
+        navigate?.to(
+            scene: .transactions,
+            view: .none,
+            viewStates: [
+                .isDateFilter(state.filter.isDateFilter),
+                .date(state.filter.date),
+                .selectedItems(Set([item]))
+            ]
+        )
+    }
+    
+    private var sectionComparisonBudgetView: some View {
+        ComparisonBudgetView() { hasAI in
+            navigate?.to(
+                scene: .current,
+                view: .budgetSelection,
+                viewStates: [.hasAI(hasAI)]
+            )
+        }
     }
     
     @ViewBuilder
@@ -65,94 +90,7 @@ public struct HomeView: View {
     
     @ViewBuilder
     private var sectionFiltersView: some View {
-        Menu {
-            RefdsButton {
-                withAnimation { state.isFilterEnable.toggle() }
-            } label: {
-                Label(
-                    String.localizable(by: .transactionsFilterByDate),
-                    systemImage: state.isFilterEnable ? RefdsIconSymbol.checkmark.rawValue : ""
-                )
-            }
-            
-            selectCategoryRowView
-            selectTagRowView
-            selectStatusRowView
-        } label: {
-            HStack {
-                RefdsText(.localizable(by: .categoriesFilter), style: .callout)
-                Spacer()
-                RefdsText(3.asString, style: .callout, color: .secondary)
-                RefdsIcon(.chevronUpChevronDown, color: .secondary.opacity(0.5), style: .callout)
-            }
-        }
-        
-        if state.isFilterEnable {
-            DateRowView(date: $state.date)
-        }
-        
-        let words = Array(state.selectedStatus) + Array(state.selectedTags) + Array(state.selectedCategories)
-        let sentence = words.joined(separator: " • ").uppercased()
-        
-        if !sentence.isEmpty {
-            HStack(spacing: .padding(.medium)) {
-                RefdsText(sentence, style: .footnote, color: .secondary)
-                Spacer(minLength: .zero)
-                RefdsButton {
-                    withAnimation {
-                        state.selectedTags = []
-                        state.selectedCategories = []
-                        state.selectedStatus = []
-                    }
-                } label: {
-                    RefdsIcon(
-                        .xmarkCircleFill,
-                        color: .secondary.opacity(0.8),
-                        size: 18,
-                        weight: .bold,
-                        renderingMode: .hierarchical
-                    )
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private var selectCategoryRowView: some View {
-        if !state.categories.isEmpty {
-            SelectMenuRowView(
-                header: .transactionsCategoriesFilterHeader,
-                icon: .squareStack3dForwardDottedlineFill,
-                title: .categoriesNavigationTitle,
-                data: state.categories,
-                selectedData: $state.selectedCategories
-            )
-        }
-    }
-    
-    @ViewBuilder
-    private var selectTagRowView: some View {
-        if !state.tags.isEmpty {
-            SelectMenuRowView(
-                header: .tagsMenuSelectHeader,
-                icon: .bookmarkFill,
-                title: .tagsNavigationTitle,
-                data: state.tags,
-                selectedData: $state.selectedTags
-            )
-        }
-    }
-    
-    @ViewBuilder
-    private var selectStatusRowView: some View{
-        let status: [TransactionStatus] = [.pending, .cleared]
-        SelectMenuRowView(
-            header: .addTransactionStatusSelect,
-            icon: .listDashHeaderRectangle,
-            title: .addTransactionStatusHeader,
-            data: status.map { $0.description },
-            selectedData: $state.selectedStatus
-        )
+        FilterView(viewData: $state.filter)
     }
     
     @ViewBuilder
@@ -167,6 +105,7 @@ public struct HomeView: View {
         if let balance = state.remainingBalance {
             RemainingCategorySectionView(
                 header: { BalanceRowView(viewData: balance, isRemaining: true) },
+                selectedRemaining: $state.selectedRemaining,
                 viewData: state.remaining
             )
         }
@@ -175,8 +114,15 @@ public struct HomeView: View {
     @ViewBuilder
     private var sectionTagsView: some View {
         if !state.tagsRow.isEmpty {
-            TagsSectionView(tags: state.tagsRow) {
-                action(.manageTags)
+            TagsSectionView(
+                selectedTag: $state.selectedTag,
+                tags: state.tagsRow
+            ) {
+                navigate?.to(
+                    scene: .current,
+                    view: .manageTags,
+                    viewStates: []
+                )
             }
         }
     }

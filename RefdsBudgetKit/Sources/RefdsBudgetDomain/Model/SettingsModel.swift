@@ -92,11 +92,13 @@ public struct SettingsModel: SettingsModelProtocol, RefdsModel {
     }
     
     public func getEntity(for context: NSManagedObjectContext) -> SettingsEntity {
-        let request = SettingsEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        guard let entity = try? context.fetch(request).last else {
-            return SettingsEntity(model: self, for: context)
+        context.performAndWait {
+            let request = SettingsEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            guard let entity = try? context.fetch(request).last else {
+                return SettingsEntity(model: self, for: context)
+            }
+            return entity
         }
-        return entity
     }
 }

@@ -5,11 +5,42 @@ import CreateML
 import CoreML
 import TabularData
 
-public enum IntelligenceModel: String, CaseIterable {
-    case budgetFromBudgets
-    case budgetFromTransactions
+public enum IntelligenceModel: CaseIterable {
+    case budgetFromBudgets(Date?)
+    case budgetFromTransactions(Date?)
     case categoryFromTransactions
-    case transactionsFromTags
+    case transactionsFromTags(Date?)
+    case transactionsFromCategories(Date?)
+    
+    public var rawValue: String {
+        switch self {
+        case .budgetFromBudgets: return "budgetFromBudgets"
+        case .budgetFromTransactions: return "budgetFromTransactions"
+        case .categoryFromTransactions: return "categoryFromTransactions"
+        case .transactionsFromTags: return "transactionsFromTags"
+        case .transactionsFromCategories: return "transactionsFromCategories"
+        }
+    }
+    
+    public static var allCases: [IntelligenceModel] {
+        [
+            .budgetFromBudgets(nil),
+            .budgetFromTransactions(nil),
+            .categoryFromTransactions,
+            .transactionsFromTags(nil),
+            .transactionsFromCategories(nil)
+        ]
+    }
+    
+    public static func allCases(for date: Date?) -> [IntelligenceModel] {
+        [
+            .budgetFromBudgets(date),
+            .budgetFromTransactions(date),
+            .categoryFromTransactions,
+            .transactionsFromTags(date),
+            .transactionsFromCategories(date)
+        ]
+    }
     
     func getData(
         tagEntities: [TagModelProtocol],
@@ -19,14 +50,16 @@ public enum IntelligenceModel: String, CaseIterable {
         on step: @escaping (String) -> Void
     ) -> Data? {
         switch self {
-        case .budgetFromBudgets: return BudgetFromBudgetsData(
+        case let .budgetFromBudgets(excludeDate): return BudgetFromBudgetsData(
             categoryEntities: categoryEntities,
             budgetEntities: budgetEntities,
+            excludedDate: excludeDate,
             on: step
         )
-        case .budgetFromTransactions: return BudgetFromTransactionsData(
+        case let .budgetFromTransactions(excludeDate): return BudgetFromTransactionsData(
             categoryEntities: categoryEntities,
             transactionEntities: transactionEntities,
+            excludedDate: excludeDate,
             on: step
         )
         case .categoryFromTransactions: return CategoryFromTransactionData(
@@ -34,9 +67,16 @@ public enum IntelligenceModel: String, CaseIterable {
             transactionEntities: transactionEntities,
             on: step
         )
-        case .transactionsFromTags: return TransactionsFromTagsData(
+        case let .transactionsFromTags(excludeDate): return TransactionsFromTagsData(
             tagEntities: tagEntities,
             transactionEntities: transactionEntities,
+            excludedDate: excludeDate,
+            on: step
+        )
+        case let .transactionsFromCategories(excludeDate): return TransactionsFromCategoriesData(
+            categories: categoryEntities,
+            transactionEntities: transactionEntities,
+            excludedDate: excludeDate,
             on: step
         )
         }
@@ -57,6 +97,10 @@ public enum IntelligenceModel: String, CaseIterable {
               let model = try? MLModel(contentsOf: urlModel)
         else { return nil }
         return model
+    }
+    
+    func delete(for level: IntelligenceLevel) {
+        RefdsDefaults.set(Data(), for: key(for: level))
     }
     
     func save(

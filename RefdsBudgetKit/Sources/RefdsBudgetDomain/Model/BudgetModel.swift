@@ -42,11 +42,13 @@ public struct BudgetModel: BudgetModelProtocol, RefdsModel {
     }
     
     public func getEntity(for context: NSManagedObjectContext) -> BudgetEntity {
-        let request = BudgetEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? context.fetch(request).first else {
-            return BudgetEntity(model: self, for: context)
+        context.performAndWait {
+            let request = BudgetEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? context.fetch(request).first else {
+                return BudgetEntity(model: self, for: context)
+            }
+            return entity
         }
-        return entity
     }
 }

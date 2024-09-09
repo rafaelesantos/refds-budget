@@ -5,10 +5,11 @@ public protocol BudgetRowViewDataProtocol {
     var id: UUID { get }
     var date: Date { get }
     var description: String? { get }
-    var amount: Double { get }
-    var spend: Double { get }
-    var percentage: Double { get }
+    var amount: Double { get set }
+    var spend: Double { get set }
+    var percentage: Double { get set }
     var isSelected: Bool { get set }
+    var hasAI: Bool { get set }
 }
 
 public struct BudgetRowViewData: BudgetRowViewDataProtocol {
@@ -19,6 +20,7 @@ public struct BudgetRowViewData: BudgetRowViewDataProtocol {
     public var spend: Double
     public var percentage: Double
     public var isSelected: Bool = false
+    public var hasAI: Bool = false
     
     init(
         id: UUID,
@@ -26,7 +28,9 @@ public struct BudgetRowViewData: BudgetRowViewDataProtocol {
         description: String? = nil,
         amount: Double,
         spend: Double,
-        percentage: Double
+        percentage: Double,
+        isSelected: Bool = false,
+        hasAI: Bool = false
     ) {
         self.id = id
         self.date = date
@@ -34,5 +38,7 @@ public struct BudgetRowViewData: BudgetRowViewDataProtocol {
         self.amount = amount
         self.spend = spend
         self.percentage = percentage
+        self.isSelected = isSelected
+        self.hasAI = hasAI
     }
 }

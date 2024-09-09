@@ -1,6 +1,7 @@
 import SwiftUI
 import RefdsUI
 import RefdsInjection
+import RefdsGamification
 import RefdsRedux
 import RefdsBudgetResource
 import RefdsBudgetPresentation
@@ -13,6 +14,7 @@ public struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.openURL) private var openURL
     @Environment(\.isPro) private var isPro
+    @Environment(\.navigate) private var navigate
     
     @State private var tintColor: Color = .accentColor
     
@@ -54,32 +56,10 @@ public struct SettingsView: View {
         .refdsShare(item: $state.share)
     }
     
-    private var bindingApplicationState: Binding<ApplicationStateProtocol> {
-        Binding {
-            applicationState?.wrappedValue ?? ApplicationState()
-        } set: {
-            applicationState?.wrappedValue = $0
-        }
-    }
-    
-    private var bindingItemNavigation: Binding<Int> {
-        Binding {
-            itemNavigation?.wrappedValue?.rawValue ?? ItemNavigation.home.rawValue
-        } set: {
-            if let item = ItemNavigation(rawValue: $0) {
-                itemNavigation?.wrappedValue = item
-            }
-        }
-    }
-    
     private func handlerDocument(for result: Result<URL, Error>) {
         switch result {
         case let .success(url):
-            Deeplink.shared.trigger(
-                state: bindingApplicationState,
-                itemNavigation: bindingItemNavigation,
-                url: url
-            )
+            navigate?.to(url: url)
         case .failure:
             state.error = .notFoundBudget
         }

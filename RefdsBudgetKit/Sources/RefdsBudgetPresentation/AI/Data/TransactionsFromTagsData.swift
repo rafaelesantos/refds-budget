@@ -4,20 +4,16 @@ import RefdsBudgetDomain
 public extension IntelligenceInput {
     static func transactionsFromTags(
         date: Date,
-        amount: Double
+        tag: String
     ) -> IntelligenceInput? {
-        var data: [String: Double] = [:]
+        var data: [String: Any] = [:]
         
         if let month = date.asString(withDateFormat: .custom("MM")).asInt,
-           let day = date.asString(withDateFormat: .day).asInt,
-           let hour = date.asString(withDateFormat: .custom("HH")).asInt,
-           let minute = date.asString(withDateFormat: .custom("mm")).asInt {
+           let year = date.asString(withDateFormat: .year).asInt {
             data = [
                 "month": Double(month),
-                "day": Double(day),
-                "hour": Double(hour),
-                "minute": Double(minute),
-                "amount": amount
+                "year": Double(year),
+                "tag": tag
             ]
         } else { return nil }
         
@@ -28,6 +24,7 @@ public extension IntelligenceInput {
 func TransactionsFromTagsData(
     tagEntities: [TagModelProtocol],
     transactionEntities: [TransactionModelProtocol],
+    excludedDate: Date? = nil,
     on step: @escaping (String) -> Void
 ) -> Data? {
     var tagsDict: [String: [TransactionModelProtocol]] = [:]
@@ -37,7 +34,8 @@ func TransactionsFromTagsData(
     
     for transaction in transactionEntities {
         for tag in tagEntities {
-            if transaction.message
+            if transaction.date.asString(withDateFormat: .monthYear) != excludedDate?.asString(withDateFormat: .monthYear),
+               transaction.message
                 .folding(options: .diacriticInsensitive, locale: .current)
                 .lowercased()
                 .contains(

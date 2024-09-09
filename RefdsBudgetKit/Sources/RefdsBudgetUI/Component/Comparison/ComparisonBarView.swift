@@ -3,16 +3,19 @@ import RefdsUI
 import Charts
 import RefdsBudgetResource
 
-public struct BarComparisonView: View {
+public struct ComparisonBarView: View {
     private var baseValue: Double
     private var compareValue: Double
+    private var color: Color
     
     public init(
         baseValue: Double,
-        compareValue: Double
+        compareValue: Double,
+        color: Color
     ) {
         self.baseValue = baseValue
         self.compareValue = compareValue
+        self.color = color
     }
     
     public var body: some View {
@@ -31,15 +34,16 @@ public struct BarComparisonView: View {
     
     private func buildMark(amount: Double) -> some ChartContent {
         BarMark(x: .value("x", amount))
-            .foregroundStyle(amount == baseValue ? Color.accentColor.opacity(0.5) : Color.accentColor)
+            .foregroundStyle(amount == baseValue ? color.opacity(0.5) : color)
     }
 }
 
 #Preview {
     List {
-        BarComparisonView(
+        ComparisonBarView(
             baseValue: .random(in: 20 ... 100),
-            compareValue: .random(in: 20 ... 100)
+            compareValue: .random(in: 20 ... 100),
+            color: .accentColor
         )
     }
 }

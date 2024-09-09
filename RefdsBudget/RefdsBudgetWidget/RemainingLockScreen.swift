@@ -87,9 +87,10 @@ struct RemainingAccessoryCircularLockScreenView: View {
             .gaugeStyle(.accessoryCircular)
         }
         .widgetURL(
-            Deeplink.url(
-                host: .openTransactions,
-                path: .addTransaction
+            ApplicationRouter.deeplinkURL(
+                scene: .home,
+                view: .none,
+                viewStates: []
             )
         )
     }
@@ -121,9 +122,10 @@ struct RemainingAccessoryRectangularLockScreenView: View {
             }
         }
         .widgetURL(
-            Deeplink.url(
-                host: .openTransactions,
-                path: .addTransaction
+            ApplicationRouter.deeplinkURL(
+                scene: .home,
+                view: .none,
+                viewStates: []
             )
         )
     }

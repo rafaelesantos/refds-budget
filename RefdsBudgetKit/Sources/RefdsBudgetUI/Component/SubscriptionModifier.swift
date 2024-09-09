@@ -4,7 +4,7 @@ import RefdsBudgetPresentation
 
 public struct SubscriptionModifier: ViewModifier {
     @Environment(\.isPro) private var isPro
-    @Environment(\.openURL) private var openURL
+    @Environment(\.navigate) private var navigate
     
     public init() {}
     
@@ -14,9 +14,11 @@ public struct SubscriptionModifier: ViewModifier {
             SubscriptionRowView()
             
             RefdsButton {
-                if let url = Deeplink.url(host: .openPremium) {
-                    openURL(url)
-                }
+                navigate?.to(
+                    scene: .premium,
+                    view: .none,
+                    viewStates: []
+                )
             } label: {
                 content
                     .refdsRedacted(if: !isPro)

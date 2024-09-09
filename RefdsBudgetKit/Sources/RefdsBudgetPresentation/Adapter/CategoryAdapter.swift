@@ -7,7 +7,6 @@ public protocol CategoryAdapterProtocol {
     func adapt(model: CategoryModelProtocol) -> AddCategoryStateProtocol
     func adapt(
         model: CategoryModelProtocol,
-        budgetId: UUID,
         budgetDescription: String?,
         budget: Double,
         percentage: Double,
@@ -30,7 +29,6 @@ public final class CategoryAdapter: CategoryAdapterProtocol {
     
     public func adapt(
         model: CategoryModelProtocol,
-        budgetId: UUID,
         budgetDescription: String?,
         budget: Double,
         percentage: Double,
@@ -38,8 +36,7 @@ public final class CategoryAdapter: CategoryAdapterProtocol {
         spend: Double
     ) -> CategoryRowViewDataProtocol {
         CategoryRowViewData(
-            categoryId: model.id,
-            budgetId: budgetId,
+            id: model.id,
             icon: model.icon,
             name: model.name,
             description: budgetDescription,

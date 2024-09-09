@@ -35,11 +35,17 @@ let package = Package(
         .package(url: "https://github.com/rafaelesantos/refds-design-system.git", branch: "main"),
         .package(url: "https://github.com/rafaelesantos/refds-router.git", branch: "main"),
         .package(url: "https://github.com/rafaelesantos/refds-welcome.git", branch: "main"),
-        .package(url: "https://github.com/rafaelesantos/refds-auth.git", branch: "main")
+        .package(url: "https://github.com/rafaelesantos/refds-auth.git", branch: "main"),
+        .package(url: "https://github.com/rafaelesantos/refds-gamification.git", branch: "main")
     ],
     targets: [
         .target(name: "RefdsBudgetResource"),
         .target(name: "RefdsBudgetDomain", dependencies: [
+            "RefdsBudgetResource",
+            .product(name: "RefdsShared", package: "refds-shared")
+        ]),
+        .target(name: "RefdsBudgetMock", dependencies: [
+            "RefdsBudgetDomain",
             "RefdsBudgetResource",
             .product(name: "RefdsShared", package: "refds-shared")
         ]),
@@ -54,17 +60,21 @@ let package = Package(
             "RefdsBudgetDomain",
             "RefdsBudgetData",
             "RefdsBudgetResource",
+            "RefdsBudgetMock",
             .product(name: "RefdsShared", package: "refds-shared"),
             .product(name: "RefdsInjection", package: "refds-injection"),
             .product(name: "RefdsDesignPatterns", package: "refds-design-patterns"),
             .product(name: "RefdsRouter", package: "refds-router"),
-            .product(name: "RefdsWelcome", package: "refds-welcome")
+            .product(name: "RefdsWelcome", package: "refds-welcome"),
+            .product(name: "RefdsNetwork", package: "refds-network")
         ]),
         .target(name: "RefdsBudgetUI", dependencies: [
             "RefdsBudgetPresentation",
             "RefdsBudgetResource",
+            "RefdsBudgetMock",
             .product(name: "RefdsUI", package: "refds-design-system"),
-            .product(name: "RefdsAuth", package: "refds-auth")
+            .product(name: "RefdsAuth", package: "refds-auth"),
+            .product(name: "RefdsGamification", package: "refds-gamification"),
         ])
     ]
 )

@@ -49,7 +49,9 @@ public struct SpendBudgetSectionView: View {
         categoryViewData.indices.forEach { index in
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
                 withAnimation(.easeInOut(duration: 0.8)) {
-                    viewData[index].isAnimate = true
+                    if viewData.indices.contains(index) {
+                        viewData[index].isAnimate = true
+                    }
                 }
             }
         }

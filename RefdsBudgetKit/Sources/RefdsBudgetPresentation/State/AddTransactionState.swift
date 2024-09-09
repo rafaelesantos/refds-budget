@@ -16,7 +16,7 @@ public protocol AddTransactionStateProtocol: RefdsReduxState {
     var date: Date { get set }
     var isEmptyBudgets: Bool { get }
     var isLoading: Bool { get set }
-    var isAI: Bool { get set }
+    var hasAI: Bool { get set }
     var error: RefdsBudgetError? { get set }
 }
 
@@ -32,7 +32,7 @@ public struct AddTransactionState: AddTransactionStateProtocol {
     public var date: Date
     public var error: RefdsBudgetError?
     public var isLoading: Bool
-    public var isAI: Bool
+    public var hasAI: Bool
     
     public var isEmptyBudgets: Bool {
         categories.isEmpty
@@ -61,6 +61,6 @@ public struct AddTransactionState: AddTransactionStateProtocol {
         self.date = date
         self.error = error
         self.isLoading = category == nil
-        self.isAI = category == nil
+        self.hasAI = category == nil
     }
 }

@@ -13,6 +13,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
     case `import`
     case budgetSelection
     case budgetComparison
+    case transactions
     
     public var navigationType: RefdsNavigationType {
         switch self {
@@ -48,6 +49,7 @@ public enum ApplicationRoute: RefdsRoutableRedux {
             case .import: AnyView(viewFactory.makeImportView(state: state.importState, action: action))
             case .budgetSelection: AnyView(viewFactory.makeBudgetSelectionView(state: state.budgetSelectionState, action: action))
             case .budgetComparison: AnyView(viewFactory.makeBudgetComparisonView(state: state.budgetComparisonState, action: action))
+            case .transactions: AnyView(viewFactory.makeTransactionsView(state: state.transactionsState, action: action))
             }
         }
     }

@@ -37,6 +37,7 @@ public extension IntelligenceInput {
 func BudgetFromBudgetsData(
     categoryEntities: [CategoryModelProtocol],
     budgetEntities: [BudgetModelProtocol],
+    excludedDate: Date? = nil,
     on step: @escaping (String) -> Void
 ) -> Data? {
     var categoriesDict: [String: (CategoryModelProtocol, Int)] = [:]
@@ -54,7 +55,8 @@ func BudgetFromBudgetsData(
     
     budgetEntities.forEach { item in
         let date = item.date
-        if let year = date.asString(withDateFormat: .year).asInt,
+        if date.asString(withDateFormat: .monthYear) != excludedDate?.asString(withDateFormat: .monthYear),
+            let year = date.asString(withDateFormat: .year).asInt,
            let month = date.asString(withDateFormat: .custom("MM")).asInt {
             let currentValue = budgetsDict["\(item.category.uuidString)/\(year)/\(month)"] ?? .zero
             budgetsDict["\(item.category.uuidString)/\(year)/\(month)"] = item.amount + currentValue

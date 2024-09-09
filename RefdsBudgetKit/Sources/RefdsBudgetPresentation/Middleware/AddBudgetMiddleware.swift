@@ -8,6 +8,7 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @Environment(\.navigate) private var navigate
     @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
     @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
@@ -16,10 +17,17 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
     public init() {}
     
     public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
-        guard let state = (state as? ApplicationStateProtocol)?.addBudgetState else { return }
+        guard let state = state as? ApplicationStateProtocol else { return }
+        
         switch action {
-        case let action as AddBudgetAction: self.handler(with: state, for: action, on: completion)
-        default: break
+        case let action as AddBudgetAction: 
+            self.handler(
+                with: state.addBudgetState,
+                for: action,
+                on: completion
+            )
+        default: 
+            break
         }
     }
     
@@ -29,68 +37,132 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
         switch action {
-        case .fetchCategories: fetchCategories(
-            with: state,
-            from: state.month,
-            on: completion
-        )
+        case .fetchData:
+            fetchData(
+                with: state,
+                on: completion
+            )
         case .fetchBudget:
-            guard let category = state.category else { return }
-            fetchBudget(from: state.month, by: category.id, on: completion)
-        case let .save(budget): save(budget, on: completion)
-        default: break
+            fetchBudget(
+                with: state,
+                on: completion
+            )
+        case .save:
+            save(
+                with: state,
+                on: completion
+            )
+        default:
+            break
        }
     }
     
-    private func fetchCategories(
+    private func fetchData(
         with state: AddBudgetStateProtocol,
-        from date: Date,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
-        let categoryEntities: [(CategoryModelProtocol, Double)] = categoryRepository.getAllCategories().map {
+        let date = budgetRepository.getBudget(by: state.id)?.date.date ?? state.date
+        
+        let categories: [CategoryRowViewDataProtocol] = categoryRepository.getAllCategories().map {
             let budget = budgetRepository.getBudget(on: $0.id, from: date)?.amount ?? .zero
             return ($0, budget)
-        }.sorted(by: { $0.1 < $1.1 })
-        
-        let categories = categoryEntities.map { $0.0 }.map { entity in
-            categoryAdapter.adapt(model: entity)
+        }.sorted(by: { 
+            $0.1 < $1.1
+        }).map {
+            $0.0
+        }.map { model in
+            categoryAdapter.adapt(
+                model: model,
+                budgetDescription: nil,
+                budget: .zero,
+                percentage: .zero,
+                transactionsAmount: .zero,
+                spend: .zero
+            )
         }
         
-        guard let category = state.category ?? categories.first,
-              let budget = budgetRepository.getBudget(on: category.id, from: date) else {
-            return completion(.updateCategories(categories, .init(), .zero, ""))
+        guard let budget = budgetRepository.getBudget(by: state.id) else {
+            let category = categories.first(where: { 
+                $0.name.lowercased() == state.categoryName?.lowercased()
+            }) ?? categories.first
+            return completion(
+                .updateData(
+                    id: state.id,
+                    description: state.description,
+                    date: date,
+                    amount: state.amount,
+                    category: category,
+                    categories: categories
+                )
+            )
         }
-        
-        completion(.updateCategories(categories, budget.id, budget.amount, budget.message ?? ""))
+
+        completion(
+            .updateData(
+                id: budget.id,
+                description: budget.message ?? "",
+                date: budget.date.date,
+                amount: budget.amount,
+                category: categories.first(where: { $0.id == budget.category }),
+                categories: categories
+            )
+        )
     }
     
     private func fetchBudget(
-        from date: Date,
-        by id: UUID,
+        with state: AddBudgetStateProtocol,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
-        guard let budget = budgetRepository.getBudget(on: id, from: date) else {
-            let predictValue = intelligence.predict(for: .budgetFromTransactions(date: date, category: id), with: .budgetFromTransactions, on: .high) ?? .zero
-            return completion(.updateBudget(.init(), predictValue, "", predictValue != .zero))
+        guard let category = state.category else { return }
+        guard let budget = budgetRepository.getBudget(on: category.id, from: state.date) else {
+            var amount: Double = .zero
+            if state.hasAISuggestion {
+                amount = intelligence.predict(
+                    for: .budgetFromTransactions(date: state.date, category: category.id),
+                    with: .budgetFromTransactions(nil),
+                    on: .ultra
+                ) ?? amount
+            }
+            return completion(
+                .updateBudget(
+                    id: state.id,
+                    description: "",
+                    amount: amount
+                )
+            )
         }
         
-        completion(.updateBudget(budget.id, budget.amount, budget.message ?? "", false))
+        var amount = budget.amount
+        if state.hasAISuggestion {
+            amount = intelligence.predict(
+                for: .budgetFromTransactions(date: state.date, category: category.id),
+                with: .budgetFromTransactions(nil),
+                on: .ultra
+            ) ?? amount
+        }
+        return completion(
+            .updateBudget(
+                id: budget.id,
+                description: budget.message ?? "",
+                amount: amount
+            )
+        )
     }
     
     private func save(
-        _ budget: AddBudgetStateProtocol,
+        with state: AddBudgetStateProtocol,
         on completion: @escaping (AddBudgetAction) -> Void
     ) {
-        guard let category = budget.category else {
+        guard let category = state.category else {
             return completion(.updateError(.notFoundCategory))
         }
         
         do {
             try budgetRepository.addBudget(
-                id: budget.id,
-                amount: budget.amount,
-                date: budget.month,
-                message: budget.description,
+                id: state.id,
+                amount: state.amount,
+                date: state.date,
+                message: state.description,
                 category: category.id
             )
         } catch { return completion(.updateError(.existingBudget)) }
@@ -104,11 +176,16 @@ public final class AddBudgetMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 id: category.id,
                 name: category.name.capitalized,
                 color: Color(hex: category.color),
-                budgets: category.budgets + [budget.id],
+                budgets: category.budgets + [state.id],
                 icon: category.icon
             )
         } catch { return completion(.updateError(.existingCategory)) }
+        
         WidgetCenter.shared.reloadAllTimelines()
-        completion(.dismiss)
+        navigate?.to(
+            scene: .current,
+            view: .dismiss,
+            viewStates: []
+        )
     }
 }

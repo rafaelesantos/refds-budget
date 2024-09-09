@@ -115,9 +115,18 @@ struct SystemSmallTransactionsView: View {
     var body: some View {
         RefdsBudgetUI.SystemSmallTransactions(viewData: entry.viewData)
             .widgetURL(
-                Deeplink.url(
-                    host: .openTransactions,
-                    path: .none
+                ApplicationRouter.deeplinkURL(
+                    scene: .transactions,
+                    view: .none,
+                    viewStates: [
+                        .isDateFilter(entry.viewData.isFilterByDate),
+                        .date(entry.viewData.date),
+                        .selectedItems(Set([
+                            entry.viewData.category,
+                            entry.viewData.tag,
+                            entry.viewData.status
+                        ]))
+                    ]
                 )
             )
     }

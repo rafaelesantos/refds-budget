@@ -9,6 +9,7 @@ public struct TagsSectionView: View {
     @Environment(\.isPro) private var isPro
     
     @State private var selectedTag: TagRowViewDataProtocol?
+    @Binding private var bindingSelectedTag: TagRowViewDataProtocol?
     @State private var tags: [TagRowViewDataProtocol] = []
     
     private let tagsViewData: [TagRowViewDataProtocol]
@@ -37,9 +38,11 @@ public struct TagsSectionView: View {
     }
     
     public init(
+        selectedTag: Binding<TagRowViewDataProtocol?>,
         tags: [TagRowViewDataProtocol],
         action: @escaping () -> Void
     ) {
+        self._bindingSelectedTag = selectedTag
         self.tagsViewData = tags.filter {
             ($0.value ?? .zero) > .zero
         }.sorted(by: {
@@ -84,6 +87,7 @@ public struct TagsSectionView: View {
     
     private func reloadData() {
         withAnimation {
+            bindingSelectedTag = nil
             selectedTag = tagsViewData.first
         }
         
@@ -92,7 +96,9 @@ public struct TagsSectionView: View {
         tagsViewData.indices.forEach { index in
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.1) {
                 withAnimation(.easeInOut(duration: 0.8)) {
-                    tags[index].isAnimate = true
+                    if tags.indices.contains(index) {
+                        tags[index].isAnimate = true
+                    }
                 }
             }
         }
@@ -169,7 +175,10 @@ public struct TagsSectionView: View {
             ForEach(tags.indices, id: \.self) {
                 let tag = tags[$0]
                 RefdsButton {
-                    withAnimation { selectedTag = tag }
+                    withAnimation { 
+                        selectedTag = tag
+                        bindingSelectedTag = tag
+                    }
                 } label: {
                     TagRowView(viewData: tag, isSelected: true)
                 }
@@ -181,6 +190,7 @@ public struct TagsSectionView: View {
 #Preview {
     List {
         TagsSectionView(
+            selectedTag: .constant(nil),
             tags: (1 ... 5).map { _ in TagRowViewDataMock() }
         ) {  }
     }

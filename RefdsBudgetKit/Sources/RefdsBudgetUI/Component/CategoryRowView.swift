@@ -43,7 +43,7 @@ public struct CategoryRowView: View {
             }
             
             HStack(spacing: .zero) {
-                VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
+                VStack(alignment: .leading) {
                     HStack(spacing: .padding(.small)) {
                         RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
                         Spacer(minLength: .zero)
@@ -60,7 +60,11 @@ public struct CategoryRowView: View {
                 
                 Spacer(minLength: .padding(.extraSmall))
                 
-                RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
+                RefdsIcon(
+                    .chevronRight,
+                    color: .secondary.opacity(0.5),
+                    style: .callout
+                )
             }
         }
     }

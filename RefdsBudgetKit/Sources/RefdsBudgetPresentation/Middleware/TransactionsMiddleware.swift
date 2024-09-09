@@ -32,14 +32,12 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
     ) {
         switch action {
         case .fetchData:
-            let date = state.isFilterEnable ? state.date : nil
+            let date = state.filter.isDateFilter ? state.filter.date : nil
             fetchData(
-                with: state.searchText,
-                and: state.selectedCategories,
-                tagsName: state.selectedTags,
-                status: state.selectedStatus,
-                page: state.page,
-                paginationDaysAmount: state.paginationDaysAmount,
+                with: state.filter.searchText,
+                and: state.filter.selectedItems,
+                page: state.filter.currentPage,
+                amountPage: state.filter.amountPage,
                 from: date,
                 on: completion
             )
@@ -47,78 +45,41 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         case let .removeTransaction(id): removeTransaction(with: state, by: id, on: completion)
         case let .removeTransactions(ids): removeTransactions(with: state, by: ids, on: completion)
         case let .updateStatus(id): updateStatus(for: id, on: completion)
-        case let .shareText(ids): shareText(for: ids, on: completion)
-        case let .share(ids): share(for: ids, on: completion)
+        case let .shareText(ids):
+            let date = state.filter.isDateFilter ? state.filter.date : nil
+            shareText(
+                for: ids,
+                with: state.filter.searchText,
+                and: state.filter.selectedItems,
+                from: date,
+                on: completion
+            )
+        case let .share(ids):
+            let date = state.filter.isDateFilter ? state.filter.date : nil
+            share(
+                for: ids,
+                with: state.filter.searchText,
+                and: state.filter.selectedItems,
+                from: date,
+                on: completion
+            )
         default: break
         }
     }
     
     private func fetchData(
         with searchText: String,
-        and categoriesName: Set<String>,
-        tagsName: Set<String>,
-        status: Set<String>,
+        and selectedItems: Set<String>,
         page: Int,
-        paginationDaysAmount: Int,
+        amountPage: Int,
         from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
-        var transactions: [TransactionModelProtocol] = []
-        var categories: [CategoryModelProtocol] = []
-        let tags = tagRepository.getTags().map { $0.name }
-        
-        if let date = date {
-            transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
-            categories = categoryRepository.getCategories(from: date)
-        } else {
-            transactions = transactionRepository.getAllTransactions()
-            categories = categoryRepository.getAllCategories()
-        }
-        
-        if !categoriesName.isEmpty {
-            let categoriesId = categoryRepository.getAllCategories().filter { categoriesName.contains($0.name) }.map { $0.id }
-            transactions = transactions.filter { categoriesId.contains($0.category) }
-        }
-        
-        if !tagsName.isEmpty {
-            transactions = transactions.filter { transaction in
-                var contains = true
-                for tagName in tagsName {
-                    if !transaction.message
-                        .folding(options: .diacriticInsensitive, locale: .current)
-                        .lowercased()
-                        .contains(
-                            tagName
-                                .folding(options: .diacriticInsensitive, locale: .current)
-                                .lowercased()
-                        ) {
-                        contains = false
-                    }
-                }
-                return contains
-            }
-        }
-        
-        if !searchText.isEmpty {
-            transactions = transactions.filter {
-                $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
-                $0.message.lowercased().contains(searchText.lowercased())
-            }
-        }
-        
-        if !status.isEmpty {
-            transactions = transactions.filter {
-                status.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
-            }
-        }
-        
-        let transactionsAdapted: [TransactionRowViewDataProtocol] = transactions.compactMap {
-            guard let category = categoryRepository.getCategory(by: $0.category) else { return nil }
-            return transactionRowViewDataAdapter.adapt(
-                model: $0,
-                categoryModel: category
-            )
-        }
+        let transactionsAdapted = getTransactionsAdapted(
+            with: searchText,
+            and: selectedItems,
+            from: date
+        )
         
         let groupedTransactions = Dictionary(
             grouping: transactionsAdapted,
@@ -130,27 +91,86 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         if let range: ClosedRange<Int> = .range(
             page: page,
-            amount: paginationDaysAmount,
+            amount: amountPage,
             count: groupedTransactions.indices.count
         ) {
             let filteredTransactions = Array(groupedTransactions[range])
             let canChangePage = page * filteredTransactions.count < groupedTransactions.count
             completion(.updateData(
                 transactions: filteredTransactions,
-                categories: categories.map { $0.name },
-                tags: tags,
                 page: page,
                 canChangePage: canChangePage
             ))
         } else {
             completion(.updateData(
                 transactions: [],
-                categories: categories.map { $0.name },
-                tags: tags,
                 page: page,
                 canChangePage: false
             ))
         }
+    }
+    
+    private func getTransactionsAdapted(
+        with searchText: String,
+        and selectedItems: Set<String>,
+        from date: Date?
+    ) -> [TransactionRowViewDataProtocol] {
+        var transactions: [TransactionModelProtocol] = []
+        
+        if let date = date {
+            transactions = transactionRepository.getTransactions(from: date, format: .monthYear)
+        } else {
+            transactions = transactionRepository.getAllTransactions()
+        }
+        
+        if !selectedItems.isEmpty {
+            let status = TransactionStatus.allCases.filter { selectedItems.contains($0.description) }.map { $0.rawValue }
+            if !status.isEmpty {
+                transactions = transactions.filter { status.contains($0.status) }
+            }
+            
+            let categoriesId = categoryRepository.getAllCategories().filter { selectedItems.contains($0.name) }.map { $0.id }
+            if !categoriesId.isEmpty {
+                transactions = transactions.filter { categoriesId.contains($0.category) }
+            }
+            
+            let tags = tagRepository.getTags().filter { selectedItems.contains($0.name) }
+            if !tags.isEmpty {
+                transactions = transactions.filter { transaction in
+                    var contains = true
+                    for tag in tags {
+                        if !transaction.message
+                            .folding(options: .diacriticInsensitive, locale: .current)
+                            .lowercased()
+                            .contains(
+                                tag.name
+                                    .folding(options: .diacriticInsensitive, locale: .current)
+                                    .lowercased()
+                            ) {
+                            contains = false
+                        }
+                    }
+                    return contains
+                }
+            }
+        }
+        
+        if !searchText.isEmpty {
+            transactions = transactions.filter {
+                $0.amount.asString.lowercased().contains(searchText.lowercased()) ||
+                $0.message.lowercased().contains(searchText.lowercased())
+            }
+        }
+        
+        let transactionsAdapted: [TransactionRowViewDataProtocol] = transactions.compactMap {
+            guard let category = categoryRepository.getCategory(by: $0.category) else { return nil }
+            return transactionRowViewDataAdapter.adapt(
+                model: $0,
+                categoryModel: category
+            )
+        }
+        
+        return transactionsAdapted
     }
     
     private func fetchTransactionForEdit(
@@ -168,7 +188,6 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             let percentage = spend / (budget.amount == .zero ? 1 : budget.amount)
             return categoryAdapter.adapt(
                 model: $0,
-                budgetId: budget.id,
                 budgetDescription: budget.message,
                 budget: budget.amount,
                 percentage: percentage,
@@ -177,7 +196,7 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
             )
         }
         
-        guard let category = categories.first(where: { $0.categoryId == transaction.category }) else {
+        guard let category = categories.first(where: { $0.id == transaction.category }) else {
             return completion(.updateError(.notFoundCategory))
         }
         
@@ -250,16 +269,32 @@ public final class TransactionsMiddleware<State>: RefdsReduxMiddlewareProtocol {
     
     private func shareText(
         for ids: Set<UUID>,
+        with searchText: String,
+        and selectedItems: Set<String>,
+        from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
+        let ids = ids.isEmpty ? Set(getTransactionsAdapted(
+            with: searchText,
+            and: selectedItems,
+            from: date
+        ).map { $0.id }) : ids
         let text = FileFactory.shared.getTransactionsText(for: ids)
         completion(.updateShareText(text))
     }
     
     private func share(
         for ids: Set<UUID>,
+        with searchText: String,
+        and selectedItems: Set<String>,
+        from date: Date?,
         on completion: @escaping (TransactionsAction) -> Void
     ) {
+        let ids = ids.isEmpty ? Set(getTransactionsAdapted(
+            with: searchText,
+            and: selectedItems,
+            from: date
+        ).map { $0.id }) : ids
         let url = FileFactory.shared.getFileURL(transactionsId: ids)
         completion(.updateShare(url))
     }

@@ -112,9 +112,10 @@ struct SystemSmallExpenseProgressView: View {
     var body: some View {
         RefdsBudgetUI.SystemSmallExpenseProgress(viewData: entry.viewData)
             .widgetURL(
-                Deeplink.url(
-                    host: .openHome,
-                    path: .none
+                ApplicationRouter.deeplinkURL(
+                    scene: .home,
+                    view: .none,
+                    viewStates: []
                 )
             )
     }

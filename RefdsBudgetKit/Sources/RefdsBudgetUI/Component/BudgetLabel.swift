@@ -5,7 +5,7 @@ import RefdsBudgetPresentation
 import RefdsBudgetResource
 
 public struct BudgetLabel: View {
-    @Environment(\.openURL) private var openURL
+    @Environment(\.navigate) private var navigate
     @Environment(\.isPro) private var isPro
     
     private let title: LocalizableKey
@@ -37,8 +37,12 @@ public struct BudgetLabel: View {
     
     public var body: some View {
         RefdsButton {
-            if showPro, let url = Deeplink.url(host: .openPremium) {
-                openURL(url)
+            if showPro {
+                navigate?.to(
+                    scene: .premium,
+                    view: .none,
+                    viewStates: []
+                )
             } else {
                 withAnimation { action?() }
             }

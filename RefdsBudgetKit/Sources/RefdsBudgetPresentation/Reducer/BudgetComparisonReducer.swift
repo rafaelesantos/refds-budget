@@ -23,8 +23,7 @@ public final class BudgetComparisonReducer: RefdsReduxReducerProtocol {
             state.categoriesChart = categoriesChart
             state.tagsChart = tagsChart
             state.isLoading = false
-        case .none,
-                .dismiss:
+        case .none:
             break
         }
         

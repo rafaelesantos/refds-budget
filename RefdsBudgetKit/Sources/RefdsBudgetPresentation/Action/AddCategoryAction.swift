@@ -1,11 +1,17 @@
 import Foundation
 import SwiftUI
+import RefdsShared
 import RefdsRedux
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public enum AddCategoryAction: RefdsReduxAction {
-    case updateCategroy(AddCategoryStateProtocol)
+    case fetchData
     case updateError(RefdsBudgetError)
-    case save(AddCategoryStateProtocol)
-    case dismiss
+    case save
+    case updateData(
+        id: UUID,
+        name: String,
+        color: Color,
+        icon: RefdsIconSymbol
+    )
 }

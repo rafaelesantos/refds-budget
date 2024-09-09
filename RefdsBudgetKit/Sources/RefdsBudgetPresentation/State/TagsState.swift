@@ -1,7 +1,7 @@
 import SwiftUI
 import RefdsRedux
 import RefdsShared
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public protocol TagsStateProtocol: RefdsReduxState {
     var selectedTag: TagRowViewDataProtocol { get set }

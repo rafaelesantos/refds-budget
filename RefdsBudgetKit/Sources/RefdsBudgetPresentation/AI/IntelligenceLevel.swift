@@ -6,6 +6,7 @@ public enum IntelligenceLevel: String, CaseIterable {
     case medium
     case high
     case ultra
+    case custom
     
     var params: MLBoostedTreeRegressor.ModelParameters {
         MLBoostedTreeRegressor.ModelParameters(
@@ -20,7 +21,7 @@ public enum IntelligenceLevel: String, CaseIterable {
         case .low: return 50
         case .medium: return 250
         case .high: return 500
-        case .ultra: return 1_000
+        case .ultra, .custom: return 1_000
         }
     }
     
@@ -29,7 +30,7 @@ public enum IntelligenceLevel: String, CaseIterable {
         case .low: return 10
         case .medium: return 100
         case .high: return 500
-        case .ultra: return 1_000
+        case .ultra, .custom: return 1_000
         }
     }
 }

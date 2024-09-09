@@ -3,8 +3,7 @@ import SwiftUI
 import RefdsShared
 
 public struct CategoryRowViewDataMock: CategoryRowViewDataProtocol {
-    public var categoryId: UUID = .init()
-    public var budgetId: UUID = .init()
+    public var id: UUID = .init()
     public var icon: String = RefdsIconSymbol.random.rawValue
     public var name: String = .someWord()
     public var description: String? = .someParagraph()

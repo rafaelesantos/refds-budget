@@ -4,15 +4,17 @@ import RefdsBudgetPresentation
 
 public struct SubscriptionRowView: View {
     @Environment(\.isPro) private var isPro
-    @Environment(\.openURL) private var openURL
+    @Environment(\.navigate) private var navigate
     
     @ViewBuilder
     public var body: some View {
         if !isPro {
             RefdsButton {
-                if let url = Deeplink.url(host: .openPremium) {
-                    openURL(url)
-                }
+                navigate?.to(
+                    scene: .premium,
+                    view: .none,
+                    viewStates: []
+                )
             } label: {
                 HStack(spacing: 5) {
                     VStack(alignment: .leading) {

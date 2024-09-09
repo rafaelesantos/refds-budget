@@ -10,7 +10,7 @@ public struct AddTransactionView: View {
     
     @State private var amount: Double = .zero
     @State private var description: String = ""
-    @State private var isAI: Bool = true
+    @State private var hasAI: Bool = true
     
     private var bindingCategory: Binding<String?> {
         Binding {
@@ -19,7 +19,7 @@ public struct AddTransactionView: View {
             if let category = state.categories.first(where: { $0.name.lowercased() == name?.lowercased() ?? "" }) {
                 withAnimation {
                     state.category = category
-                    isAI = false
+                    hasAI = false
                 }
             }
         }
@@ -31,7 +31,7 @@ public struct AddTransactionView: View {
         } set: {
             let newDate = $0.asString(withDateFormat: .monthYear)
             let currentDate = state.date.asString(withDateFormat: .monthYear)
-            if newDate != currentDate || isAI { action(.fetchCategories($0, amount)) }
+            if newDate != currentDate || hasAI { action(.fetchCategories($0, amount)) }
             state.date = $0
         }
     }
@@ -64,7 +64,7 @@ public struct AddTransactionView: View {
     private func fetchDataOnAppear() {
         description = description.isEmpty ? state.description : description
         amount = amount == .zero ? state.amount : amount
-        isAI = state.isAI
+        hasAI = state.hasAI
         guard state.category == nil else { return }
         action(.fetchCategories(state.date, amount))
     }
@@ -170,7 +170,9 @@ public struct AddTransactionView: View {
                                 color: $0.color,
                                 icon: RefdsIconSymbol(rawValue: $0.icon) ?? .dollarsign
                             )
-                        }
+                        },
+                        size: 45,
+                        spacing: .zero
                     )
                 }
                 
@@ -198,7 +200,9 @@ public struct AddTransactionView: View {
                 }
             }
         } footer: {
-            AISuggestionLabel(isEnable: isAI)
+            HStack {
+                AISuggestionLabel(isEnable: hasAI)
+            }
         }
     }
     

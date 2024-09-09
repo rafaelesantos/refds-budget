@@ -1,6 +1,6 @@
 import Foundation
 import RefdsUI
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public extension RefdsBudgetError {
     var toast: RefdsToastViewData? {

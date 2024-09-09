@@ -21,10 +21,14 @@ public protocol IntelligenceProtocol {
     
     func training(
         for level: IntelligenceLevel,
+        with excludeDate: Date?,
         on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void
     )
     
-    func training(on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void)
+    func training(
+        with excludeDate: Date?,
+        on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void
+    )
     
     func predict(
         for input: IntelligenceInput?,
@@ -147,10 +151,11 @@ final class Intelligence: IntelligenceProtocol {
     
     func training(
         for level: IntelligenceLevel,
+        with excludeDate: Date?,
         on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void
     ) {
         setupDefaultBase()
-        execute(items: IntelligenceModel.allCases.map { model in
+        execute(items: IntelligenceModel.allCases(for: excludeDate).map { model in
             {
                 self.trainingModelItem(
                     model: model,
@@ -161,9 +166,12 @@ final class Intelligence: IntelligenceProtocol {
         })
     }
     
-    func training(on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void) {
+    func training(
+        with excludeDate: Date?,
+        on step: @escaping (String, IntelligenceModel, IntelligenceLevel) -> Void
+    ) {
         setupDefaultBase()
-        let items = IntelligenceModel.allCases.map { model in
+        let items = IntelligenceModel.allCases(for: excludeDate).map { model in
             IntelligenceLevel.allCases.map { level in
                 {
                     self.trainingModelItem(
@@ -197,5 +205,12 @@ final class Intelligence: IntelligenceProtocol {
         budgetEntities = []
         categoryEntities = []
         transactionEntities = []
+        resetCustomLevel()
+    }
+    
+    private func resetCustomLevel() {
+        IntelligenceModel.allCases.forEach { model in
+            model.delete(for: .custom)
+        }
     }
 }

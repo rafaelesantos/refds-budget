@@ -5,9 +5,11 @@ import RefdsBudgetResource
 import RefdsBudgetPresentation
 
 public struct BudgetSelectionView: View {
+    @Environment(\.navigate) private var navigate
     @Environment(\.privacyMode) private var privacyMode
     
     @State private var editMode: EditMode = .active
+    @State private var showAIView: Bool = false
     @Binding private var state: BudgetSelectionStateProtocol
     private let action: (BudgetSelectionAction) -> Void
     
@@ -20,23 +22,76 @@ public struct BudgetSelectionView: View {
     }
     
     public var body: some View {
+        ZStack {
+            if showAIView {
+                aiContentView
+            } else {
+                selectionContentView
+            }
+        }
+        .onDisappear { showAIView = false }
+    }
+    
+    private var selectionContentView: some View {
         List(selection: $state.budgetsSelected) {
             sectionEmptyBudgets
             sectionBudgets
         }
         .navigationTitle(String.localizable(by: .comparisonBudgetSelection))
         .environment(\.editMode, $editMode)
-        .onAppear { 
+        .onChange(of: state.budgetsSelected) { handler() }
+        .onAppear {
             withAnimation { editMode = .active }
             action(.fetchData)
         }
-        .onChange(of: state.budgetsSelected) {
-            if state.budgetsSelected.count == 2 {
-                action(.showComparison)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    editMode = .inactive
-                }
+    }
+    
+    @ViewBuilder
+    private var aiContentView: some View {
+        let budgets = state.budgets.flatMap { $0 }
+        if state.hasAI,
+           let budgetId = state.budgetsSelected.first,
+           let budget = budgets.first(where: { $0.id == budgetId }) {
+               ComparisonAIView(for: budget.date) {
+                   navigate?.to(
+                    scene: .current,
+                    view: .budgetComparison,
+                    viewStates: [
+                        .hasAI(state.hasAI),
+                        .baseBudgetDate(budget.date.asString(withDateFormat: .monthYear))
+                    ]
+                   )
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                       editMode = .inactive
+                   }
+               }
+           }
+    }
+    
+    private func handler() {
+        guard state.budgetsSelected.count == 2 else {
+            if state.budgetsSelected.count == 1, !showAIView, state.hasAI {
+                withAnimation { showAIView = true }
             }
+            return
+        }
+        
+        let budgets = state.budgets.flatMap { $0 }
+        guard let baseBudget = budgets.first(where: { Array(state.budgetsSelected)[safe: 0] == $0.id }),
+              let compareBudget = budgets.first(where: { Array(state.budgetsSelected)[safe: 1] == $0.id })
+        else { return }
+        
+        navigate?.to(
+         scene: .current,
+         view: .budgetComparison,
+         viewStates: [
+             .hasAI(state.hasAI),
+             .baseBudgetDate(baseBudget.date.asString(withDateFormat: .monthYear)),
+             .compareBudgetDate(compareBudget.date.asString(withDateFormat: .monthYear))
+         ]
+        )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            editMode = .inactive
         }
     }
     
@@ -65,9 +120,15 @@ public struct BudgetSelectionView: View {
     @ViewBuilder
     private var sectionEmptyBudgets: some View {
         let budgets = state.budgets.flatMap { $0 }
-        if budgets.count < 2 {
+        if budgets.count < (state.hasAI ? 1 : 2) {
             RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
-            RefdsButton { action(.addBudget) } label: {
+            RefdsButton {
+                navigate?.to(
+                    scene: .current,
+                    view: .addBudget,
+                    viewStates: []
+                )
+            } label: {
                 RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
             }
         }

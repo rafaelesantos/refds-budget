@@ -1,7 +1,6 @@
-import Foundation
 import SwiftUI
-import RefdsBudgetData
 import RefdsShared
+import RefdsBudgetDomain
 
 public struct AddCategoryStateMock: AddCategoryStateProtocol {
     public var id: UUID = .init()

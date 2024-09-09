@@ -190,7 +190,7 @@
 "filterDate" = "Date";
 "filterCategory" = "Categories";
 "filterTags" = "Tags";
-"filterCurrentMonth" = "Reset";
+"filterCurrentMonth" = "Today";
 
 // MARK: - Widget
 
@@ -347,3 +347,7 @@
 "comparisonBudgetCategoryPerformance" = "Performance by Categories";
 "comparisonBudgetTagComparison" = "Tag Comparison";
 "comparisonBudgetBackButton" = "Redo Comparison";
+
+// MARK: - Artificial Intelligence
+
+"aiTitle" = "Artificial Intelligence";

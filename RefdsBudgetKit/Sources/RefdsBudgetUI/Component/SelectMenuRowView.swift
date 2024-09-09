@@ -1,6 +1,8 @@
 import SwiftUI
 import RefdsUI
 import RefdsShared
+import RefdsBudgetMock
+import RefdsBudgetDomain
 import RefdsBudgetResource
 import RefdsBudgetPresentation
 
@@ -12,21 +14,21 @@ public struct SelectMenuRowView: View {
     private let icon: RefdsIconSymbol
     private let title: LocalizableKey
     
-    private let data: [String]
-    @Binding private var selectedData: Set<String>
+    private let items: [FilterRowViewDataProtocol]
+    @Binding private var selectedItem: Set<String>
     
     public init(
         header: LocalizableKey,
         icon: RefdsIconSymbol,
         title: LocalizableKey,
-        data: [String],
-        selectedData: Binding<Set<String>>
+        items: [FilterRowViewDataProtocol],
+        selectedItem: Binding<Set<String>>
     ) {
         self.header = header
         self.icon = icon
         self.title = title
-        self.data = data
-        self._selectedData = selectedData
+        self.items = items
+        self._selectedItem = selectedItem
     }
     
     public var body: some View {
@@ -50,17 +52,25 @@ public struct SelectMenuRowView: View {
     }
     
     private var menuOptions: some View {
-        ForEach(data, id: \.self) { item in
+        ForEach(items.indices, id: \.self) {
+            let item = items[$0]
             RefdsButton {
-                if selectedData.contains(item) {
-                    selectedData.remove(item)
+                if selectedItem.contains(item.name) {
+                    selectedItem.remove(item.name)
                 } else {
-                    selectedData.insert(item)
+                    selectedItem.insert(item.name)
                 }
             } label: {
                 HStack {
-                    RefdsText(item)
-                    if selectedData.contains(item) {
+                    let contains = selectedItem.contains(item.name)
+                    
+                    if let icon = item.icon, !contains {
+                        RefdsIcon(icon)
+                    }
+                    
+                    RefdsText(item.name.capitalized)
+                    
+                    if contains {
                         RefdsIcon(.checkmark)
                     }
                 }
@@ -70,9 +80,9 @@ public struct SelectMenuRowView: View {
     
     @ViewBuilder
     private var menuFooter: some View {
-        if !selectedData.isEmpty {
+        if !selectedItem.isEmpty {
             RefdsButton {
-                selectedData = []
+                selectedItem = []
             } label: {
                 Label(
                     String.localizable(by: .menuCleanSelections),
@@ -101,12 +111,12 @@ public struct SelectMenuRowView: View {
     
     private var menuLabelDetail: some View {
         HStack {
-            if selectedData.count == 1 {
-                RefdsText(selectedData.first ?? "", style: .callout, color: .secondary)
+            if selectedItem.count == 1 {
+                RefdsText(selectedItem.first ?? "", style: .callout, color: .secondary)
             } else {
                 RefdsText(
-                    selectedData.count == .zero ? .localizable(by: .transactionsCategorieAllSelected) :
-                        selectedData.count.asString, style: .callout, color: .secondary
+                    selectedItem.count == .zero ? .localizable(by: .transactionsCategorieAllSelected) :
+                        selectedItem.count.asString, style: .callout, color: .secondary
                 )
             }
         }
@@ -120,8 +130,8 @@ public struct SelectMenuRowView: View {
             header: .transactionsCategoriesFilterHeader,
             icon: .squareStack3dForwardDottedlineFill,
             title: .categoriesNavigationTitle,
-            data: (1 ... 5).map { _ in CategoryRowViewDataMock().name },
-            selectedData: .constant([])
+            items: (1 ... 5).map { _ in FilterRowViewDataMock() },
+            selectedItem: .constant([])
         )
         .environment(\.isPro, false)
     }

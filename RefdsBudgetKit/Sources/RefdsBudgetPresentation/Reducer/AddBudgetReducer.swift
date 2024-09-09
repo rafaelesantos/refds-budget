@@ -10,28 +10,25 @@ public final class AddBudgetReducer: RefdsReduxReducerProtocol {
         var state = state
         
         switch action as? AddBudgetAction {
-        case .fetchCategories:
+        case .fetchData, .fetchBudget:
             state.isLoading = true
-        case let .updateCategories(categories, budgetId, budgetAmount, budgetDescription):
-            state.categories = categories
-            state.id = budgetId
-            state.amount = budgetAmount
-            state.description = budgetDescription
-            state.isLoading = false
-            if state.category == nil {
-                state.category = categories.first
-            }
-            state.isAI = false
-        case let .updateBudget(id, amount, description, isAI):
+        case let .updateData(id, description, date, amount, category, categories):
             state.id = id
-            state.amount = amount
             state.description = description
+            state.date = date
+            state.amount = amount
+            state.category = category
+            state.categories = categories
             state.isLoading = false
-            state.isAI = isAI
+        case let .updateBudget(id, description, amount):
+            state.id = id
+            state.description = description
+            state.amount = amount
+            state.isLoading = false
         case let .updateError(error):
             state.error = error
             state.isLoading = false
-        default:
+        case .save, .none:
             break
         }
         

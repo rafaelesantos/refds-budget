@@ -3,11 +3,11 @@ import RefdsUI
 import Charts
 import RefdsBudgetPresentation
 
-public struct ChartComparisonView: View {
+public struct ComparisonChartView: View {
     @Environment(\.privacyMode) private var privacyMode
     
     @State private var data: [BudgetComparisonChartViewDataProtocol] = []
-    @State private var chartSelection: String = ""
+    @State private var valueSelection: String = ""
     
     private let viewData: [BudgetComparisonChartViewDataProtocol]
     @Binding private var selection: BudgetComparisonChartViewDataProtocol?
@@ -27,11 +27,11 @@ public struct ChartComparisonView: View {
         chartView
             .onAppear { reload() }
             .onChange(of: viewData.count) { reload() }
-            .onChange(of: chartSelection) { handlerChartSelection() }
+            .onChange(of: valueSelection) { handlerChartSelection() }
     }
     
     private func handlerChartSelection() {
-        if let selection = data.first(where: { $0.domain.lowercased() == chartSelection.lowercased() }) {
+        if let selection = data.first(where: { $0.domain.lowercased() == valueSelection.lowercased() }) {
             withAnimation {
                 self.selection = selection
             }
@@ -40,7 +40,7 @@ public struct ChartComparisonView: View {
     
     private func reload() {
         withAnimation {
-            chartSelection = viewData.first?.domain ?? ""
+            valueSelection = viewData.first?.domain ?? ""
         }
         
         guard data.isEmpty else { return }
@@ -70,25 +70,15 @@ public struct ChartComparisonView: View {
         .frame(height: 160)
         .padding(.vertical)
         .padding(.top)
-        .chartForegroundStyleScale([
-            "base": Color.accentColor.opacity(0.5),
-            "compare": Color.accentColor
-        ])
-        .chartOverlay { proxy in
-            GeometryReader { geometry in
-                ZStack(alignment: .top) {
-                    Rectangle()
-                        .fill(.clear)
-                        .contentShape(.rect)
-                        .onTapGesture { location in
-                            guard let plotFrame = proxy.plotFrame else { return }
-                            let position = location.x - geometry[plotFrame].origin.x
-                            guard let category: String = proxy.value(atX: position) else { return }
-                            withAnimation { chartSelection = category }
-                        }
-                }
-            }
-        }
+        .chartForegroundStyleScale(foregroundColors)
+        .chartOverlay { chartOverlayView(for: $0) }
+    }
+    
+    private var foregroundColors: KeyValuePairs<String, Color> {
+        [
+            "base": (selection?.color ?? .accentColor).opacity(0.5),
+            "compare": selection?.color ?? .accentColor
+        ]
     }
     
     private func buildMark(
@@ -104,5 +94,33 @@ public struct ChartComparisonView: View {
         .interpolationMethod(.cardinal)
         .foregroundStyle(by: .value("x-style", id))
         .symbol(.circle)
+    }
+    
+    private func chartOverlayView(for proxy: ChartProxy) -> some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .top) {
+                Rectangle()
+                    .fill(.clear)
+                    .contentShape(.rect)
+                    .onTapGesture {
+                        handlerGesture(
+                            for: proxy,
+                            and: geometry,
+                            on: $0
+                        )
+                    }
+            }
+        }
+    }
+    
+    private func handlerGesture(
+        for proxy: ChartProxy,
+        and geometry: GeometryProxy,
+        on location: CGPoint
+    ) {
+        guard let plotFrame = proxy.plotFrame else { return }
+        let position = location.x - geometry[plotFrame].origin.x
+        guard let value: String = proxy.value(atX: position) else { return }
+        withAnimation { valueSelection = value }
     }
 }

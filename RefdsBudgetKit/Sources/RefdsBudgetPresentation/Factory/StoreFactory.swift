@@ -61,6 +61,7 @@ public class StoreFactory {
     private static func getMiddlewares() -> [RefdsReduxMiddleware<ApplicationStateProtocol>] {
         [
             BalanceMiddleware<ApplicationStateProtocol>().middleware,
+            FilterMiddleware<ApplicationStateProtocol>().middleware,
             AddBudgetMiddleware<ApplicationStateProtocol>().middleware,
             AddCategoryMiddleware<ApplicationStateProtocol>().middleware,
             CategoryMiddleware<ApplicationStateProtocol>().middleware,

@@ -11,6 +11,8 @@ public struct BudgetComparisonView: View {
     @Binding private var state: BudgetComparisonStateProtocol
     private let action: (BudgetComparisonAction) -> Void
     
+    @State private var categoryVariation: Double?
+    
     public init(
         state: Binding<BudgetComparisonStateProtocol>,
         action: @escaping (BudgetComparisonAction) -> Void
@@ -25,7 +27,6 @@ public struct BudgetComparisonView: View {
             sectionComparison
             sectionComparisonCategoriesChart
             sectionComparisonTagsChart
-            sectionRedoComparisonButton
         }
         .onAppear { action(.fetchData) }
     }
@@ -35,69 +36,59 @@ public struct BudgetComparisonView: View {
         if let baseBudget = state.baseBudget,
            let compareBudget = state.compareBudget {
             RefdsSection {} footer: {
-                ZStack {
-                    HStack(spacing: .padding(.large)) {
-                        VStack(spacing: 5) {
-                            RefdsText(
-                                baseBudget.date.asString(withDateFormat: .custom("yyyy")),
-                                style: .footnote,
-                                color: .secondary,
-                                weight: .bold
-                            )
-                                .padding(.bottom, -10)
-                            RefdsText(
-                                baseBudget.date.asString(withDateFormat: .custom("MMMM")).capitalized,
-                                style: .title,
-                                weight: .bold,
-                                lineLimit: 1
-                            )
-                                .minimumScaleFactor(0.8)
-                            RefdsScaleProgressView(
-                                .circle,
-                                riskColor: baseBudget.percentage.riskColor,
-                                size: 25
-                            )
-                        }
-                        .frame(maxWidth: .infinity)
-                        
-                        VStack(spacing: 5) {
-                            RefdsText(
-                                compareBudget.date.asString(withDateFormat: .custom("yyyy")),
-                                style: .footnote,
-                                color: .secondary,
-                                weight: .bold
-                            )
-                                .padding(.bottom, -10)
-                            RefdsText(
-                                compareBudget.date.asString(
-                                    withDateFormat: .custom("MMMM")
-                                ).capitalized,
-                                style: .title,
-                                weight: .bold,
-                                lineLimit: 1
-                            )
-                                .minimumScaleFactor(0.8)
-                            RefdsScaleProgressView(
-                                .circle,
-                                riskColor: compareBudget.percentage.riskColor,
-                                size: 25
-                            )
-                        }
-                        .frame(maxWidth: .infinity)
+                VStack(spacing: .padding(.medium)) {
+                    if baseBudget.hasAI {
+                        titleView(for: baseBudget)
+                    } else {
+                        titleView(for: baseBudget)
+                        Divider()
+                        titleView(for: compareBudget)
                     }
-                    .frame(maxWidth: .infinity)
-                    
-                    HStack { Divider().frame(height: 100) }
-                    RefdsText(
-                        .localizable(by: .comparisonBudgetVS).uppercased(),
-                        color: .secondary,
-                        weight: .bold
-                    )
-                        .padding(3)
-                        .padding(.horizontal, 3)
-                        .background()
-                        .cornerRadius(4)
                 }
+                .padding(.top, -20)
+            }
+        }
+    }
+    
+    private func titleView(for budget: BudgetRowViewDataProtocol) -> some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            HStack(alignment: .bottom) {
+                RefdsText(
+                    budget.date.asString(withDateFormat: .custom("MMMM")).capitalized,
+                    style: .largeTitle,
+                    weight: .bold,
+                    lineLimit: 1
+                )
+                
+                RefdsText(
+                    budget.date.asString(withDateFormat: .custom("yyyy")),
+                    style: .body,
+                    color: .secondary,
+                    weight: .bold
+                )
+                .padding(.bottom, 5)
+                
+                Spacer()
+                
+                if budget.hasAI {
+                    RefdsIconRow(.cpuFill)
+                        .clipShape(.circle)
+                } else {
+                    RefdsScaleProgressView(
+                        .circle,
+                        riskColor: budget.percentage.riskColor,
+                        size: 25
+                    )
+                }
+            }
+            
+            if budget.hasAI {
+                RefdsScaleProgressView(
+                    .circle,
+                    riskColor: budget.percentage.riskColor,
+                    size: 30
+                )
+                .padding(.top, .padding(.extraSmall))
             }
         }
     }
@@ -140,6 +131,7 @@ public struct BudgetComparisonView: View {
                 weight: .bold
             )
             .contentTransition(.numericText())
+            .animation(.default, value: variation)
         }
     }
     
@@ -155,7 +147,9 @@ public struct BudgetComparisonView: View {
                 baseDate: baseDate,
                 compareDate: compareDate,
                 baseValue: baseBudget.spend,
-                compareValue: compareBudget.spend
+                compareValue: compareBudget.spend,
+                color: .accentColor,
+                hasAI: baseBudget.hasAI
             )
             
             RefdsText(
@@ -183,7 +177,7 @@ public struct BudgetComparisonView: View {
                 )
                 VStack(spacing: .zero) {
                     rowChartSelectionComparison(for: state.selectedCategory)
-                    ChartComparisonView(
+                    ComparisonChartView(
                         viewData: state.categoriesChart,
                         selection: $state.selectedCategory
                     )
@@ -217,7 +211,7 @@ public struct BudgetComparisonView: View {
                 
                 VStack(spacing: .zero) {
                     rowChartSelectionComparison(for: state.selectedTag)
-                    ChartComparisonView(
+                    ComparisonChartView(
                         viewData: state.tagsChart,
                         selection: $state.selectedTag,
                         hasDomain: false
@@ -270,7 +264,9 @@ public struct BudgetComparisonView: View {
                 baseDate: baseDate,
                 compareDate: compareDate,
                 baseValue: selection.base,
-                compareValue: selection.compare
+                compareValue: selection.compare,
+                color: selection.color ?? .accentColor,
+                hasAI: state.baseBudget?.hasAI ?? false
             )
         }
     }
@@ -292,19 +288,32 @@ public struct BudgetComparisonView: View {
         baseDate: String,
         compareDate: String,
         baseValue: Double,
-        compareValue: Double
+        compareValue: Double,
+        color: Color,
+        hasAI: Bool
     ) -> some View {
         VStack(spacing: .zero) {
             HStack {
                 Spacer(minLength: .zero)
                 
                 VStack {
-                    RefdsText(
-                        baseDate.uppercased(),
-                        style: .caption,
-                        color: .accentColor.opacity(0.5),
-                        weight: .bold
-                    )
+                    HStack(spacing: 3) {
+                        if hasAI {
+                            RefdsIcon(
+                                .cpuFill,
+                                color: color.opacity(0.5),
+                                style: .footnote
+                            )
+                        }
+                        
+                        RefdsText(
+                            baseDate.uppercased(),
+                            style: .caption,
+                            color: color.opacity(0.5),
+                            weight: .bold
+                        )
+                    }
+                    
                     RefdsText(
                         baseValue.currency(),
                         style: .title3,
@@ -312,6 +321,7 @@ public struct BudgetComparisonView: View {
                         lineLimit: 1
                     )
                     .contentTransition(.numericText())
+                    .animation(.default, value: baseValue)
                     .refdsRedacted(if: privacyMode)
                 }
                 .frame(maxWidth: .infinity)
@@ -324,9 +334,10 @@ public struct BudgetComparisonView: View {
                     RefdsText(
                         compareDate.uppercased(),
                         style: .caption,
-                        color: .accentColor,
+                        color: color,
                         weight: .bold
                     )
+                    
                     RefdsText(
                         compareValue.currency(),
                         style: .title3,
@@ -334,6 +345,7 @@ public struct BudgetComparisonView: View {
                         lineLimit: 1
                     )
                     .contentTransition(.numericText())
+                    .animation(.default, value: compareValue)
                     .refdsRedacted(if: privacyMode)
                 }
                 .frame(maxWidth: .infinity)
@@ -342,20 +354,15 @@ public struct BudgetComparisonView: View {
             }
             .frame(maxWidth: .infinity)
             
-            BarComparisonView(
+            ComparisonBarView(
                 baseValue: baseValue,
-                compareValue: compareValue
+                compareValue: compareValue,
+                color: color
             )
+            .animation(.default, value: baseValue)
+            .animation(.default, value: compareValue)
         }
         .frame(maxWidth: .infinity)
-    }
-    
-    private var sectionRedoComparisonButton: some View {
-        RefdsSection {} footer: {
-            RefdsButton(.localizable(by: .comparisonBudgetBackButton)) {
-                action(.dismiss)
-            }
-        }
     }
 }
 

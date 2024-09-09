@@ -1,23 +1,18 @@
 import Foundation
 import RefdsRedux
+import RefdsBudgetDomain
 
 public enum HomeAction: RefdsReduxAction {
     case fetchData
-    case updateData(
-        remaining: [CategoryRowViewDataProtocol],
-        tags: [TagRowViewDataProtocol],
-        largestPurchase: [TransactionRowViewDataProtocol],
-        pendingCleared: PendingClearedSectionViewDataProtocol,
-        tagsMenu: [String],
-        categoriesMenu: [String]
-    )
-    
+    case updateFilterItems([FilterItem])
     case updateBalance(
         balance: BalanceRowViewDataProtocol,
         remainingBalace: BalanceRowViewDataProtocol
     )
-    
-    case manageTags
-    case showSettings
-    case showBudgetComparison
+    case updateData(
+        remaining: [CategoryRowViewDataProtocol],
+        tags: [TagRowViewDataProtocol],
+        largestPurchase: [TransactionRowViewDataProtocol],
+        pendingCleared: PendingClearedSectionViewDataProtocol
+    )
 }

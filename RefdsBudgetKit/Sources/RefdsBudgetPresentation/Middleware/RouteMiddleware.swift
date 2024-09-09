@@ -13,25 +13,11 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
         switch action {
         case let action as ApplicationAction:
             self.handler(with: state as? ApplicationStateProtocol, for: action)
-        case let action as AddBudgetAction:
-            self.handler(for: action, on: completion)
-        case let action as AddCategoryAction:
-            self.handler(for: action, on: completion)
-        case let action as CategoriesAction:
-            self.handler(for: action, on: completion)
-        case let action as CategoryAction:
-            self.handler(for: action, on: completion)
         case let action as AddTransactionAction:
             self.handler(for: action, on: completion)
         case let action as TransactionsAction:
             self.handler(for: action, on: completion)
-        case let action as HomeAction:
-            self.handler(for: action, on: completion)
         case let action as ImportAction:
-            self.handler(for: action, on: completion)
-        case let action as BudgetSelectionAction:
-            self.handler(for: action, on: completion)
-        case let action as BudgetComparisonAction:
             self.handler(for: action, on: completion)
         default: break
         }
@@ -75,52 +61,6 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func handler(
-        for action: AddBudgetAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .addCategory: completion(.updateRoute(.addCategory))
-        case .dismiss: completion(.dismiss)
-        default: break
-        }
-    }
-    
-    private func handler(
-        for action: AddCategoryAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .dismiss: completion(.dismiss)
-        default: break
-        }
-    }
-    
-    private func handler(
-        for action: CategoriesAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .addBudget: completion(.updateRoute(.addBudget))
-        case .addCategory: completion(.updateRoute(.addCategory))
-        case .showCategory: completion(.updateRoute(.category))
-        default: break
-        }
-    }
-    
-    private func handler(
-        for action: CategoryAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .editBudget: completion(.updateRoute(.addBudget))
-        case .editCategory: completion(.updateRoute(.addCategory))
-        case .addTransaction: completion(.updateRoute(.addTransaction))
-        case .dismiss: completion(.dismiss)
-        default: break
-        }
-    }
-    
-    private func handler(
         for action: AddTransactionAction,
         on completion: @escaping (ApplicationAction) -> Void
     ) {
@@ -143,40 +83,7 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
     }
     
     private func handler(
-        for action: HomeAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .manageTags: completion(.updateRoute(.manageTags))
-        case .showSettings: completion(.updateRoute(.settings))
-        case .showBudgetComparison: completion(.updateRoute(.budgetSelection))
-        default: break
-        }
-    }
-    
-    private func handler(
         for action: ImportAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .dismiss: completion(.dismiss)
-        default: break
-        }
-    }
-    
-    private func handler(
-        for action: BudgetSelectionAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .showComparison: completion(.updateRoute(.budgetComparison))
-        case .addBudget: completion(.updateRoute(.addBudget))
-        default: break
-        }
-    }
-    
-    private func handler(
-        for action: BudgetComparisonAction,
         on completion: @escaping (ApplicationAction) -> Void
     ) {
         switch action {

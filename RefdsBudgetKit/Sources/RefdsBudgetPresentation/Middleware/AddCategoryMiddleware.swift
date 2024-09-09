@@ -8,52 +8,99 @@ import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public final class AddCategoryMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @Environment(\.navigate) private var navigate
     @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
-    @RefdsInjection private var categoryAdapter: CategoryAdapterProtocol
     
     public init() {}
     
-    public lazy var middleware: RefdsReduxMiddleware<State> = { _, action, completion in
+    public lazy var middleware: RefdsReduxMiddleware<State> = { state, action, completion in
+        guard let state = state as? ApplicationStateProtocol else { return }
         switch action {
-        case let action as AddCategoryAction: self.handler(for: action, on: completion)
+        case let action as AddCategoryAction:
+            self.handler(
+                with: state.addCategoryState,
+                for: action,
+                on: completion
+            )
         default: break
         }
     }
     
     private func handler(
+        with state: AddCategoryStateProtocol,
         for action: AddCategoryAction,
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
         switch action {
-        case let .save(category): save(category, on: completion)
+        case .fetchData:
+            fetchData(
+                with: state.id,
+                on: completion
+            )
+        case .save:
+            save(
+                with: state,
+                on: completion
+            )
         default:
             break
         }
     }
     
-    private func save(
-        _ category: AddCategoryStateProtocol,
+    private func fetchData(
+        with id: UUID,
         on completion: @escaping (AddCategoryAction) -> Void
     ) {
-        let budgets = budgetRepository.getBudgets(on: category.id)
+        guard let category = categoryRepository.getCategory(by: id) else {
+            return completion(
+                .updateData(
+                    id: .init(),
+                    name: "",
+                    color: .random,
+                    icon: RefdsIconSymbol.categoryIcons.randomElement() ?? .dollarsign
+                )
+            )
+        }
+        completion(
+            .updateData(
+                id: category.id,
+                name: category.name,
+                color: Color(hex: category.color),
+                icon: RefdsIconSymbol(rawValue: category.icon) ?? .dollarsign
+            )
+        )
+    }
+    
+    private func save(
+        with state: AddCategoryStateProtocol,
+        on completion: @escaping (AddCategoryAction) -> Void
+    ) {
+        let budgets = budgetRepository.getBudgets(on: state.id)
         let categories = categoryRepository.getAllCategories()
         guard !categories.contains(where: {
                   $0.name.folding(options: .diacriticInsensitive, locale: .current).lowercased() ==
-                  category.name.folding(options: .diacriticInsensitive, locale: .current).lowercased()
+            state.name.folding(options: .diacriticInsensitive, locale: .current).lowercased()
               }) else {
             return completion(.updateError(.existingCategory))
         }
         do {
             try categoryRepository.addCategory(
-                id: category.id,
-                name: category.name,
-                color: category.color,
+                id: state.id,
+                name: state.name,
+                color: state.color,
                 budgets: budgets.map { $0.id },
-                icon: category.icon.rawValue
+                icon: state.icon.rawValue
             )
-        } catch { return completion(.updateError(.existingCategory))}
+        } catch {
+            return completion(.updateError(.existingCategory))
+        }
+        
         WidgetCenter.shared.reloadAllTimelines()
-        completion(.dismiss)
+        navigate?.to(
+            scene: .current,
+            view: .dismiss,
+            viewStates: []
+        )
     }
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 import StoreKit
 import RefdsRedux
-import RefdsBudgetData
+import RefdsBudgetDomain
 import RefdsBudgetResource
 
 public protocol SettingsStateProtocol: RefdsReduxState {

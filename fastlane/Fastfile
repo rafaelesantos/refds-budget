@@ -1,34 +1,23 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new release build to the App Store"
+  desc "🚀 Prepare and deploy a polished app release, ready to shine in the App Store!"
   lane :release do
-    build_app(scheme: "RefdsBudget")
-    upload_to_app_store
+    sync_code_signing(type: "appstore")
+    build_app(scheme: "MyApp")
+    upload_to_testflight
+    slack(message: "Successfully distributed a new beta build")
+  end
+
+  desc "🔧 Builds your app with precision, creating a flawless version ready for testing or release!"
+  lane :build do
+    build_app(scheme: "Budget Production")
     xcode_select "/Applications/Xcode.app"
    end
-end
 
-platform :ios do
-  desc "Push a new beta build to the Test Flight"
-  lane :beta do
-    build_app(scheme: "RefdsBudget")
-    upload_to_testflight
-    xcode_select "/Applications/Xcode.app"
+  desc "🧪 Runs all tests to ensure your app is flawless, stable, and ready for deployment!"
+  lane :tests do
+    run_tests(scheme: "Budget Production")
   end
+
 end

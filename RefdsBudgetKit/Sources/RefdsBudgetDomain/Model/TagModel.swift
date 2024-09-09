@@ -37,11 +37,13 @@ public struct TagModel: TagModelProtocol, RefdsModel {
     }
     
     public func getEntity(for context: NSManagedObjectContext) -> BubbleEntity {
-        let request = BubbleEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
-        guard let entity = try? context.fetch(request).first else {
-            return BubbleEntity(model: self, for: context)
+        context.performAndWait {
+            let request = BubbleEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            guard let entity = try? context.fetch(request).first else {
+                return BubbleEntity(model: self, for: context)
+            }
+            return entity
         }
-        return entity
     }
 }

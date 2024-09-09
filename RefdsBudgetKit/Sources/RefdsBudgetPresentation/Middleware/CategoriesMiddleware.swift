@@ -30,30 +30,32 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         for categoriesAction: CategoriesAction,
         on completion: @escaping (CategoriesAction) -> Void
     ) {
+        let date = state.filter.isDateFilter ? state.filter.date : nil
         switch categoriesAction {
-        case .fetchData: 
-            let date = state.isFilterEnable ? state.date : nil
+        case .fetchData:
             fetchData(
                 from: date,
-                tagsName: state.selectedTags,
-                status: state.selectedStatus,
+                selectedItems: state.filter.selectedItems,
                 on: completion
             )
-        case let .fetchCategoryForEdit(categoryId): fetchCategoryForEdit(with: categoryId, on: completion)
-        case let .removeCategory(date, id): removeCategory(with: state, from: date, by: id, on: completion)
+        case let .removeCategory(id):
+            removeCategory(
+                with: state,
+                from: date,
+                by: id,
+                on: completion
+            )
         default: break
         }
     }
     
     private func fetchData(
         from date: Date?,
-        tagsName: Set<String>,
-        status: Set<String>,
+        selectedItems: Set<String>,
         on completion: @escaping (CategoriesAction) -> Void
     ) {
         let allEntities = categoryRepository.getAllCategories()
         var categoriesEntity: [CategoryModelProtocol] = []
-        let tags = tagRepository.getTags().map { $0.name }
         
         if let date = date {
             categoriesEntity = categoryRepository.getCategories(from: date)
@@ -63,86 +65,32 @@ public final class CategoriesMiddleware<State>: RefdsReduxMiddlewareProtocol {
         
         let categories: [CategoryRowViewDataProtocol] = categoriesEntity.compactMap {
             var budgetsEntity: [BudgetModelProtocol] = []
-            var transactionsEntity: [TransactionModelProtocol] = []
             
             if let date = date, let budget = budgetRepository.getBudget(on: $0.id, from: date) {
                 budgetsEntity += [budget]
-                transactionsEntity = transactionRepository.getTransactions(on: $0.id, from: date, format: .monthYear).filter {
-                    if status.isEmpty {
-                        return $0.status != TransactionStatus.pending.rawValue &&
-                        $0.status != TransactionStatus.cleared.rawValue
-                    } else {
-                        return true
-                    }
-                }
             } else if date == nil {
                 budgetsEntity = budgetRepository.getBudgets(on: $0.id)
-                transactionsEntity = transactionRepository.getTransactions(on: $0.id).filter {
-                    if status.isEmpty {
-                        return $0.status != TransactionStatus.pending.rawValue &&
-                        $0.status != TransactionStatus.cleared.rawValue
-                    } else {
-                        return true
-                    }
-                }
-            }
-            
-            if !tagsName.isEmpty {
-                transactionsEntity = transactionsEntity.filter { transaction in
-                    var contains = true
-                    for tagName in tagsName {
-                        if !transaction.message
-                            .folding(options: .diacriticInsensitive, locale: .current)
-                            .lowercased()
-                            .contains(
-                                tagName
-                                    .folding(options: .diacriticInsensitive, locale: .current)
-                                    .lowercased()
-                            ) {
-                            contains = false
-                        }
-                    }
-                    return contains
-                }
-            }
-            
-            if !status.isEmpty {
-                transactionsEntity = transactionsEntity.filter {
-                    status.contains(TransactionStatus(rawValue: $0.status)?.description ?? "")
-                }
             }
             
             guard let budget = budgetsEntity.last else { return nil }
             let budgetAmount = budgetsEntity.map { $0.amount }.reduce(.zero, +)
-            let spend = transactionsEntity.map { $0.amount }.reduce(.zero, +)
-            let percentage = spend / (budgetAmount == .zero ? 1 : budgetAmount)
             
             return categoryAdapter.adapt(
                 model: $0,
-                budgetId: budget.id,
-                budgetDescription: budget.message,
+                budgetDescription: date == nil ? nil : budget.message,
                 budget: budgetAmount,
-                percentage: percentage,
-                transactionsAmount: transactionsEntity.count,
-                spend: spend
+                percentage: .zero,
+                transactionsAmount: .zero,
+                spend: .zero
             )
         }
+        
         completion(
             .updateCategories(
                 categories.sorted(by: { $0.name < $1.name }),
-                allEntities.isEmpty,
-                tags
+                allEntities.isEmpty
             )
         )
-    }
-    
-    private func fetchCategoryForEdit(
-        with id: UUID,
-        on completion: @escaping (CategoriesAction) -> Void
-    ) {
-        if let category = categoryRepository.getCategory(by: id) {
-            completion(.addCategory(categoryAdapter.adapt(model: category)))
-        } else { completion(.updateError(.notFoundCategory)) }
     }
     
     private func removeCategory(

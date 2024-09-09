@@ -133,7 +133,7 @@ public struct TransactionSectionsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     HStack(spacing: .padding(.small)) {
-                        RefdsText(transaction.amount.currency(), style: .callout, color: transaction.status.color, lineLimit: 1)
+                        RefdsText(transaction.amount.currency(), style: .callout, color: transaction.status.color, weight: .semibold, lineLimit: 1)
                             .refdsRedacted(if: privacyMode)
                         Spacer(minLength: .zero)
                         RefdsText(transaction.date.asString(withDateFormat: .custom("HH:mm")), style: .callout, color: .secondary, weight: .light)
@@ -145,7 +145,11 @@ public struct TransactionSectionsView: View {
                 
                 Spacer()
                 
-                RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
+                RefdsIcon(
+                    .chevronRight,
+                    color: .secondary.opacity(0.5),
+                    style: .callout
+                )
             }
         }
     }

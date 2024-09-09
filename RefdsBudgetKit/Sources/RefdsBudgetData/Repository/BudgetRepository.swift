@@ -23,7 +23,7 @@ public final class BudgetRepository: BudgetUseCase {
         database.viewContext.performAndWait {
             let request = BudgetEntity.fetchRequest()
             request.predicate = NSPredicate(format: "category = %@", category as CVarArg)
-            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
             guard let entities = try? database.viewContext.fetch(request) else { return [] }
             return entities.map { BudgetModel(entity: $0) }
         }

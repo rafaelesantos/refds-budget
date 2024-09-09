@@ -1,18 +1,11 @@
 import Foundation
 import RefdsRedux
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public enum CategoriesAction: RefdsReduxAction {
-    case updateError(RefdsBudgetError)
-    case updateCategories([CategoryRowViewDataProtocol], Bool, [String])
-    case updateBalance(BalanceRowViewDataProtocol)
-    
     case fetchData
-    case fetchCategoryForEdit(UUID)
-    
-    case addCategory(AddCategoryStateProtocol?)
-    case addBudget
-    case removeCategory(Date?, UUID)
-    
-    case showCategory(UUID, Date?)
+    case updateError(RefdsBudgetError)
+    case updateCategories([CategoryRowViewDataProtocol], Bool)
+    case updateBalance(BalanceRowViewDataProtocol)
+    case removeCategory(UUID)
 }

@@ -16,7 +16,7 @@ public struct AddTransactionStateMock: AddTransactionStateProtocol {
     public var isEmptyCategories: Bool = false
     public var isEmptyBudgets: Bool = false
     public var isLoading: Bool = false
-    public var isAI: Bool = true
+    public var hasAI: Bool = true
     
     public init() {}
 }

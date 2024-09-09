@@ -12,27 +12,22 @@ public final class HomeReducer: RefdsReduxReducerProtocol {
         switch action as? HomeAction {
         case .fetchData:
             state.isLoading = true
-            
         case let .updateData(
             remaining,
             tags,
             largestPurchase,
-            pendingCleared,
-            tagsMenu,
-            categoriesMenu
+            pendingCleared
         ):
             state.remaining = remaining
             state.tagsRow = tags
             state.largestPurchase = largestPurchase
             state.pendingCleared = pendingCleared
-            state.tags = tagsMenu
-            state.categories = categoriesMenu
             state.isLoading = false
-            
         case let .updateBalance(balance, remainingBalace):
             state.balance = balance
             state.remainingBalance = remainingBalace
-            
+        case let .updateFilterItems(items):
+            state.filter.items = items
         default: break
         }
         

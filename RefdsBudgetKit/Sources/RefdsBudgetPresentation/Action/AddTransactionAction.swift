@@ -1,6 +1,6 @@
 import Foundation
 import RefdsRedux
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public enum AddTransactionAction: RefdsReduxAction {
     case updateCategories(CategoryRowViewDataProtocol?, [CategoryRowViewDataProtocol])

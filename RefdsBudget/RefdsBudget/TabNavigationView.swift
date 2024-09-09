@@ -11,7 +11,6 @@ struct TabNavigationView: View {
     @Environment(\.isPro) private var isPro
     @EnvironmentObject var store: RefdsReduxStore<ApplicationStateProtocol>
     @RefdsInjection private var viewFactory: ViewFactoryProtocol
-    private var deeplink: Deeplink = .shared
     
     private var bindingState: Binding<RefdsReduxState> {
         Binding { store.state } set: {
@@ -50,11 +49,17 @@ struct TabNavigationView: View {
             settingsItemView
         }
         .onOpenURL {
-            deeplink.trigger(
-                state: $store.state,
-                itemNavigation: bindingItemNavigation,
-                url: $0
+            ApplicationRouter(state: $store.state).navigate(url: $0)
+        }
+        .navigation { scene, view, viewStates in
+            ApplicationRouter(state: $store.state).navigate(
+                scene: scene,
+                view: view,
+                viewStates: viewStates
             )
+        }
+        .navigation { url in
+            ApplicationRouter(state: $store.state).navigate(url: url)
         }
     }
     

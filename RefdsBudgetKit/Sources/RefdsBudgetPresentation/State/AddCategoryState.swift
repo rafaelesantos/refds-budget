@@ -1,8 +1,7 @@
-import Foundation
 import SwiftUI
 import RefdsRedux
 import RefdsShared
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public protocol AddCategoryStateProtocol: RefdsReduxState {
     var id: UUID { get set }

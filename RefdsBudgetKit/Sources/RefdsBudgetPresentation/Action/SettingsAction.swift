@@ -1,7 +1,7 @@
 import Foundation
 import StoreKit
 import RefdsRedux
-import RefdsBudgetData
+import RefdsBudgetDomain
 
 public enum SettingsAction: RefdsReduxAction {
     case purchase

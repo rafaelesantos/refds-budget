@@ -30,6 +30,7 @@ func CategoryFromTransactionData(
     transactionEntities: [TransactionModelProtocol],
     on step: @escaping (String) -> Void
 ) -> Data? {
+    let transactionEntities = transactionEntities.count > 400 ? Array(transactionEntities.prefix(400)) : transactionEntities
     var categoriesDict: [String: (CategoryModelProtocol, Int)] = [:]
     var targetDict: [[String: Double]] = []
     

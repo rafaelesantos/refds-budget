@@ -190,7 +190,7 @@
 "filterDate" = "Data";
 "filterCategory" = "Categorias";
 "filterTags" = "Tags";
-"filterCurrentMonth" = "Reset";
+"filterCurrentMonth" = "Hoje";
 
 // MARK: - Widget
 
@@ -348,3 +348,7 @@
 "comparisonBudgetCategoryPerformance" = "Desempenho por categorias";
 "comparisonBudgetTagComparison" = "Comparação de tags";
 "comparisonBudgetBackButton" = "Refazer Comparação";
+
+// MARK: - Artificial Intelligence
+
+"aiTitle" = "Inteligência Artificial";

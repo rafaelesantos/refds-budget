@@ -18,17 +18,21 @@ public struct AddCategoryView: View {
     
     public var body: some View {
         List {
-            sectionNameView
+            sectionName
             ColorFormView(color: $state.color)
-            IconsFormView(icon: $state.icon, color: state.color)
-            sectionSaveButtonView
+            IconsFormView(
+                icon: $state.icon,
+                color: state.color
+            )
+            saveButton
         }
-        .refdsDismissesKeyboad()
         .toolbar { ToolbarItem { saveButtonToolbar } }
+        .task { action(.fetchData) }
+        .refdsDismissesKeyboad()
         .refdsToast(item: $state.error)
     }
     
-    private var sectionNameView: some View {
+    private var sectionName: some View {
         RefdsSection {} footer: {
             #if os(macOS)
             RefdsTextField(
@@ -55,15 +59,13 @@ public struct AddCategoryView: View {
         }
     }
     
-    
-    
-    private var sectionSaveButtonView: some View {
+    private var saveButton: some View {
         RefdsSection {} footer: {
             RefdsButton(
                 .localizable(by: .addCategorySaveCategoryButton),
                 isDisable: !state.canSave
             ) {
-                action(.save(state))
+                action(.save)
             }
             .padding(.horizontal, -20)
             .padding(.bottom, 20)
@@ -71,7 +73,9 @@ public struct AddCategoryView: View {
     }
     
     private var saveButtonToolbar: some View {
-        RefdsButton(isDisable: !state.canSave) { action(.save(state)) } label: {
+        RefdsButton(isDisable: !state.canSave) {
+            action(.save)
+        } label: {
             RefdsIcon(
                 .checkmarkCircleFill,
                 color: .accentColor,

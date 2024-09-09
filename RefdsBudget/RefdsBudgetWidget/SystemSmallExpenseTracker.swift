@@ -112,9 +112,10 @@ struct SystemSmallExpenseTrackerView: View {
     var body: some View {
         RefdsBudgetUI.SystemSmallExpenseTracker(viewData: entry.viewData)
             .widgetURL(
-                Deeplink.url(
-                    host: .openHome,
-                    path: .none
+                ApplicationRouter.deeplinkURL(
+                    scene: .home,
+                    view: .none,
+                    viewStates: []
                 )
             )
     }

@@ -2,8 +2,7 @@ import Foundation
 import SwiftUI
 
 public protocol CategoryRowViewDataProtocol {
-    var categoryId: UUID { get }
-    var budgetId: UUID { get }
+    var id: UUID { get }
     var icon: String { get }
     var name: String { get }
     var description: String? { get }
@@ -16,8 +15,7 @@ public protocol CategoryRowViewDataProtocol {
 }
 
 public struct CategoryRowViewData: CategoryRowViewDataProtocol {
-    public var categoryId: UUID
-    public var budgetId: UUID
+    public var id: UUID
     public var icon: String
     public var name: String
     public var description: String?
@@ -29,19 +27,17 @@ public struct CategoryRowViewData: CategoryRowViewDataProtocol {
     public var isAnimate: Bool = false
     
     public init(
-        categoryId: UUID,
-        budgetId: UUID,
+        id: UUID,
         icon: String,
         name: String,
-        description: String?,
+        description: String? = nil,
         color: Color,
-        budget: Double,
-        percentage: Double,
-        transactionsAmount: Int,
-        spend: Double
+        budget: Double = .zero,
+        percentage: Double = .zero,
+        transactionsAmount: Int = .zero,
+        spend: Double = .zero
     ) {
-        self.categoryId = categoryId
-        self.budgetId = budgetId
+        self.id = id
         self.icon = icon
         self.name = name
         self.description = description
