@@ -13,8 +13,6 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
         switch action {
         case let action as ApplicationAction:
             self.handler(with: state as? ApplicationStateProtocol, for: action)
-        case let action as AddTransactionAction:
-            self.handler(for: action, on: completion)
         case let action as TransactionsAction:
             self.handler(for: action, on: completion)
         case let action as ImportAction:
@@ -57,18 +55,6 @@ public final class RouteMiddleware<State>: RefdsReduxMiddlewareProtocol {
                 state.settingsRouter.dismiss()
             case nil: break
             }
-        }
-    }
-    
-    private func handler(
-        for action: AddTransactionAction,
-        on completion: @escaping (ApplicationAction) -> Void
-    ) {
-        switch action {
-        case .addBudget: completion(.updateRoute(.addBudget))
-        case .addCategory: completion(.updateRoute(.addCategory))
-        case .dismiss: completion(.dismiss)
-        default: break
         }
     }
     

@@ -25,31 +25,11 @@ public final class ApplicationReducer: RefdsReduxReducerProtocol {
         }
         
         switch action {
-        case let action as AddTransactionAction:
-            state = self.handler(with: state, for: action)
         case let action as TransactionsAction:
             state = self.handler(with: state, for: action)
         default: break
         }
         
-        return state
-    }
-    
-    private func handler(
-        with state: State,
-        for action: AddTransactionAction
-    ) -> State {
-        var state: State = state
-        switch action {
-        case .addCategory:
-            state.addCategoryState = AddCategoryState()
-        case let .addBudget(date):
-            state.addBudgetState = AddBudgetState(date: date ?? .current)
-        case .dismiss:
-            state.addTransactionState = AddTransactionState(category: nil)
-        default:
-            break
-        }
         return state
     }
     

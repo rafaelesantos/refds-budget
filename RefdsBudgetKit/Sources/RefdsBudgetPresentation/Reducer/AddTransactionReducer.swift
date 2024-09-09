@@ -24,7 +24,7 @@ public final class AddTransactionReducer: RefdsReduxReducerProtocol {
         case let .updateError(error):
             state.error = error
             state.isLoading = false
-        case .dismiss, .save, .addCategory, .fetchTags, .addBudget, nil:
+        case .save, .fetchTags, nil:
             break
         }
         

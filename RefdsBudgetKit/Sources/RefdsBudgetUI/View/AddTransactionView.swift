@@ -5,6 +5,7 @@ import RefdsBudgetDomain
 import RefdsBudgetPresentation
 
 public struct AddTransactionView: View {
+    @Environment(\.navigate) private var navigate
     @Binding private var state: AddTransactionStateProtocol
     private let action: (AddTransactionAction) -> Void
     
@@ -177,9 +178,21 @@ public struct AddTransactionView: View {
                 }
                 
                 if state.isEmptyBudgets {
-                    RefdsText(.localizable(by: .categoriesEmptyBudgetsDescription), style: .callout)
-                    RefdsButton { action(.addBudget(state.date)) } label: {
-                        RefdsText(.localizable(by: .categoriesEmptyBudgetsButton), style: .callout, color: .accentColor)
+                    RefdsText(
+                        .localizable(by: .categoriesEmptyBudgetsDescription),
+                        style: .callout
+                    )
+                    RefdsButton { 
+                        navigate?.to(
+                            view: .addBudget,
+                            viewStates: [.date(state.date)]
+                        )
+                    } label: {
+                        RefdsText(
+                            .localizable(by: .categoriesEmptyBudgetsButton),
+                            style: .callout,
+                            color: .accentColor
+                        )
                     }
                 }
             }

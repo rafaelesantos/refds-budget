@@ -8,6 +8,7 @@ import RefdsBudgetResource
 import WidgetKit
 
 public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol {
+    @Environment(\.navigate) private var navigate
     @RefdsInjection private var tagRepository: TagUseCase
     @RefdsInjection private var budgetRepository: BudgetUseCase
     @RefdsInjection private var categoryRepository: CategoryUseCase
@@ -118,7 +119,7 @@ public final class AddTransactionMiddleware<State>: RefdsReduxMiddlewareProtocol
                 status: state.status
             )
             WidgetCenter.shared.reloadAllTimelines()
-            completion(.dismiss)
+            navigate?.to(view: .dismiss)
         } catch {
             completion(.updateError(.existingTransaction))
         }

@@ -247,9 +247,9 @@ public struct ApplicationRouterAction {
     }
     
     public func to(
-        scene: RouteScene,
+        scene: RouteScene = .current,
         view: RouteView,
-        viewStates: [RouteViewState]
+        viewStates: [RouteViewState] = []
     ) {
         action?(
             scene,
