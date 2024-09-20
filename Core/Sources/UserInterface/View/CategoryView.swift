@@ -59,7 +59,7 @@ public struct CategoryView: View {
         if let category = state.category {
             RefdsSection {
                 ZStack(alignment: .topTrailing) {
-                    VStack(spacing: .padding(.small)) {
+                    VStack(spacing: .small) {
                         VStack(spacing: .zero) {
                             RefdsText(
                                 category.budget.currency(),
@@ -168,7 +168,7 @@ public struct CategoryView: View {
                         ]
                     )
                 } label: {
-                    HStack(spacing: .padding(.medium)) {
+                    HStack(spacing: .medium) {
                         RefdsIconRow(
                             .listBulletRectangleFill,
                             color: category.color

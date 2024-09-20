@@ -19,7 +19,7 @@ struct EmptyCategoriesView: View {
                 viewStates: []
             )
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(.squareStack3dForwardDottedlineFill)
                 RefdsText(
                     .localizable(by: .categoriesEmptyCategoriesButton),
@@ -37,5 +37,7 @@ struct EmptyCategoriesView: View {
 }
 
 #Preview {
-    EmptyCategoriesView()
+    List {
+        EmptyCategoriesView()
+    }
 }

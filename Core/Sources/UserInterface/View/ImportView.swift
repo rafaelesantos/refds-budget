@@ -125,14 +125,14 @@ public struct ImportView: View {
                     let budget = flatBudgets[$0]
                     if let category = state.model.categories.first(where: { $0.id == budget.category }),
                     let icon = RefdsIconSymbol(rawValue: category.icon) {
-                        HStack(spacing: .padding(.medium)) {
+                        HStack(spacing: .medium) {
                             ZStack(alignment: .topTrailing) {
                                 RefdsIcon(
                                     icon,
                                     color: Color(hex: category.color),
-                                    size: .padding(.medium)
+                                    size: .medium
                                 )
-                                .frame(width: .padding(.medium), height: .padding(.medium))
+                                .frame(width: .medium, height: .medium)
                                 .padding(10)
                                 .background(Color(hex: category.color).opacity(0.2))
                                 .clipShape(.rect(cornerRadius: .cornerRadius))
@@ -150,7 +150,7 @@ public struct ImportView: View {
                                 .padding(.horizontal, -8)
                             }
                             
-                            VStack(alignment: .leading, spacing: .padding(.extraSmall)) {
+                            VStack(alignment: .leading, spacing: .extraSmall) {
                                 HStack {
                                     RefdsText(category.name.capitalized)
                                     Spacer(minLength: .zero)
@@ -187,7 +187,7 @@ public struct ImportView: View {
             RefdsSection { } header: {
                 Divider()
             } footer: {
-                VStack(spacing: .padding(.medium)) {
+                VStack(spacing: .medium) {
                     RefdsToggle(isOn: $subscribeData, style: .checkmark) {
                         RefdsText(
                             .localizable(by: .importWarning),
@@ -222,7 +222,7 @@ public struct ImportView: View {
                     categoryPrefix = isMax ? 3 : amount
                 }
             } label: {
-                HStack(spacing: .padding(.medium)) {
+                HStack(spacing: .medium) {
                     RefdsText(isMax ? .localizable(by: .importShowLessCategories) : .localizable(by: .importShowMoreCategories))
                     Spacer(minLength: .zero)
                     RefdsText((isMax ? 3 : amount - 3).asString, color: .secondary)

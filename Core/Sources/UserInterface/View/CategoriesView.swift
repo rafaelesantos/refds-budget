@@ -82,7 +82,7 @@ public struct CategoriesView: View {
                             viewStates: [.id(category.id)]
                         )
                     } label: {
-                        CategoryRowView(viewData: category)
+                        CategoryItemView(viewData: category)
                     }
                     .contextMenu {
                         editCategoryButton(at: index)
@@ -192,7 +192,7 @@ public struct CategoriesView: View {
                 )
             } footer: {
                 ScrollView(.horizontal) {
-                    HStack(spacing: .padding(.extraSmall)) {
+                    HStack(spacing: .extraSmall) {
                         ForEach(state.categoriesWithoutBudget.indices, id: \.self) {
                             let category = state.categoriesWithoutBudget[$0]
                             RefdsStoryItem(

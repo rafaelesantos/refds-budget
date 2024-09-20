@@ -5,7 +5,7 @@ import Mock
 import Domain
 import Presentation
 
-public struct BudgetItemView: View {
+struct BudgetItemView: View {
     @Environment(\.privacyMode) private var privacyMode
     private let viewData: BudgetItemViewDataProtocol
     
@@ -13,7 +13,7 @@ public struct BudgetItemView: View {
     @State private var amount: Double = 0
     @State private var spend: Double = 0
     
-    public init(viewData: BudgetItemViewDataProtocol) {
+    init(viewData: BudgetItemViewDataProtocol) {
         self.viewData = viewData
     }
     
@@ -22,7 +22,7 @@ public struct BudgetItemView: View {
         viewData.date.asString(withDateFormat: .year)
     }
     
-    public var body: some View {
+    var body: some View {
         HStack(spacing: .zero) {
             VStack {
                 RefdsScaleProgressView(
@@ -30,7 +30,7 @@ public struct BudgetItemView: View {
                     size: 15
                 )
             }
-            .padding(.trailing, .padding(.medium))
+            .padding(.trailing, .medium)
             
             VStack(alignment: .leading) {
                 HStack {
@@ -39,7 +39,9 @@ public struct BudgetItemView: View {
                         style: .callout,
                         weight: .semibold
                     )
+                    
                     Spacer()
+                    
                     RefdsText(
                         amount.currency(),
                         style: .callout
@@ -55,7 +57,9 @@ public struct BudgetItemView: View {
                         color: .secondary
                     )
                     .refdsRedacted(if: privacyMode)
+                    
                     Spacer()
+                    
                     RefdsText(
                         spend.currency(),
                         style: .callout,
@@ -68,7 +72,11 @@ public struct BudgetItemView: View {
             
             Spacer()
             
-            RefdsIcon(.chevronRight, color: .secondary.opacity(0.5), style: .callout)
+            RefdsIcon(
+                .chevronRight,
+                color: .secondary.opacity(0.5),
+                style: .callout
+            )
         }
         .onAppear { updateStateValue() }
         .onChange(of: viewData.percentage) { updateStateValue() }

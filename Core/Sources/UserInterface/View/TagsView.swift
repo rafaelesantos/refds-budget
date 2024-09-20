@@ -38,9 +38,8 @@ public struct TagsView: View {
     private var sectionsInput: some View {
         sectionName
         ColorFormView(color: $state.selectedTag.color)
-        IconsFormView(icon: $state.selectedTag.icon, color: state.selectedTag.color)
+        IconFormView(icon: $state.selectedTag.icon, color: state.selectedTag.color)
         sectionSaveButton
-        LoadingRowView(isLoading: state.isLoading)
         rowHideInput
         
     }

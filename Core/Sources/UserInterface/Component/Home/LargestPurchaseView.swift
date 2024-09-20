@@ -5,16 +5,16 @@ import Mock
 import Domain
 import Presentation
 
-public struct LargestPurchaseSectionView: View {
+struct LargestPurchaseView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.privacyMode) private var privacyMode
     private let transactions: [TransactionItemViewDataProtocol]
     
-    public init(transactions: [TransactionItemViewDataProtocol]) {
+    init(transactions: [TransactionItemViewDataProtocol]) {
         self.transactions = transactions
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             
         } header: {
@@ -25,11 +25,11 @@ public struct LargestPurchaseSectionView: View {
             )
         } footer: {
             ScrollView(.horizontal) {
-                HStack(spacing: .padding(.medium)) {
+                HStack(spacing: .medium) {
                     ForEach(transactions.indices, id: \.self) { index in
                         rowTransaction(for: index)
                             .frame(width: 170, height: 125)
-                            .padding(.padding(.medium))
+                            .padding(.medium)
                             .if(colorScheme == .light) {
                                 $0.background()
                             }
@@ -109,6 +109,6 @@ public struct LargestPurchaseSectionView: View {
 
 #Preview {
     List {
-        LargestPurchaseSectionView(transactions: (1 ... 3).map { _ in TransactionItemViewDataMock() })
+        LargestPurchaseView(transactions: (1 ... 3).map { _ in TransactionItemViewDataMock() })
     }
 }

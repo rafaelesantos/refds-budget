@@ -6,12 +6,12 @@ import Mock
 import Domain
 import Presentation
 
-public struct PendingClearedView: View {
+struct PendingClearedView: View {
     @Environment(\.privacyMode) private var privacyMode
     
     private let viewData: PendingClearedViewDataProtocol
     
-    public init(viewData: PendingClearedViewDataProtocol) {
+    init(viewData: PendingClearedViewDataProtocol) {
         self.viewData = viewData
     }
     
@@ -21,7 +21,7 @@ public struct PendingClearedView: View {
         .localizable(by: .addTransactionStatusCleared)
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             Group {
                 rowProgressChartView
@@ -53,7 +53,7 @@ public struct PendingClearedView: View {
         .chartXAxis(.hidden)
         .chartXScale(domain: 0 ... (viewData.pendingAmount + viewData.clearedAmount))
         .frame(height: 35)
-        .padding(.vertical, .padding(.small))
+        .padding(.vertical, .small)
     }
     
     private func buildMark(amount: Double, style: String) -> some ChartContent {
@@ -92,7 +92,7 @@ public struct PendingClearedView: View {
             Spacer(minLength: .zero)
             
             VStack(alignment: .leading, spacing: .zero) {
-                HStack(spacing: .padding(.small)) {
+                HStack(spacing: .small) {
                     BubbleColorView(
                         color: .orange,
                         isSelected: true,
@@ -116,7 +116,7 @@ public struct PendingClearedView: View {
             Spacer(minLength: .zero)
             
             VStack(alignment: .trailing, spacing: .zero) {
-                HStack(spacing: .padding(.small)) {
+                HStack(spacing: .small) {
                     RefdsText(
                         .localizable(by: .addTransactionStatusCleared),
                         style: .callout,

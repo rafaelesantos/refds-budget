@@ -2,8 +2,9 @@ import SwiftUI
 import RefdsUI
 import Charts
 import Domain
+import Mock
 
-public struct ComparisonChartView: View {
+struct ComparisonChartView: View {
     @Environment(\.privacyMode) private var privacyMode
     
     @State private var data: [BudgetComparisonChartViewDataProtocol] = []
@@ -13,7 +14,7 @@ public struct ComparisonChartView: View {
     @Binding private var selection: BudgetComparisonChartViewDataProtocol?
     private let hasDomain: Bool
     
-    public init(
+    init(
         viewData: [BudgetComparisonChartViewDataProtocol],
         selection: Binding<BudgetComparisonChartViewDataProtocol?>,
         hasDomain: Bool = true
@@ -23,7 +24,7 @@ public struct ComparisonChartView: View {
         self.hasDomain = hasDomain
     }
     
-    public var body: some View {
+    var body: some View {
         chartView
             .onAppear { reload() }
             .onChange(of: viewData.count) { reload() }
@@ -48,7 +49,9 @@ public struct ComparisonChartView: View {
         viewData.indices.forEach { index in
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
                 withAnimation(.easeInOut(duration: 0.8)) {
-                    data[index].isAnimated = true
+                    if data.indices.contains(index) {
+                        data[index].isAnimated = true
+                    }
                 }
             }
         }
@@ -123,4 +126,20 @@ public struct ComparisonChartView: View {
         guard let value: String = proxy.value(atX: position) else { return }
         withAnimation { valueSelection = value }
     }
+}
+
+#Preview {
+    struct ContentView: View {
+        @State private var selection: BudgetComparisonChartViewDataProtocol?
+        var body: some View {
+            List {
+                ComparisonChartView(
+                    viewData: (1 ... 10).map { _ in BudgetComparisonChartViewDataMock() },
+                    selection: $selection,
+                    hasDomain: true
+                )
+            }
+        }
+    }
+    return ContentView()
 }

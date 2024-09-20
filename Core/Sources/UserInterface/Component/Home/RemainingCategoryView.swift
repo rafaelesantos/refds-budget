@@ -5,7 +5,7 @@ import Mock
 import Domain
 import Presentation
 
-public struct RemainingCategorySectionView<Header: View>: View {
+struct RemainingCategoryView<Header: View>: View {
     private let header: () -> Header
     private let viewData: [CategoryItemViewDataProtocol]
     private let action: ((CategoryItemViewDataProtocol) -> Void)?
@@ -14,7 +14,7 @@ public struct RemainingCategorySectionView<Header: View>: View {
     @State private var budget: Double = .zero
     @State private var percentage: Double = .zero
     
-    public init(
+    init(
         @ViewBuilder header: @escaping () -> Header,
         selectedRemaining: Binding<CategoryItemViewDataProtocol?>,
         viewData: [CategoryItemViewDataProtocol],
@@ -27,7 +27,7 @@ public struct RemainingCategorySectionView<Header: View>: View {
     }
     
     @ViewBuilder
-    public var body: some View {
+    var body: some View {
         if !viewData.isEmpty {
             RefdsSection {
                 Group {
@@ -55,7 +55,7 @@ public struct RemainingCategorySectionView<Header: View>: View {
             RefdsButton {
                 withAnimation { selectedRemaining = viewData }
             } label: {
-                RemainingCategoryRowView(viewData: viewData)
+                RemainingCategoryItemView(viewData: viewData)
             }
         }
     }
@@ -63,7 +63,7 @@ public struct RemainingCategorySectionView<Header: View>: View {
 
 #Preview {
     List {
-        RemainingCategorySectionView(
+        RemainingCategoryView(
             header: { BalanceView(viewData: BalanceViewDataMock()) },
             selectedRemaining: .constant(nil),
             viewData: (1 ... 3).map { _ in CategoryItemViewDataMock() }

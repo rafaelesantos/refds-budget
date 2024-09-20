@@ -2,18 +2,19 @@ import SwiftUI
 import RefdsUI
 import RefdsShared
 
-public struct IconsFormView: View {
+struct IconFormView: View {
     @Binding private var icon: RefdsIconSymbol
     @State private var iconPrefix = 15
     
     private let color: Color
+    private let size: CGFloat = 40
     
     init(icon: Binding<RefdsIconSymbol>, color: Color) {
         self._icon = icon
         self.color = color
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             rowSelectedIcon
             rowIcons
@@ -39,13 +40,14 @@ public struct IconsFormView: View {
             
             RefdsIconRow(
                 icon,
-                color: color
+                color: color,
+                size: size
             )
         }
     }
     
     private var rowIcons: some View {
-        LazyVGrid(columns: iconsLayoutColumns) {
+        LazyVGrid(columns: iconsLayoutColumns, spacing: .medium) {
             let icons = RefdsIconSymbol.categoryIcons.prefix(iconPrefix)
             let selectedIcon = icon
             ForEach(icons, id: \.self) { icon in
@@ -55,13 +57,13 @@ public struct IconsFormView: View {
                     RefdsIcon(
                         icon,
                         color: icon == selectedIcon ? color : .primary,
-                        size: 18,
+                        size: size / 2,
                         renderingMode: .hierarchical
                     )
-                    .frame(width: 38, height: 38)
+                    .frame(width: size, height: size)
                     .background(icon == selectedIcon ? color.opacity(0.2) : Color.secondary.opacity(0.1))
-                    .clipShape(.rect(cornerRadius: 8))
-                    .padding(.padding(.extraSmall))
+                    .refdsCornerRadius(for: size)
+                    .padding(.vertical, size * 0.07)
                     .animation(.default, value: icon)
                 }
                 .buttonStyle(.plain)
@@ -78,7 +80,7 @@ public struct IconsFormView: View {
                 iconPrefix = isMax ? 15 : max
             }
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsText(isMax ? .localizable(by: .addCategoryShowLessIcons) : .localizable(by: .addCategoryShowMoreIcons), style: .callout)
                 Spacer(minLength: .zero)
                 RefdsText((isMax ? 15 : max).asString, style: .callout, color: .secondary)
@@ -88,13 +90,21 @@ public struct IconsFormView: View {
     }
     
     private var iconsLayoutColumns: [GridItem] {
-        [.init(.adaptive(minimum: 50))]
+        [.init(.adaptive(minimum: 55))]
     }
 }
 
 #Preview {
-    IconsFormView(
-        icon: .constant(.random),
-        color: .random
-    )
+    struct ContentView: View {
+        @State private var selectedIcon: RefdsIconSymbol = .dollarsign
+        var body: some View {
+            List {
+                IconFormView(
+                    icon: $selectedIcon,
+                    color: .random
+                )
+            }
+        }
+    }
+    return ContentView()
 }

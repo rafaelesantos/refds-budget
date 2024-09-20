@@ -97,14 +97,14 @@ public struct HomeView: View {
     @ViewBuilder
     private var sectionSpendBudgetView: some View {
         if !state.remaining.isEmpty {
-            SpendBudgetSectionView(viewData: state.remaining)
+            SpendBudgetView(viewData: state.remaining)
         }
     }
     
     @ViewBuilder
     private var sectionRemainingView: some View {
         if let balance = state.remainingBalance {
-            RemainingCategorySectionView(
+            RemainingCategoryView(
                 header: { BalanceView(viewData: balance, isRemaining: true) },
                 selectedRemaining: $state.selectedRemaining,
                 viewData: state.remaining
@@ -139,7 +139,7 @@ public struct HomeView: View {
     @ViewBuilder
     private var sectionLargestPurchaseView: some View {
         if !state.largestPurchase.isEmpty {
-            LargestPurchaseSectionView(transactions: state.largestPurchase)
+            LargestPurchaseView(transactions: state.largestPurchase)
         }
     }
 

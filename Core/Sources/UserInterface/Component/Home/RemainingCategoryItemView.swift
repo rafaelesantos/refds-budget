@@ -5,7 +5,7 @@ import Mock
 import Domain
 import Presentation
 
-public struct RemainingCategoryRowView: View {
+struct RemainingCategoryItemView: View {
     @Environment(\.privacyMode) private var privacyMode
     private let viewData: CategoryItemViewDataProtocol
     private let action: ((CategoryItemViewDataProtocol) -> Void)?
@@ -13,7 +13,7 @@ public struct RemainingCategoryRowView: View {
     @State private var budget: Double = .zero
     @State private var percentage: Double = .zero
     
-    public init(
+    init(
         viewData: CategoryItemViewDataProtocol,
         action: ((CategoryItemViewDataProtocol) -> Void)? = nil
     ) {
@@ -21,7 +21,7 @@ public struct RemainingCategoryRowView: View {
         self.action = action
     }
     
-    public var body: some View {
+    var body: some View {
         content
             .onAppear { updateStateValue() }
             .onChange(of: viewData.budget) { updateStateValue() }
@@ -29,7 +29,7 @@ public struct RemainingCategoryRowView: View {
     }
     
     private var content: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             if let icon = RefdsIconSymbol(rawValue: viewData.icon) {
                     RefdsIconRow(icon, color: viewData.color)
             }
@@ -81,7 +81,7 @@ public struct RemainingCategoryRowView: View {
 #Preview {
     List {
         ForEach((1 ... 5).indices, id: \.self) { _ in
-            RemainingCategoryRowView(viewData: CategoryItemViewDataMock())
+            RemainingCategoryItemView(viewData: CategoryItemViewDataMock())
         }
     }
 }

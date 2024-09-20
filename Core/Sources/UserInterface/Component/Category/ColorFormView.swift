@@ -1,16 +1,15 @@
 import SwiftUI
 import RefdsUI
 
-public struct ColorFormView: View {
+struct ColorFormView: View {
     @Binding private var color: Color
+    private let colors = Color.Default.allCases
     
-    let colors = Color.Default.allCases
-    
-    public init(color: Binding<Color>) {
+    init(color: Binding<Color>) {
         self._color = color
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             rowColorPicker
         } header: {
@@ -24,7 +23,7 @@ public struct ColorFormView: View {
     
     private var rowColorPicker: some View {
         ColorPicker(selection: $color) {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .paintpaletteFill,
                     color: color
@@ -39,5 +38,13 @@ public struct ColorFormView: View {
 }
 
 #Preview {
-    ColorFormView(color: .constant(.random))
+    struct ContentView: View {
+        @State private var selectedColor: Color = .random
+        var body: some View {
+            List {
+                ColorFormView(color: $selectedColor)
+            }
+        }
+    }
+    return ContentView()
 }

@@ -70,7 +70,7 @@ public struct AddBudgetView: View {
                 state.hasAISuggestion = true
                 action(.fetchBudget)
             } label: {
-                HStack(spacing: .padding(.medium)) {
+                HStack(spacing: .medium) {
                     RefdsIconRow(
                         .cpuFill,
                         color: .accentColor
@@ -124,9 +124,9 @@ public struct AddBudgetView: View {
     
     private var sectionDate: some View {
         RefdsSection {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(.calendar)
-                DateRowView(date: $state.date)
+                DateView(date: $state.date)
             }
         } header: {
             RefdsText(

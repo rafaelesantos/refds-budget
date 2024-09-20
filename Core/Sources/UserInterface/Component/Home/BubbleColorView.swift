@@ -1,12 +1,12 @@
 import SwiftUI
 import RefdsUI
 
-public struct BubbleColorView: View {
+struct BubbleColorView: View {
     private let color: Color
     private let isSelected: Bool
     private let size: CGFloat
     
-    public init(
+    init(
         color: Color,
         isSelected: Bool = false,
         size: CGFloat = 25
@@ -16,7 +16,7 @@ public struct BubbleColorView: View {
         self.size = size
     }
     
-    public var body: some View {
+    var body: some View {
         ZStack {
             Circle()
                 .fill(color)
@@ -28,7 +28,7 @@ public struct BubbleColorView: View {
             }
         }
         .animation(.default, value: color)
-        .padding(.vertical, .padding(.extraSmall))
+        .padding(.vertical, .extraSmall)
     }
 }
 

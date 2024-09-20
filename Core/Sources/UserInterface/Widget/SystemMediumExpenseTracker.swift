@@ -21,7 +21,7 @@ public struct SystemMediumExpenseTracker: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: .zero) {
             Spacer(minLength: .zero)
-            HStack(spacing: .padding(.small)) {
+            HStack(spacing: .small) {
                 headerView
                     .frame(width: 120)
                 spendView
@@ -142,5 +142,5 @@ public struct SystemMediumExpenseTracker: View {
     SystemMediumExpenseTracker(viewData: WidgetTransactionsViewDataMock())
         .frame(height: 130)
         .refdsCard(padding: .medium, hasShadow: true)
-        .padding(.horizontal, .padding(.extraLarge))
+        .padding(.horizontal, .extraLarge)
 }

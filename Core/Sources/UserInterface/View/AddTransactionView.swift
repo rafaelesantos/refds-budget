@@ -118,7 +118,7 @@ public struct AddTransactionView: View {
             }
         } footer: {
             ScrollView(.horizontal) {
-                HStack(spacing: .padding(.extraSmall)) {
+                HStack(spacing: .extraSmall) {
                     ForEach(state.tags, id: \.id) {
                         tagItemView(for: $0)
                     }
@@ -161,7 +161,7 @@ public struct AddTransactionView: View {
     
     private var sectionCategory: some View {
         RefdsSection {
-            LoadingRowView(isLoading: state.isLoading)
+            loadingView
             if !state.isLoading {
                 if !state.isEmptyBudgets, !state.categories.isEmpty {
                     RefdsStories(
@@ -206,6 +206,17 @@ public struct AddTransactionView: View {
     }
     
     @ViewBuilder
+    private var loadingView: some View {
+        if state.isLoading {
+            HStack {
+                Spacer()
+                RefdsLoadingView()
+                Spacer()
+            }
+        }
+    }
+    
+    @ViewBuilder
     private var rowEmptyCategories: some View {
         if state.categories.isEmpty, !state.isLoading {
             RefdsText(
@@ -219,15 +230,15 @@ public struct AddTransactionView: View {
     @ViewBuilder
     private var rowCategories: some View {
         if !state.categories.isEmpty {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 if let category = state.category,
                    let icon = RefdsIconSymbol(rawValue: category.icon) {
                     RefdsIcon(
                         icon,
                         color: category.color,
-                        size: .padding(.medium)
+                        size: .medium
                     )
-                    .frame(width: .padding(.medium), height: .padding(.medium))
+                    .frame(width: .medium, height: .medium)
                     .padding(10)
                     .background(category.color.opacity(0.2))
                     .clipShape(.rect(cornerRadius: .cornerRadius))
@@ -310,9 +321,9 @@ public struct AddTransactionView: View {
             RefdsIcon(
                 tag.icon,
                 color: tag.color,
-                size: .padding(.small)
+                size: .small
             )
-            .frame(height: .padding(.small))
+            .frame(height: .small)
             
             RefdsText(
                 tag.name.uppercased(),

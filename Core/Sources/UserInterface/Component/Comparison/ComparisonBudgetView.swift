@@ -1,22 +1,22 @@
 import SwiftUI
 import RefdsUI
 
-public struct ComparisonBudgetView: View {
+struct ComparisonBudgetView: View {
     private let action: (Bool) -> Void
     
-    public init(action: @escaping (Bool) -> Void) {
+    init(action: @escaping (Bool) -> Void) {
         self.action = action
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             aiRowView
-            VStack(alignment: .center, spacing: .padding(.large)) {
+            VStack(alignment: .center, spacing: .large) {
                 headerView
                 contentView
                 compareButton
             }
-            .padding(.vertical, .padding(.small))
+            .padding(.vertical, .small)
         } header: {
             RefdsText(
                 .localizable(by: .comparisonRowHeader),
@@ -48,7 +48,7 @@ public struct ComparisonBudgetView: View {
     }
     
     private var contentView: some View {
-        HStack(spacing: .padding(.small)) {
+        HStack(spacing: .small) {
             Spacer()
             IconsIllustrationView()
             RefdsIcon(.xmark, color: .secondary)
@@ -66,5 +66,7 @@ public struct ComparisonBudgetView: View {
 }
 
 #Preview {
-    ComparisonBudgetView { _ in }
+    List {
+        ComparisonBudgetView { _ in }
+    }
 }

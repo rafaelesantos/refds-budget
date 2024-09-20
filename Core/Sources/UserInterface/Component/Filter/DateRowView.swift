@@ -2,15 +2,15 @@ import SwiftUI
 import RefdsUI
 import RefdsShared
 
-public struct DateRowView: View {
+struct DateView: View {
     @Binding private var date: Date
     @State private var isPresentedDate = false
     
-    public init(date: Binding<Date>) {
+    init(date: Binding<Date>) {
         self._date = date
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsButton {
             withAnimation { isPresentedDate = true }
         } label: {
@@ -51,7 +51,9 @@ public struct DateRowView: View {
         @State private var date: Date = .current
         
         var body: some View {
-            DateRowView(date: $date)
+            List {
+                DateView(date: $date)
+            }
         }
     }
     return ContainerView()

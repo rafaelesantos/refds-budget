@@ -5,7 +5,7 @@ import Mock
 import Domain
 import Presentation
 
-public struct CategoryRowView: View {
+struct CategoryItemView: View {
     @Environment(\.privacyMode) private var privacyMode
     private let viewData: CategoryItemViewDataProtocol
     private let action: ((CategoryItemViewDataProtocol) -> Void)?
@@ -13,7 +13,7 @@ public struct CategoryRowView: View {
     @State private var budget: Double = .zero
     @State private var percentage: Double = .zero
     
-    public init(
+    init(
         viewData: CategoryItemViewDataProtocol,
         action: ((CategoryItemViewDataProtocol) -> Void)? = nil
     ) {
@@ -21,7 +21,7 @@ public struct CategoryRowView: View {
         self.action = action
     }
     
-    public var body: some View {
+    var body: some View {
         rowCategory
             .onAppear { updateStateValue() }
             .onChange(of: viewData.budget) { updateStateValue() }
@@ -29,15 +29,15 @@ public struct CategoryRowView: View {
     }
     
     private var rowCategory: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             if let icon = RefdsIconSymbol(rawValue: viewData.icon) {
                 VStack {
                     RefdsIcon(
                         icon,
                         color: viewData.color,
-                        size: .padding(.medium)
+                        size: .medium
                     )
-                    .frame(width: .padding(.medium), height: .padding(.medium))
+                    .frame(width: .medium, height: .medium)
                     .padding(10)
                     .background(viewData.color.opacity(0.2))
                     .clipShape(.rect(cornerRadius: .cornerRadius))
@@ -46,21 +46,36 @@ public struct CategoryRowView: View {
             
             HStack(spacing: .zero) {
                 VStack(alignment: .leading) {
-                    HStack(spacing: .padding(.small)) {
-                        RefdsText(viewData.name.capitalized, weight: .bold, lineLimit: 1)
+                    HStack(spacing: .small) {
+                        RefdsText(
+                            viewData.name.capitalized,
+                            weight: .bold,
+                            lineLimit: 1
+                        )
+                        
                         Spacer(minLength: .zero)
-                        RefdsText(budget.currency(), style: .callout, lineLimit: 1)
-                            .contentTransition(.numericText())
-                            .refdsRedacted(if: privacyMode)
+                        
+                        RefdsText(
+                            budget.currency(),
+                            style: .callout,
+                            lineLimit: 1
+                        )
+                        .contentTransition(.numericText())
+                        .refdsRedacted(if: privacyMode)
                     }
                     
                     if let description = viewData.description, !description.isEmpty {
-                        RefdsText(description, style: .callout, color: .secondary, lineLimit: 2)
+                        RefdsText(
+                            description,
+                            style: .callout,
+                            color: .secondary,
+                            lineLimit: 2
+                        )
                     }
                 }
                 .frame(maxWidth: .infinity)
                 
-                Spacer(minLength: .padding(.extraSmall))
+                Spacer(minLength: .extraSmall)
                 
                 RefdsIcon(
                     .chevronRight,
@@ -72,7 +87,7 @@ public struct CategoryRowView: View {
     }
     
     private var rowTransactions: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsText(
                 viewData.transactionsAmount.asString,
                 style: .caption,
@@ -80,15 +95,24 @@ public struct CategoryRowView: View {
                 weight: .bold
             )
             .refdsRedacted(if: privacyMode)
-            .padding(.padding(.extraSmall))
+            .padding(.extraSmall)
             .frame(width: 40)
             .background(.secondary.opacity(0.05))
             .clipShape(.rect(cornerRadius: 5))
-            RefdsText(.localizable(by: .categoryRowTransactions), style: .callout)
+            
+            RefdsText(
+                .localizable(by: .categoryRowTransactions),
+                style: .callout
+            )
         
             Spacer(minLength: .zero)
-            RefdsText(viewData.spend.currency(), style: .callout, color: .secondary)
-                .refdsRedacted(if: privacyMode)
+            
+            RefdsText(
+                viewData.spend.currency(),
+                style: .callout,
+                color: .secondary
+            )
+            .refdsRedacted(if: privacyMode)
         }
     }
     
@@ -105,7 +129,7 @@ public struct CategoryRowView: View {
 #Preview {
     List {
         ForEach((1 ... 5).indices, id: \.self) { _ in
-            CategoryRowView(viewData: CategoryItemViewDataMock())
+            CategoryItemView(viewData: CategoryItemViewDataMock())
         }
     }
 }

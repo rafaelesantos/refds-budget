@@ -3,12 +3,12 @@ import RefdsUI
 import Charts
 import Resource
 
-public struct ComparisonBarView: View {
+struct ComparisonBarView: View {
     private var baseValue: Double
     private var compareValue: Double
     private var color: Color
     
-    public init(
+    init(
         baseValue: Double,
         compareValue: Double,
         color: Color
@@ -18,7 +18,7 @@ public struct ComparisonBarView: View {
         self.color = color
     }
     
-    public var body: some View {
+    var body: some View {
         Chart {
             buildMark(amount: baseValue)
             buildMark(amount: compareValue)
@@ -29,7 +29,7 @@ public struct ComparisonBarView: View {
         .chartXAxis(.hidden)
         .chartXScale(domain: 0 ... (baseValue + compareValue))
         .frame(height: 22)
-        .padding(.vertical, .padding(.small))
+        .padding(.vertical, .small)
     }
     
     private func buildMark(amount: Double) -> some ChartContent {

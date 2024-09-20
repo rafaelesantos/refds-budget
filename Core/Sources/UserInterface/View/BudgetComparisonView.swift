@@ -36,7 +36,7 @@ public struct BudgetComparisonView: View {
         if let baseBudget = state.baseBudget,
            let compareBudget = state.compareBudget {
             RefdsSection {} footer: {
-                VStack(spacing: .padding(.medium)) {
+                VStack(spacing: .medium) {
                     if baseBudget.hasAI {
                         titleView(for: baseBudget)
                     } else {
@@ -88,7 +88,7 @@ public struct BudgetComparisonView: View {
                     riskColor: budget.percentage.riskColor,
                     size: 30
                 )
-                .padding(.top, .padding(.extraSmall))
+                .padding(.top, .extraSmall)
             }
         }
     }

@@ -21,7 +21,7 @@ struct EmptyBudgetsView: View {
                 viewStates: viewStates
             )
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(.dollarsign)
                 RefdsText(
                     .localizable(by: .categoriesEmptyBudgetsButton),
@@ -39,5 +39,7 @@ struct EmptyBudgetsView: View {
 }
 
 #Preview {
-    EmptyBudgetsView()
+    List {
+        EmptyBudgetsView()
+    }
 }

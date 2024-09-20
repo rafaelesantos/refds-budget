@@ -21,23 +21,23 @@ public struct ComparisonAIView: View {
     }
     
     public var body: some View {
-        VStack(spacing: .padding(.extraLarge)) {
+        VStack(spacing: .extraLarge) {
             Spacer()
             headerView
             progressView
             Spacer()
             Spacer()
         }
-        .padding(.padding(.extraLarge))
+        .padding(.extraLarge)
         .onChange(of: isLoading, completion)
         .task { trainingModels() }
     }
     
     private var headerView: some View {
-        VStack(spacing: .padding(.extraLarge)) {
+        VStack(spacing: .extraLarge) {
             RefdsIcon(.cpuFill, color: .accentColor, size: 60)
             
-            VStack(spacing: .padding(.small)) {
+            VStack(spacing: .small) {
                 RefdsText(
                     "Etapas do Treinamento\nInteligência Artificial",
                     style: .title,
@@ -57,7 +57,7 @@ public struct ComparisonAIView: View {
     @ViewBuilder
     private var progressView: some View {
         if isLoading {
-            VStack(spacing: .padding(.extraLarge)) {
+            VStack(spacing: .extraLarge) {
                 RefdsLoadingView()
                     .padding(.vertical)
                 

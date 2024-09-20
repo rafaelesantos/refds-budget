@@ -6,7 +6,7 @@ import Domain
 import Resource
 import Presentation
 
-public struct TransactionSectionsView: View {
+struct TransactionSectionsView: View {
     @Environment(\.privacyMode) private var privacyMode
     
     private let viewData: [[TransactionItemViewDataProtocol]]
@@ -15,7 +15,7 @@ public struct TransactionSectionsView: View {
     private let remove: ((UUID) -> Void)?
     private let resolve: ((UUID) -> Void)?
     
-    public init(
+    init(
         viewData: [[TransactionItemViewDataProtocol]],
         isLoading: Bool = false,
         action: ((TransactionItemViewDataProtocol) -> Void)? = nil,
@@ -30,7 +30,7 @@ public struct TransactionSectionsView: View {
     }
     
     @ViewBuilder
-    public var body: some View {
+    var body: some View {
         if !viewData.isEmpty {
             ForEach(viewData.indices, id: \.self) { index in
                 let transactions = viewData[index]

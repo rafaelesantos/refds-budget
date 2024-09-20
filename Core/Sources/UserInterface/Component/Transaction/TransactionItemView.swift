@@ -14,7 +14,7 @@ struct TransactionItemView: View {
     }
     
     var body: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             iconWithStatusView
             HStack {
                 contentView
@@ -35,9 +35,9 @@ struct TransactionItemView: View {
                 RefdsIcon(
                     icon,
                     color: viewData.color,
-                    size: .padding(.medium)
+                    size: .medium
                 )
-                .frame(width: .padding(.medium), height: .padding(.medium))
+                .frame(width: .medium, height: .medium)
                 .padding(10)
                 .background(viewData.color.opacity(0.2))
                 .clipShape(.rect(cornerRadius: .cornerRadius))
@@ -46,7 +46,7 @@ struct TransactionItemView: View {
                     RefdsIcon(
                         icon,
                         color: viewData.status.color,
-                        size: .padding(.medium)
+                        size: .medium
                     )
                     .padding(-8)
                     .background()
@@ -57,7 +57,7 @@ struct TransactionItemView: View {
     
     private var contentView: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: .padding(.small)) {
+            HStack(spacing: .small) {
                 RefdsText(
                     viewData.amount.currency(),
                     style: .callout,
@@ -84,7 +84,7 @@ struct TransactionItemView: View {
 }
 
 #Preview {
-    TransactionItemView(viewData: TransactionItemViewDataMock())
-        .refdsCard()
-        .padding()
+    List {
+        TransactionItemView(viewData: TransactionItemViewDataMock())
+    }
 }

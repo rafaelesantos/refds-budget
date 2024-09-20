@@ -6,7 +6,7 @@
       "location" : "https://github.com/rafaelesantos/refds-auth.git",
       "state" : {
         "branch" : "main",
-        "revision" : "5b32b1707fa4acb312a4d6f59d0c1dc6703904d4"
+        "revision" : "2b0715455e39b2c1f89371bc1a1813a420029778"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/rafaelesantos/refds-design-system.git",
       "state" : {
         "branch" : "main",
-        "revision" : "ed6fd3e51d8b7fb61e1f8e4d631438fecc9ae723"
+        "revision" : "b3d675e6a276f32454a3a31bae13577c3db9a67c"
       }
     },
     {
@@ -42,7 +42,7 @@
       "location" : "https://github.com/rafaelesantos/refds-gamification.git",
       "state" : {
         "branch" : "main",
-        "revision" : "9c5008e01941fb6451a0e34a85c2fcb17f31a3d3"
+        "revision" : "9afefaf851f6696a655b41eb229ec584c34fae50"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/rafaelesantos/refds-shared.git",
       "state" : {
         "branch" : "main",
-        "revision" : "2fca2dbb25978b84565e7d66b0fde0c288405c82"
+        "revision" : "4f4e0357af39fc0f5344632bfa53c627042f467f"
       }
     },
     {
@@ -87,7 +87,7 @@
       "location" : "https://github.com/rafaelesantos/refds-welcome.git",
       "state" : {
         "branch" : "main",
-        "revision" : "f2ff18343db461c5ed076d7b447863da6893659c"
+        "revision" : "831173acf3340d126630ffb1ef43762d15ff7784"
       }
     }
   ],

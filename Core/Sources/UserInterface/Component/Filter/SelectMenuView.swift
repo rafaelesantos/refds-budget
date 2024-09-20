@@ -6,10 +6,7 @@ import Domain
 import Resource
 import Presentation
 
-public struct SelectMenuRowView: View {
-    @Environment(\.openURL) private var openURL
-    //@Environment(\.isPro) private var isPro
-    
+public struct SelectMenuView: View {
     private let header: LocalizableKey
     private let icon: RefdsIconSymbol
     private let title: LocalizableKey
@@ -32,19 +29,15 @@ public struct SelectMenuRowView: View {
     }
     
     public var body: some View {
-        //if isPro {
-            Menu {
-                menuHeader
-                Divider()
-                menuOptions
-                Divider()
-                menuFooter
-            } label: {
-                menuLabel
-            }
-//        } else {
-//            menuLabelPremium
-//        }
+        Menu {
+            menuHeader
+            Divider()
+            menuOptions
+            Divider()
+            menuFooter
+        } label: {
+            menuLabel
+        }
     }
     
     private var menuHeader: some View {
@@ -93,19 +86,12 @@ public struct SelectMenuRowView: View {
     }
     
     private var menuLabel: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsText(.localizable(by: title), style: .callout)
             Spacer()
             menuLabelDetail
             RefdsIcon(icon)
         }
-    }
-    
-    private var menuLabelPremium: some View {
-        BudgetLabel(
-            title: title,
-            icon: icon
-        )
     }
     
     private var menuLabelDetail: some View {
@@ -125,7 +111,7 @@ public struct SelectMenuRowView: View {
 
 #Preview {
     List {
-        SelectMenuRowView(
+        SelectMenuView(
             header: .transactionsCategoriesFilterHeader,
             icon: .squareStack3dForwardDottedlineFill,
             title: .categoriesNavigationTitle,

@@ -51,7 +51,7 @@ struct FilterView: View {
     @ViewBuilder
     private var dateView: some View {
         if viewData.isDateFilter {
-            DateRowView(date: $viewData.date)
+            DateView(date: $viewData.date)
         }
     }
     
@@ -94,7 +94,7 @@ struct FilterView: View {
             case .date: 
                 dateToggleView
             case let .categories(items):
-                SelectMenuRowView(
+                SelectMenuView(
                     header: .transactionsCategoriesFilterHeader,
                     icon: .squareStack3dForwardDottedlineFill,
                     title: .categoriesNavigationTitle,
@@ -102,7 +102,7 @@ struct FilterView: View {
                     selectedItem: $viewData.selectedItems
                 )
             case let .tags(items):
-                SelectMenuRowView(
+                SelectMenuView(
                     header: .tagsMenuSelectHeader,
                     icon: .tagFill,
                     title: .tagsNavigationTitle,
@@ -110,7 +110,7 @@ struct FilterView: View {
                     selectedItem: $viewData.selectedItems
                 )
             case let .status(items):
-                SelectMenuRowView(
+                SelectMenuView(
                     header: .addTransactionStatusSelect,
                     icon: .listDashHeaderRectangle,
                     title: .addTransactionStatusHeader,
@@ -155,7 +155,9 @@ struct FilterView: View {
         @State private var viewData: FilterViewDataProtocol = FilterViewDataMock()
         
         var body: some View {
-            FilterView(viewData: $viewData)
+            List {
+                FilterView(viewData: $viewData)
+            }
         }
     }
     return ContainerView()

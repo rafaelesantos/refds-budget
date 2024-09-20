@@ -5,22 +5,22 @@ import Mock
 import Domain
 import Presentation
 
-public struct TagItemView: View {
+struct TagItemView: View {
     @Environment(\.privacyMode) private var privacyMode
     private let viewData: TagItemViewDataProtocol
     private let isSelected: Bool
     
-    public init(viewData: TagItemViewDataProtocol, isSelected: Bool) {
+    init(viewData: TagItemViewDataProtocol, isSelected: Bool) {
         self.viewData = viewData
         self.isSelected = isSelected
     }
     
-    public var body: some View {
+    var body: some View {
         content
     }
     
     private var content: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsIconRow(viewData.icon, color: viewData.color)
             
             VStack(alignment: .leading) {

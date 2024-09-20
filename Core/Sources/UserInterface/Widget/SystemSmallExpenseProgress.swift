@@ -22,7 +22,7 @@ public struct SystemSmallExpenseProgress: View {
     }
     
     private var headerView: some View {
-        HStack(spacing: .padding(.extraSmall)) {
+        HStack(spacing: .extraSmall) {
             RefdsText(
                 .localizable(by: .widgetAppName),
                 style: .title3,

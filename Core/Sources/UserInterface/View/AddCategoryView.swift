@@ -21,7 +21,7 @@ public struct AddCategoryView: View {
         List {
             sectionName
             ColorFormView(color: $state.color)
-            IconsFormView(
+            IconFormView(
                 icon: $state.icon,
                 color: state.color
             )
@@ -93,8 +93,10 @@ public struct AddCategoryView: View {
         @StateObject private var store = StoreFactory.development
         
         var body: some View {
-            AddCategoryView(state: $store.state.addCategoryState) {
-                store.dispatch(action: $0)
+            NavigationStack {
+                AddCategoryView(state: $store.state.addCategoryState) {
+                    store.dispatch(action: $0)
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ import Mock
 import Domain
 import Presentation
 
-public struct BalanceView: View {
+struct BalanceView: View {
     @Environment(\.privacyMode) private var privacyMode
     private let viewData: BalanceViewDataProtocol
     private let isRemaining: Bool
@@ -14,7 +14,7 @@ public struct BalanceView: View {
     @State private var percentage: Double = 0
     @State private var isPresentedRiskLegend = false
     
-    public init(
+    init(
         viewData: BalanceViewDataProtocol,
         isRemaining: Bool = false
     ) {
@@ -22,7 +22,7 @@ public struct BalanceView: View {
         self.isRemaining = isRemaining
     }
     
-    public var body: some View {
+    var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 headerView

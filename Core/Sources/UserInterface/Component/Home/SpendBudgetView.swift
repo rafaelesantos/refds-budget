@@ -6,17 +6,17 @@ import Mock
 import Domain
 import Presentation
 
-public struct SpendBudgetSectionView: View {
+struct SpendBudgetView: View {
     @Environment(\.privacyMode) private var privacyMode
     @State private var chartSelection: String = ""
     @State private var viewData: [CategoryItemViewDataProtocol] = []
     private let categoryViewData: [CategoryItemViewDataProtocol]
     
-    public init(viewData: [CategoryItemViewDataProtocol]) {
+    init(viewData: [CategoryItemViewDataProtocol]) {
         self.categoryViewData = viewData
     }
     
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             Group {
                 if let category = viewData.first(where: { $0.name == chartSelection }) {
@@ -64,7 +64,7 @@ public struct SpendBudgetSectionView: View {
     }
     
     private func compareCategorySelected(_ category: CategoryItemViewDataProtocol) -> some View {
-        HStack(spacing: .padding(.small)) {
+        HStack(spacing: .small) {
             RefdsText(.localizable(by: .homeSpendBudgetCategory), style: .callout)
             Spacer()
             RefdsText(category.name.capitalized, style: .callout, color: .secondary)
@@ -76,7 +76,7 @@ public struct SpendBudgetSectionView: View {
             Spacer(minLength: .zero)
             
             VStack(alignment: .leading, spacing: .zero) {
-                HStack(spacing: .padding(.small)) {
+                HStack(spacing: .small) {
                     BubbleColorView(color: .accentColor.opacity(0.6), isSelected: true, size: 14)
                     RefdsText(.localizable(by: .homeSpendBudgetBudgetTitle), style: .callout, color: .secondary)
                 }
@@ -90,7 +90,7 @@ public struct SpendBudgetSectionView: View {
             Spacer(minLength: .zero)
             
             VStack(alignment: .trailing, spacing: .zero) {
-                HStack(spacing: .padding(.small)) {
+                HStack(spacing: .small) {
                     RefdsText(.localizable(by: .homeSpendBudgetSpendTitle), style: .callout, color: .secondary)
                     BubbleColorView(color: .accentColor, isSelected: true, size: 14)
                 }
@@ -101,7 +101,7 @@ public struct SpendBudgetSectionView: View {
             
             Spacer(minLength: .zero)
         }
-        .padding(.padding(.small))
+        .padding(.small)
     }
     
     private func comparePercentView(_ category: CategoryItemViewDataProtocol) -> some View {
@@ -165,6 +165,6 @@ public struct SpendBudgetSectionView: View {
 
 #Preview {
     List {
-        SpendBudgetSectionView(viewData: (1 ... 5).map { _ in CategoryItemViewDataMock() })
+        SpendBudgetView(viewData: (1 ... 5).map { _ in CategoryItemViewDataMock() })
     }
 }

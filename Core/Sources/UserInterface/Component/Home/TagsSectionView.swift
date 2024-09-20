@@ -6,7 +6,7 @@ import Mock
 import Domain
 import Presentation
 
-public struct TagsSectionView: View {
+struct TagsSectionView: View {
     @Environment(\.privacyMode) private var privacyMode
     
     @State private var selectedTag: TagItemViewDataProtocol?
@@ -38,7 +38,7 @@ public struct TagsSectionView: View {
         return tags.last
     }
     
-    public init(
+    init(
         selectedTag: Binding<TagItemViewDataProtocol?>,
         tags: [TagItemViewDataProtocol],
         action: @escaping () -> Void
@@ -53,7 +53,7 @@ public struct TagsSectionView: View {
     }
     
     @ViewBuilder
-    public var body: some View {
+    var body: some View {
         RefdsSection {
             Group {
                 rowManageTagsView
@@ -154,7 +154,7 @@ public struct TagsSectionView: View {
         RefdsButton {
             action()
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(.tagFill)
                 RefdsText(
                     .localizable(by: .homeManageTags),

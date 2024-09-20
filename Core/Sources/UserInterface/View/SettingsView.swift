@@ -85,7 +85,7 @@ public struct SettingsView: View {
     }
     
     private var rowAppearance: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsIconRow(
                 colorScheme == .dark ? .moonFill : .sunMaxFill,
                 color: .indigo
@@ -106,7 +106,7 @@ public struct SettingsView: View {
     }
     
     private var rowTintColor: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsIconRow(
                 .paintpaletteFill,
                 color: .blue
@@ -132,14 +132,14 @@ public struct SettingsView: View {
         #if os(iOS)
         RefdsSection {
             ScrollView(.horizontal) {
-                HStack(spacing: .padding(.large)) {
+                HStack(spacing: .large) {
                     ForEach(state.icons.indices, id: \.self) {
                         let icon = state.icons[$0]
                         let isSelected = icon == state.icon
                         RefdsButton {
                             withAnimation { state.icon = icon }
                         } label: {
-                            VStack(spacing: .padding(.small)) {
+                            VStack(spacing: .small) {
                                 icon.image
                                     .resizable()
                                     .scaledToFit()
@@ -196,7 +196,7 @@ public struct SettingsView: View {
         RefdsButton {
             openURL(.budget(for: .privacyPolicy))
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .handRaisedFill,
                     color: .orange
@@ -208,7 +208,7 @@ public struct SettingsView: View {
     }
     
     private var rowBiometry: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsIconRow(
                 .lockShieldFill,
                 color: .mint
@@ -220,7 +220,7 @@ public struct SettingsView: View {
     }
     
     private var rowPrivacyMode: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             RefdsIconRow(
                 .eyeSlashFill,
                 color: .yellow
@@ -256,7 +256,7 @@ public struct SettingsView: View {
                 )
             )
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .docBadgeArrowUpFill,
                     color: .orange
@@ -271,7 +271,7 @@ public struct SettingsView: View {
         RefdsButton {
             withAnimation { state.showDocumentPicker.toggle() }
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .trayAndArrowDownFill,
                     color: .red
@@ -301,7 +301,7 @@ public struct SettingsView: View {
         RefdsButton {
             openURL(.budget(for: .jointTestFlight))
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .hammerFill,
                     color: .blue
@@ -325,7 +325,7 @@ public struct SettingsView: View {
                 self.requestReview()
             }
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .starFill,
                     color: .yellow
@@ -339,7 +339,7 @@ public struct SettingsView: View {
     
     private var rowAppShare: some View {
         ShareLink(item: .budget(for: .appleStoreReference)) {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsIconRow(
                     .squareAndArrowUp,
                     color: .green
@@ -363,7 +363,7 @@ public struct SettingsView: View {
     }
     
     private var rowApplicationDetail: some View {
-        HStack(spacing: .padding(.medium)) {
+        HStack(spacing: .medium) {
             state.icon.image
                 .resizable()
                 .scaledToFit()
@@ -398,7 +398,7 @@ public struct SettingsView: View {
         RefdsButton {
             openURL(.budget(for: .developerGithub))
         } label: {
-            HStack(spacing: .padding(.medium)) {
+            HStack(spacing: .medium) {
                 RefdsAsyncImage(url: URL.budget(for: .developerImage).absoluteString) { image in
                     image
                         .resizable()

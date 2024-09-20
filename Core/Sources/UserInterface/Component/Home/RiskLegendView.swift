@@ -2,7 +2,7 @@ import SwiftUI
 import RefdsUI
 import Charts
 
-public struct RiskLegendView: View {
+struct RiskLegendView: View {
     @State private var selectedLegend: (Color, Int, String)?
     private let color: (Color, Int, String)
     private let legends: [(Color, Int, String)] = [
@@ -12,7 +12,7 @@ public struct RiskLegendView: View {
         (.red, 25, "red")
     ]
     
-    public init(color: Color = .green) {
+    init(color: Color = .green) {
         self.color = legends.first(where: { color == $0.0 }) ?? (.green, 25, "green")
     }
     
@@ -40,8 +40,8 @@ public struct RiskLegendView: View {
         return legends.last
     }
     
-    public var body: some View {
-        HStack(spacing: .padding(.small)) {
+    var body: some View {
+        HStack(spacing: .small) {
             infoView
             Spacer(minLength: .zero)
             chartView

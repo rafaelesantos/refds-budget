@@ -136,7 +136,7 @@ public struct BudgetSelectionView: View {
             }
             Spacer()
             
-            VStack(alignment: .center, spacing: .padding(.extraSmall)) {
+            VStack(alignment: .center, spacing: .extraSmall) {
                 RefdsText(budget.amount.currency(), style: .callout, weight: .bold)
                     .refdsRedacted(if: privacyMode)
                 RefdsScaleProgressView(.circle, riskColor: budget.percentage.riskColor, size: 25)

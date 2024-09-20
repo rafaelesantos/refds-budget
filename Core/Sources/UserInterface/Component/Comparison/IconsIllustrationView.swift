@@ -2,17 +2,17 @@ import SwiftUI
 import RefdsUI
 import RefdsShared
 
-public struct IconsIllustrationView: View {
+struct IconsIllustrationView: View {
     @State private var icons: [RefdsIconSymbol] = []
     @State var isViewDisplayed = false
     
     private let size: CGFloat
     
-    public init(size: CGFloat = 100) {
+    init(size: CGFloat = 100) {
         self.size = size
     }
     
-    public var body: some View {
+    var body: some View {
         ZStack {
             VStack {
                 HStack(alignment: .top) {
