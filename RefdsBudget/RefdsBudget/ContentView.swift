@@ -6,14 +6,12 @@ import RefdsRedux
 import RefdsRouter
 import RefdsInjection
 import RefdsWelcome
-import RefdsBudgetDomain
-import RefdsBudgetData
-import RefdsBudgetPresentation
-import RefdsBudgetUI
+import Domain
+import Data
+import Presentation
+import UserInterface
 
 struct ContentView: View {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
@@ -23,7 +21,6 @@ struct ContentView: View {
     @AppStorage("isWelcomePresented") private var isWelcomePresented = false
     
     private var viewFactory = ViewFactory()
-    private let timer = Timer.publish(every: 5, on: .current, in: .common).autoconnect()
     
     init() {
         RefdsContainer.register(type: ViewFactoryProtocol.self) { viewFactory }
@@ -49,14 +46,9 @@ struct ContentView: View {
             contentView
                 .environmentObject(store)
                 .environment(\.privacyMode, store.state.settingsState.hasPrivacyMode)
-                .environment(\.isPro, store.state.settingsState.isPro)
-                .environment(\.applicationState, $store.state)
-                .environment(\.itemNavigation, $store.state.itemNavigation)
                 .preferredColorScheme(store.state.settingsState.colorScheme)
                 .tint(store.state.settingsState.tintColor)
-                .onChange(of: store.state.settingsState.isPro) { store.dispatch(action: SettingsAction.updatePro) }
                 .onChange(of: scenePhase) { handlerScenePhase() }
-                .onReceive(timer) { _ in updatePurchasedProducts() }
                 .refdsAuth(
                     isAuthenticated: bindingIsAuthenticated,
                     applicationIcon: store.state.settingsState.icon.image
@@ -115,29 +107,10 @@ struct ContentView: View {
         welcome.viewData.header = welcome.header
     }
     
-    private func observeTransactionUpdates() {
-        Task(priority: .background) {
-            for await _ in Transaction.updates {
-                updatePurchasedProducts()
-            }
-        }
-    }
-    
-    private func updatePurchasedProducts() {
-        Task(priority: .background) {
-            if store.state.settingsState.isPro {
-                store.dispatch(action: SettingsAction.fetchStore)
-            }
-        }
-    }
-    
     private func handlerScenePhase() {
-        guard store.state.settingsState.isAnimatedIcon else { return }
         switch scenePhase {
         case .active: break
-        default: 
-            welcome.isAuthenticated = false
-            appDelegate.setIconAnimator(task: nil)
+        default: welcome.isAuthenticated = false
         }
     }
 }

@@ -2,20 +2,20 @@ import WidgetKit
 import SwiftUI
 import RefdsUI
 import RefdsShared
-import RefdsBudgetUI
-import RefdsBudgetDomain
-import RefdsBudgetPresentation
-import AppIntents
+import UserInterface
+import Domain
+import Presentation
+import Mock
 
 struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetIntentPresenter.shared
     
     func placeholder(in context: Context) -> SystemSmallExpenseProgressEntry {
-        let viewData = WidgetExpenseTrackerViewData(
+        let viewData = WidgetExpensesViewData(
             isFilterByDate: true,
-            category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: .localizable(by: .transactionsCategorieAllSelected),
-            status: .localizable(by: .transactionsCategorieAllSelected),
+            category: .localizable(by: .transactionsCategoriesAllSelected),
+            tag: .localizable(by: .transactionsCategoriesAllSelected),
+            status: .localizable(by: .transactionsCategoriesAllSelected),
             date: .current,
             spend: .zero,
             budget: .zero
@@ -23,8 +23,8 @@ struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
         return SystemSmallExpenseProgressEntry(viewData: viewData)
     }
 
-    func snapshot(for configuration: SystemSmallExpenseProgressAppIntent, in context: Context) async -> SystemSmallExpenseProgressEntry {
-        let viewData = presenter.getWidgetExpenseTrackerViewData(
+    func snapshot(for configuration: WidgetAppIntent, in context: Context) async -> SystemSmallExpenseProgressEntry {
+        let viewData = presenter.getWidgetExpensesViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag,
@@ -33,8 +33,8 @@ struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
         return SystemSmallExpenseProgressEntry(viewData: viewData)
     }
     
-    func timeline(for configuration: SystemSmallExpenseProgressAppIntent, in context: Context) async -> Timeline<SystemSmallExpenseProgressEntry> {
-        let viewData = presenter.getWidgetExpenseTrackerViewData(
+    func timeline(for configuration: WidgetAppIntent, in context: Context) async -> Timeline<SystemSmallExpenseProgressEntry> {
+        let viewData = presenter.getWidgetExpensesViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
             tag: configuration.tag,
@@ -47,70 +47,16 @@ struct SystemSmallExpenseProgressProvider: AppIntentTimelineProvider {
     }
 }
 
-struct SystemSmallExpenseProgressAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "SystemSmallExpenseProgressAppIntent"
-    static var description = IntentDescription("SystemSmallExpenseProgressAppIntent")
-
-    @Parameter(title: "Filter by date", default: true)
-    var isFilterByDate: Bool
-    
-    @Parameter(title: "Category", optionsProvider: CategoriesOptionsProvider())
-    var category: String
-    
-    @Parameter(title: "Tag", optionsProvider: TagsOptionsProvider())
-    var tag: String
-    
-    @Parameter(title: "Status", optionsProvider: StatusOptionsProvider())
-    var status: String
-    
-    private struct CategoriesOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            presenter.getCategories()
-        }
-    }
-    
-    private struct TagsOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            presenter.getTags()
-        }
-    }
-    
-    private struct StatusOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            let status: [TransactionStatus] = [.pending, .cleared]
-            return status.map { $0.description } + [.localizable(by: .transactionsCategorieAllSelected)]
-        }
-    }
-}
-
 struct SystemSmallExpenseProgressEntry: TimelineEntry {
     var date: Date = .current
-    let viewData: WidgetExpenseTrackerViewDataProtocol
+    let viewData: WidgetExpensesViewDataProtocol
 }
 
 struct SystemSmallExpenseProgressView: View {
     var entry: SystemSmallExpenseProgressProvider.Entry
     
     var body: some View {
-        RefdsBudgetUI.SystemSmallExpenseProgress(viewData: entry.viewData)
+        UserInterface.SystemSmallExpenseProgress(viewData: entry.viewData)
             .widgetURL(
                 ApplicationRouter.deeplinkURL(
                     scene: .home,
@@ -127,7 +73,7 @@ struct SystemSmallExpenseProgress: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
-            intent: SystemSmallExpenseProgressAppIntent.self,
+            intent: WidgetAppIntent.self,
             provider: SystemSmallExpenseProgressProvider()
         ) { entry in
             SystemSmallExpenseProgressView(entry: entry)
@@ -143,12 +89,12 @@ struct SystemSmallExpenseProgress: Widget {
     SystemSmallExpenseProgress()
 } timeline: {
     SystemSmallExpenseProgressEntry(
-        viewData: WidgetExpenseTrackerViewDataMock()
+        viewData: WidgetExpensesViewDataMock()
     )
     SystemSmallExpenseProgressEntry(
-        viewData: WidgetExpenseTrackerViewDataMock()
+        viewData: WidgetExpensesViewDataMock()
     )
     SystemSmallExpenseProgressEntry(
-        viewData: WidgetExpenseTrackerViewDataMock()
+        viewData: WidgetExpensesViewDataMock()
     )
 }

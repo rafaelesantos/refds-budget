@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1600"
+   wasCreatedForAppExtension = "YES"
+   version = "2.2">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6C44A70F2BC6075100C94C2C"
+               BuildableName = "Budget.app"
+               BlueprintName = "RefdsBudget"
+               ReferencedContainer = "container:RefdsBudget.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <AutocreatedTestPlanReference>
+            </AutocreatedTestPlanReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Release Production"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Release Production"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      enableASanStackUseAfterReturn = "YES"
+      language = "pt-BR"
+      region = "BR"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      enableGPUShaderValidationMode = "2"
+      allowLocationSimulation = "NO">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6C44A70F2BC6075100C94C2C"
+            BuildableName = "Budget.app"
+            BlueprintName = "RefdsBudget"
+            ReferencedContainer = "container:RefdsBudget.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.SQLDebug 0&#10;-com.apple.CoreData.Logging.stderr 0               &#10;-com.apple.CoreData.ConcurrencyDebug 0&#10;-com.apple.CoreData.MigrationDebug 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.Logging.stderr 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.ConcurrencyDebug 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.MigrationDebug 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = " -com.apple.CoreData.CloudKitDebug 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <AdditionalOptions>
+         <AdditionalOption
+            key = "NSZombieEnabled"
+            value = "YES"
+            isEnabled = "YES">
+         </AdditionalOption>
+      </AdditionalOptions>
+      <LocationScenarioReference
+         identifier = "Rio de Janeiro, Brazil"
+         referenceType = "1">
+      </LocationScenarioReference>
+      <StoreKitConfigurationFileReference
+         identifier = "../RefdsBudget/BudgetStoreConfig.storekit">
+      </StoreKitConfigurationFileReference>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release Production"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6C44A70F2BC6075100C94C2C"
+            BuildableName = "Budget.app"
+            BlueprintName = "RefdsBudget"
+            ReferencedContainer = "container:RefdsBudget.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Release Production">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release Production"
+      customArchiveName = "Budget"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

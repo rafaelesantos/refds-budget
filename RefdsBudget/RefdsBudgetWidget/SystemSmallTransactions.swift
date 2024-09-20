@@ -2,10 +2,10 @@ import WidgetKit
 import SwiftUI
 import RefdsUI
 import RefdsShared
-import RefdsBudgetUI
-import RefdsBudgetDomain
-import RefdsBudgetPresentation
-import AppIntents
+import UserInterface
+import Domain
+import Presentation
+import Mock
 
 struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetIntentPresenter.shared
@@ -13,9 +13,9 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SystemSmallTransactionsEntry {
         let viewData = WidgetTransactionsViewData(
             isFilterByDate: true,
-            category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: .localizable(by: .transactionsCategorieAllSelected),
-            status: .localizable(by: .transactionsCategorieAllSelected),
+            category: .localizable(by: .transactionsCategoriesAllSelected),
+            tag: .localizable(by: .transactionsCategoriesAllSelected),
+            status: .localizable(by: .transactionsCategoriesAllSelected),
             date: .current,
             spend: .zero,
             budget: .zero,
@@ -26,7 +26,7 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
         return SystemSmallTransactionsEntry(viewData: viewData)
     }
 
-    func snapshot(for configuration: SystemSmallTransactionsAppIntent, in context: Context) async -> SystemSmallTransactionsEntry {
+    func snapshot(for configuration: WidgetAppIntent, in context: Context) async -> SystemSmallTransactionsEntry {
         let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
@@ -36,7 +36,7 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
         return SystemSmallTransactionsEntry(viewData: viewData)
     }
     
-    func timeline(for configuration: SystemSmallTransactionsAppIntent, in context: Context) async -> Timeline<SystemSmallTransactionsEntry> {
+    func timeline(for configuration: WidgetAppIntent, in context: Context) async -> Timeline<SystemSmallTransactionsEntry> {
         let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
             category: configuration.category,
@@ -50,60 +50,6 @@ struct SystemSmallTransactionsProvider: AppIntentTimelineProvider {
     }
 }
 
-struct SystemSmallTransactionsAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "SystemSmallTransactionsAppIntent"
-    static var description = IntentDescription("SystemSmallTransactionsAppIntent")
-
-    @Parameter(title: "Filter by date", default: true)
-    var isFilterByDate: Bool
-    
-    @Parameter(title: "Category", optionsProvider: CategoriesOptionsProvider())
-    var category: String
-    
-    @Parameter(title: "Tag", optionsProvider: TagsOptionsProvider())
-    var tag: String
-    
-    @Parameter(title: "Status", optionsProvider: StatusOptionsProvider())
-    var status: String
-    
-    private struct CategoriesOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            presenter.getCategories()
-        }
-    }
-    
-    private struct TagsOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            presenter.getTags()
-        }
-    }
-    
-    private struct StatusOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            let status: [TransactionStatus] = [.pending, .cleared]
-            return status.map { $0.description } + [.localizable(by: .transactionsCategorieAllSelected)]
-        }
-    }
-}
-
 struct SystemSmallTransactionsEntry: TimelineEntry {
     var date: Date = .current
     let viewData: WidgetTransactionsViewDataProtocol
@@ -113,7 +59,7 @@ struct SystemSmallTransactionsView: View {
     var entry: SystemSmallTransactionsProvider.Entry
     
     var body: some View {
-        RefdsBudgetUI.SystemSmallTransactions(viewData: entry.viewData)
+        UserInterface.SystemSmallTransactions(viewData: entry.viewData)
             .widgetURL(
                 ApplicationRouter.deeplinkURL(
                     scene: .transactions,
@@ -138,7 +84,7 @@ struct SystemSmallTransactions: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
-            intent: SystemSmallTransactionsAppIntent.self,
+            intent: WidgetAppIntent.self,
             provider: SystemSmallTransactionsProvider()
         ) { entry in
             SystemSmallTransactionsView(entry: entry)

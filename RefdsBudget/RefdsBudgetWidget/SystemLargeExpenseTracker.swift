@@ -2,10 +2,10 @@ import WidgetKit
 import SwiftUI
 import RefdsUI
 import RefdsShared
-import RefdsBudgetUI
-import RefdsBudgetDomain
-import RefdsBudgetPresentation
-import AppIntents
+import UserInterface
+import Domain
+import Presentation
+import Mock
 
 struct SystemLargeExpenseTrackerProvider: AppIntentTimelineProvider {
     private let presenter = RefdsBudgetIntentPresenter.shared
@@ -13,9 +13,9 @@ struct SystemLargeExpenseTrackerProvider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SystemLargeExpenseTrackerEntry {
         let viewData = WidgetTransactionsViewData(
             isFilterByDate: true,
-            category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: .localizable(by: .transactionsCategorieAllSelected),
-            status: .localizable(by: .transactionsCategorieAllSelected),
+            category: .localizable(by: .transactionsCategoriesAllSelected),
+            tag: .localizable(by: .transactionsCategoriesAllSelected),
+            status: .localizable(by: .transactionsCategoriesAllSelected),
             date: .current,
             spend: .zero,
             budget: .zero,
@@ -26,20 +26,20 @@ struct SystemLargeExpenseTrackerProvider: AppIntentTimelineProvider {
         return SystemLargeExpenseTrackerEntry(viewData: viewData)
     }
 
-    func snapshot(for configuration: SystemLargeExpenseTrackerAppIntent, in context: Context) async -> SystemLargeExpenseTrackerEntry {
+    func snapshot(for configuration: WidgetAppIntent, in context: Context) async -> SystemLargeExpenseTrackerEntry {
         let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
-            category: .localizable(by: .transactionsCategorieAllSelected),
+            category: .localizable(by: .transactionsCategoriesAllSelected),
             tag: configuration.tag,
             status: configuration.status
         )
         return SystemLargeExpenseTrackerEntry(viewData: viewData)
     }
     
-    func timeline(for configuration: SystemLargeExpenseTrackerAppIntent, in context: Context) async -> Timeline<SystemLargeExpenseTrackerEntry> {
+    func timeline(for configuration: WidgetAppIntent, in context: Context) async -> Timeline<SystemLargeExpenseTrackerEntry> {
         let viewData = presenter.getWidgetTransactionsViewData(
             isFilterByDate: configuration.isFilterByDate,
-            category: .localizable(by: .transactionsCategorieAllSelected),
+            category: .localizable(by: .transactionsCategoriesAllSelected),
             tag: configuration.tag,
             status: configuration.status
         )
@@ -47,45 +47,6 @@ struct SystemLargeExpenseTrackerProvider: AppIntentTimelineProvider {
             SystemLargeExpenseTrackerEntry(viewData: viewData)
         ]
         return Timeline(entries: entries, policy: .never)
-    }
-}
-
-struct SystemLargeExpenseTrackerAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "SystemLargeExpenseTrackerAppIntent"
-    static var description = IntentDescription("SystemLargeExpenseTrackerAppIntent")
-
-    @Parameter(title: "Filter by date", default: true)
-    var isFilterByDate: Bool
-    
-    @Parameter(title: "Tag", optionsProvider: TagsOptionsProvider())
-    var tag: String
-    
-    @Parameter(title: "Status", optionsProvider: StatusOptionsProvider())
-    var status: String
-    
-    private struct TagsOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            presenter.getTags()
-        }
-    }
-    
-    private struct StatusOptionsProvider: DynamicOptionsProvider {
-        private let presenter: RefdsBudgetIntentPresenterProtocol = RefdsBudgetIntentPresenter.shared
-        
-        func defaultResult() async -> String? {
-            .localizable(by: .transactionsCategorieAllSelected)
-        }
-        
-        func results() async throws -> [String] {
-            let status: [TransactionStatus] = [.pending, .cleared]
-            return status.map { $0.description } + [.localizable(by: .transactionsCategorieAllSelected)]
-        }
     }
 }
 
@@ -98,7 +59,7 @@ struct SystemLargeExpenseTrackerView: View {
     var entry: SystemLargeExpenseTrackerProvider.Entry
     
     var body: some View {
-        RefdsBudgetUI.SystemLargeExpenseTracker(viewData: entry.viewData)
+        UserInterface.SystemLargeExpenseTracker(viewData: entry.viewData)
             .widgetURL(
                 ApplicationRouter.deeplinkURL(
                     scene: .home,
@@ -115,7 +76,7 @@ struct SystemLargeExpenseTracker: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
-            intent: SystemLargeExpenseTrackerAppIntent.self,
+            intent: WidgetAppIntent.self,
             provider: SystemLargeExpenseTrackerProvider()
         ) { entry in
             SystemLargeExpenseTrackerView(entry: entry)

@@ -2,20 +2,20 @@ import WidgetKit
 import SwiftUI
 import RefdsUI
 import RefdsShared
-import RefdsBudgetUI
-import RefdsBudgetDomain
-import RefdsBudgetPresentation
-import AppIntents
+import UserInterface
+import Domain
+import Presentation
+import Mock
 
 struct RemainingLockScreenProvider: TimelineProvider {
     private let presenter = RefdsBudgetIntentPresenter.shared
     
     func placeholder(in context: Context) -> RemainingLockScreenEntry {
-        let viewData = WidgetExpenseTrackerViewData(
+        let viewData = WidgetExpensesViewData(
             isFilterByDate: true,
-            category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: .localizable(by: .transactionsCategorieAllSelected),
-            status: .localizable(by: .transactionsCategorieAllSelected),
+            category: .localizable(by: .transactionsCategoriesAllSelected),
+            tag: .localizable(by: .transactionsCategoriesAllSelected),
+            status: .localizable(by: .transactionsCategoriesAllSelected),
             date: .current,
             spend: .zero,
             budget: .zero
@@ -24,21 +24,21 @@ struct RemainingLockScreenProvider: TimelineProvider {
     }
     
     func getSnapshot(in context: Context, completion: @escaping (RemainingLockScreenEntry) -> Void) {
-        let viewData = presenter.getWidgetExpenseTrackerViewData(
+        let viewData = presenter.getWidgetExpensesViewData(
             isFilterByDate: true,
-            category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: .localizable(by: .transactionsCategorieAllSelected),
-            status: .localizable(by: .transactionsCategorieAllSelected)
+            category: .localizable(by: .transactionsCategoriesAllSelected),
+            tag: .localizable(by: .transactionsCategoriesAllSelected),
+            status: .localizable(by: .transactionsCategoriesAllSelected)
         )
         completion(RemainingLockScreenEntry(viewData: viewData))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<RemainingLockScreenEntry>) -> Void) {
-        let viewData = presenter.getWidgetExpenseTrackerViewData(
+        let viewData = presenter.getWidgetExpensesViewData(
             isFilterByDate: true,
-            category: .localizable(by: .transactionsCategorieAllSelected),
-            tag: .localizable(by: .transactionsCategorieAllSelected),
-            status: .localizable(by: .transactionsCategorieAllSelected)
+            category: .localizable(by: .transactionsCategoriesAllSelected),
+            tag: .localizable(by: .transactionsCategoriesAllSelected),
+            status: .localizable(by: .transactionsCategoriesAllSelected)
         )
         let entries: [RemainingLockScreenEntry] = [
             RemainingLockScreenEntry(viewData: viewData)
@@ -49,7 +49,7 @@ struct RemainingLockScreenProvider: TimelineProvider {
 
 struct RemainingLockScreenEntry: TimelineEntry {
     var date: Date = .current
-    let viewData: WidgetExpenseTrackerViewDataProtocol
+    let viewData: WidgetExpensesViewDataProtocol
 }
 
 struct RemainingLockScreenView: View {
@@ -66,7 +66,7 @@ struct RemainingLockScreenView: View {
 }
 
 struct RemainingAccessoryCircularLockScreenView: View {
-    var viewData: WidgetExpenseTrackerViewDataProtocol
+    var viewData: WidgetExpensesViewDataProtocol
     
     var body: some View {
         ViewThatFits {
@@ -97,7 +97,7 @@ struct RemainingAccessoryCircularLockScreenView: View {
 }
 
 struct RemainingAccessoryRectangularLockScreenView: View {
-    var viewData: WidgetExpenseTrackerViewDataProtocol
+    var viewData: WidgetExpensesViewDataProtocol
     
     var body: some View {
         ViewThatFits {
@@ -152,12 +152,12 @@ struct RemainingLockScreen: Widget {
     RemainingLockScreen()
 } timeline: {
     RemainingLockScreenEntry(
-        viewData: WidgetExpenseTrackerViewDataMock()
+        viewData: WidgetExpensesViewDataMock()
     )
     RemainingLockScreenEntry(
-        viewData: WidgetExpenseTrackerViewDataMock()
+        viewData: WidgetExpensesViewDataMock()
     )
     RemainingLockScreenEntry(
-        viewData: WidgetExpenseTrackerViewDataMock()
+        viewData: WidgetExpensesViewDataMock()
     )
 }

@@ -5,6 +5,6 @@
       location = "group:RefdsBudget/RefdsBudget.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:RefdsBudgetKit">
+      location = "group:Core">
    </FileRef>
 </Workspace>

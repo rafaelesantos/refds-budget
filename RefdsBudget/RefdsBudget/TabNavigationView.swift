@@ -2,10 +2,10 @@ import SwiftUI
 import RefdsRedux
 import RefdsRouter
 import RefdsInjection
-import RefdsBudgetDomain
-import RefdsBudgetData
-import RefdsBudgetPresentation
-import RefdsBudgetUI
+import Domain
+import Data
+import Presentation
+import UserInterface
 
 struct TabNavigationView: View {
     @Environment(\.isPro) private var isPro
@@ -21,13 +21,13 @@ struct TabNavigationView: View {
     
     private var bindingItemNavigation: Binding<Int> {
         Binding {
-            store.state.itemNavigation?.rawValue ?? .zero
+            store.state.navigationItem?.rawValue ?? .zero
         } set: { rawValue in
             withAnimation {
-                if store.state.itemNavigation?.rawValue == rawValue,
-                   let item = ItemNavigation(rawValue: rawValue) {
+                if store.state.navigationItem?.rawValue == rawValue,
+                   let item = NavigationItem(rawValue: rawValue) {
                     switch item {
-                    case .premium: store.state.premiumRouter.popToRoot()
+                    case .profile: store.state.profileRouter.popToRoot()
                     case .categories: store.state.categoriesRouter.popToRoot()
                     case .home: store.state.homeRouter.popToRoot()
                     case .transactions: store.state.transactionsRouter.popToRoot()
@@ -35,14 +35,14 @@ struct TabNavigationView: View {
                     }
                 }
                 
-                store.state.itemNavigation = ItemNavigation(rawValue: rawValue)
+                store.state.navigationItem = NavigationItem(rawValue: rawValue)
             }
         }
     }
     
     var body: some View {
         TabView(selection: bindingItemNavigation) {
-            premiumItemView
+            profileItemView
             categoriesItemView
             homeItemView
             transactionsItemView
@@ -63,26 +63,21 @@ struct TabNavigationView: View {
         }
     }
     
-    private var premiumItemView: some View {
+    private var profileItemView: some View {
         RefdsRoutingReduxView(
-            router: $store.state.premiumRouter,
+            router: $store.state.profileRouter,
             state: bindingState,
             action: store.dispatch(action:)
         ) {
-            AnyView(
-                viewFactory.makeSubscriptionView(
-                    state: $store.state.settingsState,
-                    action: store.dispatch(action:)
-                )
-            )
+            EmptyView()
         }
         .tabItem {
             Label(
-                ItemNavigation.premium.title,
-                systemImage: ItemNavigation.premium.icon(isPro: isPro).rawValue
+                NavigationItem.profile.title,
+                systemImage: NavigationItem.profile.icon(isPro: isPro).rawValue
             )
         }
-        .tag(ItemNavigation.premium.rawValue)
+        .tag(NavigationItem.profile.rawValue)
     }
     
     private var categoriesItemView: some View {
@@ -92,7 +87,7 @@ struct TabNavigationView: View {
             action: store.dispatch(action:)
         ) {
             AnyView(
-                viewFactory.makeCegoriesView(
+                viewFactory.makeCategoriesView(
                     state: $store.state.categoriesState,
                     action: store.dispatch(action:)
                 )
@@ -100,11 +95,11 @@ struct TabNavigationView: View {
         }
         .tabItem {
             Label(
-                ItemNavigation.categories.title,
-                systemImage: ItemNavigation.categories.icon(isPro: isPro).rawValue
+                NavigationItem.categories.title,
+                systemImage: NavigationItem.categories.icon(isPro: isPro).rawValue
             )
         }
-        .tag(ItemNavigation.categories.rawValue)
+        .tag(NavigationItem.categories.rawValue)
     }
     
     private var homeItemView: some View {
@@ -122,11 +117,11 @@ struct TabNavigationView: View {
         }
         .tabItem {
             Label(
-                ItemNavigation.home.title,
-                systemImage: ItemNavigation.home.icon(isPro: isPro).rawValue
+                NavigationItem.home.title,
+                systemImage: NavigationItem.home.icon(isPro: isPro).rawValue
             )
         }
-        .tag(ItemNavigation.home.rawValue)
+        .tag(NavigationItem.home.rawValue)
     }
     
     private var transactionsItemView: some View {
@@ -144,11 +139,11 @@ struct TabNavigationView: View {
         }
         .tabItem {
             Label(
-                ItemNavigation.transactions.title,
-                systemImage: ItemNavigation.transactions.icon(isPro: isPro).rawValue
+                NavigationItem.transactions.title,
+                systemImage: NavigationItem.transactions.icon(isPro: isPro).rawValue
             )
         }
-        .tag(ItemNavigation.transactions.rawValue)
+        .tag(NavigationItem.transactions.rawValue)
     }
     
     private var settingsItemView: some View {
@@ -166,11 +161,11 @@ struct TabNavigationView: View {
         }
         .tabItem {
             Label(
-                ItemNavigation.settings.title,
-                systemImage: ItemNavigation.settings.icon(isPro: isPro).rawValue
+                NavigationItem.settings.title,
+                systemImage: NavigationItem.settings.icon(isPro: isPro).rawValue
             )
         }
-        .tag(ItemNavigation.settings.rawValue)
+        .tag(NavigationItem.settings.rawValue)
     }
 }
 

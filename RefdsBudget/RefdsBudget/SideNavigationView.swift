@@ -2,10 +2,10 @@ import SwiftUI
 import RefdsRedux
 import RefdsRouter
 import RefdsInjection
-import RefdsBudgetDomain
-import RefdsBudgetData
-import RefdsBudgetPresentation
-import RefdsBudgetUI
+import Domain
+import Data
+import Presentation
+import UserInterface
 
 struct SideNavigationView: View {
     @Environment(\.isPro) private var isPro
@@ -22,15 +22,15 @@ struct SideNavigationView: View {
     
     var body: some View {
         NavigationSplitView(columnVisibility: bindingSplitVisibility) {
-            List(ItemNavigation.allCases, selection: $store.state.itemNavigation) { item in
+            List(NavigationItem.allCases, selection: $store.state.navigationItem) { item in
                 NavigationLink(value: item) {
                     Label(item.title, systemImage: item.icon(isPro: isPro).rawValue)
                 }
             }
             .listStyle(.sidebar)
         } detail: {
-            switch store.state.itemNavigation {
-            case .premium: premiumView
+            switch store.state.navigationItem {
+            case .profile: profileView
             case .categories: categoriesView
             case .home: homeView
             case .transactions: transactionsView
@@ -41,18 +41,13 @@ struct SideNavigationView: View {
         .navigationSplitViewStyle(.balanced)
     }
     
-    private var premiumView: some View {
+    private var profileView: some View {
         RefdsRoutingReduxView(
-            router: $store.state.premiumRouter,
+            router: $store.state.profileRouter,
             state: bindingState,
             action: store.dispatch(action:)
         ) {
-            AnyView(
-                viewFactory.makeSubscriptionView(
-                    state: $store.state.settingsState,
-                    action: store.dispatch(action:)
-                )
-            )
+            EmptyView()
         }
     }
     
@@ -63,7 +58,7 @@ struct SideNavigationView: View {
             action: store.dispatch(action:)
         ) {
             AnyView(
-                viewFactory.makeCegoriesView(
+                viewFactory.makeCategoriesView(
                     state: $store.state.categoriesState,
                     action: store.dispatch(action:)
                 )
